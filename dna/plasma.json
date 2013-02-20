@@ -1,0 +1,24 @@
+{
+  "BundleCode": {
+    "source": "node_modules/organic-webcell/plasma/BundleCode",
+    "root": "/client/",
+    "useCache": true,
+    "debug": false,
+    "uglify": true
+  },
+  "RenderPage": {
+    "source": "node_modules/organic-webcell/plasma/RenderPage",
+    "root": "/templates/",
+    "useCache": true
+  },
+  "MountHttpPages": {
+    "source": "plasma/MountHttpPages",
+    "cwd": {
+      "pages": "pages",
+      "pageActions": "page-helpers"
+    }
+  },
+  "ErrorHandler": {
+    "source": "node_modules/organic-webcell/plasma/ErrorHandler"
+  }
+}

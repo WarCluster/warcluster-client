@@ -1,0 +1,25 @@
+{
+  "name": "camplight.net",
+  "version": "0.0.27",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "organic": "0.0.10",
+    "organic-webcell": "0.1.7",
+    "organic-cells": "0.0.11",
+    "underscore": "latest",
+    "jquery-browserify": "*",
+    "glob": "latest"
+  },
+  "devDependencies": {
+    "shelljs" : "*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/camplight/camplight.net.git"
+  },
+  "license": "BSD"
+}

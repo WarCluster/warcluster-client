@@ -1,0 +1,9 @@
+{
+  "BundleCode": {
+    "debug": true,
+    "useCache": false
+  },
+  "RenderPage": {
+    "useCache": false
+  }
+}

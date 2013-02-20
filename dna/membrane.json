@@ -1,0 +1,10 @@
+{
+  "HttpServer": {
+    "source": "node_modules/organic-webcell/membrane/ExpressHttpServer",
+    "port": 8002,
+    "middleware": [
+      { "source": "node_modules/organic-webcell/membrane/expressMiddleware/staticFolder", 
+        "staticDir": "public/" }
+    ]
+  }
+}
