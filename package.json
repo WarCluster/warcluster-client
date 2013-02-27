@@ -1,6 +1,6 @@
 {
-  "name": "camplight.net",
-  "version": "0.0.27",
+  "name": "warcluster",
+  "version": "0.0.1",
   "main": "index.js",
   "private": true,
   "dependencies": {
@@ -9,7 +9,8 @@
     "organic-cells": "0.0.14",
     "underscore": "latest",
     "jquery-browserify": "*",
-    "glob": "latest"
+    "glob": "latest",
+    "async": "latest"
   },
   "devDependencies": {
     "shelljs" : "*"
@@ -19,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/camplight/camplight.net.git"
+    "url": "git@github.com:altras/warcluster-site.git"
   },
   "license": "BSD"
 }

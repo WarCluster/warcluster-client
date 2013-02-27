@@ -6,22 +6,22 @@ var newVersion = p.version.split(".");
 newVersion[2] = (parseInt(newVersion[2])+1).toString();
 newVersion = newVersion.join(".");
 cd(__dirname+"/../");
-
+console.log("-2-");
 if(exec("git pull --ff").code != 0){
   echo("Error: failed to git pull");
   exit(1);
 }
-
+console.log("-3-");
 if(exec("git checkout master").code != 0){
   echo("Error: failed to checkout master");
   exit(1);
 }
-
+console.log("-4-");
 if(exec("git pull --ff origin master").code != 0){
   echo("Error: failed to pull origin master");
   exit(1);
 }
-
+console.log("-5-");
 if(exec("git merge develop").code != 0){
   echo("Error: failed to merge develop");
   exit(1);
