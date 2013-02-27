@@ -1,0 +1,6 @@
+{
+  "ExpressHttpPages": {
+    "prebuildAssets": true,
+    "log": true
+  }
+}

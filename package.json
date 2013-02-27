@@ -5,8 +5,8 @@
   "private": true,
   "dependencies": {
     "organic": "0.0.10",
-    "organic-webcell": "0.1.7",
-    "organic-cells": "0.0.11",
+    "organic-webcell": "0.2.2",
+    "organic-cells": "0.0.14",
     "underscore": "latest",
     "jquery-browserify": "*",
     "glob": "latest"
