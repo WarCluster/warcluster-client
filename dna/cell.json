@@ -4,7 +4,7 @@
       "name": "staging",
       "remote": "node@178.79.148.84",
       
-      "source": "git@warcluster:altras/warcluster-site.git",
+      "source": "git@warcluster.github.com:altras/warcluster-site.git",
       "target": "~/warcluster",
 
       "main": "warcluster.js"

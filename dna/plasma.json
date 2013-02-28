@@ -20,5 +20,9 @@
   },
   "ErrorHandler": {
     "source": "node_modules/organic-webcell/plasma/ErrorHandler"
+  },
+  "Self": {
+    "source": "node_modules/organic-cells/plasma/Self",
+    "tissue": "warcluster"
   }
 }
