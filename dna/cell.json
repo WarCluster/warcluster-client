@@ -7,7 +7,7 @@
       "source": "git@warcluster.github.com:altras/warcluster-site.git",
       "target": "~/warcluster",
 
-      "main": "warcluster.js"
+      "main": "warcluster-staging.js"
     }
   ]
 }
