@@ -17,47 +17,11 @@ module.exports = function(context){
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet1.png");
 	var bmd2 = context.resourcesLoader.get("./images/planets/planet_glow.png");
 	
-
-	
-	
-	//$(".menu").append(bmd1.image);
-	Pixastic.process(bmd1.image, "hsl", {hue:Math.random() * 255, saturation:20, lightness:0}, function(c) {
-		/*var context2d = c.getContext('2d');
-		var im = new Image();*/
-		var tt = new THREE.Texture(new Image());
-		tt.image.src = c.toDataURL("image/png")
-		tt.image.width = c.width;
-		tt.image.height = c.height;
-		_self.planet =  new THREE.Mesh(new THREE.PlaneGeometry(225, 225, 1, 1), new THREE.MeshBasicMaterial({map: tt, transparent : true}));
-		_self.planet.scale.x = _self.sc;
-		_self.planet.scale.y = _self.sc;
-		_self.planet.z = pz;
-		console.log("I:", tt.image.width, tt.image.height)
-		_self.add(_self.planet);
-		/*im.width = c.width;
-		im.height = c.height;
-		im.data = new Uint8Array(context2d.getImageData(0, 0, c.width, c.height).data.buffer);*/
-
-		/*$(".menu").append(c);
-		$(".menu").append(im);*/
-		
-		
-
-		//_self.planet.material = new THREE.MeshBasicMaterial({map: im, transparent : true});
-		//this.titleMaterial.map.needsUpdate = true;
-		_self.planet.material.map.needsUpdate = true;
-
-		console.log("-------img ready------------", c.width, c.height);
-	});
-
-	/*this.glowMaterial = new THREE.MeshBasicMaterial({map: bmd2, transparent : true});
-	this.glow = new THREE.Mesh(new THREE.PlaneGeometry(225, 225, 1, 1), this.glowMaterial);
-	this.glow.scale.x = this.sc;
-	this.glow.scale.y = this.sc;
-	this.glow.position.z = pz + 10;
-	this.glow.visible = false;
-	
-	this.add(this.glow);*/
+	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(225, 225, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
+	this.planet.scale.x = this.sc;
+	this.planet.scale.y = this.sc;
+	this.planet.z = pz;
+	this.add(this.planet);
 
 	var result = this.context.canvasTextFactory.build(this.data.ShipCount, null, 50);
 	this.titleTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);

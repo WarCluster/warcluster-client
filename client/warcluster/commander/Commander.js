@@ -1,5 +1,3 @@
-var Sun = require("../../suns/Sun");
-
 module.exports = function(battleField){
   this.battleField = battleField;
 }

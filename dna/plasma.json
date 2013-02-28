@@ -1,28 +1,27 @@
 {
   "BundleCode": {
     "source": "node_modules/organic-webcell/plasma/BundleCode",
-    "root": "/client/",
     "useCache": true,
-    "debug": false,
     "uglify": true
+  },
+  "BundleStyle": {
+    "source": "node_modules/organic-webcell/plasma/BundleStyle",
+    "useCache": true
   },
   "RenderPage": {
     "source": "node_modules/organic-webcell/plasma/RenderPage",
-    "root": "/templates/",
     "useCache": true
   },
-  "MountHttpPages": {
-    "source": "plasma/MountHttpPages",
+  "ExpressHttpPages": {
+    "source": "node_modules/organic-webcell/plasma/ExpressHttpPages",
     "cwd": {
-      "pages": "pages",
-      "pageActions": "page-helpers"
+      "pages": "/pages",
+      "pageHelpers": "/page-helpers"
     }
-  },
-  "ErrorHandler": {
-    "source": "node_modules/organic-webcell/plasma/ErrorHandler"
   },
   "Self": {
     "source": "node_modules/organic-cells/plasma/Self",
-    "tissue": "warcluster"
-  }
+    "tissue": "warcluster",
+    "surviveExceptions": true
+  }  
 }
