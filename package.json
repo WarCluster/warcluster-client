@@ -1,12 +1,12 @@
 {
   "name": "warcluster",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "private": true,
   "dependencies": {
     "organic": "0.0.10",
     "organic-webcell": "0.2.2",
-    "organic-cells": "0.0.14",
+    "organic-cells": "0.0.15",
     "underscore": "latest",
     "jquery-browserify": "*",
     "glob": "latest",
