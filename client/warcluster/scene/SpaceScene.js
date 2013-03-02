@@ -17,8 +17,6 @@ module.exports.prototype.prepare = function() {
   $(".content").append(this.stats.domElement);
 
   this.context.resourcesLoader.loadTexture("./images/ships/ship1.png");
-  this.context.resourcesLoader.loadTexture("./images/backgrounds/background1.jpg");
-  this.context.resourcesLoader.loadTexture("./images/backgrounds/background3.jpg");
 
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background5.jpg");
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background6.jpg");
@@ -28,7 +26,6 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.loadTexture("./images/suns/sun1.png");
 
   this.context.resourcesLoader.loadTexture("./images/planets/planet1.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet_glow.png");
   this.context.resourcesLoader.addEventListener("complete", function() { 
     console.log("--complete--");
 
@@ -46,6 +43,7 @@ module.exports.prototype.buildScene = function() {
   console.log(ww, hh);
 
   this.objects = [];
+  this.planets = [];
   this.camera = new THREE.PerspectiveCamera(15, ww / hh, 0.1, 100000000);
   this.camera.position.z = 6000;
 
@@ -89,16 +87,6 @@ module.exports.prototype.buildScene = function() {
   $(".content").append(this.renderer.domElement);
 }
 
-module.exports.prototype.getIntersectionObjects = function() {
-  var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
-  this.projector.unprojectVector( vector, this.camera );
-
-  var raycaster = new THREE.Raycaster(this.camera.position, vector.sub(this.camera.position ).normalize());
-  var intersects = raycaster.intersectObjects(this.hitObjects);  
-
-  return raycaster.intersectObjects(this.hitObjects);
-}
-
 module.exports.prototype.startRendering = function() {
   var _self = this;
   var render = function() {
@@ -109,49 +97,18 @@ module.exports.prototype.startRendering = function() {
 
     _self.renderer.render(_self.scene, _self.camera);
     _self.stats.update();
+    _self.context.currentTime = (new Date()).getTime();
   }
 
   render();
 }
 
-module.exports.prototype.getScreenCoordinates = function(object) {
-  var scp = object.matrixWorld.getPosition().clone();
-  var screenPos = object.matrixWorld.getPosition().clone();
-  this.projector.projectVector( screenPos, this.camera );
-  screenPos.x = ( screenPos.x + 1 ) * (ww / 2);
-  screenPos.y = ( - screenPos.y + 1) * (hh / 2);
-
-  /*var _viewProjectionMatrix = new THREE.Matrix4()
-  _viewProjectionMatrix.multiply( _self.context.camera.projectionMatrix, _self.context.camera.matrixWorldInverse );
-
-  var _frustum = new THREE.Frustum();
-  _frustum.setFromMatrix( _viewProjectionMatrix );
-
-  var modelMatrix = object.matrixWorld;
-  var _vertex = new THREE.RenderableVertex();
-  _vertex.positionWorld.copy( scp );
-
-  modelMatrix.multiplyVector3( _vertex.positionWorld );
-
-  _vertex.positionScreen.copy( _vertex.positionWorld );
-  _viewProjectionMatrix.multiplyVector4( _vertex.positionScreen );
-
-  _vertex.positionScreen.x /= _vertex.positionScreen.w;
-  _vertex.positionScreen.y /= _vertex.positionScreen.w;
-
-  _vertex.visible = _vertex.positionScreen.z > _self.context.camera.near && _vertex.positionScreen.z < _self.context.camera.far;
-
-
-  console.log(_vertex);*/
-
-
-  return screenPos;
-}
-
 module.exports.prototype.update = function(data) {
-  //var objects
-  this.clear();
+  console.log("1.update:", data);
+  
+
   if (data.objects.length > 0) {
+    this.clear();
     for (var i = 0;i < data.objects.length;i ++) {
       var obj = data.objects[i];
       switch (obj.xtype) {
@@ -168,14 +125,40 @@ module.exports.prototype.update = function(data) {
           planet.position.y = obj.position.y;
 
           this.objects.push(planet);
+          this.planets.push(planet);
         break;
       }
     }
   }
+
+  console.log("2.update:", data.missions.length);
+
+  if (data.missions.length > 0) {
+    for (var i = 0;i < data.missions.length;i ++) {
+
+      var pl = [].concat(this.planets);
+      var sr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
+      var tr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
+      var mission = data.missions[i];
+      mission.startTime = this.context.currentTime;
+      mission.travelTime = 1000 * 5;
+      mission.source.position.x = sr.position.x;
+      mission.source.position.y = sr.position.y;
+
+      mission.target.position.x = tr.position.x;
+      mission.target.position.y = tr.position.y;
+      
+      console.log("mission", mission);
+      this.context.missionsFactory.build(mission);
+    }
+  }
+
+  console.log("3.update:");
 }
 
 module.exports.prototype.clear = function() {
   var obj;
+  this.planets = [];
   while (this.objects.length) {
     obj = this.objects.shift();
 

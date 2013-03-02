@@ -1,6 +1,4 @@
 // #!/usr/bin/env node
-process.env.CELL_MODE = process.env.CELL_MODE || "development";
-
 var util = require("util");
 var Cell = require("organic-webcell/WebCell");
 var DNA = require("organic").DNA;

@@ -26,6 +26,8 @@ module.exports = function(){
   var hh = window.innerHeight;
 
 	this.context = new GameContext();
+	this.context.activationTime = (new Date()).getTime();
+	this.context.currentTime = this.context.activationTime;
 	this.context.cTemp = $("#cTemp");
 	this.context.playerData = this.playerData;
 	
@@ -40,11 +42,11 @@ module.exports = function(){
 	this.context.spaceScene = new SpaceScene(this.context);
 	this.context.spaceScene.prepare();
 
-	this.spaceViewController = new SpaceViewController();
+	this.spaceViewController = new SpaceViewController(this.context);
 	this.spaceViewController.zoom = 6000;
 	this.spaceViewController.maxZoom = 60000000;
 	this.spaceViewController.minZoom = 6000;
-	this.spaceViewController.zoomStep = 20000;
+	this.spaceViewController.zoomStep = 2000;
 
 	this.spaceViewController.addEventListener("scroll", function(e) {
 		TweenLite.to(_self.context.spaceScene.camera.position, 0.7, {
@@ -59,10 +61,6 @@ module.exports = function(){
 			ease: Cubic.easeOut
 		});
 
-		/*TweenLite.to(_self.spaceViewController, 0.7, {
-			scaleIndex: _self.spaceViewController.zoom / 6000,
-			ease: Cubic.easeOut
-		});*/
 		_self.spaceViewController.scaleIndex = _self.spaceViewController.zoom / 6000;
 		
 

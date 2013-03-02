@@ -47,8 +47,23 @@ module.exports.prototype.buildMisstionsData = function(total, d) {
 
   for (var i = 0;i < total;i ++) {
     data.missions.push({
-      source: "SOURCE_ID",
-      target: "TARGET_ID"
+      totalShips: 57,
+      startTime: 100,
+      travelTime: 100,
+      source: {
+        id: "SOURCE_ID",
+        position: {
+          x: 100,
+          y: 100
+        }
+      },
+      target: {
+        id: "TARGET_ID",
+        position: {
+          x: 200,
+          y: 200
+        }
+      }
     });
   }
 

@@ -2,47 +2,53 @@ module.exports = function(context) {
 	THREE.Object3D.call(this);
 	
 	this.context = context;
-	this.target = null;
+	this.mission = null;
 	
-	var texture = this.context.resourcesLoader.get("./images/ships/ship1.png");
-	var material = new THREE.MeshBasicMaterial({map: texture, transparent: true});
+	this.material = new THREE.MeshBasicMaterial({map: null, transparent: true});
 
-	this.ship = new THREE.Mesh(new THREE.PlaneGeometry(66 * 0.5, 71 * 0.5), material);
+	this.ship = new THREE.Mesh(new THREE.PlaneGeometry(66 * 0.5, 71 * 0.5), this.material);
 	this.ship.doubleSided = true;
 	this.ship.flipSided = true;
 	this.add(this.ship);
 
+	this.progress = 0;
 	this.delta_x = 0;
 	this.delta_y = 0;
-
-	this.sp = 5
-	this.speed = {
-		x: 0,
-		y: 0
-	}
 }
 
 module.exports.prototype = new THREE.Object3D();
-module.exports.prototype.send = function(target) {
-	this.targetX = target.position.x;
-	this.targetY = target.position.y;
+module.exports.prototype.prepare = function(total) {
+	var texture = this.context.resourcesLoader.get("./images/ships/ship1.png");
+	this.material.map = texture;
+}
 
-	this.delta_x = target.position.x - this.position.x;
-	this.delta_y = target.position.y - this.position.y;
+module.exports.prototype.send = function(mission) {
+	this.mission = mission;
+
+	this.delta_x = this.mission.target.position.x - this.mission.source.position.x;
+	this.delta_y = this.mission.target.position.y - this.mission.source.position.y;
 	
 	this.rotation.z = -Math.atan2(this.delta_x, this.delta_y) + Math.PI;
 
-	this.speed.x = this.sp * Math.sin(this.rotation.z);
-	this.speed.y = this.sp * Math.cos(this.rotation.z);
+	var speed = 0.4; // speed per millisecond
+	var d = Math.sqrt((this.delta_x*this.delta_x)+(this.delta_y*this.delta_y));
+	this.mission.travelTime = d / speed;
+
+	this.displacement = {
+		x: Math.random() * 100 - 50,
+		y: Math.random() * 100 - 50
+	}
 }
 
 module.exports.prototype.tick = function() {
-	this.position.x += this.speed.x;
-	this.position.y -= this.speed.y;
-
-	this.delta_x = this.targetX - this.position.x;
-	this.delta_y = this.targetY - this.position.y;
-
-	if (Math.sqrt((this.delta_x*this.delta_x)+(this.delta_y*this.delta_y)) < 10)
+	if (this.context.currentTime > this.mission.startTime + this.mission.travelTime) {
 		this.context.shipsFactory.destroy(this);
+	} else {
+		this.progress = (this.context.currentTime - this.mission.startTime) / this.mission.travelTime;
+		this.position.x = this.mission.source.position.x + this.delta_x * this.progress;
+		this.position.y = this.mission.source.position.y + this.delta_y * this.progress;
+
+		this.ship.position.x = this.displacement.x * (1.3 - this.progress);
+		this.ship.position.y = this.displacement.y * (1.3 - this.progress);
+	}
 }

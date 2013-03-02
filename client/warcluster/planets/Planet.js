@@ -35,12 +35,13 @@ module.exports = function(context){
 	this.title.position.z = pz + 30;
 
 	this.add(this.title);
+	this.hitObject = this.planet;
 
-	this.hitObject = new THREE.Mesh(new THREE.SphereGeometry(90*this.sc));
+	/*this.hitObject = new THREE.Mesh(new THREE.SphereGeometry(90*this.sc), new THREE.MeshBasicMaterial());
 	this.hitObject.position.z = pz;
-	this.hitObject.visible = false;
+	//this.hitObject.visible = false;
 
-	this.add(this.hitObject);
+	this.add(this.hitObject);*/
 }
 
 module.exports.prototype = new THREE.Object3D();

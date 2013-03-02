@@ -1,21 +1,41 @@
-var Mission = require("../../missions/Mission");
-
 module.exports = function(context){
 	this.context = context;
-	this.cache = [];
 }
 
-module.exports.prototype.build = function() {
-	var mission = this.cache.length > 0 ? this.cache.shift() : null;
+module.exports.prototype.build = function(missionData) {
+  console.log("build[missionData]:", missionData);
+  var ts = missionData.totalShips;
+  var step = 1;
 
-	if (!mission)
-		mission = new Mission(this.context);
+  if (missionData.totalShips <= 10) {
+      step = 1;
+    } else if (missionData.totalShips <= 100) {
+      step = 10;
+    } else if (missionData.totalShips <= 1000) {
+      step = 100;
+    } else if (missionData.totalShips <= 10000) {
+      step = 1000;
+    } else if (missionData.totalShips <= 100000) {
+      step = 10000;
+    } else if (missionData.totalShips <= 1000000) {
+      step = 100000;
+    } else if (missionData.totalShips <= 10000000) {
+      step = 1000000;
+    }
 
-	return mission;
-}
+  var ship;
 
-module.exports.prototype.destroy = function(mission) {
-	this.cache.push(mission);
+  for (var i = 0;i < 10;i ++) {
+    
+    if (ts - step >= 0) {
+      ship = this.context.shipsFactory.build(step);
+    } else {
+      ship = this.context.shipsFactory.build(ts);
+    }
 
-	return mission;
+    ts -= step;
+    
+    ship.position.z = 60;
+    ship.send(missionData);
+  }
 }
