@@ -13,8 +13,6 @@ var SunsFactory = require("./factories/suns/SunsFactory");
 
 var SpaceScene = require("./scene/SpaceScene");
 
-//require("../vendor/extends");
-
 module.exports = function(){
 	var _self = this;
 
@@ -62,72 +60,11 @@ module.exports = function(){
 		});
 
 		_self.spaceViewController.scaleIndex = _self.spaceViewController.zoom / 6000;
-		
-
-		//_self.context.spaceScene.camera.position.z += e.wheelDelta * 150;
 	});
 
-
 	this.spaceViewController.activate();
-
-	/*this.selectedPlanet = null;
-
-	var t;
-		window.addEventListener("mousedown", function() {
-			t = (new Date()).getTime();
-		});
-		window.addEventListener("click", function(e) {
-			//e.preventDefault();
-			if ((new Date()).getTime() - t < 200) {
-				var intersects = getIntersectionObjects();
-				var len = intersects.length;
-				var selected = false;
-
-				
-				for (var i = 0;i < len;i ++) {
-					var inters = intersects[i];
-
-					if (inters.object.parent.data.Owner == _self.playerData.id){
-						if (_self.selectedPlanet)
-							_self.selectedPlanet.deselect();
-
-						_self.selectedPlanet = intersects[0].object.parent;
-						_self.selectedPlanet.select();
-
-						getScreenCoordinates(_self.selectedPlanet);
-
-						selected = true;
-						break;
-					}
-				}
-
-				if (len > 0 && !selected && _self.selectedPlanet) {
-					var m = _self.context.missionsFactory.build();
-					m.send([_self.selectedPlanet], intersects[0].object.parent);
-
-					_self.context.missionsFactory.destroy(m);
-				}
-
-				//console.log(len, selected, _self.selectedPlanet);
-			}
-		});
-
-		var onWindowResize = function() {
-			 _self.context.camera.aspect = window.innerWidth / window.innerHeight;
-			 _self.context.camera.updateProjectionMatrix();
-
-			 _self.context.renderer.setSize( window.innerWidth, window.innerHeight );
-		}
-
-		onWindowResize();
-		window.addEventListener('resize', onWindowResize, false );
-		window.addEventListener('mousemove', function(e) {
-			mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-			mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
-		}, false);*/
 }
 
 module.exports.prototype.renderData = function(data) {
-	console.log("-renderData-", data);
 	this.context.spaceScene.update(data);
 }

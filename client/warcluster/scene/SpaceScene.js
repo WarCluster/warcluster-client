@@ -75,6 +75,8 @@ module.exports.prototype.buildScene = function() {
   this.context.interactiveObjects = this.interactiveObjects;  
 
   var onWindowResize = function() {
+    //var ww = $(".content").offsetWidth;
+    //var hh = $(".content").offsetHeight;
      _self.camera.aspect = window.innerWidth / window.innerHeight;
      _self.camera.updateProjectionMatrix();
 
@@ -131,8 +133,6 @@ module.exports.prototype.update = function(data) {
     }
   }
 
-  console.log("2.update:", data.missions.length);
-
   if (data.missions.length > 0) {
     for (var i = 0;i < data.missions.length;i ++) {
 
@@ -148,12 +148,9 @@ module.exports.prototype.update = function(data) {
       mission.target.position.x = tr.position.x;
       mission.target.position.y = tr.position.y;
       
-      console.log("mission", mission);
       this.context.missionsFactory.build(mission);
     }
   }
-
-  console.log("3.update:");
 }
 
 module.exports.prototype.clear = function() {

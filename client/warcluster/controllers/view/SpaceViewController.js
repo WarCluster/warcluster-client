@@ -33,16 +33,19 @@ module.exports = function(context){
     window.removeEventListener("mouseup", mouseUp);
 		window.removeEventListener("mouseout",	mouseUp);
 
-    console.log("1.intersects:", scrolled, (new Date()).getTime() - t);
+    console.log("1.intersects:");
 
     if (!scrolled && (new Date()).getTime() - t < 200) {
       var intersects = _self.getIntersectionObjects();
       if (intersects.length > 0) {
+        var worldPosition = new THREE.Vector3();
+        worldPosition.getPositionFromMatrix(intersects[0].object.matrixWorld);
         var event = {
           type: "selectPlanet", 
           target: intersects[0], 
-          screenCoordinates: _self.getScreenCoordinates(intersects[0].object)
+          screenCoordinates: _self.toScreenXY(worldPosition, _self.context.camera, $(".content"))
         };
+        console.log("2.intersects:", event);
         _self.dispatchEvent(event);
       }
     }
@@ -151,36 +154,13 @@ module.exports.prototype.getIntersectionObjects = function() {
   return raycaster.intersectObjects(this.context.hitObjects);
 }
 
-module.exports.prototype.getScreenCoordinates = function(object) {
-  var scp = object.matrixWorld.getPosition().clone();
-  var screenPos = object.matrixWorld.getPosition().clone();
-  this.context.projector.projectVector( screenPos, this.context.camera );
-  screenPos.x = ( screenPos.x + 1 ) * (window.innerWidth / 2);
-  screenPos.y = ( - screenPos.y + 1) * (window.innerHeight / 2);
+module.exports.prototype.toScreenXY = function ( position, camera, jqdiv ) {
+    var pos = position.clone();
+    projScreenMat = new THREE.Matrix4();
+    projScreenMat.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
+    //projScreenMat.multiplyVector3( pos );
+    pos.applyProjection( projScreenMat )
 
-  /*var _viewProjectionMatrix = new THREE.Matrix4()
-  _viewProjectionMatrix.multiply( _self.context.camera.projectionMatrix, _self.context.camera.matrixWorldInverse );
-
-  var _frustum = new THREE.Frustum();
-  _frustum.setFromMatrix( _viewProjectionMatrix );
-
-  var modelMatrix = object.matrixWorld;
-  var _vertex = new THREE.RenderableVertex();
-  _vertex.positionWorld.copy( scp );
-
-  modelMatrix.multiplyVector3( _vertex.positionWorld );
-
-  _vertex.positionScreen.copy( _vertex.positionWorld );
-  _viewProjectionMatrix.multiplyVector4( _vertex.positionScreen );
-
-  _vertex.positionScreen.x /= _vertex.positionScreen.w;
-  _vertex.positionScreen.y /= _vertex.positionScreen.w;
-
-  _vertex.visible = _vertex.positionScreen.z > _self.context.camera.near && _vertex.positionScreen.z < _self.context.camera.far;
-
-
-  console.log(_vertex);*/
-
-
-  return screenPos;
+    return { x: ( pos.x + 1 ) * jqdiv.width() / 2 + jqdiv.offset().left,
+         y: ( - pos.y + 1) * jqdiv.height() / 2 + jqdiv.offset().top };
 }
