@@ -14,6 +14,10 @@ module.exports = function(context) {
 	this.progress = 0;
 	this.delta_x = 0;
 	this.delta_y = 0;
+
+	this.direction = Math.random() > 0.5 ? 3 : -3;
+	this.angle = Math.random() * 360;
+	console.log(this.direction);
 }
 
 module.exports.prototype = new THREE.Object3D();
@@ -48,7 +52,9 @@ module.exports.prototype.tick = function() {
 		this.position.x = this.mission.source.position.x + this.delta_x * this.progress;
 		this.position.y = this.mission.source.position.y + this.delta_y * this.progress;
 
-		this.ship.position.x = this.displacement.x * (1.3 - this.progress);
+		this.angle += this.direction;
+
+		this.ship.position.x = this.displacement.x * (1.3 - this.progress) + 5 * Math.sin(this.angle*(Math.PI/180));
 		this.ship.position.y = this.displacement.y * (1.3 - this.progress);
 	}
 }
