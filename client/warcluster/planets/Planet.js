@@ -16,10 +16,15 @@ module.exports = function(context){
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet1.png");
 	var bmd2 = context.resourcesLoader.get("./images/planets/planet_glow.png");
-	
-	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(225, 225, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
-	this.planet.scale.x = this.sc;
-	this.planet.scale.y = this.sc;
+
+	this.planetSize = {
+		width: 225 * this.sc,
+		height: 225 * this.sc
+	}
+	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(this.planetSize.width, this.planetSize.height, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
+
+	//this.planet.scale.x = this.sc;
+	//this.planet.scale.y = this.sc;
 	this.planet.z = pz;
 	this.add(this.planet);
 

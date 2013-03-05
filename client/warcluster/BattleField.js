@@ -46,22 +46,7 @@ module.exports = function(){
 	this.spaceViewController.minZoom = 6000;
 	this.spaceViewController.zoomStep = 2000;
 
-	this.spaceViewController.addEventListener("scroll", function(e) {
-		TweenLite.to(_self.context.spaceScene.camera.position, 0.7, {
-			x: -_self.spaceViewController.scrollPositon.x, 
-			y: _self.spaceViewController.scrollPositon.y,
-			ease: Cubic.easeOut
-		});
-	});
-	this.spaceViewController.addEventListener("zoom", function(e) {
-		TweenLite.to(_self.context.spaceScene.camera.position, 0.7, {
-			z: _self.spaceViewController.zoom,
-			ease: Cubic.easeOut
-		});
-
-		_self.spaceViewController.scaleIndex = _self.spaceViewController.zoom / 6000;
-	});
-
+	this.context.spaceViewController = this.spaceViewController;
 	this.spaceViewController.activate();
 }
 

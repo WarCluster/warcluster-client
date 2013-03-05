@@ -1,3 +1,5 @@
+var UserPopover = require("../../popovers/UserPopover");
+
 module.exports = function(context){
 	THREE.EventDispatcher.call(this);
 	var _self = this;
@@ -22,6 +24,16 @@ module.exports = function(context){
     x: 0,
     y: 0
   }
+  this.selectedPlanet = null;
+  var popover = new UserPopover();
+  
+  var getPopoverPosition = function() {
+    var worldPosition = new THREE.Vector3();
+    worldPosition.getPositionFromMatrix(_self.selectedPlanet.matrixWorld);
+    worldPosition.x += _self.selectedPlanet.planetSize.width/2;
+    var screenCoordinates = _self.toScreenXY(worldPosition, _self.context.camera, $(".content"));
+    return screenCoordinates;
+  }
 
   window.addEventListener('mousemove', function(e) {
     _self.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -33,19 +45,21 @@ module.exports = function(context){
     window.removeEventListener("mouseup", mouseUp);
 		window.removeEventListener("mouseout",	mouseUp);
 
-    console.log("1.intersects:");
-
     if (!scrolled && (new Date()).getTime() - t < 200) {
       var intersects = _self.getIntersectionObjects();
       if (intersects.length > 0) {
-        var worldPosition = new THREE.Vector3();
-        worldPosition.getPositionFromMatrix(intersects[0].object.matrixWorld);
+        _self.selectedPlanet = intersects[0].object.parent;
+
+        var position = getPopoverPosition();
         var event = {
           type: "selectPlanet", 
-          target: intersects[0], 
-          screenCoordinates: _self.toScreenXY(worldPosition, _self.context.camera, $(".content"))
+          target: _self.selectedPlanet, 
+          screenCoordinates: position
         };
-        console.log("2.intersects:", event);
+
+        popover.render();
+        popover.move(position.x, position.y);
+
         _self.dispatchEvent(event);
       }
     }
@@ -77,7 +91,20 @@ module.exports = function(context){
 		_self.mpos.x = e.clientX * _self.scaleIndex;
 		_self.mpos.y = e.clientY * _self.scaleIndex;
      
-     scrolled = true;
+    scrolled = true;
+
+    TweenLite.to(_self.context.spaceScene.camera.position, 0.7, {
+      x: -_self.context.spaceViewController.scrollPositon.x, 
+      y: _self.context.spaceViewController.scrollPositon.y,
+      ease: Cubic.easeOut,
+      onUpdate: function() {
+        if (_self.selectedPlanet) {
+          var position = getPopoverPosition();
+          popover.move(position.x, position.y);  
+        }
+      }
+    });
+
 		_self.dispatchEvent({type: "scroll"});
 	}
   
@@ -127,6 +154,18 @@ module.exports = function(context){
       _self.zoom += st;
     }
 
+    TweenLite.to(_self.context.spaceScene.camera.position, 0.7, {
+      z: _self.context.spaceViewController.zoom,
+      ease: Cubic.easeOut,
+      onUpdate: function() {
+        if (_self.selectedPlanet) {
+          var position = getPopoverPosition();
+          popover.move(position.x, position.y);  
+        }
+      }
+    });
+
+    _self.scaleIndex = _self.zoom / 6000;
     _self.dispatchEvent({type: "zoom", wheelDelta: st});
   });
 }

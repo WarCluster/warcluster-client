@@ -2,7 +2,10 @@
   "BundleCode": {
     "source": "node_modules/organic-webcell/plasma/BundleCode",
     "useCache": true,
-    "uglify": true
+    "uglify": true,
+    "plugins": [{
+      "source": "/client-plugins/ClientConfig"
+    }]
   },
   "BundleStyle": {
     "source": "node_modules/organic-webcell/plasma/BundleStyle",

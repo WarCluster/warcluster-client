@@ -8,15 +8,21 @@ html
 
     script(src="/js/three.js")
     script(src="/js/stats.min.js")
+    script(src='/js/jade.js')
     script(src="/code.js")
 
   body
-    .container-fluid(style="padding: 0px; margin: 0px;")
-      .content
-      canvas#cTemp.temp
-      .menu.btn-group
-        a.btn.test1(href="#") Build systems
-        a.btn.test2(href="#") Send mission
-        sup.version
-          | &nbsp;&mdash;&nbsp;
-          .label !{version}
+    .content
+    .ui-container
+      .container-fluid
+        .row-fluid
+          .span12
+        .row-fluid
+          .offset1.span10
+            .menu.btn-group
+              a.btn.test1(href="#") Build systems
+              a.btn.test2(href="#") Send mission
+          sup.version.span1
+            | &nbsp;&mdash;&nbsp;
+            .label !{version}
+    canvas#cTemp.temp
