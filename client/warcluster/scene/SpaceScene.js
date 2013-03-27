@@ -22,10 +22,11 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background6.jpg");
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background7.jpg");
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background8.jpg");
-
   this.context.resourcesLoader.loadTexture("./images/suns/sun1.png");
-
   this.context.resourcesLoader.loadTexture("./images/planets/planet1.png");
+
+  this.context.resourcesLoader.loadModel("./models/logo.js");
+
   this.context.resourcesLoader.addEventListener("complete", function() { 
     console.log("--complete--");
 
@@ -50,11 +51,32 @@ module.exports.prototype.buildScene = function() {
   this.scene = new THREE.Scene();
   this.scene.add( new THREE.AmbientLight( 0xc1c1c1 ) );
 
+
+  var light = new THREE.SpotLight( 0xc3bc83, 1.5 );
+  light.position.set( 0, 500, 2000 );
+  light.castShadow = true;
+  light.intensity = 1.5;
+
+  light.shadowCameraNear = 200;
+  light.shadowCameraFar = this.camera.far;
+  light.shadowCameraFov = 50;
+
+  light.shadowBias = -0.00022;
+  light.shadowDarkness = 0.5;
+
+  light.shadowMapWidth = 2048;
+  light.shadowMapHeight = 2048;
+
+  this.scene.add( light );
+
+
+
+
   this.projector = new THREE.Projector();
 
   this.renderer = new THREE.WebGLRenderer( { antialias: true} );
   this.renderer.setSize(ww, hh);
-  this.renderer.sortObjects = false
+  //this.renderer.sortObjects = false
   //this.renderer.autoClear = false;
 
   this.container = new THREE.Object3D();
@@ -74,6 +96,10 @@ module.exports.prototype.buildScene = function() {
   this.context.hitObjects = this.hitObjects;
   this.context.interactiveObjects = this.interactiveObjects;  
 
+  var data = this.context.resourcesLoader.get("./models/logo.js");
+  var logo = new THREE.Mesh(data.geometry, new THREE.MeshFaceMaterial( data.materials ));
+  this.container.add( logo );
+  console.log("logo:", logo, data);
   var onWindowResize = function() {
     //var ww = $(".content").offsetWidth;
     //var hh = $(".content").offsetHeight;

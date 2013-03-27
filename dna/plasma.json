@@ -15,6 +15,14 @@
     "source": "node_modules/organic-webcell/plasma/RenderPage",
     "useCache": true
   },
+  "TwitterOAuth": {
+    "source": "plasma/TwitterOAuth",
+    "consumerKey": "y65cmSKRKI3TnaUFsAbQ",
+    "consumerSecret": "uwLIgSNDqWPfSnySydV46gWBkISwPN9XaHW4yrpd3g",
+    "connectUrl": "/sessions/connect",
+    "callbackUrl": "/sessions/callback",
+    "callbackFullUrl": "http://127.0.0.1:8002/sessions/callback"
+  },
   "ExpressHttpPages": {
     "source": "node_modules/organic-webcell/plasma/ExpressHttpPages",
     "cwd": {
@@ -26,5 +34,5 @@
     "source": "node_modules/organic-cells/plasma/Self",
     "tissue": "warcluster",
     "surviveExceptions": true
-  }  
+  }
 }

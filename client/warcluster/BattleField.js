@@ -43,7 +43,7 @@ module.exports = function(){
 	this.spaceViewController = new SpaceViewController(this.context);
 	this.spaceViewController.zoom = 6000;
 	this.spaceViewController.maxZoom = 60000000;
-	this.spaceViewController.minZoom = 6000;
+	this.spaceViewController.minZoom = 2000; //6000;
 	this.spaceViewController.zoomStep = 2000;
 
 	this.context.spaceViewController = this.spaceViewController;
