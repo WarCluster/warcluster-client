@@ -19,9 +19,9 @@
     "source": "plasma/TwitterOAuth",
     "consumerKey": "y65cmSKRKI3TnaUFsAbQ",
     "consumerSecret": "uwLIgSNDqWPfSnySydV46gWBkISwPN9XaHW4yrpd3g",
-    "connectUrl": "/sessions/connect",
-    "callbackUrl": "/sessions/callback",
-    "callbackFullUrl": "http://127.0.0.1:8002/sessions/callback"
+    "connectUrl": "/twitter/connect",
+    "callbackUrl": "/game",
+    "callbackFullUrl": "http://127.0.0.1:8002/game"
   },
   "ExpressHttpPages": {
     "source": "node_modules/organic-webcell/plasma/ExpressHttpPages",
