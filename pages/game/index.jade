@@ -1,0 +1,28 @@
+!!! 5
+html
+  head
+    title WarCluster
+    meta(charset='utf-8')
+
+    link(rel='stylesheet', href='/style.css')
+
+    script(src="/js/three.js")
+    script(src="/js/stats.min.js")
+    script(src='/js/jade.js')
+    script(src="/game/code.js")
+
+  body
+    .content
+    .ui-container
+      .container-fluid
+        .row-fluid
+          .span12
+        .row-fluid
+          .offset1.span10
+            .menu.btn-group
+              a.btn.test1(href="#") Build systems
+              a.btn.test2(href="#") Send mission
+          sup.version.span1
+            | &nbsp;&mdash;&nbsp;
+            .label !{version}
+    canvas#cTemp.temp
