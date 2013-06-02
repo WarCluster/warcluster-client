@@ -9,6 +9,12 @@
     "port": 8002,
     "middleware": [
       { 
+        "source": "node_modules/organic-webcell/membrane/expressMiddleware/cookieParser"
+      },
+      { 
+        "source": "http-plugins/Session"
+      },
+      { 
         "source": "node_modules/organic-webcell/membrane/expressMiddleware/staticFolder", 
         "staticDir": "public/" 
       },

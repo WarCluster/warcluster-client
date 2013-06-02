@@ -1,28 +1,18 @@
 var boot = require("../client/boot");
 
-var BattleField = require("../client/warcluster/BattleField");
-var Commander = require("../client/warcluster/commander/Commander");
-
-var battleField;
-var commander;
-
-window.app = {};
 
 $(document).ready(function() {
-  var AppRouter = require("../client/AppRouter");
-  app.router = new AppRouter();
-
-  Backbone.history.start({trigger: true});
-
-	battleField = new BattleField();
-  commander = new Commander(battleField);
-
-  $(".test2").click(function() {
-    commander.test3();
-  });
-
-  $(".test1").click(function() {
-    commander.test4();
-  });
+  /*console.log('before if');
+  if (!window.WebGLRenderingContext) {
+    // the browser doesn't even know what WebGL is
+    window.location = "http://get.webgl.org";
+  } else {
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("webgl");
+    if (!ctx) {
+      // browser supports WebGL but initialization failed.
+      window.location = "http://get.webgl.org/troubleshooting";
+    }
+  console.log('webgl-success');
+  }*/
 });
-
