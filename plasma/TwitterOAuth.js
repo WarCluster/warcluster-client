@@ -49,14 +49,15 @@ module.exports = Organel.extend(function NotFoundPage(plasma, config){
         } else {
           req.session.oauthAccessToken = oauthAccessToken;
           req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
-          
+          console.log("1.req.twitter:");
           // Right here is where we would write out some nice user stuff
           consumer().get("https://api.twitter.com/1.1/account/verify_credentials.json", req.session.oauthAccessToken, req.session.oauthAccessTokenSecret, function (error, data, response) {
             if (error) {
-              req.twitterError = "Error getting twitter screen name : " + sys.inspect(error);
+              req.session.twitterError = "Error getting twitter screen name : " + sys.inspect(error);
               next();
             } else {
-              req.twitter = JSON.parse(data);
+              req.session.twitter = JSON.parse(data);
+              console.log("2.req.twitter:", req.twitter);
               next();
             }  
           });  

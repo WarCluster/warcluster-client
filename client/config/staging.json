@@ -1,3 +1,4 @@
 {
-  "apiendpoint": "/api"
+  "apiendpoint": "/api",
+  "socketUrl": "http://kiril.eu:7000/universe"
 }

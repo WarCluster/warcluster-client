@@ -11,10 +11,6 @@
     "source": "node_modules/organic-webcell/plasma/BundleStyle",
     "useCache": true
   },
-  "RenderPage": {
-    "source": "node_modules/organic-webcell/plasma/RenderPage",
-    "useCache": true
-  },
   "TwitterOAuth": {
     "source": "plasma/TwitterOAuth",
     "consumerKey": "y65cmSKRKI3TnaUFsAbQ",
@@ -22,6 +18,10 @@
     "connectUrl": "/twitter/connect",
     "callbackUrl": "/game",
     "callbackFullUrl": "http://127.0.0.1:8002/game"
+  },
+  "RenderPage": {
+    "source": "node_modules/organic-webcell/plasma/RenderPage",
+    "useCache": true
   },
   "ExpressHttpPages": {
     "source": "node_modules/organic-webcell/plasma/ExpressHttpPages",

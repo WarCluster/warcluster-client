@@ -6,6 +6,7 @@ html
 
     link(rel='stylesheet', href='/style.css')
 
+    script(src="/js/sockjs-0.3.min.js")
     script(src="/js/three.js")
     script(src="/js/stats.min.js")
     script(src='/js/jade.js')
@@ -22,6 +23,8 @@ html
             .menu.btn-group
               a.btn.test1(href="#") Build systems
               a.btn.test2(href="#") Send mission
+              a.btn.scroll-left(href="#") Sroll left
+              a.btn.scroll-right(href="#") Sroll right
           sup.version.span1
             | &nbsp;&mdash;&nbsp;
             .label !{version}

@@ -10,10 +10,10 @@ module.exports = function(callback) {
   var self = this;
   var bootApp = function(){
     Cell.call(self, dna);
-      self.plasma.once("ExpressHttpActions", function(c){
-        console.log(("api running in CELL_MODE == "+process.env.CELL_MODE).blue);
-        if(callback) callback();
-      });
+    self.plasma.once("ExpressHttpActions", function(c){
+      console.log(("api running in CELL_MODE == "+process.env.CELL_MODE).blue);
+      if(callback) callback();
+    });
   }
 
   var dna = new DNA();

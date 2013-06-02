@@ -25,11 +25,9 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.loadTexture("./images/suns/sun1.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet1.png");
 
-  this.context.resourcesLoader.loadModel("./models/logo.js");
+  //this.context.resourcesLoader.loadModel("./models/logo.js");
 
   this.context.resourcesLoader.addEventListener("complete", function() { 
-    console.log("--complete--");
-
     _self.buildScene();
     _self.startRendering();
     _self.dispatchEvent({type: "complete"});
@@ -96,10 +94,11 @@ module.exports.prototype.buildScene = function() {
   this.context.hitObjects = this.hitObjects;
   this.context.interactiveObjects = this.interactiveObjects;  
 
-  var data = this.context.resourcesLoader.get("./models/logo.js");
+  /*var data = this.context.resourcesLoader.get("./models/logo.js");
   var logo = new THREE.Mesh(data.geometry, new THREE.MeshFaceMaterial( data.materials ));
   this.container.add( logo );
-  console.log("logo:", logo, data);
+  console.log("logo:", logo, data);*/
+  
   var onWindowResize = function() {
     //var ww = $(".content").offsetWidth;
     //var hh = $(".content").offsetHeight;
