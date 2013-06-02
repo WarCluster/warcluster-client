@@ -1,5 +1,5 @@
-SRP
+WarCluster
 ===
 
-Survey &amp; Research Platform
+Massive multiplayer game integrated with Twitter
 
