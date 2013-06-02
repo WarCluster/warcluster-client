@@ -4,23 +4,35 @@ html
     title WarCluster
     meta(charset='utf-8')
 
+
     link(rel='stylesheet', href='/style.css')
 
     script(src='/js/jade.js')
     script(src="/code.js")
 
-  body
-    .content
-    .ui-container
-      .container-fluid
-        .navbar
-          .navbar-inner
-              a.brand(href='#') WarCluster
-              sup.version.pull-right(style="padding-top: 16px;")
-                .label !{version}
-        .row-fluid
-          .span12(style="text-align: center; margin-top: 20px;")
-            img(src="images/logo.png")
-        .row-fluid
-          .span12(style="text-align: center; margin-top: 50px;")
-            a.btn.btn-primary.btn-large(href="/twitter/connect", style="width: 150px") Login
+  body(style='background-image: url(\'/images/backgrounds/pattern.png\');')
+    .label  version !{version}
+    #logo_container.logo_container
+      div
+        img.circle1(src='images/logo/circle1.png')
+      div
+        img.circle2(src='images/logo/circle2.png')
+      div
+        img.circle3(src='images/logo/circle3.png')
+      div
+        img.circle4(src='images/logo/circle4.png')
+      div
+        img.circle5(src='images/logo/circle5.png')
+      .logo
+        img(src='images/logo/planet.png')
+      div
+        img.white_particles(src='images/logo/white_particles.png')
+      div
+        img.orange_particles(src='images/logo/orange_particles.png')
+      .x_ring
+        img(src='images/logo/x_ring.png')
+      .y_ring
+        img(src='images/logo/y_ring.png')
+    .description Real-time massively multiplayer online space strategy arcade browser game! A lot of words describing the first social game on Twitter that relies on total annihilation! :D
+    .loginBtn.text-center
+      a.btn.btn-primary.btn-large(href="/twitter/connect", style="width: 150px") Login with Twitter

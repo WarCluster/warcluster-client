@@ -1,38 +1,106 @@
-@import "/jquery/jquery-ui.css";
-@import "/jquery/jquery-fineuploader.css";
-
 @import "../style/less/bootstrap.less";
 @import "../style/less/responsive.less";
 @import "../style/less/carousel.less";
-@import "../style/bootstrap-fileupload.less";
 
 
-html, body {
-  width:100%;
-  height:100%;
-  padding:0;
-  margin:0;
-  overflow-x:hidden;
-  background-color: #000000;
+.description, .loginBtn, .label {
+  text-align: center;
+  color: #fff;
+}
+.description {
+  margin: -100px 50px 50px 0px;
+  left: 37%;
+  width: 350px;
+  height: 80px;
   position: absolute;
 }
-
-.content {
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
+.logo_container {
+  position:relative;
+  width: 500px;
+  height: 500px;
+  left: 37%;
+  margin-top: 50px;
+}
+.logo {
+  margin: -333px auto;
+  position:absolute;
+}
+.circle1 {
+  position:absolute;
+  -webkit-transform-origin: 167px 167px;
+  -moz-animation:counterClockwiseSpin 5s infinite ease-in;
+  -webkit-animation:counterClockwiseSpin 5s infinite ease-in;
+}
+.circle2 {
+  position:absolute;
+  -webkit-transform-origin: 167px 167px;
+  -moz-animation:clockwiseSpin 1s infinite ease-out;
+  -webkit-animation:clockwiseSpin 1s infinite ease-out;
+}
+.circle3 {
+  position:absolute;
+  -webkit-transform-origin: 167px 167px;
+  -moz-animation:clockwiseSpin 8s infinite ease-in-out;
+  -webkit-animation:clockwiseSpin 8s infinite ease-in-out;
+}
+.circle4 {
+  position:absolute;
+  -moz-transform-origin: 167px 167px;
+  -webkit-transform-origin: 167px 167px;
+  -moz-animation:clockwiseSpin 8s infinite ease;
+  -webkit-animation:clockwiseSpin 8s infinite ease;
+}
+.circle5 {
+  position:relative;
+  -moz-transform-origin: 167px 167px;
+  -webkit-transform-origin: 167px 167px;
+  -moz-animation:clockwiseSpin 3s infinite;
+  -webkit-animation:clockwiseSpin 3s infinite;
 }
 
-.temp {
-  top: -1000px;
-  position: absolute;
+.x_ring {
+  position:relative;
+  margin: -288px 0px 0px -55px;
 }
-
-.ui-container {
-  position: absolute;
-  z-index: 100;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
+.y_ring {
+  position:relative;
+  margin: -333px 0px 0px 33px;
+}
+.white_particles {
+  position:absolute;
+  margin: -350px 0px 0px -35px;
+  -moz-animation:pulse 8s infinite ease-in-out;
+  -webkit-animation:pulse 8s infinite ease-in-out;
+}
+.orange_particles {
+  position:absolute;
+  margin: -332px 0px 0px 42px;
+  -moz-animation:pulse 6s infinite ease-in-out;
+  -webkit-animation:pulse 6s infinite ease-in-out;
+}
+@-webkit-keyframes pulse {
+  0% {-webkit-transform:scale(1, 1);}
+  50% {-webkit-transform:scale(1.1, 1.1)}
+  100% {-webkit-transform:scale(1, 1);}
+}
+@-moz-keyframes pulse {
+  0% {-moz-transform:scale(1, 1);}
+  50% {-moz-transform:scale(1.1, 1.1);}
+  100% {-moz-transform:scale(1, 1);}
+}
+@-moz-keyframes clockwiseSpin {
+  0% {-moz-transform:rotate(0deg);}
+  100% {-moz-transform:rotate(360deg);}
+}
+@-webkit-keyframes clockwiseSpin {
+  0% {-webkit-transform:rotate(0deg);}
+  100% {-webkit-transform:rotate(360deg);}
+}
+@-moz-keyframes counterClockwiseSpin {
+  0% {-moz-transform:rotate(0deg);}
+  100% {-moz-transform:rotate(-360deg);}
+}
+@-webkit-keyframes counterClockwiseSpin {
+  0% {-webkit-transform:rotate(0deg);}
+  100% {-webkit-transform:rotate(-360deg);}
 }
