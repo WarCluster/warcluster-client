@@ -7,14 +7,15 @@ var battleField;
 var commander;
 
 window.app = {};
-console.log("---------------------------------------")
+
 $(document).ready(function() {
+  var x = 0;
+  var y = 0;
+
   /*var AppRouter = require("../client/AppRouter");
   app.router = new AppRouter();
 
   Backbone.history.start({trigger: true});*/
-  console.log(this, this.twitter, arguments)
-  
 
 	battleField = new BattleField();
   commander = new Commander(battleField);
@@ -26,8 +27,7 @@ $(document).ready(function() {
   $(".test1").click(function() {
     commander.test4();
   });
-  var x = 0;
-  var y = 0;
+
   $(".scroll-left").click(function() {
     x -= 200; 
     battleField.scroll(x, y);
@@ -36,6 +36,10 @@ $(document).ready(function() {
   $(".scroll-right").click(function() {
     x += 200; 
     battleField.scroll(x, y);
+  });
+
+  $(".attack").click(function() {
+    battleField.attack(battleField.playerData.HomePlanet.id, battleField.playerData.PlanetToAttack.id);
   });
 });
 
