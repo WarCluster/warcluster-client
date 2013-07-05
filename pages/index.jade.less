@@ -15,6 +15,9 @@ html, body {
   height: 100%;
   margin: 0 auto;
 }
+.pink {
+  background-color: #F24960;
+}
 .temp {
   top: -1000px;
   position: absolute;
@@ -32,12 +35,25 @@ html, body {
   position: absolute;
 }
 .additional {
-
   text-align: center;
   width: 330px;
 }
 .description, .loginBtn, .label {
   color: #fff;
+}
+/*.loginBtn {
+    width: 150px;
+    height: 50px;
+    background-color: #F24960;
+    text-decoration: none;
+}*/
+.login {
+  .buttonBackground(#F24960, #F24960, #FFF, 0 1px 1px rgba(255,255,255,.75));
+  .border-radius(0px);
+  padding: 10px 50px;
+  &:hover{
+    .buttonBackground(#2AA9E0, #2AA9E0, #FFF, 0 1px 1px rgba(255,255,255,.75));
+  }
 }
 .description {
   margin-top: -100px;
