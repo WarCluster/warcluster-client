@@ -2,7 +2,7 @@ var boot = require("../client/boot");
 
 
 $(document).ready(function() {
-  /*console.log('before if');
+  console.log('before if');
   if (!window.WebGLRenderingContext) {
     // the browser doesn't even know what WebGL is
     window.location = "http://get.webgl.org";
@@ -14,5 +14,5 @@ $(document).ready(function() {
       window.location = "http://get.webgl.org/troubleshooting";
     }
   console.log('webgl-success');
-  }*/
+  }
 });

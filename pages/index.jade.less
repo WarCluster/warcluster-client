@@ -1,7 +1,7 @@
 @import "../style/less/bootstrap.less";
 @import "../style/less/responsive.less";
 @import "../style/less/carousel.less";
-
+/*TODO: refactor  ppp*/
 html, body {
   width:100%;
   height:100%;
@@ -29,23 +29,30 @@ html, body {
   width: 100%;
   height: 100%;
 }
-
-.description, .loginBtn, .label {
+.elements {
+  left:37%;
+  position: absolute;
+}
+.additional {
   text-align: center;
+  width: 330px;
+}
+.description, .loginBtn, .label {
   color: #fff;
 }
 .description {
-  margin: -100px 50px 50px 0px;
-  left: 37%;
+  margin-top: -100px;
   width: 350px;
-  height: 80px;
+  /*height: 80px;*/
   position: absolute;
 }
+/*
+  Logo specific stylesheets
+*/
 .logo_container {
   position:relative;
   width: 500px;
   height: 500px;
-  left: 37%;
   margin-top: 50px;
 }
 .logo {
