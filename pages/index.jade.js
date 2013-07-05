@@ -8,6 +8,7 @@ $(document).ready(function() {
     window.location = "http://get.webgl.org";
   } else {
     var canvas = document.getElementById("myCanvas");
+        console.log(canvas);
     var ctx = canvas.getContext("webgl");
     if (!ctx) {
       // browser supports WebGL but initialization failed.
