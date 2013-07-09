@@ -10,7 +10,7 @@ module.exports = function(context){
 	    Size: this.sc, 
 	    ShipCount: parseInt(50 * this.sc),
 	    BuildPerTick: 0.01,
-	    Owner: Math.random() > 0.5 ? "gophie" : null
+	    Owner: Math.random() > 0.5 ? "gophie" : "xavie"
 	};
 
 	var pz = Math.random() * (-50);
@@ -28,21 +28,30 @@ module.exports = function(context){
 	this.planet.z = pz;
 	this.add(this.planet);
 
-	var owner = this.context.canvasTextFactory.build("unknown", null, 50);//this.data.Owner;
 	var result = this.context.canvasTextFactory.build(this.data.ShipCount, null, 50);
-	this.titleTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
 
+	this.titleTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
+	// console.log(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer))
 	this.titleMaterial = new THREE.MeshBasicMaterial({map: this.titleTexture, transparent : true});
 	this.titleMaterial.map.needsUpdate = true;
 
 	this.title = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.titleMaterial);
 	this.title.scale.x = result.canvas2d.width*this.sc;
 	this.title.scale.y = result.canvas2d.height*this.sc;
-	this.title.position.z = pz + 30;
+	this.title.position.z = pz + 50;
 
 	this.add(this.title);
 	this.hitObject = this.planet;
 
+	// var owner = this.context.canvasTextFactory.build(this.data.Owner, null, 50);
+	// this.titleTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
+	// this.titleMaterial = new THREE.MeshBasicMaterial({map: this.titleTexture, transparent : true});
+	// this.titleMaterial.map.needsUpdate = true;
+	// this.title = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.titleMaterial);
+	// this.title.scale.x = result.canvas2d.width*this.sc;
+	// this.title.scale.y = result.canvas2d.height*this.sc;
+	// this.title.position.z = pz + 30;
+	// this.add(this.title);
 	/*this.hitObject = new THREE.Mesh(new THREE.SphereGeometry(90*this.sc), new THREE.MeshBasicMaterial());
 	this.hitObject.position.z = pz;
 	//this.hitObject.visible = false;
