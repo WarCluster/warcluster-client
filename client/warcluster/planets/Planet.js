@@ -20,7 +20,7 @@ module.exports = function(context){
 	this.planetSize = {
 		width: 225 * this.sc,
 		height: 225 * this.sc
-	}
+	};
 	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(this.planetSize.width, this.planetSize.height, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
 
 	//this.planet.scale.x = this.sc;
@@ -28,6 +28,7 @@ module.exports = function(context){
 	this.planet.z = pz;
 	this.add(this.planet);
 
+	var owner = this.context.canvasTextFactory.build("unknown", null, 50);//this.data.Owner;
 	var result = this.context.canvasTextFactory.build(this.data.ShipCount, null, 50);
 	this.titleTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
 
