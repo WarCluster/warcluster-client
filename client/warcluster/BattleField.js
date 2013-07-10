@@ -116,7 +116,7 @@ module.exports.prototype.connect = function() {
       //console.log(e.data);
       switch (e.data) {
       	case "Username: ":
-      	self.sockjs.send("Robb Flynn");
+      	self.sockjs.send("RobbFlynn");
       	break;
       	case "TwitterID: ":
       	self.sockjs.send("asdasdasd");
