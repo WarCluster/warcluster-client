@@ -28,7 +28,7 @@ module.exports = function(context){
 	this.planet.z = pz;
 	this.add(this.planet);
 
-	//TODO: refactor for DRY
+	//TODO: refactor for DRY(Don't Repeat Yourself)
 	var result = this.context.canvasTextFactory.build(this.data.ShipCount, null, 50);
 	this.titleTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
 	this.titleMaterial = new THREE.MeshBasicMaterial({map: this.titleTexture, transparent : true});
