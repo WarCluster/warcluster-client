@@ -58,12 +58,15 @@ module.exports = function(){
 }
 
 module.exports.prototype.scroll = function(x, y) {
-	console.log("scroll:", x, y)
-	this.sockjs.send(JSON.stringify({
-		"Command": "scope_of_view", 
-		"Position": [x, y], 
-		"Resolution": [1920, 1080]
-	}));
+  var command = JSON.stringify({
+    "Command": "scope_of_view", 
+    "Position": [x, y], 
+    "Resolution": [1920, 1080]
+  });
+
+  console.log("scroll:", x, y, command)
+
+	this.sockjs.send(command);
 }
 
 module.exports.prototype.attack = function(source, target) {
@@ -77,7 +80,7 @@ module.exports.prototype.attack = function(source, target) {
 }
 
 module.exports.prototype.parseCommand = function(command) {
-	console.log("###.parseCommand:", command);
+	//console.log("###.parseCommand:", command);
 
 	switch (command) {
   	case "Username: ":
