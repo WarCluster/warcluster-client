@@ -1,10 +1,12 @@
-module.exports = function(context){
+module.exports = function(context, data){
 	THREE.Object3D.call(this);
 	var _self = this;
 
 	this.sc = 0.3 + Math.random() * 0.4;
 
 	this.context = context;
+	this.planetData = data;
+
 	this.data = {
 		Texture: 1, 
 	    Size: this.sc, 

@@ -5,11 +5,11 @@ module.exports = function(context){
 	this.cache = [];
 }
 
-module.exports.prototype.build = function() {
+module.exports.prototype.build = function(data) {
 	var planet = this.cache.length > 0 ? this.cache.shift() : null;
 
 	if (!planet)
-		planet = new Planet(this.context);
+		planet = new Planet(this.context, data);
 
 	this.context.container.add(planet);
 	

@@ -147,7 +147,7 @@ module.exports.prototype.update = function(data) {
           this.objects.push(sun);
         break;
         case "PLANET":
-          var planet = this.context.planetsFactory.build();
+          var planet = this.context.planetsFactory.build(obj);
           planet.position.x = obj.position.x;
           planet.position.y = obj.position.y;
 
