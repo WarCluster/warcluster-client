@@ -15,9 +15,12 @@ module.exports = function(){
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
-module.exports.prototype.loadTexture = function(path) {
-    this.total ++;
-    this.resources[path] = THREE.ImageUtils.loadTexture(path, null, this.onLoadComplete);
+module.exports.prototype.loadTexture = function() {
+     for (var nProp = 0; nProp < arguments.length; nProp++) {
+        this.total ++;
+        var path = arguments[nProp];
+        this.resources[path] = THREE.ImageUtils.loadTexture(path, null, this.onLoadComplete);
+    });
 }
 
 module.exports.prototype.loadModel = function(path, texturesPath) {
