@@ -1,7 +1,6 @@
 //var Selection = require("./selection/Selection");
 var SpaceViewController = require("./controllers/view/SpaceViewController");
 var GameContext = require("./data/GameContext");
-var ResourcesLoader = require("./loaders/resources/ResourcesLoader");
 
 var Planet = require("./planets/Planet");
 

@@ -98,7 +98,9 @@ module.exports.prototype.parseCommand = function(command) {
 					this.playerData.Username = data.Username;
 					this.playerData.Position = data.Position;
 
-					this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": [0, 0], "Resolution": [1920, 1080]}));
+          this.context.spaceScene.moveTo(data.Position[0], data.Position[1]);
+
+					this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": data.Position, "Resolution": [1920, 1080]}));
 				break;
 				case "scope_of_view_result":
 					var renderData = {
@@ -107,7 +109,7 @@ module.exports.prototype.parseCommand = function(command) {
 					}
 					
 					var pos, item;
-					var sc = 2;
+					var sc = 1;
 					for (var s in data.Planets) {
 						item = data.Planets[s];
 						item.id = s;
@@ -122,7 +124,7 @@ module.exports.prototype.parseCommand = function(command) {
 									y: pos[1] * sc
 								}
 							});
-
+              console.log(this.playerData.Username, item.Owner)
 							if (this.playerData.Username == item.Owner)
 								this.playerData.HomePlanet = item;
 							else

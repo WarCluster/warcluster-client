@@ -178,6 +178,11 @@ module.exports.prototype.update = function(data) {
   }
 }
 
+module.exports.prototype.moveTo = function(x, y) {
+  this.camera.position.x = x;
+  this.camera.position.y = y;
+}
+
 module.exports.prototype.clear = function() {
   var obj;
   this.planets = [];
