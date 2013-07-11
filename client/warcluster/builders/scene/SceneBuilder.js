@@ -213,17 +213,19 @@ module.exports.prototype.prepareScene = function() {
 	$(".content").append(this.stats.domElement);
 	$(".content").append(this.context.renderer.domElement);
 
- 	this.context.resourcesLoader.loadTexture("./images/ships/ship1.png");
-	this.context.resourcesLoader.loadTexture("./images/backgrounds/background1.jpg");
-	this.context.resourcesLoader.loadTexture("./images/backgrounds/background3.jpg");
-
-	this.context.resourcesLoader.loadTexture("./images/backgrounds/background5.jpg");
-	this.context.resourcesLoader.loadTexture("./images/backgrounds/background6.jpg");
-	this.context.resourcesLoader.loadTexture("./images/backgrounds/background7.jpg");
-	this.context.resourcesLoader.loadTexture("./images/backgrounds/background8.jpg");
-
-	this.context.resourcesLoader.loadTexture("./images/planets/planet1.png");
-	this.context.resourcesLoader.loadTexture("./images/planets/planet_glow.png");
+	var ships = ["./images/ships/ship1.png",
+				"./images/ships/ship2.png"
+				"./images/ships/ship3.png",
+				"./images/ships/ship4.png",];
+ 	this.context.resourcesLoader.loadTexture.apply(this, ships);
+	this.context.resourcesLoader.loadTexture.apply(this, ["./images/backgrounds/background1.jpg"]);
+	this.context.resourcesLoader.loadTexture.apply(this, ["./images/backgrounds/background3.jpg"]);
+	this.context.resourcesLoader.loadTexture.apply(this, ["./images/backgrounds/background5.jpg"]);
+	this.context.resourcesLoader.loadTexture.apply(this, ["./images/backgrounds/background6.jpg"]);
+	this.context.resourcesLoader.loadTexture.apply(this, ["./images/backgrounds/background7.jpg"]);
+	this.context.resourcesLoader.loadTexture.apply(this, ["./images/backgrounds/background8.jpg"]);
+	this.context.resourcesLoader.loadTexture.apply(this, ["./images/planets/planet1.png"]);
+	this.context.resourcesLoader.loadTexture.apply(this, ["./images/planets/planet_glow.png"]);
 	this.context.resourcesLoader.addEventListener("complete", function() { 
 		console.log("--complete--");
 		_self.dispatchEvent({type: "resources"});

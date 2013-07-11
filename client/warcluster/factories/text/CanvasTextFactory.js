@@ -10,16 +10,11 @@ module.exports.prototype.build = function(text, font, size) {
 	var canvas2d = this.context.cTemp[0];
 	var context2d = canvas2d.getContext('2d');
 
-	font = !font ? "Arial" : font;
+	font = !font ? "Ubuntu" : font;
 	size = !size ? 20 : size;
 
-	context2d.font = size + 'pt ' + font;
-    context2d.fillStyle = 'white';
-    context2d.textAlign = "center";
-    context2d.textBaseline = "middle";
-
     canvas2d.width = context2d.measureText(text).width;
-    canvas2d.height = size;
+    canvas2d.height = size*2;
 	
     context2d.font = size + 'pt ' + font;
     context2d.fillStyle = 'white';

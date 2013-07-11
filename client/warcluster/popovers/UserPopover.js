@@ -1,6 +1,6 @@
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./UserPopover.jade")),
-  className: "popover right my-popover show",
+  className: "popover right show customPop",
   events: {
     "click .close-btn": "removePopover"
   },
