@@ -8,8 +8,6 @@ module.exports = function(context, data){
 		"mediumPlanet": 0.033,
 		"bigPlanet": 	0.05
 	};//https://github.com/altras/WarCluster/wiki/Planets
-	debugger;
-	this.planetSizeCoef = 0.7;
 
 	this.context = context;
 	this.planetData = data;
@@ -31,17 +29,18 @@ module.exports = function(context, data){
 	    BuildPerTick: buildingRate,
 	    Owner:  this.planetData.data.Owner
 	};
+	this.planetSizeCoef =  0.3 + Math.random() * 0.4;
 	var pz = Math.random() * (-50);
 
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet"+this.data.Texture+".png");
 
 	this.planetSize = {
-		width: 225 * this.planetSizeCoef,
+		width:  225 * this.planetSizeCoef,
 		height: 225 * this.planetSizeCoef
 	};
 	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(this.planetSize.width, this.planetSize.height, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
-	//this.planet.scale.x = this.planetSizeCoef;
-	//this.planet.scale.y = this.planetSizeCoef;
+	// this.planet.scale.x = this.planetSizeCoef;
+	// this.planet.scale.y = this.planetSizeCoef;
 	this.planet.z = pz;
 	this.add(this.planet);
 
