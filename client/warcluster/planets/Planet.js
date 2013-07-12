@@ -1,16 +1,34 @@
 module.exports = function(context, data){
 	THREE.Object3D.call(this);
 	var _self = this;
-
+	var buildingRate;
+	var buildPerTickArr = {
+		"homePlanet": 	0.01,
+		"littePlanet": 	0.025,
+		"mediumPlanet": 0.033,
+		"bigPlanet": 	0.05
+	};//https://github.com/altras/WarCluster/wiki/Planets
+	debugger;
 	this.planetSizeCoef = 0.7;
 
 	this.context = context;
 	this.planetData = data;
+
+	 if(this.planetData.data.Owner === "") {
+	 	buildingRate = 0;
+	 } else if (this.planetData.data.Size <= 2) {
+	 	buildingRate = buildPerTickArr["littePlanet"];
+	 } else if ((this.planetData.data.Size > 2) &&  (this.planetData.data.Size <= 5)) {
+	 	buildingRate = buildPerTickArr["mediumPlanet"];
+	 } else {
+	 	buildingRate = buildPerTickArr["bigPlanet"];
+	 }
+
 	this.data = {
 		Texture: this.planetData.data.Texture, 
 	    Size: this.planetData.data.Size, 
 	    ShipCount: this.planetData.data.ShipCount,
-	    BuildPerTick: 0.01,
+	    BuildPerTick: buildingRate,
 	    Owner:  this.planetData.data.Owner
 	};
 	var pz = Math.random() * (-50);
