@@ -6,13 +6,12 @@ module.exports = function(context, data){
 
 	this.context = context;
 	this.planetData = data;
-	// console.log(this.planetData.data.Texture);
 	this.data = {
 		Texture: this.planetData.data.Texture, 
-	    Size: this.sc, 
-	    ShipCount: parseInt(50 * this.sc),
+	    Size: (this.planetData.data.Texture/10), 
+	    ShipCount: this.planetData.data.ShipCount,
 	    BuildPerTick: 0.01,
-	    Owner: "this.planetData.data.Owner"
+	    Owner:  this.planetData.data.Owner
 	};
 	var pz = Math.random() * (-50);
 
@@ -48,7 +47,7 @@ module.exports = function(context, data){
 	this.owner = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.ownerMaterial);
 	this.owner.scale.x = result.canvas2d.width*this.sc;
 	this.owner.scale.y = result.canvas2d.height*this.sc;
-	this.owner.position.set(0, this.planetSize.height * (-0.6), pz + 50);
+	this.owner.position.set(0, this.planetSize.height * (-0.8), pz + 50);
 	this.add(this.owner);
 
 	/*this.hitObject = new THREE.Mesh(new THREE.SphereGeometry(90*this.sc), new THREE.MeshBasicMaterial());
