@@ -29,7 +29,7 @@ module.exports = function(context, data){
 	    BuildPerTick: buildingRate,
 	    Owner:  this.planetData.data.Owner
 	};
-	this.planetSizeCoef =  0.3 + Math.random() * 0.4;
+	this.planetSizeCoef =  0.5 + Number("0." + this.data.Size) * 0.4;//;
 	var pz = Math.random() * (-50);
 
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet"+this.data.Texture+".png");
