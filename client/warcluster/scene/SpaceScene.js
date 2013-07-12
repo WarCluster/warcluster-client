@@ -17,13 +17,26 @@ module.exports.prototype.prepare = function() {
   $(".content").append(this.stats.domElement);
 
   this.context.resourcesLoader.loadTexture("./images/ships/ship1.png");
+  this.context.resourcesLoader.loadTexture("./images/ships/ship2.png");
+  this.context.resourcesLoader.loadTexture("./images/ships/ship3.png");
+  this.context.resourcesLoader.loadTexture("./images/ships/ship4.png");
 
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background5.jpg");
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background6.jpg");
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background7.jpg");
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background8.jpg");
   this.context.resourcesLoader.loadTexture("./images/suns/sun1.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet0.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet1.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet2.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet3.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet4.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet5.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet6.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet7.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet8.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet9.png");
+
 
   //this.context.resourcesLoader.loadModel("./models/logo.js");
 

@@ -50,7 +50,7 @@ module.exports = function(){
 
   this.commandsManager = new CommandsManager("http://127.0.0.1:7000/universe");
   this.commandsManager.loginFn = function(data) {
-    console.log("-loginFn-", data);
+    // console.log("-loginFn-", data);
 
     self.playerData = data;
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
@@ -64,5 +64,5 @@ module.exports = function(){
 }
 
 module.exports.prototype.connect = function() {
-  this.commandsManager.prepare("RobbFlynn" + Math.random(), "TwitterID" + Math.random());
+  this.commandsManager.prepare("RobbFlynn", "TwitterID");
 }
