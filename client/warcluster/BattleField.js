@@ -64,5 +64,5 @@ module.exports = function(){
 }
 
 module.exports.prototype.connect = function() {
-  this.commandsManager.prepare("Robb Flynn" + Math.random(), "TwitterID" + Math.random());
+  this.commandsManager.prepare("RobbFlynn" + Math.random(), "TwitterID" + Math.random());
 }

@@ -40,37 +40,27 @@ module.exports.prototype.prepare = function(username, twitterId) {
 // ***********************************************************************************
 
 module.exports.prototype.parseMessage = function(command) {
-  console.log("###.parseMessage:", command);
+  //console.log("###.parseMessage:", command);
 
-  switch (command) {
-    case "Username: ":
-      this.sockjs.send(this.username);
-    break;
-    case "TwitterID: ":
-      this.sockjs.send(this.twitterId);
-    break;
-    default: 
-    try {
-      var data = JSON.parse(command);
-      
-      switch (data.Command) {
-        case "login_success":
-          var pd = new PlayerData();
-          pd.Username = this.username;
-          pd.TwitterID = this.twitterId;
-          pd.Position = data.Position;
+  try {
+    var data = JSON.parse(command);
+    
+    switch (data.Command) {
+      case "login_success":
+        var pd = new PlayerData();
+        pd.Username = this.username;
+        pd.TwitterID = this.twitterId;
+        pd.Position = data.Position;
 
-          this.loginFn(pd);
-        break;
-        case "scope_of_view_result":
-          var renderData = this.parseData(data)
-          this.updateViewFn(renderData)
-        break;
-      }
-    } catch(err) {
-      console.log("###.InvalidData:", command)
+        this.loginFn(pd);
+      break;
+      case "scope_of_view_result":
+        var renderData = this.parseData(data)
+        this.updateViewFn(renderData)
+      break;
     }
-    break;
+  } catch(err) {
+    console.log("###.InvalidData:", command)
   }
 }
 
