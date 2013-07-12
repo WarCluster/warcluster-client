@@ -41,7 +41,6 @@ module.exports.prototype.prepare = function(username, twitterId) {
 
 module.exports.prototype.parseMessage = function(command) {
   console.log("###.parseMessage:", command);
-
   try {
     var data = JSON.parse(command);
     
