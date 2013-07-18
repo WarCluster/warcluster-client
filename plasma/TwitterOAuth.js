@@ -42,6 +42,7 @@ module.exports = Organel.extend(function NotFoundPage(plasma, config){
     var url = config.callbackUrl || '/twitter/callback';
 
     app.get(url, function(req, res, next){
+      console.log("---------------------------- app.get");
       consumer().getOAuthAccessToken(req.session.oauthRequestToken, req.session.oauthRequestTokenSecret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
         if (error) {
           req.twitterError = "Error getting OAuth access token : " + sys.inspect(error);
@@ -57,7 +58,7 @@ module.exports = Organel.extend(function NotFoundPage(plasma, config){
               next();
             } else {
               req.session.twitter = JSON.parse(data);
-              console.log("2.req.twitter:", req.twitter);
+              console.log("2.req.twitter:", req.session.twitter);
               next();
             }  
           });  
