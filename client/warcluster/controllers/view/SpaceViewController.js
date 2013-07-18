@@ -48,6 +48,7 @@ module.exports = function(context){
       var intersects = _self.getIntersectionObjects();
       if (intersects.length > 0) {
         _self.selectedPlanet = intersects[0].object.parent;
+        console.log(_self.selectedPlanet.data.Owner);
         if(_self.selectedPlanet.data.Owner !== ""){
           var position = getPopoverPosition();
           var event = {
