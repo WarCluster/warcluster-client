@@ -2,8 +2,8 @@ var UserPopover = require("../../popovers/UserPopover");
 
 module.exports = function(context){
 	THREE.EventDispatcher.call(this);
+  var t;
 	var _self = this;
-
   this.context = context;
 	this.active = false;
 	this.mpos = {x: 0, y: 0};
@@ -18,7 +18,6 @@ module.exports = function(context){
   this.yMax = 4000000;
   this.scaleIndex = 1;
 
-  var t;
   var scrolled = false;
   this.mouse = {
     x: 0,
@@ -49,18 +48,17 @@ module.exports = function(context){
       var intersects = _self.getIntersectionObjects();
       if (intersects.length > 0) {
         _self.selectedPlanet = intersects[0].object.parent;
-
-        var position = getPopoverPosition();
-        var event = {
-          type: "selectPlanet", 
-          target: _self.selectedPlanet, 
-          screenCoordinates: position
-        };
-
-        popover.render();
-        popover.move(position.x, position.y);
-
-        _self.dispatchEvent(event);
+        if(_self.selectedPlanet.data.Owner !== ""){
+          var position = getPopoverPosition();
+          var event = {
+            type: "selectPlanet", 
+            target: _self.selectedPlanet, 
+            screenCoordinates: position
+          };
+          popover.render(_self.selectedPlanet.data);
+          popover.move(position.x, position.y);
+          _self.dispatchEvent(event);   
+        }
       }
     }
 

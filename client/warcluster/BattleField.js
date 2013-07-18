@@ -64,5 +64,5 @@ module.exports = function(){
 }
 
 module.exports.prototype.connect = function() {
-  	this.commandsManager.prepare(user.name, String(user.id));
+  	this.commandsManager.prepare(user.screen_name, String(user.id));
 }

@@ -4,8 +4,12 @@ module.exports = Backbone.View.extend({
   events: {
     "click .close-btn": "removePopover"
   },
-  render: function(){
-    this.$el.html(this.template());
+  render: function(playerData){
+    // var playerAvatar = "http://a0.twimg.com/profile_images/1780216111/1ae72f5_normal.jpg";
+    this.$el.html(this.template({
+     playerName:    playerData.Owner,
+     twitterAvatar: playerData.Owner
+    }));
     this.delegateEvents();
     $(".ui-container").append(this.el);
     $(this.el).css({position: "absolute", "margin-top": -$(this.el).height()/2});
