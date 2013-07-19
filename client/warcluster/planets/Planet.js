@@ -2,19 +2,22 @@ module.exports = function(context, data){
 	THREE.Object3D.call(this);
 	var _self = this;
 
-	this.sc = 0.3 + Math.random() * 0.4;
+	this.sc = 0.3 + Math.random() * 0.4 + 0.5;
 
 	this.context = context;
-	this.planetData = data;
+	this.planetData = data.planetData;
+
+	this.position.x = data.position.x;
+    this.position.y = data.position.y;
 
 	this.data = {
 		Texture: 1, 
 	    Size: this.sc, 
 	    ShipCount: parseInt(50 * this.sc),
 	    BuildPerTick: 0.01,
-	    Owner: Math.random() > 0.5 ? "gophie" : "vitaliy_filipov"
+	    Owner: this.planetData.Owner ? this.planetData.Owner : "gophie"
 	};
-
+	
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet1.png");
 	var bmd2 = context.resourcesLoader.get("./images/planets/planet_glow.png");

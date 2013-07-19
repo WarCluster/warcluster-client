@@ -39,8 +39,10 @@ $(document).ready(function() {
   });
 
   $(".attack").click(function() {
-    console.log(battleField.playerData)
-    battleField.attack(battleField.playerData.HomePlanet.id, battleField.playerData.PlanetToAttack.id);
+    $(".attack-container").show();
+    battleField.prepareAttack();
+    //console.log(battleField.playerData)
+    //battleField.attack(battleField.playerData.HomePlanet.id, battleField.playerData.PlanetToAttack.id);
   });
 });
 

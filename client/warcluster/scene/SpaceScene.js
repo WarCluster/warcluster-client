@@ -140,16 +140,11 @@ module.exports.prototype.update = function(data) {
       var obj = data.objects[i];
       switch (obj.xtype) {
         case "SUN":
-          var sun = this.context.sunsFactory.build();
-          sun.position.x = obj.position.x;
-          sun.position.y = obj.position.y;
-
+          var sun = this.context.sunsFactory.build(obj);
           this.objects.push(sun);
         break;
         case "PLANET":
           var planet = this.context.planetsFactory.build(obj);
-          planet.position.x = obj.position.x;
-          planet.position.y = obj.position.y;
 
           this.objects.push(planet);
           this.planets.push(planet);

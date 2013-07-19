@@ -5,11 +5,11 @@ module.exports = function(context){
   this.cache = [];
 }
 
-module.exports.prototype.build = function() {
+module.exports.prototype.build = function(data) {
   var sun = this.cache.length > 0 ? this.cache.shift() : null;
 
   if (!sun)
-    sun = new Sun(this.context);
+    sun = new Sun(this.context, data);
 
   this.context.container.add(sun);
   

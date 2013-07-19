@@ -44,23 +44,24 @@ module.exports.prototype.parseMessage = function(command) {
 
   try {
     var data = JSON.parse(command);
-    
-    switch (data.Command) {
-      case "login_success":
-        var pd = new PlayerData();
-        pd.Username = this.username;
-        pd.TwitterID = this.twitterId;
-        pd.Position = data.Position;
-
-        this.loginFn(pd);
-      break;
-      case "scope_of_view_result":
-        var renderData = this.parseData(data)
-        this.updateViewFn(renderData)
-      break;
-    }
   } catch(err) {
-    console.log("###.InvalidData:", command)
+    console.log("###.InvalidData:", command);
+    return false;
+  }
+
+  switch (data.Command) {
+    case "login_success":
+      var pd = new PlayerData();
+      pd.Username = this.username;
+      pd.TwitterID = this.twitterId;
+      pd.Position = data.Position;
+
+      this.loginFn(pd);
+    break;
+    case "scope_of_view_result":
+      var renderData = this.parseData(data)
+      this.updateViewFn(renderData)
+    break;
   }
 }
 
@@ -80,7 +81,7 @@ module.exports.prototype.parseData = function(data) {
       pos = s.split("planet.").join("").split("_");
       renderData.objects.push({
         xtype: "PLANET",
-        data: item,
+        planetData: item,
         position: {
           x: pos[0] * sc,
           y: pos[1] * sc

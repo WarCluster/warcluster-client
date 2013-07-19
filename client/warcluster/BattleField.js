@@ -1,4 +1,3 @@
-//var Selection = require("./selection/Selection");
 var SpaceViewController = require("./controllers/view/SpaceViewController");
 var GameContext = require("./data/GameContext");
 var ResourcesLoader = require("./loaders/resources/ResourcesLoader");
@@ -13,10 +12,13 @@ var CommandsManager = require("./commander/CommandsManager");
 
 var SpaceScene = require("./scene/SpaceScene");
 
+var UserPopover = require("./popovers/UserPopover");
+
 module.exports = function(){
 	var self = this;
 
 	this.playerData = null;
+	this.popover = new UserPopover();
 
 	this.context = new GameContext();
 	this.context.activationTime = (new Date()).getTime();
@@ -44,6 +46,20 @@ module.exports = function(){
 	this.spaceViewController.maxZoom = 60000000;
 	this.spaceViewController.minZoom = 2000; //6000;
 	this.spaceViewController.zoomStep = 2000;
+	this.spaceViewController.addEventListener("selectPlanet", function(e) {
+		self.popover.render();
+    self.popover.move(e.position.x, e.position.y);
+	});
+
+	this.spaceViewController.addEventListener("scrollProgress", function(e) {
+		if (e.target)
+			self.popover.move(e.position.x, e.position.y);
+	}); 
+
+	this.spaceViewController.addEventListener("zoomProgress", function(e) {
+		if (e.target)
+			self.popover.move(e.position.x, e.position.y);
+	});
 
 	this.context.spaceViewController = this.spaceViewController;
 	this.spaceViewController.activate();
@@ -65,4 +81,8 @@ module.exports = function(){
 
 module.exports.prototype.connect = function() {
   this.commandsManager.prepare("RobbFlynn" + Math.random(), "TwitterID" + Math.random());
+}
+
+module.exports.prototype.prepareAttack = function() {
+  console.log("-prepareAttack-");
 }

@@ -1,10 +1,14 @@
-module.exports = function(context){
+module.exports = function(context, data){
   THREE.Object3D.call(this);
   var _self = this;
 
-  this.sc = 1.6 + Math.random() * 0.4;
-
   this.context = context;
+  this.data = data;
+
+  this.position.x = data.position.x;
+  this.position.y = data.position.y;
+
+  this.sc = 1.6 + Math.random() * 0.4 + 1;
 
   var bmd1 = context.resourcesLoader.get("./images/suns/sun1.png");
 

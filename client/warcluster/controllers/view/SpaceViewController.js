@@ -2,7 +2,7 @@ var UserPopover = require("../../popovers/UserPopover");
 
 module.exports = function(context){
 	THREE.EventDispatcher.call(this);
-	var _self = this;
+	var self = this;
 
   this.context = context;
 	this.active = false;
@@ -28,16 +28,18 @@ module.exports = function(context){
   var popover = new UserPopover();
   
   var getPopoverPosition = function() {
+    if (!self.selectedPlanet)
+      return null;
     var worldPosition = new THREE.Vector3();
-    worldPosition.getPositionFromMatrix(_self.selectedPlanet.matrixWorld);
-    worldPosition.x += _self.selectedPlanet.planetSize.width/2;
-    var screenCoordinates = _self.toScreenXY(worldPosition, _self.context.camera, $(".content"));
+    worldPosition.getPositionFromMatrix(self.selectedPlanet.matrixWorld);
+    worldPosition.x += self.selectedPlanet.planetSize.width/2;
+    var screenCoordinates = self.toScreenXY(worldPosition, self.context.camera, $(".content"));
     return screenCoordinates;
   }
 
   window.addEventListener('mousemove', function(e) {
-    _self.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    _self.mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+    self.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    self.mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
   }, false);
 
 	var mouseUp = function(e) {
@@ -46,21 +48,18 @@ module.exports = function(context){
 		window.removeEventListener("mouseout",	mouseUp);
 
     if (!scrolled && (new Date()).getTime() - t < 200) {
-      var intersects = _self.getIntersectionObjects();
+      var intersects = self.getIntersectionObjects();
       if (intersects.length > 0) {
-        _self.selectedPlanet = intersects[0].object.parent;
+        self.selectedPlanet = intersects[0].object.parent;
 
         var position = getPopoverPosition();
         var event = {
           type: "selectPlanet", 
-          target: _self.selectedPlanet, 
-          screenCoordinates: position
+          target: self.selectedPlanet, 
+          position: position
         };
 
-        popover.render();
-        popover.move(position.x, position.y);
-
-        _self.dispatchEvent(event);
+        self.dispatchEvent(event);
       }
     }
 
@@ -68,50 +67,54 @@ module.exports = function(context){
 	}
 
 	var mouseMove = function(e) {
-		var dx = _self.scrollPositon.x + (e.clientX * _self.scaleIndex - _self.mpos.x);
-		var dy = _self.scrollPositon.y + (e.clientY * _self.scaleIndex - _self.mpos.y);
+		var dx = self.scrollPositon.x + (e.clientX * self.scaleIndex - self.mpos.x);
+		var dy = self.scrollPositon.y + (e.clientY * self.scaleIndex - self.mpos.y);
 
-		if (dx < _self.xMin)
-			_self.scrollPositon.x = _self.xMin;
+		if (dx < self.xMin)
+			self.scrollPositon.x = self.xMin;
 		else
-		if (dx > _self.xMax)
-			_self.scrollPositon.x = _self.xMax;
+		if (dx > self.xMax)
+			self.scrollPositon.x = self.xMax;
 		else
-			_self.scrollPositon.x = dx;
+			self.scrollPositon.x = dx;
   		
 
-		if (dy < _self.yMin)
-			_self.scrollPositon.y = _self.yMin;
+		if (dy < self.yMin)
+			self.scrollPositon.y = self.yMin;
 		else
-  	if (dy > _self.yMax)
-			_self.scrollPositon.y = _self.yMax;
+  	if (dy > self.yMax)
+			self.scrollPositon.y = self.yMax;
 		else
-			_self.scrollPositon.y = dy;
+			self.scrollPositon.y = dy;
 
-		_self.mpos.x = e.clientX * _self.scaleIndex;
-		_self.mpos.y = e.clientY * _self.scaleIndex;
+		self.mpos.x = e.clientX * self.scaleIndex;
+		self.mpos.y = e.clientY * self.scaleIndex;
      
     scrolled = true;
 
-    TweenLite.to(_self.context.spaceScene.camera.position, 0.7, {
-      x: -_self.context.spaceViewController.scrollPositon.x, 
-      y: _self.context.spaceViewController.scrollPositon.y,
+    TweenLite.to(self.context.spaceScene.camera.position, 0.7, {
+      x: -self.scrollPositon.x, 
+      y: self.scrollPositon.y,
       ease: Cubic.easeOut,
       onUpdate: function() {
-        if (_self.selectedPlanet) {
-          var position = getPopoverPosition();
-          popover.move(position.x, position.y);  
-        }
+        var position = getPopoverPosition();
+        var event = {
+          type: "scrollProgress", 
+          target: self.selectedPlanet, 
+          position: position
+        };
+
+        self.dispatchEvent(event);
       }
     });
 
-		_self.dispatchEvent({type: "scroll"});
+		self.dispatchEvent({type: "scroll"});
 	}
   
 	var mouseDown = function(e) {
     e.preventDefault();
-		_self.mpos.x = e.clientX * _self.scaleIndex;
-		_self.mpos.y = e.clientY * _self.scaleIndex;
+		self.mpos.x = e.clientX * self.scaleIndex;
+		self.mpos.y = e.clientY * self.scaleIndex;
 
     t = (new Date()).getTime();
     
@@ -124,47 +127,51 @@ module.exports = function(context){
 	}
 
   window.addEventListener('mousewheel', function(e) {
-    if (!_self.active)
+    if (!self.active)
       return ;
 
     e.preventDefault();
 
-    var st = e.wheelDelta > 0 ? -_self.zoomStep : _self.zoomStep;
+    var st = e.wheelDelta > 0 ? -self.zoomStep : self.zoomStep;
 
-    if (_self.minZoom != null && _self.maxZoom != null) {
-      if (_self.zoom + st < _self.minZoom)
-        _self.zoom = _self.minZoom;
-      else if (_self.zoom + st > _self.maxZoom)
-        _self.zoom = _self.maxZoom;
+    if (self.minZoom != null && self.maxZoom != null) {
+      if (self.zoom + st < self.minZoom)
+        self.zoom = self.minZoom;
+      else if (self.zoom + st > self.maxZoom)
+        self.zoom = self.maxZoom;
       else
-        _self.zoom += st;
-    } else if (_self.minZoom != null && _self.maxZoom == null) {
-      if (_self.zoom + st < _self.minZoom)
-        _self.zoom = _self.minZoom;
+        self.zoom += st;
+    } else if (self.minZoom != null && self.maxZoom == null) {
+      if (self.zoom + st < self.minZoom)
+        self.zoom = self.minZoom;
       else
-        _self.zoom += st;
-    } else if (_self.minZoom == null && _self.maxZoom != null) {
-      if (_self.zoom + st > _self.maxZoom)
-        _self.zoom = _self.maxZoom;
+        self.zoom += st;
+    } else if (self.minZoom == null && self.maxZoom != null) {
+      if (self.zoom + st > self.maxZoom)
+        self.zoom = self.maxZoom;
       else
-        _self.zoom += st;
+        self.zoom += st;
     } else {
-      _self.zoom += st;
+      self.zoom += st;
     }
 
-    TweenLite.to(_self.context.spaceScene.camera.position, 0.7, {
-      z: _self.context.spaceViewController.zoom,
+    TweenLite.to(self.context.spaceScene.camera.position, 0.7, {
+      z: self.zoom,
       ease: Cubic.easeOut,
       onUpdate: function() {
-        if (_self.selectedPlanet) {
-          var position = getPopoverPosition();
-          popover.move(position.x, position.y);  
-        }
+        var position = getPopoverPosition();
+        var event = {
+          type: "zoomProgress", 
+          target: self.selectedPlanet, 
+          position: position
+        };
+
+        self.dispatchEvent(event);
       }
     });
 
-    _self.scaleIndex = _self.zoom / 6000;
-    _self.dispatchEvent({type: "zoom", wheelDelta: st});
+    self.scaleIndex = self.zoom / 6000;
+    self.dispatchEvent({type: "zoom", wheelDelta: st});
   });
 }
 
