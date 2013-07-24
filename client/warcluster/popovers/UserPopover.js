@@ -5,11 +5,9 @@ module.exports = Backbone.View.extend({
     "click .close-btn": "removePopover"
   },
   render: function(playerData){
-    // var playerAvatar = "http://a0.twimg.com/profile_images/1780216111/1ae72f5_normal.jpg";
-    console.log("playerData.AvatarURL:" + playerData.AvatarURL);
     this.$el.html(this.template({
      playerName:    playerData.Owner,
-     twitterAvatar: "http://a0.twimg.com/profile_images/1780216111/1ae72f5_normal.jpg"// playerData.AvatarURL
+     twitterAvatar: playerData.OwnerAvatarURL
     }));
     this.delegateEvents();
     $(".ui-container").append(this.el);

@@ -22,7 +22,6 @@ module.exports = function(){
 	this.context.activationTime = (new Date()).getTime();
 	this.context.currentTime = this.context.activationTime;
 	this.context.cTemp = $("#cTemp");
-    debugger;
 	this.context.playerData = this.playerData;
 	
 	this.context.resourcesLoader = new ResourcesLoader();

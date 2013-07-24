@@ -27,7 +27,8 @@ module.exports = function(context, data){
 	    Size: this.planetData.data.Size, 
 	    ShipCount: this.planetData.data.ShipCount,
 	    BuildPerTick: buildingRate,
-	    Owner:  this.planetData.data.Owner
+	    Owner:  this.planetData.data.Owner,
+	    OwnerAvatarURL: this.planetData.data.OwnerAvatarURL
 	};
 	this.planetSizeCoef =  0.5 + Number("0." + this.data.Size) * 0.4;//;
 	var pz = Math.random() * (-50);
