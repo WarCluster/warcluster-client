@@ -7,16 +7,18 @@ module.exports = function(url){
   this.updateViewFn = null;
 }
 
-module.exports.prototype.prepare = function(username, twitterId) {
+module.exports.prototype.prepare = function(username, twitterId, avatarURL) {
   var self = this;
 
   this.username = username;
   this.twitterId = twitterId;
+  this.avatarURL = avatarURL;
 
   var msg = {
     "Command": "login", 
     "Username": username, 
-    "TwitterId": twitterId
+    "TwitterId": twitterId,
+    "AvatarURL": avatarURL
   };
   console.log("msg:", msg)
   this.sockjs = new SockJS(this.url);
@@ -50,7 +52,8 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Username = this.username;
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
-
+        pd.AvatarURL = this.avatarURL;
+      
         this.loginFn(pd);
       break;
       case "scope_of_view_result":

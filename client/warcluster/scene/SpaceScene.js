@@ -80,9 +80,6 @@ module.exports.prototype.buildScene = function() {
 
   this.scene.add( light );
 
-
-
-
   this.projector = new THREE.Projector();
 
   this.renderer = new THREE.WebGLRenderer( { antialias: true} );

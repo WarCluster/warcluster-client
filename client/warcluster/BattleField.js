@@ -22,6 +22,7 @@ module.exports = function(){
 	this.context.activationTime = (new Date()).getTime();
 	this.context.currentTime = this.context.activationTime;
 	this.context.cTemp = $("#cTemp");
+    debugger;
 	this.context.playerData = this.playerData;
 	
 	this.context.resourcesLoader = new ResourcesLoader();
@@ -51,8 +52,8 @@ module.exports = function(){
   this.commandsManager = new CommandsManager("http://127.0.0.1:7000/universe");
   this.commandsManager.loginFn = function(data) {
     // console.log("-loginFn-", data);
-
     self.playerData = data;
+    console.log("-self.playerData loginFn:" + self.playerData.AvatarURL);
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
 
     this.scopeOfView(self.playerData.Position);
@@ -64,5 +65,5 @@ module.exports = function(){
 }
 
 module.exports.prototype.connect = function() {
-  	this.commandsManager.prepare(user.screen_name, String(user.id));
+  	this.commandsManager.prepare(user.screen_name, String(user.id), user.profile_image_url);
 }

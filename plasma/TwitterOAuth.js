@@ -57,7 +57,7 @@ module.exports = Organel.extend(function NotFoundPage(plasma, config){
               next();
             } else {
               req.session.twitter = JSON.parse(data);
-              console.log("2.req.twitter:", req.session.twitter);
+              // console.log("2.req.twitter:", req.session.twitter);
               next();
             }  
           });  
