@@ -7,6 +7,7 @@ module.exports = Backbone.View.extend({
   render: function(playerData){
     var ownerAvatarURL = (playerData.OwnerAvatarURL === "") ? "images/default_avatar.jpg" : playerData.OwnerAvatarURL; 
     var owner = (playerData.Owner === "") ? "Neutral Planet" : "@" + playerData.Owner; 
+    
     this.$el.html(this.template({
      playerName:    owner,
      twitterAvatar: ownerAvatarURL
