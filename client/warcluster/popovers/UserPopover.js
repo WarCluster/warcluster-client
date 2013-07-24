@@ -2,15 +2,20 @@ module.exports = Backbone.View.extend({
   template: jadeCompile(require("./UserPopover.jade")),
   className: "popover right show customPop",
   events: {
-    "click .close-btn": "removePopover"
+    "click .close-btn": "removePopover",
+    "click .attack":    "attack",
+    "click .spy":       "spy"
   },
   render: function(playerData){
     var ownerAvatarURL = (playerData.OwnerAvatarURL === "") ? "images/default_avatar.jpg" : playerData.OwnerAvatarURL; 
     var owner = (playerData.Owner === "") ? "Neutral Planet" : "@" + playerData.Owner; 
-    
+    //TODO: fix production coef according to github wiki
+    var production = playerData.Size;
+
     this.$el.html(this.template({
-     playerName:    owner,
-     twitterAvatar: ownerAvatarURL
+     playerName:        owner,
+     twitterAvatar:     ownerAvatarURL,
+     planetProduction:  production
     }));
     this.delegateEvents();
     $(".ui-container").append(this.el);
@@ -23,5 +28,11 @@ module.exports = Backbone.View.extend({
   removePopover: function(e) {
     e.preventDefault();
     this.remove();
+  },
+  attack: function(e) {
+    console.log("attack: " + e);
+  },
+  spy: function(e) {
+    console.log("spy: " + e);
   }
 })

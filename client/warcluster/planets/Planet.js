@@ -2,6 +2,7 @@ module.exports = function(context, data){
 	THREE.Object3D.call(this);
 	var _self = this;
 	var buildingRate;
+	//TODO: should make them according to the wiki in github
 	var buildPerTickArr = {
 		"homePlanet": 	0.01,
 		"littePlanet": 	0.025,
@@ -14,9 +15,9 @@ module.exports = function(context, data){
 
 	 if(this.planetData.data.Owner === "") {
 	 	buildingRate = 0;
-	 } else if (this.planetData.data.Size <= 2) {
+	 } else if (this.planetData.data.Size <= 3) {
 	 	buildingRate = buildPerTickArr["littePlanet"];
-	 } else if ((this.planetData.data.Size > 2) &&  (this.planetData.data.Size <= 5)) {
+	 } else if ((this.planetData.data.Size > 3) &&  (this.planetData.data.Size <= 5)) {
 	 	buildingRate = buildPerTickArr["mediumPlanet"];
 	 } else {
 	 	buildingRate = buildPerTickArr["bigPlanet"];
