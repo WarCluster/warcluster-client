@@ -49,17 +49,15 @@ module.exports = function(context){
       if (intersects.length > 0) {
         _self.selectedPlanet = intersects[0].object.parent;
         console.log("_self.selectedPlanet.data.Owner: " + _self.selectedPlanet);
-        if(_self.selectedPlanet.data.Owner !== ""){
-          var position = getPopoverPosition();
-          var event = {
-            type: "selectPlanet", 
-            target: _self.selectedPlanet, 
-            screenCoordinates: position
-          };
-          popover.render(_self.selectedPlanet.data);
-          popover.move(position.x, position.y);
-          _self.dispatchEvent(event);   
-        }
+        var position = getPopoverPosition();
+        var event = {
+          type: "selectPlanet", 
+          target: _self.selectedPlanet, 
+          screenCoordinates: position
+        };
+        popover.render(_self.selectedPlanet.data);
+        popover.move(position.x, position.y);
+        _self.dispatchEvent(event);   
       }
     }
 
