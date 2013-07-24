@@ -9,7 +9,7 @@ module.exports = Backbone.View.extend({
     console.log("playerData.AvatarURL:" + playerData.AvatarURL);
     this.$el.html(this.template({
      playerName:    playerData.Owner,
-     twitterAvatar: "http://a0.twimg.com/profile_images/1780216111/1ae72f5_normal.jpg"
+     twitterAvatar: "http://a0.twimg.com/profile_images/1780216111/1ae72f5_normal.jpg"// playerData.AvatarURL
     }));
     this.delegateEvents();
     $(".ui-container").append(this.el);

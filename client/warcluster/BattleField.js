@@ -53,7 +53,7 @@ module.exports = function(){
   this.commandsManager.loginFn = function(data) {
     // console.log("-loginFn-", data);
     self.playerData = data;
-    console.log("-self.playerData loginFn:" + self.playerData.AvatarURL);
+    // console.log("-self.playerData loginFn:" + self.playerData.AvatarURL);
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
 
     this.scopeOfView(self.playerData.Position);

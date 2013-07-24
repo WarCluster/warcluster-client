@@ -52,7 +52,6 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Username = this.username;
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
-        pd.AvatarURL = this.avatarURL;
       
         this.loginFn(pd);
       break;
