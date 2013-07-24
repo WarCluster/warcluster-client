@@ -5,9 +5,11 @@ module.exports = Backbone.View.extend({
     "click .close-btn": "removePopover"
   },
   render: function(playerData){
+    var ownerAvatarURL = (playerData.OwnerAvatarURL === "") ? "images/default_avatar.jpg" : playerData.OwnerAvatarURL; 
+    var owner = (playerData.Owner === "") ? "Neutral Planet" : "@" + playerData.Owner; 
     this.$el.html(this.template({
-     playerName:    playerData.Owner,
-     twitterAvatar: playerData.OwnerAvatarURL
+     playerName:    owner,
+     twitterAvatar: ownerAvatarURL
     }));
     this.delegateEvents();
     $(".ui-container").append(this.el);
