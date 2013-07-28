@@ -9,7 +9,7 @@ module.exports = function(context, data){
 
 	this.position.x = data.position.x;
     this.position.y = data.position.y;
-
+    console.log(data)
 	this.data = {
 		Texture: 1, 
 	    Size: this.sc, 

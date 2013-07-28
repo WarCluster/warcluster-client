@@ -41,6 +41,10 @@ module.exports = function(){
 		self.connect();
 	});
 
+	this.attackMode = false;
+	this.sourceTarget = null;
+	this.enemyTarget = null;
+
 	this.spaceViewController = new SpaceViewController(this.context);
 	this.spaceViewController.zoom = 6000;
 	this.spaceViewController.maxZoom = 60000000;
@@ -49,6 +53,17 @@ module.exports = function(){
 	this.spaceViewController.addEventListener("selectPlanet", function(e) {
 		self.popover.render();
     self.popover.move(e.position.x, e.position.y);
+
+    if (self.attackMode) {
+    	if (!self.sourceTarget) 
+    		self.sourceTarget = e.target.planetData.id;
+    	else {
+    		self.attackMode = false;
+    		self.commandsManager.attack(self.sourceTarget, e.target.planetData.id);
+
+    		$(".attack-container").hide();
+    	}
+    }
 	});
 
 	this.spaceViewController.addEventListener("scrollProgress", function(e) {
@@ -84,5 +99,8 @@ module.exports.prototype.connect = function() {
 }
 
 module.exports.prototype.prepareAttack = function() {
+	this.attackMode = true;
+	$(".attack-container").show();
+	
   console.log("-prepareAttack-");
 }
