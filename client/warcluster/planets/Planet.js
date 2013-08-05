@@ -8,14 +8,15 @@ module.exports = function(context, data){
 	this.planetData = data.planetData;
 
 	this.position.x = data.position.x;
-    this.position.y = data.position.y;
-    console.log(data)
+  this.position.y = data.position.y;
+  console.log(data);
+
 	this.data = {
 		Texture: 1, 
-	    Size: this.sc, 
-	    ShipCount: parseInt(50 * this.sc),
-	    BuildPerTick: 0.01,
-	    Owner: this.planetData.Owner ? this.planetData.Owner : "gophie"
+    Size: this.sc, 
+    ShipCount: parseInt(50 * this.sc),
+    BuildPerTick: 0.01,
+    Owner: this.planetData.Owner ? this.planetData.Owner : "gophie"
 	};
 	
 	var pz = Math.random() * (-50);
@@ -87,7 +88,6 @@ module.exports.prototype.updateInfo = function() {
 }
 
 module.exports.prototype.tick = function() {
-	
 	if (this.data.Owner) {
 		var prevShipCount = this.data.ShipCount;
 
@@ -105,3 +105,47 @@ module.exports.prototype.setOwner = function(value) {
 module.exports.prototype.getOwner = function() {
 	return this.data.Owner;
 }
+
+module.exports.prototype.rectHitTest = function(rect) {
+	var halfSize = this.planetSize.width / 2;
+  var worldPosition = new THREE.Vector3();
+  worldPosition.getPositionFromMatrix(this.matrixWorld);
+  var sc = this.toScreenXY(worldPosition);
+
+  //console.log("rectHitTest:", rect, sc)
+
+  return sc.x >= rect.x && sc.x <= rect.x + rect.width &&
+         sc.y >= rect.y  && sc.y <= rect.y + rect.height;
+}
+
+module.exports.prototype.toScreenXY = function (position) {
+  var pos = position.clone();
+  projScreenMat = new THREE.Matrix4();
+  projScreenMat.multiplyMatrices( this.context.camera.projectionMatrix, this.context.camera.matrixWorldInverse );
+  pos.applyProjection( projScreenMat )
+
+  return { 
+  	x: ( pos.x + 1 ) * this.context.$content.width() / 2 + this.context.$content.offset().left,
+    y: ( - pos.y + 1) * this.context.$content.height() / 2 + this.context.$content.offset().top 
+  };
+}
+
+/*odule.exports.prototype.intersects = function(rect) {
+  var circleDistance.x = Math.abs(this.circle.x - rect.x);
+  var circleDistance.y = Math.abs(this.circle.y - rect.y);
+
+  if (circleDistance.x > (rect.width/2 + this.circle.r)) 
+  	return false;
+  if (circleDistance.y > (rect.height/2 + this.circle.r)) 
+  	return false;
+
+  if (circleDistance.x <= (rect.width/2)) 
+  	return true;
+  if (circleDistance.y <= (rect.height/2)) 
+  	return true;
+
+  var cornerDistance_sq = Math.sqr(circleDistance.x - rect.width/2) +
+                       Math.sqr(circleDistance.y - rect.height/2);
+
+  return (cornerDistance_sq <= Math.sqr(this.circle.r));
+}*/

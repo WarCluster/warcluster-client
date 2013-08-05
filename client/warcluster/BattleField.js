@@ -21,6 +21,7 @@ module.exports = function(){
 	this.popover = new UserPopover();
 
 	this.context = new GameContext();
+  this.context.$content = $(".content");
 	this.context.activationTime = (new Date()).getTime();
 	this.context.currentTime = this.context.activationTime;
 	this.context.cTemp = $("#cTemp");
@@ -67,12 +68,12 @@ module.exports = function(){
 	});
 
 	this.spaceViewController.addEventListener("scrollProgress", function(e) {
-		if (e.target)
+		if (e.object)
 			self.popover.move(e.position.x, e.position.y);
 	}); 
 
 	this.spaceViewController.addEventListener("zoomProgress", function(e) {
-		if (e.target)
+		if (e.object)
 			self.popover.move(e.position.x, e.position.y);
 	});
 

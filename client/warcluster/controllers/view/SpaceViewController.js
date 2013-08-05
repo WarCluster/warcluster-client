@@ -1,5 +1,3 @@
-var UserPopover = require("../../popovers/UserPopover");
-
 module.exports = function(context){
 	THREE.EventDispatcher.call(this);
 	var self = this;
@@ -25,15 +23,19 @@ module.exports = function(context){
     y: 0
   }
   this.selectedPlanet = null;
-  var popover = new UserPopover();
-  
-  var getPopoverPosition = function() {
+  this.ctrlKey = false;
+
+  this.selectionRect = $('<div class="selection-rect"></div>');
+
+  console.log("this.selectionRect:", this.selectionRect)
+
+  var getMousePosition = function() {
     if (!self.selectedPlanet)
       return null;
     var worldPosition = new THREE.Vector3();
     worldPosition.getPositionFromMatrix(self.selectedPlanet.matrixWorld);
     worldPosition.x += self.selectedPlanet.planetSize.width/2;
-    var screenCoordinates = self.toScreenXY(worldPosition, self.context.camera, $(".content"));
+    var screenCoordinates = self.toScreenXY(worldPosition, self.context.camera, self.context.$content);
     return screenCoordinates;
   }
 
@@ -41,6 +43,18 @@ module.exports = function(context){
     self.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     self.mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
   }, false);
+
+  $(document).keydown(function(e){
+    //console.log(e.keyCode);
+    if (e.keyCode == 17)
+      self.ctrlKey = true;
+  });
+
+  $(document).keyup(function(e){
+    //console.log(e.keyCode);
+    if (e.keyCode == 17)
+      self.ctrlKey = false;
+  });
 
 	var mouseUp = function(e) {
 	  window.removeEventListener("mousemove", mouseMove);
@@ -52,10 +66,10 @@ module.exports = function(context){
       if (intersects.length > 0) {
         self.selectedPlanet = intersects[0].object.parent;
 
-        var position = getPopoverPosition();
+        var position = getMousePosition();
         var event = {
           type: "selectPlanet", 
-          target: self.selectedPlanet, 
+          object: self.selectedPlanet, 
           position: position
         };
 
@@ -97,10 +111,10 @@ module.exports = function(context){
       y: self.scrollPositon.y,
       ease: Cubic.easeOut,
       onUpdate: function() {
-        var position = getPopoverPosition();
+        var position = getMousePosition();
         var event = {
           type: "scrollProgress", 
-          target: self.selectedPlanet, 
+          object: self.selectedPlanet, 
           position: position
         };
 
@@ -122,8 +136,80 @@ module.exports = function(context){
     window.addEventListener("mouseup", mouseUp);
 	}
 
+  var mouseMoveSelection = function(e) {
+    e.preventDefault();
+
+    var w = e.clientX - self.mpos.x;
+    var h = e.clientY - self.mpos.y;
+
+    var css = {
+      left: w >= 0 ? self.mpos.x : e.clientX,
+      top: h >= 0 ? self.mpos.y : e.clientY,
+      width: w >= 0 ? w : Math.abs(w),
+      height: h >= 0 ? h : Math.abs(h)
+    };
+
+    $(self.selectionRect).css(css);
+  }
+
+  var hitTestPlanets = function(rect) {
+    var hitObjects = self.context.spaceScene.hitObjects;
+    for (var i=0;i < hitObjects.length;i ++) {
+      if (hitObjects[i].parent.rectHitTest(rect))
+        console.log("rectHitTest:", hitObjects[i].parent);
+    }
+  };
+
+  //this.selectionRect
+
+  var mouseUpSelection = function(e) {
+    e.preventDefault();
+
+    var w = e.clientX - self.mpos.x;
+    var h = e.clientY - self.mpos.y;
+    var rect = {
+      x: w >= 0 ? self.mpos.x : e.clientX,
+      y: h >= 0 ? self.mpos.y : e.clientY,
+      width: w >= 0 ? w : Math.abs(w),
+      height: h >= 0 ? h : Math.abs(h)
+    };
+
+    hitTestPlanets(rect);
+
+    (self.selectionRect).remove();
+
+    window.removeEventListener("mousemove", mouseMoveSelection);
+    window.removeEventListener("mouseup", mouseUpSelection);
+  }
+
+  var mouseDownSelection = function(e) {
+    e.preventDefault();
+
+    self.mpos.x = e.clientX;
+    self.mpos.y = e.clientY;
+
+
+    $("body").append(self.selectionRect);
+
+    var css = {
+      left: self.mpos.x,
+      top: self.mpos.y,
+      width: e.clientX - self.mpos.x,
+      height: e.clientY - self.mpos.y
+    }
+
+    $(self.selectionRect).css(css);
+
+
+    window.addEventListener("mousemove", mouseMoveSelection);
+    window.addEventListener("mouseup", mouseUpSelection);
+  }
+
 	this.onMouseDown = function(e) {
-		mouseDown(e);
+    if (!self.ctrlKey)
+		  mouseDown(e);
+    else
+      mouseDownSelection(e);
 	}
 
   window.addEventListener('mousewheel', function(e) {
@@ -159,10 +245,10 @@ module.exports = function(context){
       z: self.zoom,
       ease: Cubic.easeOut,
       onUpdate: function() {
-        var position = getPopoverPosition();
+        var position = getMousePosition();
         var event = {
           type: "zoomProgress", 
-          target: self.selectedPlanet, 
+          object: self.selectedPlanet, 
           position: position
         };
 
@@ -198,15 +284,15 @@ module.exports.prototype.getIntersectionObjects = function() {
   return raycaster.intersectObjects(this.context.hitObjects);
 }
 
-module.exports.prototype.toScreenXY = function ( position, camera, jqdiv ) {
+module.exports.prototype.toScreenXY = function ( position, camera, $container ) {
     var pos = position.clone();
     projScreenMat = new THREE.Matrix4();
     projScreenMat.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
     //projScreenMat.multiplyVector3( pos );
     pos.applyProjection( projScreenMat )
 
-    return { x: ( pos.x + 1 ) * jqdiv.width() / 2 + jqdiv.offset().left,
-         y: ( - pos.y + 1) * jqdiv.height() / 2 + jqdiv.offset().top };
+    return { x: ( pos.x + 1 ) * $container.width() / 2 + $container.offset().left,
+         y: ( - pos.y + 1) * $container.height() / 2 + $container.offset().top };
 }
 
 module.exports.prototype.setPosition = function (x, y) {

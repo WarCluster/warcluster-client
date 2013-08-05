@@ -14,7 +14,7 @@ module.exports.prototype.prepare = function() {
   this.stats.domElement.style.position = 'absolute';
   this.stats.domElement.style.top = '20px';
   this.stats.domElement.style.left = '50px';
-  $(".content").append(this.stats.domElement);
+  this.context.$content.append(this.stats.domElement);
 
   this.context.resourcesLoader.loadTexture("./images/ships/ship1.png");
 
