@@ -11,7 +11,7 @@ cd(__dirname+"/../");
 //   echo("Error: failed to source nvm");
 //   exit(1);
 // }
-console.log(exec("source ~/.nvm/nvm.sh").code)
+// console.log(exec("source ~/.nvm/nvm.sh").code)
 // if(exec("nvm use 0.8.14").code != 0){
 //   echo("Error: failed to nvm use");
 //   exit(1);
