@@ -48,7 +48,7 @@ module.exports = function(){
 	this.context.spaceViewController = this.spaceViewController;
 	this.spaceViewController.activate();
 
-  this.commandsManager = new CommandsManager("http://127.0.0.1:7000/universe");
+  this.commandsManager = new CommandsManager("http://warcluster-6760.euw1.actionbox.io:7000/universe");
   this.commandsManager.loginFn = function(data) {
     // console.log("-loginFn-", data);
 
