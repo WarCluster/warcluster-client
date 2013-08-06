@@ -60,3 +60,8 @@ if(exec("git merge --ff master").code != 0){
   echo("Error: failed to push develop");
   exit(1);
 }
+
+if(exec("nvm use 0.8.14").code != 0){
+  echo("Error: failed to nvm use");
+  exit(1);
+}
