@@ -64,5 +64,5 @@ module.exports = function(){
 }
 
 module.exports.prototype.connect = function() {
-  this.commandsManager.prepare("RobbFlynn", "TwitterID");
+  	this.commandsManager.prepare(user.name, String(user.id));
 }
