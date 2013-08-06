@@ -7,6 +7,16 @@ newVersion[2] = (parseInt(newVersion[2])+1).toString();
 newVersion = newVersion.join(".");
 cd(__dirname+"/../");
 
+// if(exec("source ~/.nvm/nvm.sh").code != 0){
+//   echo("Error: failed to source nvm");
+//   exit(1);
+// }
+console.log(exec("source ~/.nvm/nvm.sh").code)
+// if(exec("nvm use 0.8.14").code != 0){
+//   echo("Error: failed to nvm use");
+//   exit(1);
+// }
+
 if(exec("git pull --ff").code != 0){
   echo("Error: failed to git pull");
   exit(1);
@@ -58,15 +68,5 @@ if(exec("git merge --ff master").code != 0){
 
  if(exec("git push").code != 0){
   echo("Error: failed to push develop");
-  exit(1);
-}
-
-if(exec("source ~/.nvm/nvm.sh").code != 0){
-  echo("Error: failed to source nvm");
-  exit(1);
-}
-
-if(exec("nvm use 0.8.14").code != 0){
-  echo("Error: failed to nvm use");
   exit(1);
 }
