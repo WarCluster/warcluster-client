@@ -6,7 +6,7 @@
   },
   "HttpServer": {
     "source": "node_modules/organic-webcell/membrane/ExpressHttpServer",
-    "port": 8002,
+    "port": 8118,
     "middleware": [
       { 
         "source": "node_modules/organic-webcell/membrane/expressMiddleware/cookieParser"
