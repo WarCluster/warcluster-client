@@ -94,11 +94,6 @@ module.exports.prototype.buildScene = function() {
   this.context.hitObjects = this.hitObjects;
   this.context.interactiveObjects = this.interactiveObjects;  
 
-  /*var data = this.context.resourcesLoader.get("./models/logo.js");
-  var logo = new THREE.Mesh(data.geometry, new THREE.MeshFaceMaterial( data.materials ));
-  this.container.add( logo );
-  console.log("logo:", logo, data);*/
-  
   var onWindowResize = function() {
     //var ww = $(".content").offsetWidth;
     //var hh = $(".content").offsetHeight;
@@ -132,7 +127,6 @@ module.exports.prototype.startRendering = function() {
 
 module.exports.prototype.update = function(data) {
   console.log("1.update:", data);
-  
 
   if (data.objects.length > 0) {
     this.clear();

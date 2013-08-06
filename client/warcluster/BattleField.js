@@ -17,7 +17,6 @@ var UserPopover = require("./popovers/UserPopover");
 module.exports = function(){
 	var self = this;
 
-	this.playerData = null;
 	this.popover = new UserPopover();
 
 	this.context = new GameContext();
@@ -25,7 +24,7 @@ module.exports = function(){
 	this.context.activationTime = (new Date()).getTime();
 	this.context.currentTime = this.context.activationTime;
 	this.context.cTemp = $("#cTemp");
-	this.context.playerData = this.playerData;
+	this.context.playerData = {};
 	
 	this.context.resourcesLoader = new ResourcesLoader();
 
@@ -53,7 +52,7 @@ module.exports = function(){
 	this.spaceViewController.zoomStep = 2000;
 	this.spaceViewController.addEventListener("selectPlanet", function(e) {
 		self.popover.render();
-    self.popover.move(e.position.x, e.position.y);
+    self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
 
     if (self.attackMode) {
     	if (!self.sourceTarget) 
@@ -68,13 +67,13 @@ module.exports = function(){
 	});
 
 	this.spaceViewController.addEventListener("scrollProgress", function(e) {
-		if (e.object)
-			self.popover.move(e.position.x, e.position.y);
+		if (e.tooltipPlanet)
+			self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
 	}); 
 
 	this.spaceViewController.addEventListener("zoomProgress", function(e) {
-		if (e.object)
-			self.popover.move(e.position.x, e.position.y);
+		if (e.tooltipPlanet)
+			self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
 	});
 
 	this.context.spaceViewController = this.spaceViewController;
@@ -84,10 +83,10 @@ module.exports = function(){
   this.commandsManager.loginFn = function(data) {
     console.log("-loginFn-", data);
 
-    self.playerData = data;
+    _.extend(self.context.playerData, data);
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
 
-    this.scopeOfView(self.playerData.Position);
+    this.scopeOfView(self.context.playerData.Position);
   }
   this.commandsManager.updateViewFn = function(data) {
     console.log("-updateViewFn-", data);

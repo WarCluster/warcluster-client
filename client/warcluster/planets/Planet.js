@@ -9,7 +9,6 @@ module.exports = function(context, data){
 
 	this.position.x = data.position.x;
   this.position.y = data.position.y;
-  console.log(data);
 
 	this.data = {
 		Texture: 1, 
@@ -28,10 +27,6 @@ module.exports = function(context, data){
 		height: 225 * this.sc
 	};
 	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(this.planetSize.width, this.planetSize.height, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
-
-	//this.planet.scale.x = this.sc;
-	//this.planet.scale.y = this.sc;
-	this.planet.z = pz;
 	this.add(this.planet);
 
 	//TODO: refactor for DRY(Don't Repeat Yourself)
@@ -57,22 +52,31 @@ module.exports = function(context, data){
 	this.owner.position.set(0, this.planetSize.height * (-0.6), pz + 50);
 	this.add(this.owner);
 
-	/*this.hitObject = new THREE.Mesh(new THREE.SphereGeometry(90*this.sc), new THREE.MeshBasicMaterial());
-	this.hitObject.position.z = pz;
-	//this.hitObject.visible = false;
+  var circleRadius = this.planetSize.width / 2;
+  var circleShape = new THREE.Shape();
+  circleShape.moveTo( 0, circleRadius );
+  circleShape.quadraticCurveTo( circleRadius, circleRadius, circleRadius, 0 );
+  circleShape.quadraticCurveTo( circleRadius, -circleRadius, 0, -circleRadius );
+  circleShape.quadraticCurveTo( -circleRadius, -circleRadius, -circleRadius, 0 );
+  circleShape.quadraticCurveTo( -circleRadius, circleRadius, 0, circleRadius );
 
-	this.add(this.hitObject);*/
+  var points = circleShape.createPointsGeometry();
+  this.selection = new THREE.Line( points, new THREE.LineBasicMaterial( { color: 0xFFFFFF, linewidth: 2 } ) );
+  this.selection.visible = false;
+  this.add( this.selection );
 }
 
 module.exports.prototype = new THREE.Object3D();
 module.exports.prototype.select = function() {
-	//TweenLite.to(this.glow, 0.3, {alpha: 1, ease: Cubic.easeOut});
-	this.glow.visible = true;
+	this.selection.visible = true;
 }
 
 module.exports.prototype.deselect = function() {
-	//TweenLite.to(this.glow, 0.3, {alpha: 0, ease: Cubic.easeOut});
-	this.glow.visible = false;
+	this.selection.visible = false;
+}
+
+module.exports.prototype.isSelected = function() {
+  return this.selection.visible;
 }
 
 module.exports.prototype.updateInfo = function() {
@@ -111,8 +115,6 @@ module.exports.prototype.rectHitTest = function(rect) {
   var worldPosition = new THREE.Vector3();
   worldPosition.getPositionFromMatrix(this.matrixWorld);
   var sc = this.toScreenXY(worldPosition);
-
-  //console.log("rectHitTest:", rect, sc)
 
   return sc.x >= rect.x && sc.x <= rect.x + rect.width &&
          sc.y >= rect.y  && sc.y <= rect.y + rect.height;

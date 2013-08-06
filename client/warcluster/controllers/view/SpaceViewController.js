@@ -18,69 +18,84 @@ module.exports = function(context){
 
   var t;
   var scrolled = false;
-  this.mouse = {
-    x: 0,
-    y: 0
-  }
-  this.selectedPlanet = null;
+  
+  this.selectedPlanets = [];
+  this.selectedTooltipPlanet = null;
   this.ctrlKey = false;
+  this.shiftKey = false;
 
   this.selectionRect = $('<div class="selection-rect"></div>');
 
-  console.log("this.selectionRect:", this.selectionRect)
-
-  var getMousePosition = function() {
-    if (!self.selectedPlanet)
-      return null;
-    var worldPosition = new THREE.Vector3();
-    worldPosition.getPositionFromMatrix(self.selectedPlanet.matrixWorld);
-    worldPosition.x += self.selectedPlanet.planetSize.width/2;
-    var screenCoordinates = self.toScreenXY(worldPosition, self.context.camera, self.context.$content);
-    return screenCoordinates;
-  }
-
-  window.addEventListener('mousemove', function(e) {
-    self.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    self.mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
-  }, false);
+  // *****************************************************************
 
   $(document).keydown(function(e){
     //console.log(e.keyCode);
-    if (e.keyCode == 17)
-      self.ctrlKey = true;
+    switch (e.keyCode) {
+      case 17:
+        self.ctrlKey = true;
+      break;
+      case 16:
+        self.shiftKey = true;
+      break;
+    }
   });
 
   $(document).keyup(function(e){
-    //console.log(e.keyCode);
-    if (e.keyCode == 17)
-      self.ctrlKey = false;
+    switch (e.keyCode) {
+      case 17:
+        self.ctrlKey = false;
+      break;
+      case 16:
+        self.shiftKey = false;
+      break;
+    }
   });
 
-	var mouseUp = function(e) {
-	  window.removeEventListener("mousemove", mouseMove);
-    window.removeEventListener("mouseup", mouseUp);
-		window.removeEventListener("mouseout",	mouseUp);
+  // *****************************************************************
 
-    if (!scrolled && (new Date()).getTime() - t < 200) {
-      var intersects = self.getIntersectionObjects();
+	var scrollMouseUp = function(e) {
+	  window.removeEventListener("mousemove", scrollMouseMove);
+    window.removeEventListener("mouseup", scrollMouseUp);
+		window.removeEventListener("mouseout",	scrollMouseUp);
+
+    if (!scrolled) {
+      var intersects = self.getMouseIntersectionObjects(e);
       if (intersects.length > 0) {
-        self.selectedPlanet = intersects[0].object.parent;
+        if (!self.ctrlKey && !self.shiftKey) {
+          self.selectedTooltipPlanet = intersects[0].object.parent;
 
-        var position = getMousePosition();
-        var event = {
-          type: "selectPlanet", 
-          object: self.selectedPlanet, 
-          position: position
-        };
+          var event = {
+            type: "selectPlanet", 
+            tooltipPlanet: self.selectedTooltipPlanet, 
+            tooltipPosition: self.getTooltipPosition(),
+            objects: self.selectedPlanets
+          };
 
-        self.dispatchEvent(event);
+          self.dispatchEvent(event);
+        } else {
+          var target = intersects[0].object.parent;
+          var index = self.selectedPlanets.indexOf(target);
+          if (index == -1) {
+            if (target.data.Owner == self.context.playerData.Username) {
+              target.select();
+              self.selectedPlanets.push(target);  
+            }
+          } else {
+            target.deselect();
+            self.selectedPlanets.splice(index, 1);
+          }
+        }
+      } else {
+        for (var i = 0;i < self.selectedPlanets.length;i ++)
+          self.selectedPlanets[i].deselect();
+        self.selectedPlanets = [];
       }
     }
 
     scrolled = false;
 	}
 
-	var mouseMove = function(e) {
+	var scrollMouseMove = function(e) {
 		var dx = self.scrollPositon.x + (e.clientX * self.scaleIndex - self.mpos.x);
 		var dy = self.scrollPositon.y + (e.clientY * self.scaleIndex - self.mpos.y);
 
@@ -111,11 +126,11 @@ module.exports = function(context){
       y: self.scrollPositon.y,
       ease: Cubic.easeOut,
       onUpdate: function() {
-        var position = getMousePosition();
         var event = {
           type: "scrollProgress", 
-          object: self.selectedPlanet, 
-          position: position
+          tooltipPlanet: self.selectedTooltipPlanet, 
+          tooltipPosition: self.getTooltipPosition(),
+          objects: self.selectedPlanets
         };
 
         self.dispatchEvent(event);
@@ -125,18 +140,20 @@ module.exports = function(context){
 		self.dispatchEvent({type: "scroll"});
 	}
   
-	var mouseDown = function(e) {
+	var scrollMouseDown = function(e) {
     e.preventDefault();
 		self.mpos.x = e.clientX * self.scaleIndex;
 		self.mpos.y = e.clientY * self.scaleIndex;
 
     t = (new Date()).getTime();
     
-    window.addEventListener("mousemove", mouseMove);
-    window.addEventListener("mouseup", mouseUp);
+    window.addEventListener("mousemove", scrollMouseMove);
+    window.addEventListener("mouseup", scrollMouseUp);
 	}
 
-  var mouseMoveSelection = function(e) {
+  // *****************************************************************
+
+  var selectionMouseMove = function(e) {
     e.preventDefault();
 
     var w = e.clientX - self.mpos.x;
@@ -152,17 +169,9 @@ module.exports = function(context){
     $(self.selectionRect).css(css);
   }
 
-  var hitTestPlanets = function(rect) {
-    var hitObjects = self.context.spaceScene.hitObjects;
-    for (var i=0;i < hitObjects.length;i ++) {
-      if (hitObjects[i].parent.rectHitTest(rect))
-        console.log("rectHitTest:", hitObjects[i].parent);
-    }
-  };
+  
 
-  //this.selectionRect
-
-  var mouseUpSelection = function(e) {
+  var selectionMouseUp = function(e) {
     e.preventDefault();
 
     var w = e.clientX - self.mpos.x;
@@ -174,20 +183,21 @@ module.exports = function(context){
       height: h >= 0 ? h : Math.abs(h)
     };
 
-    hitTestPlanets(rect);
+    if (rect.width > 0 || rect.height > 0)
+      self.hitTestPlanets(rect);
+    else
+      scrollMouseUp(e);
+    self.selectionRect.remove();
 
-    (self.selectionRect).remove();
-
-    window.removeEventListener("mousemove", mouseMoveSelection);
-    window.removeEventListener("mouseup", mouseUpSelection);
+    window.removeEventListener("mousemove", selectionMouseMove);
+    window.removeEventListener("mouseup", selectionMouseUp);
   }
 
-  var mouseDownSelection = function(e) {
+  var selectionMouseDown = function(e) {
     e.preventDefault();
 
     self.mpos.x = e.clientX;
     self.mpos.y = e.clientY;
-
 
     $("body").append(self.selectionRect);
 
@@ -200,17 +210,11 @@ module.exports = function(context){
 
     $(self.selectionRect).css(css);
 
-
-    window.addEventListener("mousemove", mouseMoveSelection);
-    window.addEventListener("mouseup", mouseUpSelection);
+    window.addEventListener("mousemove", selectionMouseMove);
+    window.addEventListener("mouseup", selectionMouseUp);
   }
 
-	this.onMouseDown = function(e) {
-    if (!self.ctrlKey)
-		  mouseDown(e);
-    else
-      mouseDownSelection(e);
-	}
+  // *****************************************************************
 
   window.addEventListener('mousewheel', function(e) {
     if (!self.active)
@@ -245,11 +249,11 @@ module.exports = function(context){
       z: self.zoom,
       ease: Cubic.easeOut,
       onUpdate: function() {
-        var position = getMousePosition();
         var event = {
           type: "zoomProgress", 
-          object: self.selectedPlanet, 
-          position: position
+          tooltipPlanet: self.selectedTooltipPlanet, 
+          tooltipPosition: self.getTooltipPosition(),
+          objects: self.selectedPlanets
         };
 
         self.dispatchEvent(event);
@@ -259,6 +263,15 @@ module.exports = function(context){
     self.scaleIndex = self.zoom / 6000;
     self.dispatchEvent({type: "zoom", wheelDelta: st});
   });
+
+  // *****************************************************************
+
+  this.onMouseDown = function(e) {
+    if (!self.ctrlKey)
+      scrollMouseDown(e);
+    else
+      selectionMouseDown(e);
+  }
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
@@ -276,8 +289,11 @@ module.exports.prototype.deactivate = function() {
 	}
 }
 
-module.exports.prototype.getIntersectionObjects = function() {
-  var vector = new THREE.Vector3( this.mouse.x, this.mouse.y, 0.5 );
+module.exports.prototype.getMouseIntersectionObjects = function(e) {
+  var mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+  var mouseY = - (e.clientY / window.innerHeight) * 2 + 1;
+
+  var vector = new THREE.Vector3( mouseX, mouseY, 0.5 );
   this.context.projector.unprojectVector( vector, this.context.camera );
 
   var raycaster = new THREE.Raycaster(this.context.camera.position, vector.sub(this.context.camera.position ).normalize());
@@ -285,14 +301,16 @@ module.exports.prototype.getIntersectionObjects = function() {
 }
 
 module.exports.prototype.toScreenXY = function ( position, camera, $container ) {
-    var pos = position.clone();
-    projScreenMat = new THREE.Matrix4();
-    projScreenMat.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
-    //projScreenMat.multiplyVector3( pos );
-    pos.applyProjection( projScreenMat )
+  var pos = position.clone();
+  projScreenMat = new THREE.Matrix4();
+  projScreenMat.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
+  //projScreenMat.multiplyVector3( pos );
+  pos.applyProjection( projScreenMat )
 
-    return { x: ( pos.x + 1 ) * $container.width() / 2 + $container.offset().left,
-         y: ( - pos.y + 1) * $container.height() / 2 + $container.offset().top };
+  return { 
+    x: ( pos.x + 1 ) * $container.width() / 2 + $container.offset().left,
+    y: ( - pos.y + 1) * $container.height() / 2 + $container.offset().top 
+  };
 }
 
 module.exports.prototype.setPosition = function (x, y) {
@@ -300,4 +318,30 @@ module.exports.prototype.setPosition = function (x, y) {
   this.scrollPositon.y = y;
 
   this.context.spaceScene.moveTo(x, y);
+}
+
+module.exports.prototype.getTooltipPosition = function() {
+  if (!this.selectedTooltipPlanet)
+    return null;
+  var worldPosition = new THREE.Vector3();
+  worldPosition.getPositionFromMatrix(this.selectedTooltipPlanet.matrixWorld);
+  worldPosition.x += this.selectedTooltipPlanet.planetSize.width/2;
+  return this.toScreenXY(worldPosition, this.context.camera, this.context.$content);
+}
+
+module.exports.prototype.hitTestPlanets = function(rect) {
+  var hitObjects = this.context.spaceScene.hitObjects;
+  if (!this.shiftKey)
+    this.selectedPlanets = [];
+  for (var i=0;i < hitObjects.length;i ++) {
+    var target = hitObjects[i].parent;
+    if (target.data.Owner == this.context.playerData.Username) {
+      if (!this.shiftKey)
+        target.deselect();
+      if (target.rectHitTest(rect))
+        target.select();
+      if (this.selectedPlanets.indexOf(target) == -1)
+        this.selectedPlanets.push(target);
+    }
+  }
 }
