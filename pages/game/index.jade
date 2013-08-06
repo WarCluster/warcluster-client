@@ -5,7 +5,9 @@ html
     meta(charset='utf-8')
 
     link(rel='stylesheet', href='/style.css')
-
+    //TODO: think about security before closed beta testing
+    script
+      var user = !{JSON.stringify(session.twitter)}
     script(src="/js/sockjs-0.3.min.js")
     script(src="/js/three.js")
     script(src="/js/stats.min.js")

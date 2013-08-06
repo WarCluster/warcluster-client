@@ -124,8 +124,6 @@ module.exports = function(context){
 	}
 
   window.addEventListener('mousewheel', function(e) {
-    console.log("mousewheel", e.wheelDelta, _self.zoom);
-
     if (!_self.active)
       return ;
 
@@ -202,4 +200,11 @@ module.exports.prototype.toScreenXY = function ( position, camera, jqdiv ) {
 
     return { x: ( pos.x + 1 ) * jqdiv.width() / 2 + jqdiv.offset().left,
          y: ( - pos.y + 1) * jqdiv.height() / 2 + jqdiv.offset().top };
+}
+
+module.exports.prototype.setPosition = function (x, y) {
+  this.scrollPositon.x = -x;
+  this.scrollPositon.y = y;
+
+  this.context.spaceScene.moveTo(x, y);
 }

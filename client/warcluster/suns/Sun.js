@@ -2,7 +2,7 @@ module.exports = function(context){
   THREE.Object3D.call(this);
   var _self = this;
 
-  this.sc = 1.6 + Math.random() * 0.4;
+  this.sc = 2.6 + Math.random() * 0.4;
 
   this.context = context;
 
