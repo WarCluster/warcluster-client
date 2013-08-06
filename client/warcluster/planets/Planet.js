@@ -9,25 +9,26 @@ module.exports = function(context, data){
 
 	this.position.x = data.position.x;
   this.position.y = data.position.y;
-
-	this.data = {
-		Texture: 1, 
-    Size: this.sc, 
-    ShipCount: parseInt(50 * this.sc),
-    BuildPerTick: 0.01,
-    Owner: this.planetData.Owner ? this.planetData.Owner : "gophie"
-	};
+  
+	this.data = data.planetData;
+  this.data.width = 130 + 20 * this.data.Size,
+  this.data.height = 130 + 20 * this.data.Size
 	
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet1.png");
-	var bmd2 = context.resourcesLoader.get("./images/planets/planet_glow.png");
+	var bmd2 = context.resourcesLoader.get("./images/planets/planet_selection_glow.png");
+  var bmd3 = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
 
-	this.planetSize = {
-		width: 225 * this.sc,
-		height: 225 * this.sc
-	};
-	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(this.planetSize.width, this.planetSize.height, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
+	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width, this.data.height, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
 	this.add(this.planet);
+
+  this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.2, this.data.height*1.2, 1, 1), new THREE.MeshBasicMaterial({map: bmd2, transparent : true}));
+  this.selection.visible = false;
+  this.add(this.selection);
+
+  this.attackSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.2, this.data.height*1.2, 1, 1), new THREE.MeshBasicMaterial({map: bmd3, transparent : true}));
+  this.attackSelection.visible = false;
+  this.add(this.attackSelection);
 
 	//TODO: refactor for DRY(Don't Repeat Yourself)
 	var result = this.context.canvasTextFactory.build(this.data.ShipCount, null, 50);
@@ -42,28 +43,15 @@ module.exports = function(context, data){
 	this.add(this.title);
 	this.hitObject = this.planet;
 
-	result = this.context.canvasTextFactory.build(this.data.Owner, null, 50);
+	result = this.context.canvasTextFactory.build(this.data.Owner || " ", null, 50);
 	this.ownerTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
 	this.ownerMaterial = new THREE.MeshBasicMaterial({map: this.ownerTexture, transparent: true});
 	this.ownerMaterial.map.needsUpdate = true;
 	this.owner = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.ownerMaterial);
 	this.owner.scale.x = result.canvas2d.width*this.sc;
 	this.owner.scale.y = result.canvas2d.height*this.sc;
-	this.owner.position.set(0, this.planetSize.height * (-0.6), pz + 50);
+	this.owner.position.set(0, this.data.height * (-0.6), pz + 50);
 	this.add(this.owner);
-
-  var circleRadius = this.planetSize.width / 2;
-  var circleShape = new THREE.Shape();
-  circleShape.moveTo( 0, circleRadius );
-  circleShape.quadraticCurveTo( circleRadius, circleRadius, circleRadius, 0 );
-  circleShape.quadraticCurveTo( circleRadius, -circleRadius, 0, -circleRadius );
-  circleShape.quadraticCurveTo( -circleRadius, -circleRadius, -circleRadius, 0 );
-  circleShape.quadraticCurveTo( -circleRadius, circleRadius, 0, circleRadius );
-
-  var points = circleShape.createPointsGeometry();
-  this.selection = new THREE.Line( points, new THREE.LineBasicMaterial( { color: 0xFFFFFF, linewidth: 2 } ) );
-  this.selection.visible = false;
-  this.add( this.selection );
 }
 
 module.exports.prototype = new THREE.Object3D();
@@ -75,8 +63,12 @@ module.exports.prototype.deselect = function() {
 	this.selection.visible = false;
 }
 
-module.exports.prototype.isSelected = function() {
-  return this.selection.visible;
+module.exports.prototype.selectForAttack = function() {
+  this.attackSelection.visible = true;
+}
+
+module.exports.prototype.deselectFromAttack = function() {
+  this.attackSelection.visible = false;
 }
 
 module.exports.prototype.updateInfo = function() {
@@ -95,7 +87,7 @@ module.exports.prototype.tick = function() {
 	if (this.data.Owner) {
 		var prevShipCount = this.data.ShipCount;
 
-		this.data.ShipCount += this.data.BuildPerTick;
+		//this.data.ShipCount += this.data.BuildPerTick;
 
 		if (parseInt(prevShipCount) != parseInt(this.data.ShipCount))
 			this.updateInfo();
@@ -111,7 +103,7 @@ module.exports.prototype.getOwner = function() {
 }
 
 module.exports.prototype.rectHitTest = function(rect) {
-	var halfSize = this.planetSize.width / 2;
+	var halfSize = this.data.width / 2;
   var worldPosition = new THREE.Vector3();
   worldPosition.getPositionFromMatrix(this.matrixWorld);
   var sc = this.toScreenXY(worldPosition);

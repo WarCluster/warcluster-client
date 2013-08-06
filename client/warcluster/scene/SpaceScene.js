@@ -4,16 +4,17 @@ var Planet = require("../planets/Planet");
 
 module.exports = function(context){
   this.context = context;
+  this.afterUpdateFn = null;
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.prepare = function() {
-  var _self = this;
+  var self = this;
 
   this.stats = new Stats();
   this.stats.domElement.style.position = 'absolute';
   this.stats.domElement.style.top = '20px';
-  this.stats.domElement.style.left = '50px';
+  this.stats.domElement.style.right = '50px';
   this.context.$content.append(this.stats.domElement);
 
   this.context.resourcesLoader.loadTexture("./images/ships/ship1.png");
@@ -24,25 +25,23 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.loadTexture("./images/backgrounds/background8.jpg");
   this.context.resourcesLoader.loadTexture("./images/suns/sun1.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet1.png");
-
-  //this.context.resourcesLoader.loadModel("./models/logo.js");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet_selection_glow.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet_attack_glow.png");
 
   this.context.resourcesLoader.addEventListener("complete", function() { 
-    _self.buildScene();
-    _self.startRendering();
-    _self.dispatchEvent({type: "complete"});
+    self.buildScene();
+    self.startRendering();
+    self.dispatchEvent({type: "complete"});
   });
 }
 
 module.exports.prototype.buildScene = function() {
   var ww = window.innerWidth;
   var hh = window.innerHeight;
-  var _self = this;
+  var self = this;
 
   console.log(ww, hh);
 
-  this.objects = [];
-  this.planets = [];
   this.camera = new THREE.PerspectiveCamera(15, ww / hh, 0.1, 100000000);
   this.camera.position.z = 6000;
 
@@ -83,24 +82,21 @@ module.exports.prototype.buildScene = function() {
   this.enviroment = new SpaceSceneEnviroment(this.context);
   this.container.add(this.enviroment);
 
-  this.hitObjects = [];
-  this.interactiveObjects = [];
-
   this.context.camera = this.camera;
   this.context.scene = this.scene;
   this.context.projector = this.projector;
   this.context.renderer = this.renderer;
   this.context.container = this.container;
-  this.context.hitObjects = this.hitObjects;
-  this.context.interactiveObjects = this.interactiveObjects;  
+
+  THREE.Object3D._threexDomEvent.camera(this.camera);
 
   var onWindowResize = function() {
     //var ww = $(".content").offsetWidth;
     //var hh = $(".content").offsetHeight;
-     _self.camera.aspect = window.innerWidth / window.innerHeight;
-     _self.camera.updateProjectionMatrix();
+     self.camera.aspect = window.innerWidth / window.innerHeight;
+     self.camera.updateProjectionMatrix();
 
-     _self.renderer.setSize( window.innerWidth, window.innerHeight );
+     self.renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
   onWindowResize();
@@ -110,16 +106,18 @@ module.exports.prototype.buildScene = function() {
 }
 
 module.exports.prototype.startRendering = function() {
-  var _self = this;
+  var self = this;
+  var t = (new Date()).getTime();
   var render = function() {
     requestAnimationFrame(render);
 
-    for(var i = 0;i < _self.interactiveObjects.length;i ++)
-      _self.interactiveObjects[i].tick();
+    for(var i = 0;i < self.context.interactiveObjects.length;i ++)
+      self.context.interactiveObjects[i].tick();
 
-    _self.renderer.render(_self.scene, _self.camera);
-    _self.stats.update();
-    _self.context.currentTime = (new Date()).getTime();
+    self.renderer.render(self.scene, self.camera);
+    self.stats.update();
+    self.context.currentTime += (new Date()).getTime() - t;
+    t = (new Date()).getTime();
   }
 
   render();
@@ -135,13 +133,10 @@ module.exports.prototype.update = function(data) {
       switch (obj.xtype) {
         case "SUN":
           var sun = this.context.sunsFactory.build(obj);
-          this.objects.push(sun);
+          this.context.objects.push(sun);
         break;
         case "PLANET":
-          var planet = this.context.planetsFactory.build(obj);
-
-          this.objects.push(planet);
-          this.planets.push(planet);
+          var planet = this.context.planetsHitObjectsFactory.build(obj);
         break;
       }
     }
@@ -150,7 +145,7 @@ module.exports.prototype.update = function(data) {
   if (data.missions.length > 0) {
     for (var i = 0;i < data.missions.length;i ++) {
 
-      var pl = [].concat(this.planets);
+      var pl = [].concat(this.context.planetsHitObjects);
       var sr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
       var tr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
       var mission = data.missions[i];
@@ -165,6 +160,9 @@ module.exports.prototype.update = function(data) {
       this.context.missionsFactory.build(mission);
     }
   }
+
+  if (this.afterUpdateFn != null)
+    this.afterUpdateFn();
 }
 
 module.exports.prototype.moveTo = function(x, y) {
@@ -172,15 +170,22 @@ module.exports.prototype.moveTo = function(x, y) {
   this.camera.position.y = y;
 }
 
+module.exports.prototype.attack = function(x, y) {
+  this.camera.position.x = x;
+  this.camera.position.y = y;
+}
+
 module.exports.prototype.clear = function() {
   var obj;
-  this.planets = [];
-  while (this.objects.length) {
-    obj = this.objects.shift();
+  this.context.objects = [];
+  this.context.planetsHitObjects = [];
+
+  while (this.context.interactiveObjects.length) {
+    obj = this.context.interactiveObjects.shift();
 
     if (obj instanceof Sun)  
       this.context.sunsFactory.destroy(obj);
     else if (obj instanceof Planet)  
-      this.context.planetsFactory.destroy(obj);
+      this.context.planetsHitObjectsFactory.destroy(obj);
   }
 }

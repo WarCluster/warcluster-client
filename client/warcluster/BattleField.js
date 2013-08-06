@@ -28,7 +28,7 @@ module.exports = function(){
 	
 	this.context.resourcesLoader = new ResourcesLoader();
 
-	this.context.planetsFactory = new PlanetsFactory(this.context);
+	this.context.planetsHitObjectsFactory = new PlanetsFactory(this.context);
 	this.context.missionsFactory = new MissionsFactory(this.context);
 	this.context.shipsFactory = new ShipsFactory(this.context);
 	this.context.canvasTextFactory = new CanvasTextFactory(this.context);
@@ -76,10 +76,15 @@ module.exports = function(){
 			self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
 	});
 
+  this.spaceViewController.addEventListener("attackPlanet", function(e) {
+    for (var i = 0;i < e.attackSourcesIds.length;i ++)
+      self.commandsManager.attack(e.attackSourcesIds[i], e.planetToAttackId);
+  });
+
 	this.context.spaceViewController = this.spaceViewController;
 	this.spaceViewController.activate();
 
-  this.commandsManager = new CommandsManager("http://127.0.0.1:7000/universe");
+  this.commandsManager = new CommandsManager("http://127.0.0.1:7000/universe", this.context);
   this.commandsManager.loginFn = function(data) {
     console.log("-loginFn-", data);
 
@@ -95,7 +100,8 @@ module.exports = function(){
 }
 
 module.exports.prototype.connect = function() {
-  this.commandsManager.prepare("RobbFlynn" + Math.random(), "TwitterID" + Math.random());
+  //this.commandsManager.prepare("RobbFlynn" + Math.random(), "TwitterID" + Math.random());
+  this.commandsManager.prepare("RobbFlynn", "TwitterID");
 }
 
 module.exports.prototype.prepareAttack = function() {

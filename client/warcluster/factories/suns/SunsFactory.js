@@ -12,12 +12,15 @@ module.exports.prototype.build = function(data) {
     sun = new Sun(this.context, data);
 
   this.context.container.add(sun);
+  this.context.objects.push(sun);
   
   return sun;
 }
 
 module.exports.prototype.destroy = function(sun) {
   this.context.container.remove(sun);
+  this.context.objects.splice(this.context.objects.indexOf(sun), 1);
+  
   this.cache.push(sun);
 
   return sun;

@@ -3,8 +3,10 @@ module.exports = function(context) {
 	
 	this.context = context;
 	this.mission = null;
+	this.total = null;
 	
-	this.material = new THREE.MeshBasicMaterial({map: null, transparent: true});
+	var map = this.context.resourcesLoader.get("./images/ships/ship1.png");
+	this.material = new THREE.MeshBasicMaterial({map: map, transparent: true});
 
 	this.ship = new THREE.Mesh(new THREE.PlaneGeometry(66 * 0.5, 71 * 0.5), this.material);
 	this.ship.doubleSided = true;
@@ -17,26 +19,24 @@ module.exports = function(context) {
 
 	this.direction = Math.random() > 0.5 ? 3 : -3;
 	this.angle = Math.random() * 360;
-	console.log(this.direction);
 }
 
 module.exports.prototype = new THREE.Object3D();
 module.exports.prototype.prepare = function(total) {
-	var texture = this.context.resourcesLoader.get("./images/ships/ship1.png");
-	this.material.map = texture;
+	this.total = total;
 }
 
 module.exports.prototype.send = function(mission) {
 	this.mission = mission;
 
-	this.delta_x = this.mission.target.position.x - this.mission.source.position.x;
-	this.delta_y = this.mission.target.position.y - this.mission.source.position.y;
+	this.delta_x = this.mission.target.x - this.mission.source.x;
+	this.delta_y = this.mission.target.y - this.mission.source.y;
 	
 	this.rotation.z = -Math.atan2(this.delta_x, this.delta_y) + Math.PI;
 
 	var speed = 0.4; // speed per millisecond
 	var d = Math.sqrt((this.delta_x*this.delta_x)+(this.delta_y*this.delta_y));
-	this.mission.travelTime = d / speed;
+	//this.mission.travelTime = d / speed;
 
 	this.displacement = {
 		x: Math.random() * 100 - 50,
@@ -45,12 +45,13 @@ module.exports.prototype.send = function(mission) {
 }
 
 module.exports.prototype.tick = function() {
+	//console.log("tick:", this.context.currentTime, this.mission.startTime, this.mission.travelTime)
 	if (this.context.currentTime > this.mission.startTime + this.mission.travelTime) {
 		this.context.shipsFactory.destroy(this);
 	} else {
 		this.progress = (this.context.currentTime - this.mission.startTime) / this.mission.travelTime;
-		this.position.x = this.mission.source.position.x + this.delta_x * this.progress;
-		this.position.y = this.mission.source.position.y + this.delta_y * this.progress;
+		this.position.x = this.mission.source.x + this.delta_x * this.progress;
+		this.position.y = this.mission.source.y + this.delta_y * this.progress;
 
 		this.angle += this.direction;
 

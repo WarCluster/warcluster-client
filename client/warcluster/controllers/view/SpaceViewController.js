@@ -19,6 +19,7 @@ module.exports = function(context){
   var t;
   var scrolled = false;
   
+  this.attackTarget = null;
   this.selectedPlanets = [];
   this.selectedTooltipPlanet = null;
   this.ctrlKey = false;
@@ -28,11 +29,24 @@ module.exports = function(context){
 
   // *****************************************************************
 
+  this.context.spaceScene.afterUpdateFn = function() {
+    for (var i=0;i < self.context.planetsHitObjects.length;i ++) {
+      self.context.planetsHitObjects[i].on("mouseover", function(e) {
+        self.onPlanetMouseOver(e);
+      });
+      self.context.planetsHitObjects[i].on("mouseout", function(e) {
+        self.onPlanetMouseOut(e);
+      });
+    }
+  }
+
   $(document).keydown(function(e){
     //console.log(e.keyCode);
     switch (e.keyCode) {
       case 17:
         self.ctrlKey = true;
+        if (self.attackTarget)
+          self.attackTarget.selectForAttack();
       break;
       case 16:
         self.shiftKey = true;
@@ -44,6 +58,8 @@ module.exports = function(context){
     switch (e.keyCode) {
       case 17:
         self.ctrlKey = false;
+        if (self.attackTarget)
+          self.attackTarget.deselectFromAttack();
       break;
       case 16:
         self.shiftKey = false;
@@ -63,22 +79,25 @@ module.exports = function(context){
       if (intersects.length > 0) {
         if (!self.ctrlKey && !self.shiftKey) {
           self.selectedTooltipPlanet = intersects[0].object.parent;
-
-          var event = {
+          self.dispatchEvent({
             type: "selectPlanet", 
             tooltipPlanet: self.selectedTooltipPlanet, 
             tooltipPosition: self.getTooltipPosition(),
             objects: self.selectedPlanets
-          };
-
-          self.dispatchEvent(event);
+          });
         } else {
           var target = intersects[0].object.parent;
           var index = self.selectedPlanets.indexOf(target);
           if (index == -1) {
-            if (target.data.Owner == self.context.playerData.Username) {
+            if (target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
               target.select();
               self.selectedPlanets.push(target);  
+            } else {
+              self.dispatchEvent({
+                type: "attackPlanet", 
+                attackSourcesIds: self.getSelectedPlanetsIds(),
+                planetToAttackId: self.getPlanetТоAttackId()
+              });
             }
           } else {
             target.deselect();
@@ -126,14 +145,12 @@ module.exports = function(context){
       y: self.scrollPositon.y,
       ease: Cubic.easeOut,
       onUpdate: function() {
-        var event = {
+        self.dispatchEvent({
           type: "scrollProgress", 
           tooltipPlanet: self.selectedTooltipPlanet, 
           tooltipPosition: self.getTooltipPosition(),
           objects: self.selectedPlanets
-        };
-
-        self.dispatchEvent(event);
+        });
       }
     });
 
@@ -249,14 +266,12 @@ module.exports = function(context){
       z: self.zoom,
       ease: Cubic.easeOut,
       onUpdate: function() {
-        var event = {
+        self.dispatchEvent({
           type: "zoomProgress", 
           tooltipPlanet: self.selectedTooltipPlanet, 
           tooltipPosition: self.getTooltipPosition(),
           objects: self.selectedPlanets
-        };
-
-        self.dispatchEvent(event);
+        });
       }
     });
 
@@ -297,7 +312,7 @@ module.exports.prototype.getMouseIntersectionObjects = function(e) {
   this.context.projector.unprojectVector( vector, this.context.camera );
 
   var raycaster = new THREE.Raycaster(this.context.camera.position, vector.sub(this.context.camera.position ).normalize());
-  return raycaster.intersectObjects(this.context.hitObjects);
+  return raycaster.intersectObjects(this.context.planetsHitObjects);
 }
 
 module.exports.prototype.toScreenXY = function ( position, camera, $container ) {
@@ -330,12 +345,11 @@ module.exports.prototype.getTooltipPosition = function() {
 }
 
 module.exports.prototype.hitTestPlanets = function(rect) {
-  var hitObjects = this.context.spaceScene.hitObjects;
   if (!this.shiftKey)
     this.selectedPlanets = [];
-  for (var i=0;i < hitObjects.length;i ++) {
-    var target = hitObjects[i].parent;
-    if (target.data.Owner == this.context.playerData.Username) {
+  for (var i=0;i < this.context.planetsHitObjects.length;i ++) {
+    var target = this.context.planetsHitObjects[i].parent;
+    if (target.data.Owner.indexOf(this.context.playerData.Username) != -1) {
       if (!this.shiftKey)
         target.deselect();
       if (target.rectHitTest(rect))
@@ -344,4 +358,33 @@ module.exports.prototype.hitTestPlanets = function(rect) {
         this.selectedPlanets.push(target);
     }
   }
+}
+
+module.exports.prototype.onPlanetMouseOver = function(e) {
+  if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1 &&
+      this.selectedPlanets.length > 0) {
+    if (this.ctrlKey)
+      e.target.parent.selectForAttack();
+    this.attackTarget = e.target.parent;
+  }
+}
+
+module.exports.prototype.onPlanetMouseOut = function(e) {
+  if (this.selectedPlanets.length > 0) {
+    this.attackTarget = null;
+    e.target.parent.deselectFromAttack();
+  }
+}
+
+module.exports.prototype.getSelectedPlanetsIds = function() {
+  var ids = [];
+  for (var i = 0;i < this.selectedPlanets.length;i ++) 
+    ids.push(this.selectedPlanets[i].data.id);
+
+  console.log("getSelectedPlanetsIds:", ids)
+  return ids;
+}
+
+module.exports.prototype.getPlanetТоAttackId = function() {
+  return this.attackTarget.data.id;
 }
