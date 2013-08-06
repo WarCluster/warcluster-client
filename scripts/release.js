@@ -60,6 +60,7 @@ if(exec("git merge --ff master").code != 0){
   echo("Error: failed to push develop");
   exit(1);
 }
+
 if(exec("source ~/.nvm/nvm.sh").code != 0){
   echo("Error: failed to source nvm");
   exit(1);
