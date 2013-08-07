@@ -7,10 +7,10 @@ module.exports = Backbone.View.extend({
     "click .spy":       "spy"
   },
   render: function(playerData){
-    var ownerAvatarURL = (playerData.OwnerAvatarURL === "") ? "images/default_avatar.jpg" : playerData.OwnerAvatarURL; 
-    var owner = (playerData.Owner === "") ? "Neutral Planet" : "@" + playerData.Owner; 
+    var ownerAvatarURL = playerData && playerData.OwnerAvatarURL ? playerData.OwnerAvatarURL : "images/default_avatar.jpg"; 
+    var owner = playerData && playerData.Owner ? "@" + playerData.Owner : "Neutral Planet"; 
     //TODO: fix production coef according to github wiki
-    var production = playerData.Size;
+    var production = playerData && playerData.Size ? playerData.Size : 0;
 
     this.$el.html(this.template({
      playerName:        owner,
