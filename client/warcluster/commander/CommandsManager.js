@@ -67,19 +67,18 @@ module.exports.prototype.parseMessage = function(command) {
     }
   } else {
     for (var s in data) {
-      var d = s.split("-");
-      var sourcePosition = d[1].split("_");
-      var time = parseInt(d[0].split(".")[1]) * 1000;
+      var d = s.split(".")[1].split("_");
+      var time = parseInt(d[0]) * 1000;
+      var targetPosition = data[s].EndPlanet.split(".")[1].split("_");
 
       this.context.currentTime = time;
-
-      var targetPosition = data[s].EndPlanet.split(".")[1].split("_");
+      
       var mission = {
         startTime: time,
         travelTime: 10000,
         source: {
-          x: -parseFloat(sourcePosition[0]),
-          y: parseFloat(sourcePosition[1])
+          x: parseFloat(d[1]),
+          y: parseFloat(d[2])
         },
         target: {
           x: parseFloat(targetPosition[0]),
@@ -142,8 +141,8 @@ module.exports.prototype.scopeOfView = function(position, resolution) {
   this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": resolution || [1920, 1080]}));
 }
 
-module.exports.prototype.attack = function(source, target, ships) {
-  console.log("attack:", source, target, ships)
+module.exports.prototype.sendMission = function(source, target, ships) {
+  console.log("sendMission:", source, target, ships)
   this.sockjs.send(JSON.stringify({
     "Command": "start_mission",
     "StartPlanet": source,

@@ -20,6 +20,8 @@ module.exports = function(context){
   var scrolled = false;
   
   this.attackTarget = null;
+  this.supportTarget = null;
+
   this.selectedPlanets = [];
   this.selectedTooltipPlanet = null;
   this.ctrlKey = false;
@@ -45,11 +47,17 @@ module.exports = function(context){
     switch (e.keyCode) {
       case 17:
         self.ctrlKey = true;
-        if (self.attackTarget)
-          self.attackTarget.selectForAttack();
+        if (self.attackTarget && !self.shiftKey)
+          self.attackTarget.showAttackSelection();
+        else if (self.supportTarget)
+          self.supportTarget.showSupportSelection();
       break;
       case 16:
         self.shiftKey = true;
+        if (self.attackTarget && self.ctrlKey)
+          self.attackTarget.hideAttackSelection();
+        else if (self.supportTarget && self.ctrlKey)
+          self.supportTarget.hideSupportSelection();
       break;
     }
   });
@@ -58,11 +66,17 @@ module.exports = function(context){
     switch (e.keyCode) {
       case 17:
         self.ctrlKey = false;
-        if (self.attackTarget)
-          self.attackTarget.deselectFromAttack();
+        if (self.attackTarget && !self.shiftKey)
+          self.attackTarget.hideAttackSelection();
+        else if (self.supportTarget && !self.shiftKey)
+          self.supportTarget.hideSupportSelection();
       break;
       case 16:
         self.shiftKey = false;
+        if (self.attackTarget && self.ctrlKey)
+          self.attackTarget.showAttackSelection();
+        else if (self.supportTarget && self.ctrlKey)
+          self.supportTarget.showSupportSelection();
       break;
     }
   });
@@ -73,35 +87,46 @@ module.exports = function(context){
 	  window.removeEventListener("mousemove", scrollMouseMove);
     window.removeEventListener("mouseup", scrollMouseUp);
 		window.removeEventListener("mouseout",	scrollMouseUp);
-
+    
     if (!scrolled) {
       var intersects = self.getMouseIntersectionObjects(e);
+      
       if (intersects.length > 0) {
         if (!self.ctrlKey && !self.shiftKey) {
           self.selectedTooltipPlanet = intersects[0].object.parent;
           self.dispatchEvent({
-            type: "selectPlanet", 
+            type: "showPlanetInfo", 
             tooltipPlanet: self.selectedTooltipPlanet, 
             tooltipPosition: self.getTooltipPosition(),
             objects: self.selectedPlanets
           });
-        } else {
+        } else { 
           var target = intersects[0].object.parent;
-          var index = self.selectedPlanets.indexOf(target);
-          if (index == -1) {
-            if (target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
+
+          if (self.ctrlKey && self.shiftKey && target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
+            var index = self.selectedPlanets.indexOf(target);
+            if (index == -1) {
               target.select();
               self.selectedPlanets.push(target);  
             } else {
+              target.deselect();
+              self.selectedPlanets.splice(index, 1);
+            }
+          } else if (self.ctrlKey && !self.shiftKey) {
+
+            if (self.attackTarget) {
               self.dispatchEvent({
                 type: "attackPlanet", 
                 attackSourcesIds: self.getSelectedPlanetsIds(),
                 planetToAttackId: self.getPlanetТоAttackId()
               });
+            } else if (self.supportTarget) {
+              self.dispatchEvent({
+                type: "supportPlanet", 
+                supportSourcesIds: self.getSelectedPlanetsIds(),
+                planetToSupportId: self.getPlanetТоSupportId()
+              });
             }
-          } else {
-            target.deselect();
-            self.selectedPlanets.splice(index, 1);
           }
         }
       } else {
@@ -186,8 +211,6 @@ module.exports = function(context){
     $(self.selectionRect).css(css);
   }
 
-  
-
   var selectionMouseUp = function(e) {
     e.preventDefault();
 
@@ -205,7 +228,7 @@ module.exports = function(context){
     else
       scrollMouseUp(e);
     self.selectionRect.remove();
-
+    
     window.removeEventListener("mousemove", selectionMouseMove);
     window.removeEventListener("mouseup", selectionMouseUp);
   }
@@ -282,10 +305,12 @@ module.exports = function(context){
   // *****************************************************************
 
   this.onMouseDown = function(e) {
-    if (!self.ctrlKey)
-      scrollMouseDown(e);
-    else
-      selectionMouseDown(e);
+    if (self.context.renderer.domElement == e.target) {
+      if (!self.ctrlKey)
+        scrollMouseDown(e);
+      else
+        selectionMouseDown(e);
+    }
   }
 }
 
@@ -340,7 +365,7 @@ module.exports.prototype.getTooltipPosition = function() {
     return null;
   var worldPosition = new THREE.Vector3();
   worldPosition.getPositionFromMatrix(this.selectedTooltipPlanet.matrixWorld);
-  worldPosition.x += this.selectedTooltipPlanet.planetSize.width/2;
+  worldPosition.x += this.selectedTooltipPlanet.data.width/2;
   return this.toScreenXY(worldPosition, this.context.camera, this.context.$content);
 }
 
@@ -352,34 +377,46 @@ module.exports.prototype.hitTestPlanets = function(rect) {
     if (target.data.Owner.indexOf(this.context.playerData.Username) != -1) {
       if (!this.shiftKey)
         target.deselect();
-      if (target.rectHitTest(rect))
+      if (target.rectHitTest(rect)) {
         target.select();
-      if (this.selectedPlanets.indexOf(target) == -1)
-        this.selectedPlanets.push(target);
+        if (this.selectedPlanets.indexOf(target) == -1)
+          this.selectedPlanets.push(target);
+      }
     }
   }
 }
 
 module.exports.prototype.onPlanetMouseOver = function(e) {
-  if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1 &&
-      this.selectedPlanets.length > 0) {
-    if (this.ctrlKey)
-      e.target.parent.selectForAttack();
-    this.attackTarget = e.target.parent;
+  if (this.selectedPlanets.length > 0) {
+    if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1) {
+      this.attackTarget = e.target.parent;
+      if (this.ctrlKey && !this.shiftKey)
+        this.attackTarget.showAttackSelection();
+    } else {
+      this.supportTarget = e.target.parent;
+      if (this.ctrlKey && !this.shiftKey)
+        this.supportTarget.showSupportSelection();
+    }  
   }
 }
 
 module.exports.prototype.onPlanetMouseOut = function(e) {
   if (this.selectedPlanets.length > 0) {
-    this.attackTarget = null;
-    e.target.parent.deselectFromAttack();
+    if (this.attackTarget) {
+      this.attackTarget.hideAttackSelection();
+      this.attackTarget = null;
+    } else if (this.supportTarget) {
+      this.supportTarget.hideSupportSelection();
+      this.supportTarget = null;
+    }
   }
 }
 
 module.exports.prototype.getSelectedPlanetsIds = function() {
   var ids = [];
   for (var i = 0;i < this.selectedPlanets.length;i ++) 
-    ids.push(this.selectedPlanets[i].data.id);
+    if (!this.supportTarget || this.supportTarget.data.id != this.selectedPlanets[i].data.id)
+      ids.push(this.selectedPlanets[i].data.id);
 
   console.log("getSelectedPlanetsIds:", ids)
   return ids;
@@ -387,4 +424,8 @@ module.exports.prototype.getSelectedPlanetsIds = function() {
 
 module.exports.prototype.getPlanetТоAttackId = function() {
   return this.attackTarget.data.id;
+}
+
+module.exports.prototype.getPlanetТоSupportId = function() {
+  return this.supportTarget.data.id;
 }

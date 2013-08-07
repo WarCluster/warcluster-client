@@ -3,6 +3,7 @@ module.exports = function(context, data){
 	var _self = this;
 
 	this.sc = 0.3 + Math.random() * 0.4 + 0.5;
+  this.selected = false;
 
 	this.context = context;
 	this.planetData = data.planetData;
@@ -17,7 +18,8 @@ module.exports = function(context, data){
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet1.png");
 	var bmd2 = context.resourcesLoader.get("./images/planets/planet_selection_glow.png");
-  var bmd3 = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
+  var bmd3 = context.resourcesLoader.get("./images/planets/planet_support_glow.png");
+  var bmd4 = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
 
 	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width, this.data.height, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
 	this.add(this.planet);
@@ -26,7 +28,11 @@ module.exports = function(context, data){
   this.selection.visible = false;
   this.add(this.selection);
 
-  this.attackSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.2, this.data.height*1.2, 1, 1), new THREE.MeshBasicMaterial({map: bmd3, transparent : true}));
+  this.supportSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.2, this.data.height*1.2, 1, 1), new THREE.MeshBasicMaterial({map: bmd3, transparent : true}));
+  this.supportSelection.visible = false;
+  this.add(this.supportSelection);
+
+  this.attackSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.2, this.data.height*1.2, 1, 1), new THREE.MeshBasicMaterial({map: bmd4, transparent : true}));
   this.attackSelection.visible = false;
   this.add(this.attackSelection);
 
@@ -57,18 +63,30 @@ module.exports = function(context, data){
 module.exports.prototype = new THREE.Object3D();
 module.exports.prototype.select = function() {
 	this.selection.visible = true;
+  this.selected = true;
 }
 
 module.exports.prototype.deselect = function() {
 	this.selection.visible = false;
+  this.selected = false;
 }
 
-module.exports.prototype.selectForAttack = function() {
+module.exports.prototype.showAttackSelection = function() {
   this.attackSelection.visible = true;
 }
 
-module.exports.prototype.deselectFromAttack = function() {
+module.exports.prototype.hideAttackSelection = function() {
   this.attackSelection.visible = false;
+}
+
+module.exports.prototype.showSupportSelection = function() {
+  this.supportSelection.visible = true;
+  this.selection.visible = false;
+}
+
+module.exports.prototype.hideSupportSelection = function() {
+  this.supportSelection.visible = false;
+  this.selection.visible = this.selected;
 }
 
 module.exports.prototype.updateInfo = function() {

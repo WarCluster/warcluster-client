@@ -26,6 +26,7 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.loadTexture("./images/suns/sun1.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet1.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet_selection_glow.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet_support_glow.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet_attack_glow.png");
 
   this.context.resourcesLoader.addEventListener("complete", function() { 
@@ -44,6 +45,8 @@ module.exports.prototype.buildScene = function() {
 
   this.camera = new THREE.PerspectiveCamera(15, ww / hh, 0.1, 100000000);
   this.camera.position.z = 6000;
+
+  THREE.Object3D._threexDomEvent.camera(this.camera);
 
   this.scene = new THREE.Scene();
   this.scene.add( new THREE.AmbientLight( 0xc1c1c1 ) );
@@ -87,8 +90,6 @@ module.exports.prototype.buildScene = function() {
   this.context.projector = this.projector;
   this.context.renderer = this.renderer;
   this.context.container = this.container;
-
-  THREE.Object3D._threexDomEvent.camera(this.camera);
 
   var onWindowResize = function() {
     //var ww = $(".content").offsetWidth;

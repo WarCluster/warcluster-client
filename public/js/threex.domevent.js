@@ -86,14 +86,6 @@ THREEx.DomEvent	= function(camera, domElement)
 	this._$onTouchMove	= function(){ _this._onTouchMove.apply(_this, arguments);	};
 	this._$onTouchStart	= function(){ _this._onTouchStart.apply(_this, arguments);	};
 	this._$onTouchEnd	= function(){ _this._onTouchEnd.apply(_this, arguments);	};
-	this._domElement.addEventListener( 'click'	, this._$onClick	, false );
-	this._domElement.addEventListener( 'dblclick'	, this._$onDblClick	, false );
-	this._domElement.addEventListener( 'mousemove'	, this._$onMouseMove	, false );
-	this._domElement.addEventListener( 'mousedown'	, this._$onMouseDown	, false );
-	this._domElement.addEventListener( 'mouseup'	, this._$onMouseUp	, false );
-	this._domElement.addEventListener( 'touchmove'	, this._$onTouchMove	, false );
-	this._domElement.addEventListener( 'touchstart'	, this._$onTouchStart	, false );
-	this._domElement.addEventListener( 'touchend'	, this._$onTouchEnd	, false );
 }
 
 // # Destructor
@@ -147,7 +139,17 @@ THREEx.DomEvent.prototype._objectCtxGet	= function(object3d){
 */
 THREEx.DomEvent.prototype.camera	= function(value)
 {
-	if( value )	this._camera	= value;
+	if( value )	{
+		this._camera	= value;
+		this._domElement.addEventListener( 'click'	, this._$onClick	, false );
+		this._domElement.addEventListener( 'dblclick'	, this._$onDblClick	, false );
+		this._domElement.addEventListener( 'mousemove'	, this._$onMouseMove	, false );
+		this._domElement.addEventListener( 'mousedown'	, this._$onMouseDown	, false );
+		this._domElement.addEventListener( 'mouseup'	, this._$onMouseUp	, false );
+		this._domElement.addEventListener( 'touchmove'	, this._$onTouchMove	, false );
+		this._domElement.addEventListener( 'touchstart'	, this._$onTouchStart	, false );
+		this._domElement.addEventListener( 'touchend'	, this._$onTouchEnd	, false );
+	}
 	return this._camera;
 }
 

@@ -50,7 +50,7 @@ module.exports = function(){
 	this.spaceViewController.maxZoom = 60000000;
 	this.spaceViewController.minZoom = 2000; //6000;
 	this.spaceViewController.zoomStep = 2000;
-	this.spaceViewController.addEventListener("selectPlanet", function(e) {
+	this.spaceViewController.addEventListener("showPlanetInfo", function(e) {
 		self.popover.render();
     self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
 
@@ -77,24 +77,31 @@ module.exports = function(){
 	});
 
   this.spaceViewController.addEventListener("attackPlanet", function(e) {
+    console.log("-SEND ATTACK MISSION-");
     for (var i = 0;i < e.attackSourcesIds.length;i ++)
-      self.commandsManager.attack(e.attackSourcesIds[i], e.planetToAttackId);
+      self.commandsManager.sendMission(e.attackSourcesIds[i], e.planetToAttackId);
+  });
+
+  this.spaceViewController.addEventListener("supportPlanet", function(e) {
+    console.log("-SEND SUPPORT MISSION-");
+    for (var i = 0;i < e.supportSourcesIds.length;i ++)
+      self.commandsManager.sendMission(e.supportSourcesIds[i], e.planetToSupportId);
   });
 
 	this.context.spaceViewController = this.spaceViewController;
-	this.spaceViewController.activate();
 
   this.commandsManager = new CommandsManager("http://127.0.0.1:7000/universe", this.context);
   this.commandsManager.loginFn = function(data) {
     console.log("-loginFn-", data);
 
     _.extend(self.context.playerData, data);
+
+    self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
 
     this.scopeOfView(self.context.playerData.Position);
   }
   this.commandsManager.updateViewFn = function(data) {
-    console.log("-updateViewFn-", data);
     self.context.spaceScene.update(data);
   }
 }
