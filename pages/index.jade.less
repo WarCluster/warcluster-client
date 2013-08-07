@@ -22,12 +22,11 @@ html, body {
   height:100%;
   padding:0;
   margin:0;
-  overflow-x:hidden;
+  overflow:hidden;
 }
 .content {
   width: 100%;
   height: 100%;
-  margin: 0 auto;
 }
 .pink {
   background-color: #F24960;
@@ -39,10 +38,9 @@ html, body {
 .ui-container {
   position: absolute;
   z-index: 100;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
+  top: 20px;
+  left: 20px;
+  color: #FFFFFF;
 }
 .elements {
   left:37%;
@@ -164,4 +162,15 @@ html, body {
 @-webkit-keyframes counterClockwiseSpin {
   0% {-webkit-transform:rotate(0deg);}
   100% {-webkit-transform:rotate(-360deg);}
+}
+
+.selection-rect {
+  position: fixed;
+  z-index: 999999;
+  background: rgba(255, 255, 255, .3);
+  border-color: #FFFFFF;
+  border-style: solid;
+  border-width: 1px;
+  opacity: 0.2;
+  pointer-events: none;
 }

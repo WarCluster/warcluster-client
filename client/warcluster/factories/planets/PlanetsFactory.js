@@ -1,4 +1,4 @@
-var Planet = require("../../planets/Planet");
+var Planet = require("../../space-objects/planets/Planet");
 
 module.exports = function(context){
 	this.context = context;
@@ -13,16 +13,19 @@ module.exports.prototype.build = function(data) {
 
 	this.context.container.add(planet);
 	
-	this.context.hitObjects.push(planet.hitObject);
+	this.context.planetsHitObjects.push(planet.hitObject);
 	this.context.interactiveObjects.push(planet);
+	this.context.objects.push(planet);
 
 	return planet;
 }
 
 module.exports.prototype.destroy = function(planet) {
 	this.context.container.remove(planet);
-	this.context.hitObjects.splice(this.context.hitObjects.indexOf(planet.hitObject), 1);
-	this.context.interactiveObjects.splice(this.context.interactiveObjects.indexOf(planet), 1);
+	
+	this.context.planetsHitObjects.splice(this.context.planetsHitObjects.indexOf(planet.hitObject), 1);
+	this.context.interactiveObjects.splice(this.context.interactiveObjects.indexOf(planet.hitObject), 1);
+	this.context.objects.splice(this.context.objects.indexOf(planet), 1);
 
 	this.cache.push(planet);
 

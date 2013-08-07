@@ -10,6 +10,8 @@ _ = require("../client/vendor/underscore");
 Backbone = require("../client/vendor/backbone");
 require("../client/vendor/backbone/backbone_bind_to");
 
+config = require("config");
+
 window.jadeCompile = function(path){
   var compiled = jade.compile(path);
   return function(data) {

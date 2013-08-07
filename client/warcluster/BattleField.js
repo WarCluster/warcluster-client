@@ -1,6 +1,5 @@
-//var Selection = require("./selection/Selection");
-var SpaceViewController = require("./controllers/view/SpaceViewController");
 var GameContext = require("./data/GameContext");
+var SpaceViewController = require("./controllers/view/SpaceViewController");
 var ResourcesLoader = require("./loaders/resources/ResourcesLoader");
 
 var PlanetsFactory = require("./factories/planets/PlanetsFactory");
@@ -9,24 +8,26 @@ var ShipsFactory = require("./factories/ships/ShipsFactory");
 var CanvasTextFactory = require("./factories/text/CanvasTextFactory");
 var SunsFactory = require("./factories/suns/SunsFactory");
 
-var CommandsManager = require("./commander/CommandsManager");
-
+var CommandsManager = require("./managers/commands/CommandsManager");
 var SpaceScene = require("./scene/SpaceScene");
+
+var UserPopover = require("./popovers/UserPopover");
 
 module.exports = function(){
 	var self = this;
 
-	this.playerData = null;
+	this.popover = new UserPopover();
 
 	this.context = new GameContext();
+  this.context.$content = $(".content");
 	this.context.activationTime = (new Date()).getTime();
 	this.context.currentTime = this.context.activationTime;
 	this.context.cTemp = $("#cTemp");
-	this.context.playerData = this.playerData;
+	this.context.playerData = {};
 	
 	this.context.resourcesLoader = new ResourcesLoader();
 
-	this.context.planetsFactory = new PlanetsFactory(this.context);
+	this.context.planetsHitObjectsFactory = new PlanetsFactory(this.context);
 	this.context.missionsFactory = new MissionsFactory(this.context);
 	this.context.shipsFactory = new ShipsFactory(this.context);
 	this.context.canvasTextFactory = new CanvasTextFactory(this.context);
@@ -39,30 +40,61 @@ module.exports = function(){
 		self.connect();
 	});
 
+	this.sourceTarget = null;
+	this.enemyTarget = null;
+
 	this.spaceViewController = new SpaceViewController(this.context);
 	this.spaceViewController.zoom = 6000;
 	this.spaceViewController.maxZoom = 60000000;
 	this.spaceViewController.minZoom = 6000; //6000;
 	this.spaceViewController.zoomStep = 2000;
+	this.spaceViewController.addEventListener("showPlanetInfo", function(e) {
+		self.popover.render();
+    self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
+	});
+
+	this.spaceViewController.addEventListener("scrollProgress", function(e) {
+		if (e.tooltipPlanet)
+			self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
+	}); 
+
+	this.spaceViewController.addEventListener("zoomProgress", function(e) {
+		if (e.tooltipPlanet)
+			self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
+	});
+
+  this.spaceViewController.addEventListener("attackPlanet", function(e) {
+    console.log("-SEND ATTACK MISSION-");
+    for (var i = 0;i < e.attackSourcesIds.length;i ++)
+      self.commandsManager.sendMission(e.attackSourcesIds[i], e.planetToAttackId);
+  });
+
+  this.spaceViewController.addEventListener("supportPlanet", function(e) {
+    console.log("-SEND SUPPORT MISSION-");
+    for (var i = 0;i < e.supportSourcesIds.length;i ++)
+      self.commandsManager.sendMission(e.supportSourcesIds[i], e.planetToSupportId);
+  });
 
 	this.context.spaceViewController = this.spaceViewController;
-	this.spaceViewController.activate();
 
-  this.commandsManager = new CommandsManager("http://warcluster-6760.euw1.actionbox.io:7000/universe");
+  this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
-    // console.log("-loginFn-", data);
-    self.playerData = data;
-    // console.log("-self.playerData loginFn:" + self.playerData.AvatarURL);
+    console.log("-loginFn-", data);
+
+    _.extend(self.context.playerData, data);
+
+    self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
 
-    this.scopeOfView(self.playerData.Position);
+    this.scopeOfView(self.context.playerData.Position);
   }
   this.commandsManager.updateViewFn = function(data) {
-    console.log("-updateViewFn-", data);
     self.context.spaceScene.update(data);
   }
 }
-
+console.log(typeof user)
 module.exports.prototype.connect = function() {
-  	this.commandsManager.prepare(user.screen_name, String(user.id), user.profile_image_url);
+  //this.commandsManager.prepare(user.screen_name, String(user.id), user.profile_image_url);
+  //this.commandsManager.prepare("RobbFlynn" + Math.random(), "TwitterID" + Math.random());
+  this.commandsManager.prepare("RobbFlynn", "TwitterID");
 }

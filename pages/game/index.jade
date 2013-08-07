@@ -8,8 +8,11 @@ html
     //- TODO: think about security before closed beta testing
     script
       var user = !{JSON.stringify(session.twitter)}
+      console.log(user)
     script(src="/js/sockjs-0.3.min.js")
     script(src="/js/three.js")
+    script(src="/js/threex.domevent.js")
+    script(src="/js/threex.domevent.object3d.js")
     script(src="/js/stats.min.js")
     script(src='/js/jade.js')
     script(src="/game/code.js")
@@ -17,18 +20,5 @@ html
   body(style="background-color: #000000")
     .content
     .ui-container
-      .container-fluid
-        .row-fluid
-          .span12
-        .row-fluid
-          .offset1.span10
-            .menu.btn-group
-              a.btn.test1(href="#") Build systems
-              a.btn.test2(href="#") Send mission
-              a.btn.scroll-left(href="#") Sroll left
-              a.btn.scroll-right(href="#") Sroll right
-              a.btn.attack(href="#") Attack
-          sup.version.span1
-            | &nbsp;&mdash;&nbsp;
-            .label !{version}
+      .label !{version}
     canvas#cTemp.temp

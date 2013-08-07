@@ -3,7 +3,6 @@ module.exports = function(context){
 }
 
 module.exports.prototype.build = function(missionData) {
-  console.log("build[missionData]:", missionData);
   var ts = missionData.totalShips;
   var step = 1;
 
@@ -35,7 +34,7 @@ module.exports.prototype.build = function(missionData) {
 
     ts -= step;
     
-    ship.position.z = 60;
+    ship.position.z = 260;
     ship.send(missionData);
   }
 }

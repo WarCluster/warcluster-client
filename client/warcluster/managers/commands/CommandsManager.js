@@ -1,24 +1,23 @@
-var PlayerData = require("../data/PlayerData");
+var PlayerData = require("../../data/PlayerData");
 
-module.exports = function(url){
+module.exports = function(url, context){
   this.url = url;
+  this.context = context;
 
   this.loginFn = null;
   this.updateViewFn = null;
 }
 
-module.exports.prototype.prepare = function(username, twitterId, avatarURL) {
+module.exports.prototype.prepare = function(username, twitterId) {
   var self = this;
 
   this.username = username;
   this.twitterId = twitterId;
-  this.avatarURL = avatarURL;
 
   var msg = {
     "Command": "login", 
     "Username": username, 
-    "TwitterId": twitterId,
-    "AvatarURL": avatarURL
+    "TwitterId": twitterId
   };
   console.log("msg:", msg)
   this.sockjs = new SockJS(this.url);
@@ -42,26 +41,54 @@ module.exports.prototype.prepare = function(username, twitterId, avatarURL) {
 // ***********************************************************************************
 
 module.exports.prototype.parseMessage = function(command) {
-  console.log("###.parseMessage:", command);
+  
+
   try {
     var data = JSON.parse(command);
-    
+  } catch(err) {
+    console.log("###.InvalidData:", command);
+    return false;
+  }
+  console.log("###.parseMessage:", data);
+  if (data.Command) {
     switch (data.Command) {
       case "login_success":
         var pd = new PlayerData();
         pd.Username = this.username;
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
-      
+
         this.loginFn(pd);
       break;
       case "scope_of_view_result":
-        var renderData = this.parseData(data)
-        this.updateViewFn(renderData)
+        var renderData = this.parseData(data);
+        this.updateViewFn(renderData);
       break;
     }
-  } catch(err) {
-    console.log("###.InvalidData:", command)
+  } else {
+    for (var s in data) {
+      var d = s.split(".")[1].split("_");
+      var time = parseInt(d[0]) * 1000;
+      var targetPosition = data[s].EndPlanet.split(".")[1].split("_");
+
+      this.context.currentTime = time;
+      
+      var mission = {
+        startTime: time,
+        travelTime: 10000,
+        source: {
+          x: parseFloat(d[1]),
+          y: parseFloat(d[2])
+        },
+        target: {
+          x: parseFloat(targetPosition[0]),
+          y: parseFloat(targetPosition[1])
+        }
+      };
+
+      
+      this.context.missionsFactory.build(mission);
+    }
   }
 }
 
@@ -81,19 +108,12 @@ module.exports.prototype.parseData = function(data) {
       pos = s.split("planet.").join("").split("_");
       renderData.objects.push({
         xtype: "PLANET",
-        data: item,
+        planetData: item,
         position: {
           x: pos[0] * sc,
           y: pos[1] * sc
         }
       });
-
-      /*console.log(this.playerData.Username, item.Owner)
-      if (this.playerData.Username == item.Owner)
-        this.playerData.HomePlanet = item;
-      else
-        this.playerData.PlanetToAttack = item;*/
-
     } else if (s.indexOf("sun") != -1) {
       pos = s.split("sun.").join("").split("_");
       renderData.objects.push({
@@ -114,13 +134,13 @@ module.exports.prototype.scopeOfView = function(position, resolution) {
   this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": resolution || [1920, 1080]}));
 }
 
-module.exports.prototype.attack = function(source, target) {
-  console.log("attack:", source, target)
+module.exports.prototype.sendMission = function(source, target, ships) {
+  console.log("sendMission:", source, target, ships)
   this.sockjs.send(JSON.stringify({
     "Command": "start_mission",
     "StartPlanet": source,
     "EndPlanet": target,
-    "Fleet": 40
+    "Fleet": ships || 40
   }));
 }
 
