@@ -2,6 +2,9 @@ var boot = require("../client/boot");
 
 
 $(document).ready(function() {
+<<<<<<< HEAD
+  console.log('before if');
+=======
 
   //Google analytics
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -12,6 +15,7 @@ $(document).ready(function() {
   ga('send', 'pageview');
   //end of Google analytics tracking
 
+>>>>>>> develop
   if (!window.WebGLRenderingContext) {
     // the browser doesn't even know what WebGL is
     window.location = "http://get.webgl.org";
@@ -24,5 +28,8 @@ $(document).ready(function() {
     }
   console.log('webgl-success');
   }
+<<<<<<< HEAD
+=======
 
+>>>>>>> develop
 });
