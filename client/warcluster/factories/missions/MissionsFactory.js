@@ -3,7 +3,6 @@ module.exports = function(context){
 }
 
 module.exports.prototype.build = function(missionData) {
-  console.log("build[missionData]:", missionData);
   var ts = missionData.totalShips;
   var step = 1;
 

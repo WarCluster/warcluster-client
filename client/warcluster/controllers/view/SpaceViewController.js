@@ -113,7 +113,6 @@ module.exports = function(context){
               self.selectedPlanets.splice(index, 1);
             }
           } else if (self.ctrlKey && !self.shiftKey) {
-
             if (self.attackTarget) {
               self.dispatchEvent({
                 type: "attackPlanet", 

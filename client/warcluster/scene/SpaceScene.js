@@ -1,6 +1,6 @@
 var SpaceSceneEnviroment = require("./SpaceSceneEnviroment");
-var Sun = require("../suns/Sun");
-var Planet = require("../planets/Planet");
+var Sun = require("../space-objects/suns/Sun");
+var Planet = require("../space-objects/planets/Planet");
 
 module.exports = function(context){
   this.context = context;

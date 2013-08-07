@@ -1,5 +1,5 @@
-var SpaceViewController = require("./controllers/view/SpaceViewController");
 var GameContext = require("./data/GameContext");
+var SpaceViewController = require("./controllers/view/SpaceViewController");
 var ResourcesLoader = require("./loaders/resources/ResourcesLoader");
 
 var PlanetsFactory = require("./factories/planets/PlanetsFactory");
@@ -8,7 +8,7 @@ var ShipsFactory = require("./factories/ships/ShipsFactory");
 var CanvasTextFactory = require("./factories/text/CanvasTextFactory");
 var SunsFactory = require("./factories/suns/SunsFactory");
 
-var CommandsManager = require("./commander/CommandsManager");
+var CommandsManager = require("./managers/commands/CommandsManager");
 
 var SpaceScene = require("./scene/SpaceScene");
 
@@ -90,7 +90,7 @@ module.exports = function(){
 
 	this.context.spaceViewController = this.spaceViewController;
 
-  this.commandsManager = new CommandsManager("http://127.0.0.1:7000/universe", this.context);
+  this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
     console.log("-loginFn-", data);
 

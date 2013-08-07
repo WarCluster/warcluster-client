@@ -1,4 +1,4 @@
-var Sun = require("../../suns/Sun");
+var Sun = require("../../space-objects/suns/Sun");
 
 module.exports = function(context){
   this.context = context;

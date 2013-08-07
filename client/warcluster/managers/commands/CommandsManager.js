@@ -1,4 +1,4 @@
-var PlayerData = require("../data/PlayerData");
+var PlayerData = require("../../data/PlayerData");
 
 module.exports = function(url, context){
   this.url = url;

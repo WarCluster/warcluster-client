@@ -1,4 +1,4 @@
-var Ship = require("../../ships/Ship");
+var Ship = require("../../space-objects/ships/Ship");
 
 module.exports = function(context){
 	this.context = context;
