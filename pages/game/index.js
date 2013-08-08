@@ -3,7 +3,10 @@ module.exports = function(config) {
     "GET": [
       this.version,
       function(req, res, next) {
-        next();
+        if (!req.session.twitter)
+          res.redirect("/");
+        else
+          next();
       },
       function(req, res, next){
         res.sendPage();

@@ -17,13 +17,18 @@ module.exports = function(){
 	var self = this;
 
 	this.popover = new UserPopover();
-
+  
 	this.context = new GameContext();
   this.context.$content = $(".content");
 	this.context.activationTime = (new Date()).getTime();
 	this.context.currentTime = this.context.activationTime;
 	this.context.cTemp = $("#cTemp");
-	this.context.playerData = {};
+	this.context.playerData = {
+    twitter: twitter
+  };
+
+  // Clear twitter credentials from global object
+  twitter = null;
 	
 	this.context.resourcesLoader = new ResourcesLoader();
 
@@ -79,9 +84,9 @@ module.exports = function(){
 
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
-    console.log("-loginFn-", data);
-
     _.extend(self.context.playerData, data);
+
+    console.log("-loginFn-", self.context.playerData);
 
     self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
@@ -92,9 +97,10 @@ module.exports = function(){
     self.context.spaceScene.update(data);
   }
 }
-console.log(typeof user)
+
 module.exports.prototype.connect = function() {
-  //this.commandsManager.prepare(user.screen_name, String(user.id), user.profile_image_url);
-  //this.commandsManager.prepare("RobbFlynn" + Math.random(), "TwitterID" + Math.random());
-  this.commandsManager.prepare("RobbFlynn", "TwitterID");
+  this.commandsManager.prepare(
+    this.context.playerData.twitter.screen_name, 
+    String(this.context.playerData.twitter.id)
+  );
 }
