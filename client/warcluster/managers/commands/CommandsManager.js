@@ -19,7 +19,7 @@ module.exports.prototype.prepare = function(username, twitterId) {
     "Username": username, 
     "TwitterId": twitterId
   };
-  console.log("msg:", msg)
+  
   this.sockjs = new SockJS(this.url);
   this.sockjs.onopen = function() {
     console.log('open');
