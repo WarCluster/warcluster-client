@@ -38,7 +38,8 @@ module.exports = function(context, data){
   var bmd3 = context.resourcesLoader.get("./images/planets/planet_support_glow.png");
   var bmd4 = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
 
-	this.planet =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width, this.data.height, 1, 1), new THREE.MeshBasicMaterial({map: bmd1, transparent : true}));
+  var color = (0xffffff * 0.7) + (0xffffff * 0.3) * Math.random();
+	this.planet =  new THREE.Mesh(new THREE.SphereGeometry(this.data.width / 2, 12, 12), new THREE.MeshLambertMaterial({map: bmd1, color: color, ambient: color}));
 	this.add(this.planet);
 
   this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: bmd2, transparent : true}));
@@ -55,15 +56,15 @@ module.exports = function(context, data){
 
 	//TODO: refactor for DRY(Don't Repeat Yourself)
 	var result = this.context.canvasTextFactory.build(this.data.ShipCount, null, 50);
-	this.titleTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
-	this.titleMaterial = new THREE.MeshBasicMaterial({map: this.titleTexture, transparent : true});
-	this.titleMaterial.map.needsUpdate = true;
-	this.title = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.titleMaterial);
-	this.title.scale.x = result.canvas2d.width*this.sc;
-	this.title.scale.y = result.canvas2d.height*this.sc;
-	this.title.position.z = pz + 50;
+	this.populationTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
+	this.populationMaterial = new THREE.MeshBasicMaterial({map: this.populationTexture, transparent : true});
+	this.populationMaterial.map.needsUpdate = true;
+	this.population = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.populationMaterial);
+	this.population.scale.x = result.canvas2d.width*this.sc;
+	this.population.scale.y = result.canvas2d.height*this.sc;
+	this.population.position.set(0, this.data.height * (0.78), pz + 50);
 
-	this.add(this.title);
+	this.add(this.population);
 	this.hitObject = this.planet;
 
 	result = this.context.canvasTextFactory.build(this.data.Owner || " ", null, 50);
@@ -73,7 +74,7 @@ module.exports = function(context, data){
 	this.owner = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.ownerMaterial);
 	this.owner.scale.x = result.canvas2d.width*this.sc;
 	this.owner.scale.y = result.canvas2d.height*this.sc;
-	this.owner.position.set(0, this.data.height * (-0.6), pz + 50);
+	this.owner.position.set(0, this.data.height * (-0.78), pz + 50);
 	this.add(this.owner);
 }
 
@@ -115,14 +116,14 @@ module.exports.prototype.hideSupportSelection = function() {
 module.exports.prototype.updatePopulationInfo = function() {
   //console.log("1.this.data:", this.data)
 	var result = this.context.canvasTextFactory.build(parseInt(this.data.ShipCount), null, 50);
-	this.titleTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
-	this.titleTexture.image.width = result.canvas2d.width;
-	this.titleTexture.image.height = result.canvas2d.height;
+	this.populationTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
+	this.populationTexture.image.width = result.canvas2d.width;
+	this.populationTexture.image.height = result.canvas2d.height;
 
-	this.titleMaterial.map.needsUpdate = true;
+	this.populationMaterial.map.needsUpdate = true;
 
-	this.title.scale.x = result.canvas2d.width*this.sc;
-	this.title.scale.y = result.canvas2d.height*this.sc;
+	this.population.scale.x = result.canvas2d.width*this.sc;
+	this.population.scale.y = result.canvas2d.height*this.sc;
 }
 
 module.exports.prototype.updateOwnerInfo = function() {
