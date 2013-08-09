@@ -9,6 +9,10 @@ module.exports = function(context, data){
   this.position.x = data.position.x;
   this.position.y = data.position.y;
 
+  this.light = new THREE.PointLight( 0xfffdbd, 1.5, 5000 );
+  this.light.position.set( data.position.x, data.position.y, 0 );
+  this.context.scene.add( this.light );
+
   this.sc = 1.6 + Math.random() * 0.4 + 1;
 
   var bmd1 = context.resourcesLoader.get("./images/suns/sun1.png");
