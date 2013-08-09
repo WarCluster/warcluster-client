@@ -101,12 +101,19 @@ module.exports.prototype.showSupportSelection = function() {
   this.selection.visible = false;
 }
 
+module.exports.prototype.update = function(data) {
+  _.extend(this.data, data.planetData);
+  this.updatePopulationInfo();
+  this.updateOwnerInfo();
+}
+
 module.exports.prototype.hideSupportSelection = function() {
   this.supportSelection.visible = false;
   this.selection.visible = this.selected;
 }
 
-module.exports.prototype.updateInfo = function() {
+module.exports.prototype.updatePopulationInfo = function() {
+  //console.log("1.this.data:", this.data)
 	var result = this.context.canvasTextFactory.build(parseInt(this.data.ShipCount), null, 50);
 	this.titleTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
 	this.titleTexture.image.width = result.canvas2d.width;
@@ -118,6 +125,20 @@ module.exports.prototype.updateInfo = function() {
 	this.title.scale.y = result.canvas2d.height*this.sc;
 }
 
+module.exports.prototype.updateOwnerInfo = function() {
+  var result = this.context.canvasTextFactory.build(this.data.Owner || " ", null, 50);
+  this.ownerTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
+  this.ownerTexture.image.width = result.canvas2d.width;
+  this.ownerTexture.image.height = result.canvas2d.height;
+
+  this.ownerMaterial.map.needsUpdate = true;
+
+  this.owner.scale.x = result.canvas2d.width*this.sc;
+  this.owner.scale.y = result.canvas2d.height*this.sc;
+}
+
+
+
 module.exports.prototype.tick = function() {
 	if (this.data.Owner) {
 		var prevShipCount = this.data.ShipCount;
@@ -125,7 +146,7 @@ module.exports.prototype.tick = function() {
     if (this.data.BuildPerTick) {
       this.data.ShipCount += this.data.BuildPerTick;
       if (parseInt(prevShipCount) != parseInt(this.data.ShipCount))
-        this.updateInfo();  
+        this.updatePopulationInfo();  
     }
 	}
 }

@@ -4,6 +4,7 @@ module.exports = function(){
   
 	this.container = null;
 	this.planetsHitObjects = [];
+  this.objectsById = {};
   this.objects = [];
   this.interactiveObjects = [];
 

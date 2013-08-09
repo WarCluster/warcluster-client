@@ -4,7 +4,7 @@ module.exports = function(context, data){
 
   this.sc = 2.6 + Math.random() * 0.4;
   this.context = context;
-  this.data = data;
+  this.data = data.sunData;
 
   this.position.x = data.position.x;
   this.position.y = data.position.y;

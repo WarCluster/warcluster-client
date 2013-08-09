@@ -16,6 +16,7 @@ module.exports.prototype.build = function(data) {
 	this.context.planetsHitObjects.push(planet.hitObject);
 	this.context.interactiveObjects.push(planet);
 	this.context.objects.push(planet);
+	this.context.objectsById[data.planetData.id] = planet;
 
 	return planet;
 }
@@ -26,6 +27,7 @@ module.exports.prototype.destroy = function(planet) {
 	this.context.planetsHitObjects.splice(this.context.planetsHitObjects.indexOf(planet.hitObject), 1);
 	this.context.interactiveObjects.splice(this.context.interactiveObjects.indexOf(planet.hitObject), 1);
 	this.context.objects.splice(this.context.objects.indexOf(planet), 1);
+	delete this.context.objectsById[planet.data.id];
 
 	this.cache.push(planet);
 

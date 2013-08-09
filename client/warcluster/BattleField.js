@@ -93,8 +93,8 @@ module.exports = function(){
 
     this.scopeOfView(self.context.playerData.Position);
   }
-  this.commandsManager.updateViewFn = function(data) {
-    self.context.spaceScene.update(data);
+  this.commandsManager.renderViewFn = function(data) {
+    self.context.spaceScene.render(data);
   }
 }
 

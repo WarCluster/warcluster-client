@@ -4,7 +4,7 @@ var Planet = require("../space-objects/planets/Planet");
 
 module.exports = function(context){
   this.context = context;
-  this.afterUpdateFn = null;
+  this.afterRenderFn = null;
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
@@ -135,8 +135,8 @@ module.exports.prototype.startRendering = function() {
   render();
 }
 
-module.exports.prototype.update = function(data) {
-  console.log("1.update:", data);
+module.exports.prototype.render = function(data) {
+  console.log("1.render:", data);
 
   if (data.objects.length > 0) {
     this.clear();
@@ -173,8 +173,57 @@ module.exports.prototype.update = function(data) {
     }
   }
 
-  if (this.afterUpdateFn != null)
-    this.afterUpdateFn();
+  if (this.afterRenderFn != null)
+    this.afterRenderFn();
+}
+
+module.exports.prototype.render = function(data) {
+  console.log("1.render:", data);
+
+  if (data.objects.length > 0) {
+    //this.clear();
+    for (var i = 0;i < data.objects.length;i ++) {
+      var obj = data.objects[i];
+      switch (obj.xtype) {
+        case "SUN":
+          var sun = this.context.objectsById[obj.sunData.id];
+
+          if (!sun)
+            sun = this.context.sunsFactory.build(obj);
+        break;
+        case "PLANET":
+          var planet = this.context.objectsById[obj.planetData.id];
+
+          if (!planet)
+            planet = this.context.planetsHitObjectsFactory.build(obj);
+          else
+            planet.update(obj);
+        break;
+      }
+    }
+  }
+
+  if (data.missions.length > 0) {
+    for (var i = 0;i < data.missions.length;i ++) {
+
+      var pl = [].concat(this.context.planetsHitObjects);
+      var sr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
+      var tr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
+      var mission = data.missions[i];
+      mission.startTime = this.context.currentTime;
+      mission.travelTime = 1000 * 5;
+      mission.source.position.x = sr.position.x;
+      mission.source.position.y = sr.position.y;
+
+      mission.target.position.x = tr.position.x;
+      mission.target.position.y = tr.position.y;
+      
+      this.context.missionsFactory.build(mission);
+    }
+  }
+
+  if (this.afterRenderFn != null)
+    this.afterRenderFn();
 }
 
 module.exports.prototype.moveTo = function(x, y) {

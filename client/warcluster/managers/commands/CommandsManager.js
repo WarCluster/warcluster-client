@@ -5,7 +5,7 @@ module.exports = function(url, context){
   this.context = context;
 
   this.loginFn = null;
-  this.updateViewFn = null;
+  this.renderViewFn = null;
 }
 
 module.exports.prototype.prepare = function(username, twitterId) {
@@ -62,7 +62,11 @@ module.exports.prototype.parseMessage = function(command) {
       break;
       case "scope_of_view_result":
         var renderData = this.parseData(data);
-        this.updateViewFn(renderData);
+        this.renderViewFn(renderData);
+      break;
+      case "state_change":
+        var renderData = this.parseData(data);
+        this.renderViewFn(renderData);
       break;
     }
   } else {
@@ -118,7 +122,7 @@ module.exports.prototype.parseData = function(data) {
       pos = s.split("sun.").join("").split("_");
       renderData.objects.push({
         xtype: "SUN",
-        data: item,
+        sunData: item,
         position: {
           x: pos[0] * sc,
           y: pos[1] * sc
