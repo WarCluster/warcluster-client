@@ -63,10 +63,10 @@ module.exports.prototype.buildScene = function() {
   THREE.Object3D._threexDomEvent.camera(this.camera);
 
   this.scene = new THREE.Scene();
-  this.scene.add( new THREE.AmbientLight( 0xc1c1c1 ) );
+  this.scene.add( new THREE.AmbientLight( 0xb0b0b0 ) );
 
 
-  var light = new THREE.SpotLight( 0xc3bc83, 1.5 );
+  /*var light = new THREE.SpotLight( 0xc3bc83, 1.5 );
   light.position.set( 0, 500, 2000 );
   light.castShadow = true;
   light.intensity = 1.5;
@@ -81,7 +81,7 @@ module.exports.prototype.buildScene = function() {
   light.shadowMapWidth = 2048;
   light.shadowMapHeight = 2048;
 
-  this.scene.add( light );
+  this.scene.add( light );*/
 
   this.projector = new THREE.Projector();
 

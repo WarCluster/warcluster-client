@@ -49,19 +49,15 @@ module.exports = function(context){
     keymap[e.keyCode] = true;
     
     switch (e.keyCode) {
-      case 17:
-        self.ctrlKey = true;
-        if (self.attackTarget && !self.shiftKey)
-          self.attackTarget.showAttackSelection();
-        else if (self.supportTarget)
-          self.handleShowSupprotSelection();
-      break;
       case 16:
         self.shiftKey = true;
-        if (self.attackTarget && self.ctrlKey)
-          self.attackTarget.hideAttackSelection();
-        else if (self.supportTarget && self.ctrlKey)
+        if (self.supportTarget)
           self.supportTarget.hideSupportSelection();
+      break;
+      case 17:
+        self.ctrlKey = true;
+        if (self.supportTarget)
+          self.handleShowSupprotSelection();
       break;
     }
   });
@@ -69,19 +65,15 @@ module.exports = function(context){
   $(document).keyup(function(e){
     delete keymap[e.keyCode];
     switch (e.keyCode) {
-      case 17:
-        self.ctrlKey = false;
-        if (self.attackTarget && !self.shiftKey)
-          self.attackTarget.hideAttackSelection();
-        else if (self.supportTarget && !self.shiftKey)
-          self.supportTarget.hideSupportSelection();
-      break;
       case 16:
         self.shiftKey = false;
-        if (self.attackTarget && self.ctrlKey)
-          self.attackTarget.showAttackSelection();
-        else if (self.supportTarget && self.ctrlKey)
+        if (self.supportTarget)
           self.handleShowSupprotSelection();
+      break;
+      case 17:
+        self.ctrlKey = false;
+        if (self.supportTarget)
+          self.supportTarget.hideSupportSelection();
       break;
     }
   });
@@ -97,7 +89,7 @@ module.exports = function(context){
       var intersects = self.getMouseIntersectionObjects(e);
       
       if (intersects.length > 0) {
-        if (!self.ctrlKey && !self.shiftKey) {
+        if (!self.shiftKey) {
           self.selectedTooltipPlanet = intersects[0].object.parent;
           self.dispatchEvent({
             type: "showPlanetInfo", 
@@ -108,7 +100,7 @@ module.exports = function(context){
         } else { 
           var target = intersects[0].object.parent;
 
-          if (self.ctrlKey && self.shiftKey && target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
+          if (self.shiftKey && target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
             var index = self.selectedPlanets.indexOf(target);
             if (index == -1) {
               target.select();
@@ -117,7 +109,8 @@ module.exports = function(context){
               target.deselect();
               self.selectedPlanets.splice(index, 1);
             }
-          } else if (self.ctrlKey && !self.shiftKey) {
+          } else if (!self.shiftKey) {
+            console.log("ATTACK:", self.attackTarget, self.supportTarget)
             if (self.attackTarget) {
               self.dispatchEvent({
                 type: "attackPlanet", 
@@ -215,6 +208,56 @@ module.exports = function(context){
     $(self.selectionRect).css(css);
   }
 
+  var handleMouseActions = function(e) {
+
+    var intersects = self.getMouseIntersectionObjects(e);
+    
+    if (intersects.length > 0) {
+      var target = intersects[0].object.parent;
+      console.log("1.handleMouseActions")
+      if (target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
+        if (self.supportTarget && self.ctrlKey) {
+          self.dispatchEvent({
+            type: "supportPlanet", 
+            supportSourcesIds: self.getSelectedPlanetsIds(),
+            planetToSupportId: self.getPlanetТоSupportId()
+          });
+        } else if (self.shiftKey && !self.ctrlKey) {
+          var index = self.selectedPlanets.indexOf(target);
+          console.log("2.handleMouseActions", index)
+          if (index == -1) {
+            target.select();
+            self.selectedPlanets.push(target);  
+          } else {
+            target.deselect();
+            self.selectedPlanets.splice(index, 1);
+          }
+        } else {
+          console.log("3.handleMouseActions")
+          self.deselectAll();
+
+          target.select();
+          self.selectedPlanets.push(target);  
+          
+        }
+      } else {
+        if (self.selectedPlanets.length > 0) {
+          if (self.attackTarget) {
+            self.dispatchEvent({
+              type: "attackPlanet", 
+              attackSourcesIds: self.getSelectedPlanetsIds(),
+              planetToAttackId: self.getPlanetТоAttackId()
+            });
+          }
+        }
+      }
+    } else {
+      for (var i = 0;i < self.selectedPlanets.length;i ++)
+        self.selectedPlanets[i].deselect();
+      self.selectedPlanets = [];
+    }
+  }
+
   var selectionMouseUp = function(e) {
     e.preventDefault();
 
@@ -230,7 +273,7 @@ module.exports = function(context){
     if (rect.width > 0 || rect.height > 0)
       self.hitTestPlanets(rect);
     else
-      scrollMouseUp(e);
+      handleMouseActions(e);
     self.selectionRect.remove();
     
     window.removeEventListener("mousemove", selectionMouseMove);
@@ -308,13 +351,22 @@ module.exports = function(context){
 
   // *****************************************************************
 
+  $(document).bind("contextmenu",function(e){
+    if (!self.shiftKey)
+      return false;
+  });
+
   this.onMouseDown = function(e) {
+    console.log(e.button )
     if (self.context.renderer.domElement == e.target) {
-      if (!self.ctrlKey)
+      if (e.button != 0)
         scrollMouseDown(e);
       else
         selectionMouseDown(e);
     }
+
+    e.preventDefault();
+    return false;
   }
 }
 
@@ -393,15 +445,20 @@ module.exports.prototype.hitTestPlanets = function(rect) {
     this.onPlanetMouseOut();
 }
 
+module.exports.prototype.deselectAll = function() {
+  for (var i=0;i < this.selectedPlanets.length;i ++)
+    this.selectedPlanets[i].deselect();
+  this.selectedPlanets = [];
+}
+
 module.exports.prototype.onPlanetMouseOver = function(e) {
   if (this.selectedPlanets.length > 0) {
     if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1) {
       this.attackTarget = e.target.parent;
-      if (this.ctrlKey && !this.shiftKey)
-        this.attackTarget.showAttackSelection();
+      this.attackTarget.showAttackSelection();
     } else {
       this.supportTarget = e.target.parent;
-      if (this.ctrlKey && !this.shiftKey) {
+      if (this.ctrlKey) {
         this.handleShowSupprotSelection();
       }
     }  
