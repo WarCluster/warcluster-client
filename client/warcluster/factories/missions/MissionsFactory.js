@@ -34,7 +34,7 @@ module.exports.prototype.build = function(missionData) {
 
     ts -= step;
     
-    ship.position.z = 260;
+    ship.position.z = 360;
     ship.send(missionData);
   }
 }
