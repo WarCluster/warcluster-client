@@ -221,7 +221,7 @@ module.exports.prototype.render = function(data) {
       this.context.missionsFactory.build(mission);
     }
   }
-
+  
   if (this.afterRenderFn != null)
     this.afterRenderFn();
 }

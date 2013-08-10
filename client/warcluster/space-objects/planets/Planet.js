@@ -13,8 +13,7 @@ module.exports = function(context, data){
   this.selected = false;
 
 	this.context = context;
-	this.planetData = data.planetData;
-
+	
 	this.position.x = data.position.x;
   this.position.y = data.position.y;
   
