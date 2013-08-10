@@ -79,9 +79,9 @@ module.exports.prototype.tick = function() {
 		//var index = (1 - this.progress);
 
 		if (this.progress <= 0.4)
-			this.index = this.progress / 0.4;
+			this.index = 0.3 + this.progress / 0.4;
 		else if (this.progress > 0.4)
-			this.index = (1 - (this.progress - 0.4) / 0.6);
+			this.index = 0.3 + (1 - (this.progress - 0.4) / 0.6);
 
 		this.vector.x = this.displacement.xx * this.index;
 		this.vector.y = this.displacement.yy * this.index;
