@@ -23,18 +23,18 @@ module.exports.prototype.build = function(missionData) {
     }
 
   var ship;
+  var color = new THREE.Color((0xffffff * 0.7) + (0xffffff * 0.3) * Math.random());
 
   for (var i = 0;i < 10;i ++) {
     
     if (ts - step >= 0) {
-      ship = this.context.shipsFactory.build(step);
+      ship = this.context.shipsFactory.build(step, color);
     } else {
-      ship = this.context.shipsFactory.build(ts);
+      ship = this.context.shipsFactory.build(ts, color);
     }
 
     ts -= step;
     
-    ship.position.z = 360;
     ship.send(missionData);
   }
 }

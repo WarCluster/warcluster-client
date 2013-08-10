@@ -6,24 +6,33 @@ module.exports = Backbone.View.extend({
     "click .attack":    "attack",
     "click .spy":       "spy"
   },
-  render: function(playerData){
-    var ownerAvatarURL = playerData && playerData.OwnerAvatarURL ? playerData.OwnerAvatarURL : "images/default_avatar.jpg"; 
-    var owner = playerData && playerData.Owner ? "@" + playerData.Owner : "Neutral Planet"; 
+  initialize: function() {
+    this.playerData = null;
+  },
+  render: function(){
+    var ownerAvatarURL = this.playerData && this.playerData.OwnerAvatarURL ? this.playerData.OwnerAvatarURL : "images/default_avatar.jpg"; 
+    var owner = this.playerData && this.playerData.Owner ? "@" + this.playerData.Owner : "Neutral Planet"; 
     //TODO: fix production coef according to github wiki
-    var production = playerData && playerData.Size ? playerData.Size : 0;
+    var production = this.playerData && this.playerData.Size ? this.playerData.Size : 0;
 
     this.$el.html(this.template({
      playerName:        owner,
      twitterAvatar:     ownerAvatarURL,
      planetProduction:  production
     }));
-    this.delegateEvents();
+    
     $(".ui-container").append(this.el);
-    $(this.el).css({position: "absolute", "margin-top": -$(this.el).height()/2});
+    
     return this;
   },
+  show: function(l, t, data) {
+    this.playerData = data;
+    this.render();
+    this.move(l, t);
+  },
   move: function(l, t) {
-    $(this.el).css({ top: t, left: l+10});
+    t -= this.$el.height()/2 + 22;
+    this.$el.css({ top: t, left: l - 15});
   },
   removePopover: function(e) {
     e.preventDefault();
