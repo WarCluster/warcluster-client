@@ -5,10 +5,13 @@ module.exports = function(context){
 	this.cache = [];
 }
 
-module.exports.prototype.build = function(total) {
+module.exports.prototype.build = function(total, color) {
 	var ship = this.cache.length > 0 ? this.cache.shift() : new Ship(this.context);
 	ship.prepare(total);
 	
+	ship.material.color = color;
+	ship.material.ambient = color;
+
 	this.context.container.add(ship);
 	this.context.objects.push(ship);
 	this.context.interactiveObjects.push(ship);

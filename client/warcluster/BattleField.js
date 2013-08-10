@@ -48,11 +48,21 @@ module.exports = function(){
 	this.sourceTarget = null;
 	this.enemyTarget = null;
 
-	this.spaceViewController = new SpaceViewController(this.context);
-	this.spaceViewController.zoom = 6000;
-	this.spaceViewController.maxZoom = 60000000;
-	this.spaceViewController.minZoom = 6000; //6000;
-	this.spaceViewController.zoomStep = 2000;
+	this.spaceViewController = new SpaceViewController(this.context, {
+    zoomer: {
+      zoom: 6000,
+      maxZoom: 60000000,
+      minZoom: 6000,
+      zoomStep: 2000
+    },
+    scroller: {
+      xMin: -5000000,
+      xMax: 5000000,
+      yMin: -4000000,
+      yMax: 4000000
+    }
+  });
+
 	this.spaceViewController.addEventListener("showPlanetInfo", function(e) {
 		self.popover.render();
     self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
