@@ -19,6 +19,8 @@ module.exports = function(context, color) {
 
 	this.direction = Math.random() > 0.5 ? 3 : -3;
 	this.angle = Math.random() * 360;
+
+	this.vector = new THREE.Vector3( 0, 0, 0 );
 }
 
 module.exports.prototype = new THREE.Object3D();
@@ -38,11 +40,21 @@ module.exports.prototype.send = function(mission) {
 	var d = Math.sqrt((this.delta_x*this.delta_x)+(this.delta_y*this.delta_y));
 	//this.mission.travelTime = d / speed;
 
+	var angle = Math.random() * 360;
+	var l = Math.random() * 200;
+	var l2 = Math.random() * 100 - 50;
+
 	this.displacement = {
 		x: Math.random() * 100 - 50,
 		y: Math.random() * 100 - 50,
-		z: 100 * Math.random() - 50
+		z: 100 * Math.random() - 50,
+		xx: l*Math.sin(angle*(Math.PI/180)),
+		yy: l2,
+		zz: l*Math.cos(angle*(Math.PI/180))
 	}
+
+	this.index = 0;
+	this.ship.rotation.y = Math.PI * Math.random();
 }
 
 module.exports.prototype.tick = function() {
@@ -62,11 +74,21 @@ module.exports.prototype.tick = function() {
 
 		var ind = Math.sin(this.angle*(Math.PI/180))
 
-		this.ship.rotation.y = 0.6 * ind;
+		this.ship.rotation.y += 0.004 * this.direction;
 
-		this.ship.position.x = this.displacement.x * (1 - this.progress) + 10 * ind;
-		this.ship.position.y = this.displacement.y * (1 - this.progress) + 3 * ind;
+		//var index = (1 - this.progress);
 
-		this.ship.position.z = this.displacement.z * (1 - this.progress);
+		if (this.progress <= 0.4)
+			this.index = 0.3 + this.progress / 0.4;
+		else if (this.progress > 0.4)
+			this.index = 0.3 + (1 - (this.progress - 0.4) / 0.6);
+
+		this.vector.x = this.displacement.xx * this.index;
+		this.vector.y = this.displacement.yy * this.index;
+		this.vector.z = this.displacement.zz * this.index;
+
+		this.ship.position.x = this.vector.x;
+		this.ship.position.y = this.vector.y;
+		this.ship.position.z = this.vector.z;
 	}
 }
