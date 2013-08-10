@@ -1,18 +1,18 @@
-module.exports = function(context) {
+module.exports = function(context, color) {
 	THREE.Object3D.call(this);
 	
 	this.context = context;
 	this.mission = null;
 	this.total = null;
-	
+
+	var resource = this.context.resourcesLoader.get("./models/ship1.js");
 	var map = this.context.resourcesLoader.get("./images/ships/ship1.png");
-	this.material = new THREE.MeshBasicMaterial({map: map, transparent: true});
+	this.material = new THREE.MeshPhongMaterial({map: map});
 
-	this.ship = new THREE.Mesh(new THREE.PlaneGeometry(66 * 0.5, 71 * 0.5), this.material);
-	this.ship.doubleSided = true;
-	this.ship.flipSided = true;
+	this.ship = new THREE.Mesh(resource.geometry, this.material);
+	this.ship.scale.set(0.35, 0.35, 0.35); 
 	this.add(this.ship);
-
+	
 	this.progress = 0;
 	this.delta_x = 0;
 	this.delta_y = 0;
@@ -40,7 +40,8 @@ module.exports.prototype.send = function(mission) {
 
 	this.displacement = {
 		x: Math.random() * 100 - 50,
-		y: Math.random() * 100 - 50
+		y: Math.random() * 100 - 50,
+		z: 100 * Math.random() - 50
 	}
 }
 
@@ -50,12 +51,22 @@ module.exports.prototype.tick = function() {
 		this.context.shipsFactory.destroy(this);
 	} else {
 		this.progress = (this.context.currentTime - this.mission.startTime) / this.mission.travelTime;
+
+		if (this.progress > 1)
+			this.progress = 1;
+
 		this.position.x = this.mission.source.x + this.delta_x * this.progress;
 		this.position.y = this.mission.source.y + this.delta_y * this.progress;
 
 		this.angle += this.direction;
 
-		this.ship.position.x = this.displacement.x * (1.3 - this.progress) + 5 * Math.sin(this.angle*(Math.PI/180));
-		this.ship.position.y = this.displacement.y * (1.3 - this.progress);
+		var ind = Math.sin(this.angle*(Math.PI/180))
+
+		this.ship.rotation.y = 0.6 * ind;
+
+		this.ship.position.x = this.displacement.x * (1 - this.progress) + 10 * ind;
+		this.ship.position.y = this.displacement.y * (1 - this.progress) + 3 * ind;
+
+		this.ship.position.z = this.displacement.z * (1 - this.progress);
 	}
 }

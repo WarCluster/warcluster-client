@@ -43,6 +43,8 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.loadTexture("./images/planets/planet_support_glow.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet_attack_glow.png");
 
+  this.context.resourcesLoader.loadModel("./models/ship1.js");
+
   this.context.resourcesLoader.addEventListener("complete", function() { 
     self.buildScene();
     self.startRendering();
@@ -64,24 +66,6 @@ module.exports.prototype.buildScene = function() {
 
   this.scene = new THREE.Scene();
   this.scene.add( new THREE.AmbientLight( 0xb0b0b0 ) );
-
-
-  /*var light = new THREE.SpotLight( 0xc3bc83, 1.5 );
-  light.position.set( 0, 500, 2000 );
-  light.castShadow = true;
-  light.intensity = 1.5;
-
-  light.shadowCameraNear = 200;
-  light.shadowCameraFar = this.camera.far;
-  light.shadowCameraFov = 50;
-
-  light.shadowBias = -0.00022;
-  light.shadowDarkness = 0.5;
-
-  light.shadowMapWidth = 2048;
-  light.shadowMapHeight = 2048;
-
-  this.scene.add( light );*/
 
   this.projector = new THREE.Projector();
 
@@ -221,7 +205,7 @@ module.exports.prototype.render = function(data) {
       this.context.missionsFactory.build(mission);
     }
   }
-  
+
   if (this.afterRenderFn != null)
     this.afterRenderFn();
 }
