@@ -9,8 +9,6 @@ module.exports = function(context, config){
   this.minZoom = config.minZoom || null;
   this.maxZoom = config.maxZoom || null;
 
-  // *****************************************************************
-
   window.addEventListener('mousewheel', function(e) {
     e.preventDefault();
 

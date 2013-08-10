@@ -19,8 +19,6 @@ module.exports = function(context, color) {
 
 	this.direction = Math.random() > 0.5 ? 3 : -3;
 	this.angle = Math.random() * 360;
-
-	this.vector = new THREE.Vector3( 0, 0, 0 );
 }
 
 module.exports.prototype = new THREE.Object3D();
@@ -58,7 +56,6 @@ module.exports.prototype.send = function(mission) {
 }
 
 module.exports.prototype.tick = function() {
-	//console.log("tick:", this.context.currentTime, this.mission.startTime, this.mission.travelTime)
 	if (this.context.currentTime > this.mission.startTime + this.mission.travelTime) {
 		this.context.shipsFactory.destroy(this);
 	} else {
@@ -71,24 +68,15 @@ module.exports.prototype.tick = function() {
 		this.position.y = this.mission.source.y + this.delta_y * this.progress;
 
 		this.angle += this.direction;
-
-		var ind = Math.sin(this.angle*(Math.PI/180))
-
 		this.ship.rotation.y += 0.004 * this.direction;
 
-		//var index = (1 - this.progress);
-
 		if (this.progress <= 0.4)
-			this.index = 0.3 + this.progress / 0.4;
+			this.index = 0.2 + this.progress / 0.4;
 		else if (this.progress > 0.4)
-			this.index = 0.3 + (1 - (this.progress - 0.4) / 0.6);
+			this.index = 0.2 + (1 - (this.progress - 0.4) / 0.6);
 
-		this.vector.x = this.displacement.xx * this.index;
-		this.vector.y = this.displacement.yy * this.index;
-		this.vector.z = this.displacement.zz * this.index;
-
-		this.ship.position.x = this.vector.x;
-		this.ship.position.y = this.vector.y;
-		this.ship.position.z = this.vector.z;
+		this.ship.position.x = this.displacement.xx * this.index;
+		this.ship.position.y = this.displacement.yy * this.index;
+		this.ship.position.z = this.displacement.zz * this.index;
 	}
 }
