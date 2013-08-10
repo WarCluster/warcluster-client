@@ -8,6 +8,8 @@ module.exports = function(context, config){
 
 	var self = this;
 
+  this.context = context;
+
   this.zoomer = new Zoomer(context, config.zoomer);
   this.zoomer.addEventListener("zoom", function(e) {
     self.scroller.scaleIndex = e.zoom / 6000;

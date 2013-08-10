@@ -147,10 +147,10 @@ module.exports = function(context, config){
       height: h >= 0 ? h : Math.abs(h)
     };
 
-    if (rect.width > 0 || rect.height > 0)
-      self.hitTestPlanets(rect);
-    else
+    if (rect.width < 4 && rect.height < 4)
       handleMouseActions(e);
+    else
+      self.hitTestPlanets(rect);
     self.selectionRect.remove();
     
     window.removeEventListener("mousemove", selectionMouseMove);
