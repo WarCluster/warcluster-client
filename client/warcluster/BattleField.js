@@ -10,14 +10,11 @@ var SunsFactory = require("./factories/suns/SunsFactory");
 
 var CommandsManager = require("./managers/commands/CommandsManager");
 var SpaceScene = require("./scene/SpaceScene");
-
-var UserPopover = require("./popovers/UserPopover");
+var MissionsMenu = require("./controls/mission-menu");
 
 module.exports = function(){
 	var self = this;
 
-	this.popover = new UserPopover();
-  
 	this.context = new GameContext();
   this.context.$content = $(".content");
 	this.context.activationTime = (new Date()).getTime();
@@ -29,6 +26,9 @@ module.exports = function(){
 
   // Clear twitter credentials from global object
   twitter = null;
+
+  this.missionsMenu = new MissionsMenu();
+  $(".ui-container").append(this.missionsMenu.render().el);
 	
 	this.context.resourcesLoader = new ResourcesLoader();
 
@@ -45,9 +45,6 @@ module.exports = function(){
 		self.connect();
 	});
 
-	this.sourceTarget = null;
-	this.enemyTarget = null;
-
 	this.spaceViewController = new SpaceViewController(this.context, {
     zoomer: {
       zoom: 6000,
@@ -62,21 +59,6 @@ module.exports = function(){
       yMax: 4000000
     }
   });
-
-	this.spaceViewController.addEventListener("showPlanetInfo", function(e) {
-		self.popover.render();
-    self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
-	});
-
-	this.spaceViewController.addEventListener("scrollProgress", function(e) {
-		if (e.tooltipPlanet)
-			self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
-	}); 
-
-	this.spaceViewController.addEventListener("zoomProgress", function(e) {
-		if (e.tooltipPlanet)
-			self.popover.move(e.tooltipPosition.x, e.tooltipPosition.y);
-	});
 
   this.spaceViewController.addEventListener("attackPlanet", function(e) {
     console.log("-SEND ATTACK MISSION-");

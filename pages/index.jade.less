@@ -1,6 +1,8 @@
 @import "../style/less/bootstrap.less";
 @import "../style/less/responsive.less";
 @import "../style/less/carousel.less";
+
+@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 /*TODO: 
   refactor css in less style
 */
@@ -18,6 +20,8 @@
   float: right;
 }
 html, body {
+  font-family: 'Roboto Condensed', sans-serif;
+  color: #FFFFFF;
   width:100%;
   height:100%;
   padding:0;
@@ -38,8 +42,8 @@ html, body {
 .ui-container {
   position: absolute;
   z-index: 100;
-  top: 20px;
-  left: 20px;
+  top: 0px;
+  left: 0px;
   color: #FFFFFF;
 }
 .elements {
@@ -50,7 +54,16 @@ html, body {
   text-align: center;
   width: 330px;
 }
-.description, .loginBtn, .label {
+
+.label {
+  position: absolute;
+  top: 18px;
+  left: 10px;
+  color: #fff;
+}
+
+.description {
+  font-size: 18px;
   color: #fff;
 }
 /*.loginBtn {
@@ -173,4 +186,31 @@ html, body {
   border-width: 1px;
   opacity: 0.3;
   pointer-events: none;
+}
+
+.missions-menu {
+  background-image:url('/images/missions-menu.png');
+  width: 405px;
+  height: 141px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.missions-menu ul {
+  position: absolute;
+  left: 12px;
+  bottom: -14px;
+}
+
+.missions-menu li {
+  width: 60px;
+  height: 60px;
+  margin-right: 8px;
+}
+
+.missions-menu-selection {
+  background-image:url('/images/mission-selection.png');
+  width: 60px;
+  height: 60px;
 }
