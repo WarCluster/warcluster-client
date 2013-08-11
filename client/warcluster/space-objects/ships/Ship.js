@@ -10,15 +10,16 @@ module.exports = function(context, color) {
 	this.material = new THREE.MeshPhongMaterial({map: map});
 
 	this.ship = new THREE.Mesh(resource.geometry, this.material);
-	this.ship.scale.set(0.35, 0.35, 0.35); 
+	this.ship.scale.set(0.3, 0.3, 0.3); 
 	this.add(this.ship);
 	
 	this.progress = 0;
 	this.delta_x = 0;
 	this.delta_y = 0;
 
-	this.direction = Math.random() > 0.5 ? 3 : -3;
+	this.direction = Math.random() > 0.5 ? 1 : -1;
 	this.angle = Math.random() * 360;
+	this.formation = null;
 }
 
 module.exports.prototype = new THREE.Object3D();
@@ -40,22 +41,23 @@ module.exports.prototype.send = function(mission) {
 
 	var angle = Math.random() * 360;
 	var l = Math.random() * 200;
-	var l2 = Math.random() * 100 - 50;
+	var l2 = Math.random() * 400 - 200;
 
-	this.displacement = {
+	/*this.displacement = {
 		x: Math.random() * 100 - 50,
 		y: Math.random() * 100 - 50,
 		z: 100 * Math.random() - 50,
 		xx: l*Math.sin(angle*(Math.PI/180)),
 		yy: l2,
 		zz: l*Math.cos(angle*(Math.PI/180))
-	}
+	}*/
 
 	this.index = 0;
 	this.ship.rotation.y = Math.PI * Math.random();
 }
 
 module.exports.prototype.tick = function() {
+	//console.log("tick:", this.context.currentTime, this.mission.startTime, this.mission.travelTime)
 	if (this.context.currentTime > this.mission.startTime + this.mission.travelTime) {
 		this.context.shipsFactory.destroy(this);
 	} else {
@@ -68,15 +70,15 @@ module.exports.prototype.tick = function() {
 		this.position.y = this.mission.source.y + this.delta_y * this.progress;
 
 		this.angle += this.direction;
-		this.ship.rotation.y += 0.004 * this.direction;
 
-		if (this.progress <= 0.4)
-			this.index = 0.2 + this.progress / 0.4;
-		else if (this.progress > 0.4)
-			this.index = 0.2 + (1 - (this.progress - 0.4) / 0.6);
+		var ind = Math.sin(this.angle*(Math.PI/180))
+		var ind2 = Math.sin((180 * this.progress)*(Math.PI/180))
 
-		this.ship.position.x = this.displacement.xx * this.index;
-		this.ship.position.y = this.displacement.yy * this.index;
-		this.ship.position.z = this.displacement.zz * this.index;
+		//console.log(ind2)
+		this.ship.rotation.y = -0.5 * ind - 0.5;
+
+		this.ship.position.x = this.formation.x * ind2 + ind * 15;
+		this.ship.position.y = this.formation.y * ind2;
+		this.ship.position.z = this.formation.z * ind2;
 	}
 }
