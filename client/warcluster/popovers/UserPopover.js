@@ -20,10 +20,14 @@ module.exports = Backbone.View.extend({
      twitterAvatar:     ownerAvatarURL,
      planetProduction:  production
     }));
-    
+
+    this.delegateEvents();
     $(".ui-container").append(this.el);
     
     return this;
+  },
+  updateInfo: function() {
+
   },
   show: function(l, t, data) {
     this.playerData = data;
@@ -32,7 +36,7 @@ module.exports = Backbone.View.extend({
   },
   move: function(l, t) {
     t -= this.$el.height()/2 + 2;
-    this.$el.css({ top: t, left: l});
+    this.$el.css({ top: t, left: l + 5});
   },
   removePopover: function(e) {
     e.preventDefault();

@@ -1,14 +1,15 @@
 .arrow
 h5.popover-title
-  a(href='http://www.twitter.com/'+playerName, target='_blank')  !{playerName}
+  a.player-name(href='http://www.twitter.com/'+playerName, target='_blank')  !{playerName}
   a.close-btn(href="#")
     i.icon-remove.pull-right
 .popover-content
-  
-  img.avatar.float-left(src="#{twitterAvatar}")
-  .meta-information
-    p.float-right(style='white-space:pre;')
-      | !{planetProduction} ships/minute
-  .btn-group.float-right
-    .attack.btn Attack
-    .spy.btn Spy
+  .row-fluid
+    img.player-avatar.span4(src="#{twitterAvatar}")
+    .meta-information.span8
+      p.float-right(style='white-space:pre;')
+        span.planet-production !{planetProduction} 
+        span  ships/minute
+      .pull-right
+        .attack.btn Attack
+        .spy.btn Spy
