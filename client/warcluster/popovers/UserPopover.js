@@ -10,14 +10,14 @@ module.exports = Backbone.View.extend({
     this.playerData = null;
   },
   render: function(){
-    var ownerAvatarURL = this.playerData && this.playerData.OwnerAvatarURL ? this.playerData.OwnerAvatarURL : "images/default_avatar.jpg"; 
-    var owner = this.playerData && this.playerData.Owner ? "@" + this.playerData.Owner : "Neutral Planet"; 
-    //TODO: fix production coef according to github wiki
+    var screenName = this.playerData && this.playerData.Owner ? this.playerData.Owner.split("player.").join("") : null;
+    var twitterAvatar = screenName ? "https://twitter.com/api/users/profile_image/"+screenName+"?size=bigger" : "/images/default_avatar.jpg";
+    var owner = screenName ? "@" + screenName : "Neutral Planet"; 
     var production = this.playerData && this.playerData.Size ? this.playerData.Size : 0;
 
     this.$el.html(this.template({
      playerName:        owner,
-     twitterAvatar:     ownerAvatarURL,
+     twitterAvatar:     twitterAvatar,
      planetProduction:  production
     }));
 

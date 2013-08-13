@@ -39,11 +39,11 @@ module.exports = function(){
 	this.context.sunsFactory = new SunsFactory(this.context);
 
 	this.context.spaceScene = new SpaceScene(this.context);
-	this.context.spaceScene.prepare();
 	this.context.spaceScene.addEventListener("complete", function() { 
 		console.log("--complete space scene--");
 		self.connect();
 	});
+  this.context.spaceScene.prepare();
 
 	this.spaceViewController = new SpaceViewController(this.context, {
     zoomer: {
