@@ -86,6 +86,24 @@ module.exports.prototype.buildScene = function() {
   this.context.renderer = this.renderer;
   this.context.container = this.container;
 
+  this.ctrlKey = false;
+  $(document).keydown(function(e){
+    switch (e.keyCode) {
+      case 17:
+        self.ctrlKey = true;
+      break;
+    }
+  });
+
+  $(document).keyup(function(e){
+    switch (e.keyCode) {
+      case 17:
+        self.ctrlKey = false;
+      break;
+    }
+  });
+
+
   var onWindowResize = function() {
     //var ww = $(".content").offsetWidth;
     //var hh = $(".content").offsetHeight;
@@ -104,8 +122,11 @@ module.exports.prototype.buildScene = function() {
 module.exports.prototype.startRendering = function() {
   var self = this;
   var t = (new Date()).getTime();
+  var nextT = 0;
   var render = function() {
     requestAnimationFrame(render);
+
+    nextT = (new Date()).getTime();
 
     for(var i = 0;i < self.context.interactiveObjects.length;i ++)
       self.context.interactiveObjects[i].tick();
@@ -113,56 +134,17 @@ module.exports.prototype.startRendering = function() {
     self.renderer.render(self.scene, self.camera);
     self.stats.update();
     self.context.currentTime += (new Date()).getTime() - t;
-    t = (new Date()).getTime();
+
+    if (self.ctrlKey)
+      console.log("RenderTime:", nextT - t, self.context.interactiveObjects.length);
+    t = nextT;
   }
 
   render();
 }
 
 module.exports.prototype.render = function(data) {
-  console.log("1.render:", data);
-
-  if (data.objects.length > 0) {
-    this.clear();
-    for (var i = 0;i < data.objects.length;i ++) {
-      var obj = data.objects[i];
-      switch (obj.xtype) {
-        case "SUN":
-          var sun = this.context.sunsFactory.build(obj);
-          this.context.objects.push(sun);
-        break;
-        case "PLANET":
-          var planet = this.context.planetsHitObjectsFactory.build(obj);
-        break;
-      }
-    }
-  }
-
-  if (data.missions.length > 0) {
-    for (var i = 0;i < data.missions.length;i ++) {
-
-      var pl = [].concat(this.context.planetsHitObjects);
-      var sr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
-      var tr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
-      var mission = data.missions[i];
-      mission.startTime = this.context.currentTime;
-      mission.travelTime = 1000 * 5;
-      mission.source.position.x = sr.position.x;
-      mission.source.position.y = sr.position.y;
-
-      mission.target.position.x = tr.position.x;
-      mission.target.position.y = tr.position.y;
-      
-      this.context.missionsFactory.build(mission);
-    }
-  }
-
-  if (this.afterRenderFn != null)
-    this.afterRenderFn();
-}
-
-module.exports.prototype.render = function(data) {
-  console.log("1.render:", data);
+  //console.log("1.render:", data);
 
   if (data.objects.length > 0) {
     //this.clear();
@@ -187,7 +169,7 @@ module.exports.prototype.render = function(data) {
     }
   }
 
-  if (data.missions.length > 0) {
+  /*if (data.missions.length > 0) {
     for (var i = 0;i < data.missions.length;i ++) {
 
       var pl = [].concat(this.context.planetsHitObjects);
@@ -204,7 +186,7 @@ module.exports.prototype.render = function(data) {
       
       this.context.missionsFactory.build(mission);
     }
-  }
+  }*/
 
   if (this.afterRenderFn != null)
     this.afterRenderFn();

@@ -1,35 +1,38 @@
-module.exports = function(context){
-	this.context = context;
-	this.result = {
-		canvas2d: null,
-		context2d: null,
-	};
+module.exports = function(useGlobalCanvas, context){
+  if (useGlobalCanvas && !module.exports.canvas)
+    module.exports.canvas = document.createElement('canvas');
+
+  this.canvas2d = useGlobalCanvas ? module.exports.canvas : document.createElement('canvas');
+  this.context2d = this.canvas2d.getContext('2d');
+  this.uint8Array = null;
 }
 
 module.exports.prototype.build = function(text, font, size) {
-	var canvas2d = this.context.cTemp[0];
-	var context2d = canvas2d.getContext('2d');
 	var textHandler = text;
 
-	if (textHandler === "") {
+	if (textHandler === "")
 		textHandler = " "
-	}
 
-	font = !font ? "Ubuntu" : font;
-	size = !size ? 20 : size;
+	font = font || "Ubuntu";
+	size = size || 20;
 
-    canvas2d.width = context2d.measureText(textHandler).width;
-    canvas2d.height = size*2;
-	
-    context2d.font = size + 'pt ' + font;
-    context2d.fillStyle = 'white';
-    context2d.textAlign = "center";
-    context2d.textBaseline = "middle";
-	
-    context2d.fillText(textHandler, canvas2d.width / 2, canvas2d.height / 2);
-	
-    this.result.canvas2d = canvas2d;
-    this.result.context2d = context2d;
+  this.canvas2d.width = this.context2d.measureText(textHandler).width;
+  this.canvas2d.height = size*2;
 
-	return this.result;
+  this.context2d.font = size + 'pt ' + font;
+  this.context2d.fillStyle = 'white';
+  this.context2d.textAlign = "center";
+  this.context2d.textBaseline = "middle";
+
+  this.context2d.fillText(textHandler, this.canvas2d.width / 2, this.canvas2d.height / 2);
+
+	return this;
 }
+
+module.exports.prototype.buildUint8Array = function(text, font, size) {
+  this.build(text, font, size);
+  this.uint8Array = new Uint8Array(this.context2d.getImageData(0, 0, this.canvas2d.width, this.canvas2d.height).data.buffer);
+  return this;
+}
+
+module.exports.canvas = null;
