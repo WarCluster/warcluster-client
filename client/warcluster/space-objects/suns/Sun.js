@@ -2,7 +2,7 @@ module.exports = function(context, data){
   THREE.Object3D.call(this);
   var _self = this;
 
-  this.sc = 2.6 + Math.random() * 0.4;
+  this.sc = 2.6 + Math.random() * 0.4 + 1;
   this.context = context;
   this.data = data.sunData;
 
@@ -13,8 +13,6 @@ module.exports = function(context, data){
   this.light = new THREE.PointLight( 0xfffdbd, 1.5, 5000 );
   this.light.position.set( data.position.x, data.position.y, 0 );
   this.context.scene.add( this.light );
-
-  this.sc = 1.6 + Math.random() * 0.4 + 1;
 
   var bmd1 = context.resourcesLoader.get("./images/suns/sun1.png");
 
