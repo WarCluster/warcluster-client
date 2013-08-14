@@ -16,7 +16,7 @@ $(document).ready(function() {
     window.location = "http://get.webgl.org";
   } else {
     var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("webgl");
+    var ctx = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     if (!ctx) {
       // browser supports WebGL but initialization failed.
       window.location = "http://get.webgl.org/troubleshooting";
