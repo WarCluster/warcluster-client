@@ -49,7 +49,7 @@ module.exports.prototype.parseMessage = function(command) {
     console.log("###.InvalidData:", command);
     return false;
   }
-  console.log("###.parseMessage:", data);
+  //console.log("###.parseMessage:", data);
   if (data.Command) {
     switch (data.Command) {
       case "login_success":
@@ -139,7 +139,7 @@ module.exports.prototype.scopeOfView = function(position, resolution) {
 }
 
 module.exports.prototype.sendMission = function(source, target, ships) {
-  console.log("sendMission:", source, target, ships)
+  //console.log("sendMission:", source, target, ships)
   this.sockjs.send(JSON.stringify({
     "Command": "start_mission",
     "StartPlanet": source,

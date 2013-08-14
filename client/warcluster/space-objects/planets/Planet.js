@@ -1,5 +1,7 @@
+var InteractiveObject = require("../InteractiveObject");
+
 module.exports = function(context, data){
-	THREE.Object3D.call(this);
+	InteractiveObject.call(this);
 	
   //TODO: should make them according to the wiki in github
   var buildPerTickArr = {
@@ -11,6 +13,7 @@ module.exports = function(context, data){
 
 	this.sc = 0.3 + Math.random() * 0.4 + 0.5;
   this.selected = false;
+  this.prevShipCount = 0;
 
 	this.context = context;
 	
@@ -18,8 +21,8 @@ module.exports = function(context, data){
   this.position.y = data.position.y;
   
 	this.data = data.planetData;
-  this.data.width = 130 + 20 * this.data.Size,
-  this.data.height = 130 + 20 * this.data.Size
+  this.data.width = 130 + 20 * this.data.Size;
+  this.data.height = 130 + 20 * this.data.Size;
 	
   if(this.data.Owner === "") {
     this.data.BuildPerTick = 0;
@@ -38,6 +41,7 @@ module.exports = function(context, data){
   var bmd4 = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
 
   var color = (0xffffff * 0.7) + (0xffffff * 0.3) * Math.random();
+
 	this.planet =  new THREE.Mesh(new THREE.SphereGeometry(this.data.width / 2, 12, 12), new THREE.MeshLambertMaterial({map: bmd1, color: color, ambient: color}));
 	this.add(this.planet);
 
@@ -54,30 +58,47 @@ module.exports = function(context, data){
   this.add(this.attackSelection);
 
 	//TODO: refactor for DRY(Don't Repeat Yourself)
-	var result = this.context.canvasTextFactory.build(this.data.ShipCount, null, 50);
-	this.populationTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
-	this.populationMaterial = new THREE.MeshBasicMaterial({map: this.populationTexture, transparent : true});
+	var result = this.context.canvasTextFactory.buildUint8Array(this.data.ShipCount, null, 45);
+
+  var ww = result.canvas2d.width;
+  var hh = result.canvas2d.height;
+
+	this.populationTexture = new THREE.DataTexture(result.uint8Array, result.canvas2d.width, result.canvas2d.height);
+	this.populationMaterial = new THREE.MeshBasicMaterial({map: this.populationTexture, transparent : true})
 	this.populationMaterial.map.needsUpdate = true;
 	this.population = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.populationMaterial);
-	this.population.scale.x = result.canvas2d.width*this.sc;
-	this.population.scale.y = result.canvas2d.height*this.sc;
+	this.population.scale.set(ww, hh, 1.0);
 	this.population.position.set(0, this.data.height * (0.78), pz + 50);
 
 	this.add(this.population);
 	this.hitObject = this.planet;
 
-	result = this.context.canvasTextFactory.build(this.data.Owner || " ", null, 50);
-	this.ownerTexture = new THREE.DataTexture(new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer), result.canvas2d.width, result.canvas2d.height);
-	this.ownerMaterial = new THREE.MeshBasicMaterial({map: this.ownerTexture, transparent: true});
-	this.ownerMaterial.map.needsUpdate = true;
-	this.owner = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.ownerMaterial);
-	this.owner.scale.x = result.canvas2d.width*this.sc;
-	this.owner.scale.y = result.canvas2d.height*this.sc;
-	this.owner.position.set(0, this.data.height * (-0.78), pz + 50);
-	this.add(this.owner);
+  if (this.data.Owner) {
+    result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner, null, 45);
+
+    this.ownerTexture = new THREE.DataTexture(result.uint8Array, result.canvas2d.width, result.canvas2d.height);
+    this.activate();
+  } else {
+    this.ownerTexture = new THREE.DataTexture();
+  }
+
+  ww = result.canvas2d.width;
+  hh = result.canvas2d.height;
+
+  this.ownerMaterial = new THREE.MeshBasicMaterial({ map: this.ownerTexture, transparent: true});
+  this.owner = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.ownerMaterial);
+  this.owner.scale.set(ww, hh, 1.0);
+  this.owner.position.set(0,this.data.height * (-0.78),0);
+
+  if (this.data.Owner) 
+    this.ownerMaterial.map.needsUpdate = true;
+  else 
+    this.owner.visible = false;
+
+  this.add(this.owner);
 }
 
-module.exports.prototype = new THREE.Object3D();
+module.exports.prototype = new InteractiveObject();
 module.exports.prototype.select = function() {
 	this.selection.visible = true;
   this.selected = true;
@@ -102,6 +123,7 @@ module.exports.prototype.showSupportSelection = function() {
 }
 
 module.exports.prototype.update = function(data) {
+  //console.log("###---update:", data);
   _.extend(this.data, data.planetData);
   this.updatePopulationInfo();
   this.updateOwnerInfo();
@@ -114,38 +136,45 @@ module.exports.prototype.hideSupportSelection = function() {
 
 module.exports.prototype.updatePopulationInfo = function() {
   //console.log("1.this.data:", this.data)
-	var result = this.context.canvasTextFactory.build(parseInt(this.data.ShipCount), null, 50);
-	this.populationTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
-	this.populationTexture.image.width = result.canvas2d.width;
-	this.populationTexture.image.height = result.canvas2d.height;
+  if (this.data.Owner) {
+    this.activate();
 
-	this.populationMaterial.map.needsUpdate = true;
+  	var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
+  	this.populationTexture.image.data = result.uint8Array;
+  	this.populationTexture.image.width = result.canvas2d.width;
+  	this.populationTexture.image.height = result.canvas2d.height;
 
-	this.population.scale.x = result.canvas2d.width*this.sc;
-	this.population.scale.y = result.canvas2d.height*this.sc;
+  	this.populationMaterial.map.needsUpdate = true;
+
+  	this.population.scale.x = result.canvas2d.width;
+  	this.population.scale.y = result.canvas2d.height;
+  } else {
+    this.population.visible = false;
+    this.deactivate();
+  }
 }
 
 module.exports.prototype.updateOwnerInfo = function() {
-  var result = this.context.canvasTextFactory.build(this.data.Owner || " ", null, 50);
+  var result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner || " ", null, 45);
   this.ownerTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
   this.ownerTexture.image.width = result.canvas2d.width;
   this.ownerTexture.image.height = result.canvas2d.height;
 
   this.ownerMaterial.map.needsUpdate = true;
 
-  this.owner.scale.x = result.canvas2d.width*this.sc;
-  this.owner.scale.y = result.canvas2d.height*this.sc;
+  this.owner.scale.x = result.canvas2d.width;
+  this.owner.scale.y = result.canvas2d.height;
+
+  this.owner.visible = true;
 }
-
-
 
 module.exports.prototype.tick = function() {
 	if (this.data.Owner) {
-		var prevShipCount = this.data.ShipCount;
+		this.prevShipCount = this.data.ShipCount;
 
     if (this.data.BuildPerTick) {
       this.data.ShipCount += this.data.BuildPerTick;
-      if (parseInt(prevShipCount) != parseInt(this.data.ShipCount))
+      if (this.prevShipCount != this.data.ShipCount)
         this.updatePopulationInfo();  
     }
 	}

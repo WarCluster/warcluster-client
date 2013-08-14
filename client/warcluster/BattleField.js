@@ -19,7 +19,6 @@ module.exports = function(){
   this.context.$content = $(".content");
 	this.context.activationTime = (new Date()).getTime();
 	this.context.currentTime = this.context.activationTime;
-	this.context.cTemp = $("#cTemp");
 	this.context.playerData = {
     twitter: twitter
   };
@@ -35,8 +34,9 @@ module.exports = function(){
 	this.context.planetsHitObjectsFactory = new PlanetsFactory(this.context);
 	this.context.missionsFactory = new MissionsFactory(this.context);
 	this.context.shipsFactory = new ShipsFactory(this.context);
-	this.context.canvasTextFactory = new CanvasTextFactory(this.context);
 	this.context.sunsFactory = new SunsFactory(this.context);
+
+  this.context.canvasTextFactory = new CanvasTextFactory(true, this.context);
 
 	this.context.spaceScene = new SpaceScene(this.context);
 	this.context.spaceScene.addEventListener("complete", function() { 
@@ -48,7 +48,7 @@ module.exports = function(){
 	this.spaceViewController = new SpaceViewController(this.context, {
     zoomer: {
       zoom: 6000,
-      maxZoom: 60000000,
+      maxZoom: 26000,
       minZoom: 6000,
       zoomStep: 2000
     },
