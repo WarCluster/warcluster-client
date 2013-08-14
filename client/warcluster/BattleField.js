@@ -47,9 +47,9 @@ module.exports = function(){
 
 	this.spaceViewController = new SpaceViewController(this.context, {
     zoomer: {
-      zoom: 6000,
-      maxZoom: 26000,
-      minZoom: 6000,
+      zoom: 8000,
+      maxZoom: 60000000,
+      minZoom: 8000,
       zoomStep: 2000
     },
     scroller: {

@@ -21,8 +21,8 @@ module.exports = function(context, data){
   this.position.y = data.position.y;
   
 	this.data = data.planetData;
-  this.data.width = 130 + 20 * this.data.Size;
-  this.data.height = 130 + 20 * this.data.Size;
+  this.data.width = 90 + 10 * this.data.Size;
+  this.data.height = 90 + 10 * this.data.Size;
 	
   if(this.data.Owner === "") {
     this.data.BuildPerTick = 0;
