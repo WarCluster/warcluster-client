@@ -49,7 +49,7 @@ module.exports.prototype.parseMessage = function(command) {
     console.log("###.InvalidData:", command);
     return false;
   }
-  //console.log("###.parseMessage:", data);
+  console.log("###.parseMessage:", data);
   if (data.Command) {
     switch (data.Command) {
       case "login_success":
@@ -70,28 +70,40 @@ module.exports.prototype.parseMessage = function(command) {
       break;
     }
   } else {
-    for (var s in data) {
+    for (var key in data) {
       debugger;
-      var d = s.split(".")[1].split("_");
-      var time = parseInt(d[0]) * 1000;
-      var targetPosition = data[s].EndPlanet.split(".")[1].split("_");
+      // command: "{"mission.1376565575112_3783_6506": 
+      // {"Source":[3783,6506],
+      // "Target":[6863,6705],
+      // "CurrentTime":"2013-08-15T14:19:35.112837+03:00",
+      // "StartTime":"2013-08-15T14:19:35.112837+03:00",
+      // "ArrivalTime":"2013-08-15T14:19:35.112837+03:00",
+      // "Player":"vitaliy_filipov",
+      // "ShipCount":5}}"
+
+      // var d = s.split(".")[1].split("_");
+      var time = new Date(data[key].CurrentTime);
+      var arrivalTime = new Date(data[key].ArrivalTime);
+      var startTime = new Date(data[key].StartTime);
+      var travelMilliseconds = Math.abs(arrivalTime.getMilliseconds() - startTime.getMilliseconds());
+      var targetPosition = data[key].Target;
+      var sourcePosition = data[key].Source;
 
       this.context.currentTime = time;
       
       var mission = {
-        startTime: time,
+        startTime: parseInt("1376568764397") * 1000,
+        totalShips: data[key].ShipCount,
         travelTime: 10000,
         source: {
-          x: parseFloat(d[1]),
-          y: parseFloat(d[2])
+          x: parseFloat(sourcePosition[0]),
+          y: parseFloat(sourcePosition[1])
         },
         target: {
           x: parseFloat(targetPosition[0]),
           y: parseFloat(targetPosition[1])
         }
       };
-
-      
       this.context.missionsFactory.build(mission);
     }
   }
