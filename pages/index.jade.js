@@ -2,6 +2,14 @@ var boot = require("../client/boot");
 
 
 $(document).ready(function() {
+  $('.login').click( function() {
+    var key = prompt("The alpha server is closed! You can go to http://signup.warcluster.com if you want to know when we open our doors ;P Thanks","closed alpha password");
+      if (key === "alphawar") {
+        $(".login").attr("href", "/twitter/connect");
+      } else {
+        $(".login").attr("href", "#");
+      }
+  });
 
   //Google analytics
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
