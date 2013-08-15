@@ -71,6 +71,7 @@ module.exports.prototype.parseMessage = function(command) {
     }
   } else {
     for (var s in data) {
+      debugger;
       var d = s.split(".")[1].split("_");
       var time = parseInt(d[0]) * 1000;
       var targetPosition = data[s].EndPlanet.split(".")[1].split("_");
