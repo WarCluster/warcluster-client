@@ -3,7 +3,7 @@ var boot = require("../client/boot");
 
 $(document).ready(function() {
   var windowLocation = window.location.host;
-  if(windowLocation == "0.0.0.0:8118" || windowLocation == "127.0.0.1:8118")
+  if(windowLocation !== "0.0.0.0:8118" || windowLocation !== "127.0.0.1:8118")
     $('.login').click( function() {
       var key = prompt("The alpha server is closed! You can go to http://signup.warcluster.com if you want to know when we open our doors ;P Thanks","closed alpha password");
         if (key === "alphawar") {
