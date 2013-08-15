@@ -6,7 +6,7 @@ module.exports = function(context){
 }
 
 module.exports.prototype.build = function(total, color, formationPosition) {
-	console.log("cache:", this.cache.length)
+	// console.log("cache:", this.cache.length)
 	var ship = this.cache.length > 0 ? this.cache.shift() : new Ship(this.context);
 	ship.prepare(total);
 	
