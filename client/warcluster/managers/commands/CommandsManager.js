@@ -42,14 +42,13 @@ module.exports.prototype.prepare = function(username, twitterId) {
 
 module.exports.prototype.parseMessage = function(command) {
   
-
   try {
     var data = JSON.parse(command);
   } catch(err) {
     console.log("###.InvalidData:", command);
     return false;
   }
-  //console.log("###.parseMessage:", data);
+  console.log("###.parseMessage:", data);
   if (data.Command) {
     switch (data.Command) {
       case "login_success":
@@ -70,27 +69,27 @@ module.exports.prototype.parseMessage = function(command) {
       break;
     }
   } else {
-    for (var s in data) {
-      var d = s.split(".")[1].split("_");
-      var time = parseInt(d[0]) * 1000;
-      var targetPosition = data[s].EndPlanet.split(".")[1].split("_");
+    for (var key in data) { 
+      var currentTime = parseInt(key.split(".")[1].split("_")[0]);//new Date(data[key].CurrentTime);
+      var travelms = data[key].ArrivalTime;
+      var targetPosition = data[key].Target;
+      var sourcePosition = data[key].Source;
 
-      this.context.currentTime = time;
+      this.context.currentTime = currentTime;
       
       var mission = {
-        startTime: time,
-        travelTime: 10000,
+        startTime: currentTime,
+        totalShips: data[key].ShipCount,
+        travelTime: travelms,
         source: {
-          x: parseFloat(d[1]),
-          y: parseFloat(d[2])
+          x: parseFloat(sourcePosition[0]),
+          y: parseFloat(sourcePosition[1])
         },
         target: {
           x: parseFloat(targetPosition[0]),
           y: parseFloat(targetPosition[1])
         }
       };
-
-      
       this.context.missionsFactory.build(mission);
     }
   }
@@ -139,12 +138,12 @@ module.exports.prototype.scopeOfView = function(position, resolution) {
 }
 
 module.exports.prototype.sendMission = function(source, target, ships) {
-  //console.log("sendMission:", source, target, ships)
+  console.log("sendMission [source, target, ships percent]:", source, target, ships)
   this.sockjs.send(JSON.stringify({
     "Command": "start_mission",
     "StartPlanet": source,
     "EndPlanet": target,
-    "Fleet": ships || 40
+    "Fleet": ships
   }));
 }
 
