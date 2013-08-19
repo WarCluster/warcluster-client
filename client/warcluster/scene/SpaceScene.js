@@ -136,7 +136,7 @@ module.exports.prototype.startRendering = function() {
     self.context.currentTime += (new Date()).getTime() - t;
 
     if (self.ctrlKey)
-      console.log("RenderTime:", nextT - t, self.context.interactiveObjects.length);
+      // console.log("RenderTime:", nextT - t, self.context.interactiveObjects.length);
     t = nextT;
   }
 

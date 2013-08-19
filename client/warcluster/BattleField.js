@@ -61,15 +61,15 @@ module.exports = function(){
   });
 
   this.spaceViewController.addEventListener("attackPlanet", function(e) {
-    console.log("-SEND ATTACK MISSION-");
+    // console.log("-SEND ATTACK MISSION-");
     for (var i = 0;i < e.attackSourcesIds.length;i ++)
-      self.commandsManager.sendMission(e.attackSourcesIds[i], e.planetToAttackId);
+      self.commandsManager.sendMission(e.attackSourcesIds[i], e.planetToAttackId, self.missionsMenu.getCurrentType());
   });
 
   this.spaceViewController.addEventListener("supportPlanet", function(e) {
-    console.log("-SEND SUPPORT MISSION-");
+    // console.log("-SEND SUPPORT MISSION-");
     for (var i = 0;i < e.supportSourcesIds.length;i ++)
-      self.commandsManager.sendMission(e.supportSourcesIds[i], e.planetToSupportId);
+      self.commandsManager.sendMission(e.supportSourcesIds[i], e.planetToSupportId, self.missionsMenu.getCurrentType());
   });
 
 	this.context.spaceViewController = this.spaceViewController;
