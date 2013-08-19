@@ -71,8 +71,7 @@ module.exports.prototype.parseMessage = function(command) {
   } else {
     for (var key in data) { 
       var currentTime = parseInt(key.split(".")[1].split("_")[0]);//new Date(data[key].CurrentTime);
-      var arrivalTime = new Date(data[key].ArrivalTime);
-      var startTime = new Date(data[key].StartTime);
+      var travelms = data[key].ArrivalTime;
       var targetPosition = data[key].Target;
       var sourcePosition = data[key].Source;
 
@@ -81,7 +80,7 @@ module.exports.prototype.parseMessage = function(command) {
       var mission = {
         startTime: currentTime,
         totalShips: data[key].ShipCount,
-        travelTime: arrivalTime - startTime,
+        travelTime: travelms,
         source: {
           x: parseFloat(sourcePosition[0]),
           y: parseFloat(sourcePosition[1])
