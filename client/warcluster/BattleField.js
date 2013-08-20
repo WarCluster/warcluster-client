@@ -91,6 +91,7 @@ module.exports = function(){
 }
 
 module.exports.prototype.connect = function() {
+  console.log("playerData.twitter: ", this.context.playerData.twitter);
   this.commandsManager.prepare(
     this.context.playerData.twitter.screen_name, 
     String(this.context.playerData.twitter.id)

@@ -41,13 +41,13 @@ module.exports.prototype.prepare = function(username, twitterId) {
 // ***********************************************************************************
 
 module.exports.prototype.parseMessage = function(command) {
-  
   try {
     var data = JSON.parse(command);
   } catch(err) {
     console.log("###.InvalidData:", command);
     return false;
   }
+
   console.log("###.parseMessage:", data);
   if (data.Command) {
     switch (data.Command) {
@@ -67,32 +67,29 @@ module.exports.prototype.parseMessage = function(command) {
         var renderData = this.parseData(data);
         this.renderViewFn(renderData);
       break;
+      case "send_mission":
+        this.context.currentTime =  data.Mission.CurrentTime;
+        
+        var mission = {
+          startTime:  data.Mission.CurrentTime,
+          totalShips: data.Mission.ShipCount,
+          travelTime: data.Mission.TravelTime,
+          source: {
+            x: parseFloat(data.Mission.Source[0]),
+            y: parseFloat(data.Mission.Source[1])
+          },
+          target: {
+            x: parseFloat(data.Mission.Target[0]),
+            y: parseFloat(data.Mission.Target[1])
+          }
+        };
+        this.context.missionsFactory.build(mission);
+        break;
     }
   } else {
-    for (var key in data) { 
-      var currentTime = parseInt(key.split(".")[1].split("_")[0]);//new Date(data[key].CurrentTime);
-      var travelms = data[key].ArrivalTime;
-      var targetPosition = data[key].Target;
-      var sourcePosition = data[key].Source;
-
-      this.context.currentTime = currentTime;
-      
-      var mission = {
-        startTime: currentTime,
-        totalShips: data[key].ShipCount,
-        travelTime: travelms,
-        source: {
-          x: parseFloat(sourcePosition[0]),
-          y: parseFloat(sourcePosition[1])
-        },
-        target: {
-          x: parseFloat(targetPosition[0]),
-          y: parseFloat(targetPosition[1])
-        }
-      };
-      this.context.missionsFactory.build(mission);
+      debugger;
     }
-  }
+  
 }
 
 module.exports.prototype.parseData = function(data) {

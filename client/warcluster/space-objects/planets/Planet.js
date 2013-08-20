@@ -11,7 +11,7 @@ module.exports = function(context, data){
     "bigPlanet":  0.05
   };//https://github.com/altras/WarCluster/wiki/Planets
 
-	this.sc = 0.3 + Math.random() * 0.4 + 0.5;
+	// this.sc = 0.3 + Math.random() * 0.4 + 0.5;
   this.selected = false;
   this.prevShipCount = 0;
 
