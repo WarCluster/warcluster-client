@@ -87,8 +87,12 @@ module.exports.prototype.buildScene = function() {
   this.context.container = this.container;
 
   this.ctrlKey = false;
+  this.spaceKey = false;
   $(document).keydown(function(e){
     switch (e.keyCode) {
+      case 32:
+        self.spaceKey = true;
+      break;
       case 17:
         self.ctrlKey = true;
       break;
@@ -97,6 +101,9 @@ module.exports.prototype.buildScene = function() {
 
   $(document).keyup(function(e){
     switch (e.keyCode) {
+      case 32:
+        self.spaceKey = false;
+      break;
       case 17:
         self.ctrlKey = false;
       break;
@@ -121,23 +128,23 @@ module.exports.prototype.buildScene = function() {
 
 module.exports.prototype.startRendering = function() {
   var self = this;
-  var t = (new Date()).getTime();
-  var nextT = 0;
+  var ct = (new Date()).getTime();
+  var t = ct;
   var render = function() {
     requestAnimationFrame(render);
 
-    nextT = (new Date()).getTime();
+    ct = (new Date()).getTime();
+    self.context.currentTime += ct - t;
+    t = ct;
 
     for(var i = 0;i < self.context.interactiveObjects.length;i ++)
       self.context.interactiveObjects[i].tick();
 
     self.renderer.render(self.scene, self.camera);
     self.stats.update();
-    self.context.currentTime += (new Date()).getTime() - t;
 
-    if (self.ctrlKey)
-      // console.log("RenderTime:", nextT - t, self.context.interactiveObjects.length);
-    t = nextT;
+    if (self.ctrlKey && self.spaceKey)
+      console.log("RenderTime:", (new Date()).getTime() - t, self.context.interactiveObjects.length);
   }
 
   render();

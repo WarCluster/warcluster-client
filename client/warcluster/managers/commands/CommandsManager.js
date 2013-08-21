@@ -69,21 +69,7 @@ module.exports.prototype.parseMessage = function(command) {
       break;
       case "send_mission":
         this.context.currentTime =  data.Mission.CurrentTime;
-        
-        var mission = {
-          startTime:  data.Mission.CurrentTime,
-          totalShips: data.Mission.ShipCount,
-          travelTime: data.Mission.TravelTime,
-          source: {
-            x: parseFloat(data.Mission.Source[0]),
-            y: parseFloat(data.Mission.Source[1])
-          },
-          target: {
-            x: parseFloat(data.Mission.Target[0]),
-            y: parseFloat(data.Mission.Target[1])
-          }
-        };
-        this.context.missionsFactory.build(mission);
+        this.context.missionsFactory.build(data.Mission);
         break;
     }
   } else {
