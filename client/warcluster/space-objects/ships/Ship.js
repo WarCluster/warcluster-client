@@ -66,6 +66,6 @@ module.exports.prototype.tick = function() {
 
 		this.ship.position.x = this.formation.x * ind2 + ind * 15;
 		this.ship.position.y = this.formation.y * ind2;
-		this.ship.position.z = this.formation.z * ind2;
+		this.ship.position.z = this.formation.z * ind2 + 250;
 	}
 }
