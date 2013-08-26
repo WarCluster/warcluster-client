@@ -9,6 +9,12 @@ module.exports = function(context){
   this.selectedTooltipPlanet = null;
 
   this.popover = new UserPopover();
+  this.popover.on("attack", function(id) {
+    self.dispatchEvent({
+      type: "attackPlanet",
+      id: id
+    });
+  });
 
   var click = function(e) {
     if (e.button == 0)

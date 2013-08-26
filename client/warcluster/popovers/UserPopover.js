@@ -7,13 +7,13 @@ module.exports = Backbone.View.extend({
     "click .spy":       "spy"
   },
   initialize: function() {
-    this.playerData = null;
+    this.planetData = null;
   },
   render: function(){
-    var screenName = this.playerData && this.playerData.Owner ? this.playerData.Owner.split("player.").join("") : null;
+    var screenName = this.planetData && this.planetData.Owner ? this.planetData.Owner.split("player.").join("") : null;
     var twitterAvatar = screenName ? "https://twitter.com/api/users/profile_image/"+screenName+"?size=bigger" : "/images/default_avatar.jpg";
     var owner = screenName ? "@" + screenName : "Neutral Planet"; 
-    var production = this.playerData && this.playerData.Size ? this.playerData.Size : 0;
+    var production = this.planetData && this.planetData.Size ? this.planetData.Size : 0;
 
     this.$el.html(this.template({
      playerName:        owner,
@@ -30,7 +30,7 @@ module.exports = Backbone.View.extend({
 
   },
   show: function(l, t, data) {
-    this.playerData = data;
+    this.planetData = data;
     this.render();
     this.move(l, t);
   },
@@ -44,8 +44,10 @@ module.exports = Backbone.View.extend({
   },
   attack: function(e) {
     console.log("attack: " + e);
+    this.trigger("attack", this.planetData.id);
   },
   spy: function(e) {
     console.log("spy: " + e);
+    this.trigger("spy", this.planetData.id);
   }
 })
