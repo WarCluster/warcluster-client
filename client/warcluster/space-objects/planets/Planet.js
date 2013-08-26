@@ -25,13 +25,15 @@ module.exports = function(context, data){
   this.data.height = 90 + 10 * this.data.Size;
 	
   if(this.data.Owner === "") {
-    this.data.BuildPerTick = 0;
-  } else if (this.data.Size <= 3) {
-    this.data.BuildPerTick = buildPerTickArr["littePlanet"];
-  } else if ((this.data.Size > 3) &&  (this.data.Size <= 5)) {
-    this.data.BuildPerTick = buildPerTickArr["mediumPlanet"];
-  } else {
-    this.data.BuildPerTick = buildPerTickArr["bigPlanet"];
+    this.data.BuildPerMinutes = 0;
+  } else if (this.data.Size <= 2) {
+    this.data.BuildPerMinutes = 1;
+  } else if ((this.data.Size > 2) &&  (this.data.Size <= 5)) {
+    this.data.BuildPerMinutes = 2;
+  } else if ((this.data.Size > 5) &&  (this.data.Size <= 8)) {
+    this.data.BuildPerMinutes = 3;
+  } else if ((this.data.Size > 8) &&  (this.data.Size <= 10)) {
+    this.data.BuildPerMinutes = 4;
   }
 
 	var pz = Math.random() * (-50);
@@ -96,6 +98,7 @@ module.exports = function(context, data){
     this.owner.visible = false;
 
   this.add(this.owner);
+  this.nextTick = this.context.currentTime + 60000;
 }
 
 module.exports.prototype = new InteractiveObject();
@@ -124,6 +127,10 @@ module.exports.prototype.showSupportSelection = function() {
 
 module.exports.prototype.update = function(data) {
   //console.log("###---update:", data);
+
+  if (this.data.Owner != data.planetData.Owner)
+    this.nextTick = this.context.currentTime + 60000;
+
   _.extend(this.data, data.planetData);
   this.updatePopulationInfo();
   this.updateOwnerInfo();
@@ -169,15 +176,13 @@ module.exports.prototype.updateOwnerInfo = function() {
 }
 
 module.exports.prototype.tick = function() {
-	if (this.data.Owner) {
-		this.prevShipCount = this.data.ShipCount;
+  if (this.data.Owner && this.context.currentTime >= this.nextTick) {
+    console.log("-tick-")
+    this.nextTick = this.context.currentTime + 60000;
+    this.data.ShipCount += this.data.BuildPerMinutes;
 
-    if (this.data.BuildPerTick) {
-      this.data.ShipCount += this.data.BuildPerTick;
-      if (this.prevShipCount != this.data.ShipCount)
-        this.updatePopulationInfo();  
-    }
-	}
+    this.updatePopulationInfo();  
+  }
 }
 
 module.exports.prototype.setOwner = function(value) {
