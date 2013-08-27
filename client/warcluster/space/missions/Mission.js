@@ -23,8 +23,6 @@ module.exports.prototype.send = function(formation) {
     }
   }
 
-  console.log("send-mission:", step, sizes, this.data)
-
   for (var i = 0;i < sizes.length;i ++) {
     ship = this.context.shipsFactory.build(sizes[i], this, color, formation[i]);
     ship.send();

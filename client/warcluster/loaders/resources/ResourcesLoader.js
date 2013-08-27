@@ -29,7 +29,7 @@ module.exports.prototype.loadModel = function(path, texturesPath) {
             geometry: geometry, 
             materials: materials
         };
-        console.log("modelComplete:", geometry, materials);
+        
         _self.onLoadComplete();
     }, texturesPath);
 }
