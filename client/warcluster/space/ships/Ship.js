@@ -23,7 +23,7 @@ module.exports = function(size, context) {
 			resource = this.context.resourcesLoader.get("./models/ship4.js");
 		break;
 		default:
-			resource = this.context.resourcesLoader.get("./models/ship4	.js");
+			resource = this.context.resourcesLoader.get("./models/ship4.js");
 		break;
 	}
 

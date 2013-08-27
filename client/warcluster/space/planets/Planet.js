@@ -15,17 +15,7 @@ module.exports = function(context, data){
   this.data.width = 90 + 10 * this.data.Size;
   this.data.height = 90 + 10 * this.data.Size;
 	
-  if(this.data.Owner === "") {
-    this.data.BuildPerMinutes = 0;
-  } else if (this.data.Size <= 2) {
-    this.data.BuildPerMinutes = 1;
-  } else if ((this.data.Size > 2) &&  (this.data.Size <= 5)) {
-    this.data.BuildPerMinutes = 2;
-  } else if ((this.data.Size > 5) &&  (this.data.Size <= 8)) {
-    this.data.BuildPerMinutes = 3;
-  } else if ((this.data.Size > 8) &&  (this.data.Size <= 10)) {
-    this.data.BuildPerMinutes = 4;
-  }
+  this.updatePopilationProduction();
 
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet"+this.data.Texture+".png");
@@ -62,10 +52,11 @@ module.exports = function(context, data){
 	this.population = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.populationMaterial);
 	this.population.scale.set(ww, hh, 1.0);
 	this.population.position.set(0, this.data.height * (0.78), pz + 50);
+  this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
 
 	this.add(this.population);
 	this.hitObject = this.planet;
-
+  console.log(this.data, this.context.playerData)
   if (this.data.Owner) {
     result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner, null, 45);
 
@@ -117,12 +108,10 @@ module.exports.prototype.showSupportSelection = function() {
 }
 
 module.exports.prototype.update = function(data) {
-  //console.log("###---update:", data);
-
   if (this.data.Owner != data.planetData.Owner)
     this.nextTick = this.context.currentTime + 60000;
 
-  var updatePopulation = this.data.ShipCount != data.planetData.ShipCount;
+  var updatePopulation = this.data.ShipCount != data.planetData.ShipCount && this.data.Owner == this.context.playerData.Username;
   var updateOwner = this.data.Owner != data.planetData.Owner;
 
   _.extend(this.data, data.planetData);
@@ -139,8 +128,6 @@ module.exports.prototype.hideSupportSelection = function() {
 }
 
 module.exports.prototype.updatePopulationInfo = function() {
-  //console.log("1.this.data:", this.data)
-
   var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
   this.populationTexture.image.data = result.uint8Array;
   this.populationTexture.image.width = result.canvas2d.width;
@@ -165,10 +152,12 @@ module.exports.prototype.updateOwnerInfo = function() {
 
   this.owner.visible = true;
 
-  if (this.data.Owner)
+  if (this.data.Owner == this.context.playerData.Username) {
+    this.updatePopilationProduction();
     this.activate();
-  else
-    this.deactivate();
+  }
+
+  this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
 }
 
 module.exports.prototype.tick = function() {
@@ -210,6 +199,21 @@ module.exports.prototype.toScreenXY = function (position) {
     y: ( - pos.y + 1) * this.context.$content.height() / 2 + this.context.$content.offset().top 
   };
 }
+
+module.exports.prototype.updatePopilationProduction = function () {
+  if(this.data.Owner === "") {
+    this.data.BuildPerMinutes = 0;
+  } else if (this.data.Size <= 2) {
+    this.data.BuildPerMinutes = 1;
+  } else if ((this.data.Size > 2) &&  (this.data.Size <= 5)) {
+    this.data.BuildPerMinutes = 2;
+  } else if ((this.data.Size > 5) &&  (this.data.Size <= 8)) {
+    this.data.BuildPerMinutes = 3;
+  } else if ((this.data.Size > 8) &&  (this.data.Size <= 10)) {
+    this.data.BuildPerMinutes = 4;
+  }
+}
+
 
 /*odule.exports.prototype.intersects = function(rect) {
   var circleDistance.x = Math.abs(this.circle.x - rect.x);
