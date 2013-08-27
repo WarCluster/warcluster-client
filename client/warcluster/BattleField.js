@@ -28,6 +28,7 @@ module.exports = function(){
 
   this.missionsMenu = new MissionsMenu();
   $(".ui-container").append(this.missionsMenu.render().el);
+  $(".ui-container").css('z-index', 3000);
 	
 	this.context.resourcesLoader = new ResourcesLoader();
 
@@ -91,7 +92,6 @@ module.exports = function(){
 }
 
 module.exports.prototype.connect = function() {
-  console.log("playerData.twitter: ", this.context.playerData.twitter);
   this.commandsManager.prepare(
     this.context.playerData.twitter.screen_name, 
     String(this.context.playerData.twitter.id)
