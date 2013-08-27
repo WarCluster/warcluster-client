@@ -1,12 +1,32 @@
 var InteractiveObject = require("../InteractiveObject");
 
-module.exports = function(context, color) {
+module.exports = function(size, context) {
 	InteractiveObject.call(this);
 	
 	this.context = context;
+	this.size = size;
 	this.mission = null;
 
-	var resource = this.context.resourcesLoader.get("./models/ship1.js");
+	var resource;
+
+	switch (size) {
+		case 1:
+			resource = this.context.resourcesLoader.get("./models/ship1.js");
+		break;
+		case 2:
+			resource = this.context.resourcesLoader.get("./models/ship2.js");
+		break;
+		case 3:
+			resource = this.context.resourcesLoader.get("./models/ship3.js");
+		break;
+		case 4:
+			resource = this.context.resourcesLoader.get("./models/ship4.js");
+		break;
+		default:
+			resource = this.context.resourcesLoader.get("./models/ship4	.js");
+		break;
+	}
+
 	var map = this.context.resourcesLoader.get("./images/ships/ship1.png");
 	this.material = new THREE.MeshPhongMaterial({map: map});
 
@@ -59,6 +79,6 @@ module.exports.prototype.tick = function() {
 
 		this.ship.position.x = this.formation.x * ind2 + ind * 15;
 		this.ship.position.y = this.formation.y * ind2;
-		this.ship.position.z = this.formation.z * ind2 + 250;
+		this.ship.position.z = (this.formation.z + 250) * ind2;
 	}
 }
