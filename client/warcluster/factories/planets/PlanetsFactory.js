@@ -1,4 +1,4 @@
-var Planet = require("../../space-objects/planets/Planet");
+var Planet = require("../../space/planets/Planet");
 
 module.exports = function(context){
 	this.context = context;

@@ -3,15 +3,6 @@ var InteractiveObject = require("../InteractiveObject");
 module.exports = function(context, data){
 	InteractiveObject.call(this);
 	
-  //TODO: should make them according to the wiki in github
-  var buildPerTickArr = {
-    "homePlanet":   0.01,
-    "littePlanet":  0.025,
-    "mediumPlanet": 0.033,
-    "bigPlanet":  0.05
-  };//https://github.com/altras/WarCluster/wiki/Planets
-
-	// this.sc = 0.3 + Math.random() * 0.4 + 0.5;
   this.selected = false;
   this.prevShipCount = 0;
 
@@ -131,9 +122,15 @@ module.exports.prototype.update = function(data) {
   if (this.data.Owner != data.planetData.Owner)
     this.nextTick = this.context.currentTime + 60000;
 
+  var updatePopulation = this.data.ShipCount != data.planetData.ShipCount;
+  var updateOwner = this.data.Owner != data.planetData.Owner;
+
   _.extend(this.data, data.planetData);
-  this.updatePopulationInfo();
-  this.updateOwnerInfo();
+
+  if (updatePopulation)
+    this.updatePopulationInfo();
+  if (updateOwner)
+    this.updateOwnerInfo();
 }
 
 module.exports.prototype.hideSupportSelection = function() {
@@ -143,22 +140,16 @@ module.exports.prototype.hideSupportSelection = function() {
 
 module.exports.prototype.updatePopulationInfo = function() {
   //console.log("1.this.data:", this.data)
-  if (this.data.Owner) {
-    this.activate();
 
-  	var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
-  	this.populationTexture.image.data = result.uint8Array;
-  	this.populationTexture.image.width = result.canvas2d.width;
-  	this.populationTexture.image.height = result.canvas2d.height;
+  var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
+  this.populationTexture.image.data = result.uint8Array;
+  this.populationTexture.image.width = result.canvas2d.width;
+  this.populationTexture.image.height = result.canvas2d.height;
 
-  	this.populationMaterial.map.needsUpdate = true;
+  this.populationMaterial.map.needsUpdate = true;
 
-  	this.population.scale.x = result.canvas2d.width;
-  	this.population.scale.y = result.canvas2d.height;
-  } else {
-    this.population.visible = false;
-    this.deactivate();
-  }
+  this.population.scale.x = result.canvas2d.width;
+  this.population.scale.y = result.canvas2d.height;
 }
 
 module.exports.prototype.updateOwnerInfo = function() {
@@ -173,6 +164,11 @@ module.exports.prototype.updateOwnerInfo = function() {
   this.owner.scale.y = result.canvas2d.height;
 
   this.owner.visible = true;
+
+  if (this.data.Owner)
+    this.activate();
+  else
+    this.deactivate();
 }
 
 module.exports.prototype.tick = function() {

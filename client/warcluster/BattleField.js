@@ -28,7 +28,6 @@ module.exports = function(){
 
   this.missionsMenu = new MissionsMenu();
   $(".ui-container").append(this.missionsMenu.render().el);
-  $(".ui-container").css('z-index', 3000);
 	
 	this.context.resourcesLoader = new ResourcesLoader();
 

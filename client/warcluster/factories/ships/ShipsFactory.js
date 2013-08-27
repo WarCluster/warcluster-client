@@ -1,15 +1,14 @@
-var Ship = require("../../space-objects/ships/Ship");
+var Ship = require("../../space/ships/Ship");
 
 module.exports = function(context){
 	this.context = context;
 	this.cache = [];
 }
 
-module.exports.prototype.build = function(total, color, formationPosition) {
+module.exports.prototype.build = function(mission, color, formationPosition) {
 	// console.log("cache:", this.cache.length)
 	var ship = this.cache.length > 0 ? this.cache.shift() : new Ship(this.context);
-	ship.prepare(total);
-	
+	ship.mission = mission;
 	ship.material.color = color;
 	ship.material.ambient = color;
 	ship.formation = formationPosition;
