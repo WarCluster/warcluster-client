@@ -2,12 +2,16 @@ var Ship = require("../../space/ships/Ship");
 
 module.exports = function(context){
 	this.context = context;
-	this.cache = [];
+	this.cache = {};
 }
 
-module.exports.prototype.build = function(mission, color, formationPosition) {
+module.exports.prototype.build = function(size, mission, color, formationPosition) {
 	// console.log("cache:", this.cache.length)
-	var ship = this.cache.length > 0 ? this.cache.shift() : new Ship(this.context);
+
+	if (!this.cache[size])
+		this.cache[size] = new Array();
+
+	var ship = this.cache[size].length > 0 ? this.cache[size].shift() : new Ship(size, this.context);
 	ship.mission = mission;
 	ship.material.color = color;
 	ship.material.ambient = color;
@@ -26,7 +30,7 @@ module.exports.prototype.destroy = function(ship) {
 	this.context.container.remove(ship);
 	this.context.objects.splice(this.context.objects.indexOf(ship), 1);
 
-	this.cache.push(ship);
+	this.cache[ship.size].push(ship);
 
 	return ship;
 }

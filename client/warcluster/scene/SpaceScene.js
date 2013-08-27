@@ -44,6 +44,9 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.loadTexture("./images/planets/planet_attack_glow.png");
 
   this.context.resourcesLoader.loadModel("./models/ship1.js");
+  this.context.resourcesLoader.loadModel("./models/ship2.js");
+  this.context.resourcesLoader.loadModel("./models/ship3.js");
+  this.context.resourcesLoader.loadModel("./models/ship4.js");
 
   this.context.resourcesLoader.addEventListener("complete", function() { 
     self.buildScene();
