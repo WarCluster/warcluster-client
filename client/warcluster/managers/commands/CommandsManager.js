@@ -110,6 +110,8 @@ module.exports.prototype.parseData = function(data) {
           y: pos[1] * sc
         }
       });
+    } else if (s.indexOf("mission") != -1) {
+      renderData.missions.push(item);
     }
   }
 

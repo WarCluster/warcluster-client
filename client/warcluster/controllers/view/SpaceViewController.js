@@ -33,6 +33,15 @@ module.exports = function(context, config){
   });
 
   this.info = new Info(context);
+  this.info.addEventListener("attackPlanet", function(e) {
+    var attackSourcesIds = self.selection.getSelectedPlanetsIds()
+    if (attackSourcesIds.length > 0)
+      self.dispatchEvent({
+        type: "attackPlanet", 
+        attackSourcesIds: attackSourcesIds,
+        planetToAttackId: e.id
+      });
+  });
 
   // *****************************************************************
 

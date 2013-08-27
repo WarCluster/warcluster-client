@@ -1,3 +1,5 @@
+var Mission = require("../../space/missions/Mission");
+
 module.exports = function(context){
 	this.context = context;
 
@@ -26,40 +28,19 @@ module.exports = function(context){
   ];
 }
 
-module.exports.prototype.build = function(missionData) {
-  var ts = missionData.totalShips;
-  var step = 1;
-
-  if (missionData.totalShips <= 10) {
-      step = 2;
-    } else if (missionData.totalShips <= 100) {
-      step = 20;
-    } else if (missionData.totalShips <= 1000) {
-      step = 200;
-    } else if (missionData.totalShips <= 10000) {
-      step = 2000;
-    } else if (missionData.totalShips <= 100000) {
-      step = 20000;
-    } else if (missionData.totalShips <= 1000000) {
-      step = 200000;
-    } else if (missionData.totalShips <= 10000000) {
-      step = 2000000;
-    }
-
-  var ship;
-  var color = new THREE.Color((0xffffff * 0.7) + (0xffffff * 0.3) * Math.random());
+module.exports.prototype.build = function(data) {
+  if (data.ShipCount == 0)
+    return;
   var formation = this.formations[parseInt(this.formations.length * Math.random())]
+  var mission = new Mission(data, this.context);
 
-  for (var i = 0;i < 5;i ++) {
-    
-    if (ts - step >= 0) {
-      ship = this.context.shipsFactory.build(step, color, formation[i]);
-    } else {
-      ship = this.context.shipsFactory.build(ts, color, formation[i]);
-    }
+  this.context.objectsById[data.id] = mission;
+  mission.send(formation);
 
-    ts -= step;
-    
-    ship.send(missionData);
-  }
+  return mission;
+}
+
+module.exports.prototype.destroy = function(mission) {
+  delete this.context.objectsById[mission.data.id];
+  return mission;
 }

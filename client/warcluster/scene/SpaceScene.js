@@ -1,6 +1,6 @@
 var SpaceSceneEnviroment = require("./SpaceSceneEnviroment");
-var Sun = require("../space-objects/suns/Sun");
-var Planet = require("../space-objects/planets/Planet");
+var Sun = require("../space/suns/Sun");
+var Planet = require("../space/planets/Planet");
 
 module.exports = function(context){
   this.context = context;
@@ -151,8 +151,6 @@ module.exports.prototype.startRendering = function() {
 }
 
 module.exports.prototype.render = function(data) {
-  //console.log("1.render:", data);
-
   if (data.objects.length > 0) {
     //this.clear();
     for (var i = 0;i < data.objects.length;i ++) {
@@ -176,24 +174,15 @@ module.exports.prototype.render = function(data) {
     }
   }
 
-  /*if (data.missions.length > 0) {
-    for (var i = 0;i < data.missions.length;i ++) {
-
-      var pl = [].concat(this.context.planetsHitObjects);
-      var sr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
-      var tr = pl.splice(parseInt(pl.length * Math.random()), 1)[0];
-      var mission = data.missions[i];
-      mission.startTime = this.context.currentTime;
-      mission.travelTime = 1000 * 5;
-      mission.source.position.x = sr.position.x;
-      mission.source.position.y = sr.position.y;
-
-      mission.target.position.x = tr.position.x;
-      mission.target.position.y = tr.position.y;
-      
-      this.context.missionsFactory.build(mission);
-    }
-  }*/
+  for (var i = 0;i < data.missions.length;i ++) {
+    var mission = this.context.objectsById[data.missions[i].id];
+    this.context.currentTime =  data.missions[i].CurrentTime;
+    
+    if (!mission)
+      this.context.missionsFactory.build(data.missions[i]);
+    else
+      mission.update(data.missions[i]);
+  }
 
   if (this.afterRenderFn != null)
     this.afterRenderFn();
