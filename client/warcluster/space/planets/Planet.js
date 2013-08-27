@@ -81,6 +81,8 @@ module.exports = function(context, data){
 
   this.add(this.owner);
   this.nextTick = this.context.currentTime + 60000;
+
+  console.log("0.updateOwnerInfo:", this.population.visible)
 }
 
 module.exports.prototype = new InteractiveObject();
@@ -158,6 +160,7 @@ module.exports.prototype.updateOwnerInfo = function() {
   }
 
   this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
+  console.log("updateOwnerInfo:", this.population.visible)
 }
 
 module.exports.prototype.tick = function() {
