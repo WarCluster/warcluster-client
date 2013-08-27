@@ -78,7 +78,7 @@ module.exports = function(context){
   for(i = 0;i < 4; i ++) {
     var bgd = this.context.resourcesLoader.get("./images/backgrounds/background" + (i + 5) + ".jpg");
     var mat = new THREE.MeshBasicMaterial({map: bgd, transparent : true});
-    mat.opacity = 0.2;
+    mat.opacity = 0.25;
 
     var mesh =  new THREE.Mesh(new THREE.PlaneGeometry(1366 * sc, 768 * sc, 1, 1), mat);
     mesh.position.z = -5000000;
