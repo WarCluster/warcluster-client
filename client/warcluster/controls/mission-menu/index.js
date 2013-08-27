@@ -1,17 +1,25 @@
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
+    "click .unit": "switchType"
   },
   className: "missions-menu",
   initialize: function(options) {
     var self = this;
     this.currentType = 1;
-    this.typeArray = {
+    this.percentArray = {
       1: 5,
       2: 10,
       3: 20,
       4: 50,
       5: 100
+    };
+    this.typeArray = {
+      "type1": 1,
+      "type2": 2,
+      "type3": 3,
+      "type4": 4,
+      "type5": 5
     };
     $(document).keydown(function(e){
       switch (e.keyCode) {
@@ -34,17 +42,15 @@ module.exports = Backbone.View.extend({
     });
   },
   switchType: function(index) {
-    this.$(".unit-type" + this.currentType).hide();
-    
-    this.currentType = index;
-
-    this.$(".unit-type" + this.currentType).show();
+    this.$(".type" + this.currentType).hide();
+    this.currentType = index.hasOwnProperty("currentTarget") ? this.typeArray[index.currentTarget.firstChild.className.split(" ")[1]] : index;
+    this.$(".type" + this.currentType).show();
   },
   render: function() {
     this.$el.html(this.template());
     return this;
   },
   getCurrentType: function(){
-    return  this.typeArray[this.currentType];
+    return  this.percentArray[this.currentType];
   }
 })
