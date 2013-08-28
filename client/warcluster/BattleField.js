@@ -78,12 +78,13 @@ module.exports = function(){
   this.commandsManager.loginFn = function(data) {
     _.extend(self.context.playerData, data);
 
-    console.log("-loginFn-", self.context.playerData);
+    // console.log("-loginFn-", self.context.playerData);
 
     self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
 
     this.scopeOfView(self.context.playerData.Position);
+    humane.log("Welcome back General!");
   }
   this.commandsManager.renderViewFn = function(data) {
     self.context.spaceScene.render(data);

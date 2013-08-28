@@ -8,6 +8,7 @@ require("../client/vendor/easing/EasePack.min");
 
 _ = require("../client/vendor/underscore");
 Backbone = require("../client/vendor/backbone");
+humane = require("../client/vendor/humane.min");
 require("../client/vendor/backbone/backbone_bind_to");
 
 config = require("config");
