@@ -48,7 +48,7 @@ module.exports.prototype.parseMessage = function(command) {
     return false;
   }
 
-  //console.log("###.parseMessage:", data);
+  console.log("###.parseMessage:", data);
   if (data.Command) {
     switch (data.Command) {
       case "login_success":
