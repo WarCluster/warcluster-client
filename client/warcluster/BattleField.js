@@ -84,7 +84,8 @@ module.exports = function(){
     self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
 
     this.scopeOfView(self.context.playerData.Position);
-    humane.log("Welcome back General!");
+    
+    humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
   }
   this.commandsManager.renderViewFn = function(data) {
     self.context.spaceScene.render(data);
