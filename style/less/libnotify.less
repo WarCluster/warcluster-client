@@ -1,0 +1,76 @@
+html,
+body {
+  min-height: 100%;
+}
+.humane,
+.humane-libnotify {
+  position: fixed;
+  .transition(all 0.3s ease-out);
+  z-index: 100000;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+}
+.humane,
+.humane-libnotify {
+  font-family: Roboto Condensed, Arial, sans-serif;
+  text-align: center;
+  font-size: 15px;
+  bottom: 10px;
+  right: 10px;
+  opacity: 0;
+  width: 150px;
+  color: #fff;
+  padding: 10px;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABQCAYAAADYxx/bAAAABmJLR0QA/wD/AP+gvaeTAAAANElEQVQYlWNgYGB4ysTAwMDAxMjICCUQXDQWAwMDAxMTExMedcRyB6d5CAMQ5hGrjSrmAQBQdgIXlosSTwAAAABJRU5ErkJggg==');
+  #gradient.vertical(rgba(0,0,0,0.9), rgba(50,50,50,0.9));
+  .border-radius(5px);
+  .box-shadow(0 4px 4px -4px #000);
+  .translate(0, 40px);
+}
+.humane p,
+.humane-libnotify p,
+.humane ul,
+.humane-libnotify ul {
+  margin: 0;
+  padding: 0;
+}
+.humane ul,
+.humane-libnotify ul {
+  list-style: none;
+}
+.humane.humane-libnotify-info,
+.humane-libnotify.humane-libnotify-info {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABQCAYAAADYxx/bAAAABmJLR0QA/wD/AP+gvaeTAAAAMUlEQVQYlWNgYDB6ysTAwMDAxMDACCcYUFkMDEwMDEwMBNVhkxg65jGhmke6M6hgHgBSdgHnpZwADwAAAABJRU5ErkJggg==');
+  #gradient.vertical(rgba(0,0,50,0.9), rgba(0,0,100,0.9));
+  *background-color: #030;
+}
+.humane.humane-libnotify-success,
+.humane-libnotify.humane-libnotify-success {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABQCAYAAADYxx/bAAAABmJLR0QA/wD/AP+gvaeTAAAAMUlEQVQYlWNgMGJ4ysTAwMDAxMAIJxhQWQwMDEwMTKgS2NRhkxg65jGhmke6M6hhHgBS2QHn2LzhygAAAABJRU5ErkJggg==');
+  #gradient.vertical(rgba(0,50,0,0.9), rgba(0,100,0,0.9));
+  *background-color: #030;
+}
+.humane.humane-libnotify-error,
+.humane-libnotify.humane-libnotify-error {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADICAYAAAAp8ov1AAAABmJLR0QA/wD/AP+gvaeTAAAAPklEQVQokWMwYmB4ysTAwMCATjASFsOmBBvBRJ7x+O0g0wCS7CDTH/RwH7X9MVDuwyaG032D2M2UeIYO7gMAqt8C19Bn7+YAAAAASUVORK5CYII=');
+  #gradient.vertical(rgba(50,0,0,0.9), rgba(100,0,0,0.9));
+  *background-color: #300;
+}
+.humane.humane-animate,
+.humane-libnotify.humane-libnotify-animate {
+  opacity: 1;
+  .translate(0, 0);
+}
+.humane.humane-animate:hover,
+.humane-libnotify.humane-libnotify-animate:hover {
+  opacity: 0.2;
+}
+.humane.humane-animate,
+.humane-libnotify.humane-libnotify-js-animate {
+  opacity: 1;
+  .translate(0, 0);
+}
+.humane.humane-animate:hover,
+.humane-libnotify.humane-libnotify-js-animate:hover {
+  opacity: 0.2;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
+}
