@@ -23,7 +23,7 @@ module.exports = function(context, data){
   var bmd3 = context.resourcesLoader.get("./images/planets/planet_support_glow.png");
   var bmd4 = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
 
-  var color = new THREE.Color().setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
+  var color = new THREE.Color().setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
 
 	this.planet =  new THREE.Mesh(new THREE.SphereGeometry(this.data.width / 2, 12, 12), new THREE.MeshLambertMaterial({map: bmd1, color: color, ambient: color}));
 	this.add(this.planet);
