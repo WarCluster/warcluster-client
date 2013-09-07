@@ -46,7 +46,7 @@ module.exports = function(context, config){
       case 17:
         self.ctrlKey = true;
         if (self.supportTarget)
-          self.handleShowSupprotSelection();
+          self.handleShowSupportSelection();
       break;
     }
   });
@@ -57,7 +57,7 @@ module.exports = function(context, config){
       case 16:
         self.shiftKey = false;
         if (self.supportTarget)
-          self.handleShowSupprotSelection();
+          self.handleShowSupportSelection();
       break;
       case 17:
         self.ctrlKey = false;
@@ -95,7 +95,7 @@ module.exports = function(context, config){
     if (intersects.length > 0) {
       var target = intersects[0].object.parent;
       if (target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
-        if (self.ctrlKey) {
+        if (self.supportTarget && self.ctrlKey) {
           self.dispatchEvent({
             type: "supportPlanet", 
             supportSourcesIds: self.getSelectedPlanetsIds(),
@@ -123,7 +123,7 @@ module.exports = function(context, config){
               self.dispatchEvent({
                 type: "supportPlanet", 
                 supportSourcesIds: self.getSelectedPlanetsIds(),
-                planetToSupportId: self.getPlanetТоAttackId()
+                planetToSupportId: self.getPlanetТоSupportId()
               });
           } else if (self.attackTarget) {
               self.dispatchEvent({
@@ -225,13 +225,18 @@ module.exports.prototype.deselectAll = function() {
 
 module.exports.prototype.onPlanetMouseOver = function(e) {
   if (this.selectedPlanets.length > 0) 
-      if (this.ctrlKey) {
+    if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1){
+      if (this.ctrlKey){
         this.supportTarget = e.target.parent;
-        this.handleShowSupprotSelection();
+        this.handleShowSupportSelection();
+        return;
       }
-      else {
         this.attackTarget = e.target.parent;
         this.attackTarget.showAttackSelection();
+    } else {
+        this.supportTarget = e.target.parent;
+        if (this.ctrlKey)
+          this.handleShowSupportSelection();
       }
 }
 
@@ -245,7 +250,7 @@ module.exports.prototype.onPlanetMouseOut = function(e) {
   }
 }
 
-module.exports.prototype.handleShowSupprotSelection = function() {
+module.exports.prototype.handleShowSupportSelection = function() {
   if (this.selectedPlanets.length == 1) {
     if (this.supportTarget.data.id != this.selectedPlanets[0].data.id) {
       this.supportTarget.showSupportSelection();  
