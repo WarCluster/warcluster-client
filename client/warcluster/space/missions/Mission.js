@@ -4,9 +4,9 @@ module.exports = function(data, context) {
   this.ships = [];
 }
 
-module.exports.prototype.send = function(formation) {
+module.exports.prototype.send = function(formation, color) {
   var ship;
-  var color = new THREE.Color((0xffffff * 0.7) + (0xffffff * 0.3) * Math.random());
+  var color = new THREE.Color().setRGB(color.R/255, color.G/255, color.B/255);
 
   var totalShips = this.data.ShipCount;
   var step = Math.ceil(this.data.ShipCount / 5);

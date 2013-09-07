@@ -95,7 +95,7 @@ module.exports = function(context, config){
     if (intersects.length > 0) {
       var target = intersects[0].object.parent;
       if (target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
-        if (self.supportTarget && self.ctrlKey) {
+        if (self.ctrlKey) {
           self.dispatchEvent({
             type: "supportPlanet", 
             supportSourcesIds: self.getSelectedPlanetsIds(),
@@ -119,13 +119,19 @@ module.exports = function(context, config){
         }
       } else {
         if (self.selectedPlanets.length > 0) {
-          if (self.attackTarget) {
-            self.dispatchEvent({
-              type: "attackPlanet", 
-              attackSourcesIds: self.getSelectedPlanetsIds(),
-              planetToAttackId: self.getPlanetТоAttackId()
-            });
-          }
+            if (self.ctrlKey) {
+              self.dispatchEvent({
+                type: "supportPlanet", 
+                supportSourcesIds: self.getSelectedPlanetsIds(),
+                planetToSupportId: self.getPlanetТоAttackId()
+              });
+          } else if (self.attackTarget) {
+              self.dispatchEvent({
+                type: "attackPlanet", 
+                attackSourcesIds: self.getSelectedPlanetsIds(),
+                planetToAttackId: self.getPlanetТоAttackId()
+              });
+            }
         }
       }
     } else {
@@ -218,17 +224,15 @@ module.exports.prototype.deselectAll = function() {
 }
 
 module.exports.prototype.onPlanetMouseOver = function(e) {
-  if (this.selectedPlanets.length > 0) {
-    if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1) {
-      this.attackTarget = e.target.parent;
-      this.attackTarget.showAttackSelection();
-    } else {
-      this.supportTarget = e.target.parent;
+  if (this.selectedPlanets.length > 0) 
       if (this.ctrlKey) {
+        this.supportTarget = e.target.parent;
         this.handleShowSupprotSelection();
       }
-    }  
-  }
+      else {
+        this.attackTarget = e.target.parent;
+        this.attackTarget.showAttackSelection();
+      }
 }
 
 module.exports.prototype.onPlanetMouseOut = function(e) {

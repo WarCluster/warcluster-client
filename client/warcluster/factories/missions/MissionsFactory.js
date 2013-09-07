@@ -35,7 +35,7 @@ module.exports.prototype.build = function(data) {
   var mission = new Mission(data, this.context);
 
   this.context.objectsById[data.id] = mission;
-  mission.send(formation);
+  mission.send(formation, data.Color);
 
   return mission;
 }
