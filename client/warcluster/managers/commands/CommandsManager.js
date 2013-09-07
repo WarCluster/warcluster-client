@@ -86,6 +86,7 @@ module.exports.prototype.parseData = function(data) {
   
   var pos, item;
   var sc = 1;
+
   for (var s in data.Planets) {
     item = data.Planets[s];
     item.id = s;
@@ -100,8 +101,13 @@ module.exports.prototype.parseData = function(data) {
           y: pos[1] * sc
         }
       });
-    } else if (s.indexOf("sun") != -1) {
-      pos = s.split("sun.").join("").split("_");
+    } 
+  }
+  for (var _sun in data.Suns) {    
+    if (_sun.indexOf("sun") != -1) {
+      item = data.Suns[_sun];
+      item.id = _sun;
+      pos = _sun.split("sun.").join("").split("_");
       renderData.objects.push({
         xtype: "SUN",
         sunData: item,
@@ -110,9 +116,14 @@ module.exports.prototype.parseData = function(data) {
           y: pos[1] * sc
         }
       });
-    } else if (s.indexOf("mission") != -1) {
-      renderData.missions.push(item);
     }
+  }
+  for (var mission in data.Missions) {
+    if (mission.indexOf("mission") != -1) {
+      item = data.Missions[mission];
+      item.id = mission;
+      renderData.missions.push(item);
+    }  
   }
 
   return renderData;
@@ -126,6 +137,7 @@ module.exports.prototype.sendMission = function(source, target, ships) {
   console.log("sendMission [source, target, ships percent]:", source, target, ships)
   this.sockjs.send(JSON.stringify({
     "Command": "start_mission",
+    //"Type": "Attack"
     "StartPlanet": source,
     "EndPlanet": target,
     "Fleet": ships
