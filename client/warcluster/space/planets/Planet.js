@@ -111,7 +111,7 @@ module.exports.prototype.update = function(data) {
   if (this.data.Owner != data.planetData.Owner)
     this.nextTick = this.context.currentTime + 60000;
 
-  var updatePopulation = this.data.ShipCount != data.planetData.ShipCount && this.data.Owner == this.context.playerData.Username;
+  var updatePopulation = this.data.ShipCount != data.planetData.ShipCount;
   var updateOwner = this.data.Owner != data.planetData.Owner;
 
   _.extend(this.data, data.planetData);
