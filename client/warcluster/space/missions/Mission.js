@@ -35,13 +35,13 @@ module.exports.prototype.update = function(data) {
 }
 
 module.exports.prototype.getSize = function(ships) {
-  if (ships > 10 && ships <= 50)
+  if (ships > 100 && ships <= 200)
     return 2;
-  else if (ships > 50 && ships <= 100)
+  else if (ships > 200 && ships <= 500)
     return 3;
-  else if (ships > 100 && ships <= 200)
+  else if (ships > 500 && ships <= 1000)
     return 4;
-  else if (ships > 200)
+  else if (ships > 1000)
     return 5;
 
   return 1;
