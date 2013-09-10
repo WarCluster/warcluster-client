@@ -15,7 +15,7 @@ module.exports = function(context, data){
   this.data.width = 90 + 10 * this.data.Size;
   this.data.height = 90 + 10 * this.data.Size;
 	
-  this.updatePopilationProduction();
+  this.updatePopulationProduction();
 
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet"+this.data.Texture+".png");
@@ -111,8 +111,9 @@ module.exports.prototype.update = function(data) {
   if (this.data.Owner != data.planetData.Owner)
     this.nextTick = this.context.currentTime + 60000;
 
-  var updatePopulation = this.data.ShipCount != data.planetData.ShipCount;
-  var updateOwner = this.data.Owner != data.planetData.Owner;
+  var updatePopulation = this.data.ShipCount !== data.planetData.ShipCount && (this.data.Owner === this.context.playerData.Username || this.data.Owner === "")
+  var updateOwner = this.data.Owner !== data.planetData.Owner;
+  var updateColor = this.data.Color !== data.planetData.Color;
 
   _.extend(this.data, data.planetData);
 
@@ -120,11 +121,18 @@ module.exports.prototype.update = function(data) {
     this.updatePopulationInfo();
   if (updateOwner)
     this.updateOwnerInfo();
+  if (updateColor)
+    this.updateColor();
 }
 
 module.exports.prototype.hideSupportSelection = function() {
   this.supportSelection.visible = false;
   this.selection.visible = this.selected;
+}
+
+module.exports.prototype.updateColor = function() {
+  this.planet.material.color.setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
+  this.planet.material.ambient.setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
 }
 
 module.exports.prototype.updatePopulationInfo = function() {
@@ -153,7 +161,7 @@ module.exports.prototype.updateOwnerInfo = function() {
   this.owner.visible = true;
 
   if (this.data.Owner == this.context.playerData.Username) {
-    this.updatePopilationProduction();
+    this.updatePopulationProduction();
     this.activate();
   }
 
@@ -200,7 +208,7 @@ module.exports.prototype.toScreenXY = function (position) {
   };
 }
 
-module.exports.prototype.updatePopilationProduction = function () {
+module.exports.prototype.updatePopulationProduction = function () {
   if(this.data.Owner === "") {
     this.data.BuildPerMinutes = 0;
   } else if (this.data.Size <= 2) {
