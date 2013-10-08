@@ -122,13 +122,8 @@ module.exports.prototype.update = function(data) {
     this.updatePopulationInfo();
   if (updateOwner) {
     if (currentOwner === this.context.playerData.Username) {
-      var selectedPlanets = this.context.spaceViewController.selection.selectedPlanets;
-      for (var index = 0; index < selectedPlanets.length; index++){
-        if (selectedPlanets[index].data.id === data.planetData.id) {
-          this.context.spaceViewController.selection.selectedPlanets[index].deselect();
-          break;
-        }
-      }
+      this.deselect();
+      this.context.spaceViewController.selection.deselectPlanet(data.planetData.id);
     }
     this.updateOwnerInfo();
   }
