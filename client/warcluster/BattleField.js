@@ -11,6 +11,7 @@ var SunsFactory = require("./factories/suns/SunsFactory");
 var CommandsManager = require("./managers/commands/CommandsManager");
 var SpaceScene = require("./scene/SpaceScene");
 var MissionsMenu = require("./controls/mission-menu");
+var PlanetsSelection = require("./controls/planets-selection");
 
 module.exports = function(){
 	var self = this;
@@ -28,6 +29,9 @@ module.exports = function(){
 
   this.missionsMenu = new MissionsMenu();
   $(".ui-container").append(this.missionsMenu.render().el);
+
+  this.planetsSelection = new PlanetsSelection();
+  $(".ui-container").append(this.planetsSelection.render().el);
 	
 	this.context.resourcesLoader = new ResourcesLoader();
 
@@ -70,6 +74,18 @@ module.exports = function(){
     // console.log("-SEND SUPPORT MISSION-");
     for (var i = 0;i < e.supportSourcesIds.length;i ++)
       self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.missionsMenu.getCurrentType());
+  });
+
+  this.spaceViewController.addEventListener("selectPlanet", function(e) {
+    self.planetsSelection.selectPlanet(e.planet.data);
+  });
+
+  this.spaceViewController.addEventListener("deselectPlanet", function(e) {
+    self.planetsSelection.deselectPlanet(e.planet.data);
+  });
+
+  this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
+    self.planetsSelection.deselectAllPlanets();
   });
 
 	this.context.spaceViewController = this.spaceViewController;

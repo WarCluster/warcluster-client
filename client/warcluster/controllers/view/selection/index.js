@@ -105,16 +105,16 @@ module.exports = function(context, config){
           var index = self.selectedPlanets.indexOf(target);
           if (index == -1) {
             target.select();
-            self.selectedPlanets.push(target);  
+            self.selectPlanet(target);  
           } else {
             target.deselect();
-            self.selectedPlanets.splice(index, 1);
+            self.deselectPlanet(target, index);
           }
         } else {
           self.deselectAll();
 
           target.select();
-          self.selectedPlanets.push(target);  
+          self.selectPlanet(target);  
           
         }
       } else {
@@ -135,9 +135,7 @@ module.exports = function(context, config){
         }
       }
     } else {
-      for (var i = 0;i < self.selectedPlanets.length;i ++)
-        self.selectedPlanets[i].deselect();
-      self.selectedPlanets = [];
+      self.deselectAll();
     }
   }
 
@@ -199,7 +197,7 @@ module.exports.prototype.getMouseIntersectionObjects = function(e) {
 
 module.exports.prototype.hitTestPlanets = function(rect) {
   if (!this.shiftKey)
-    this.selectedPlanets = [];
+    this.deselectAll();
   for (var i=0;i < this.context.planetsHitObjects.length;i ++) {
     var target = this.context.planetsHitObjects[i].parent;
     if (target.data.Owner.indexOf(this.context.playerData.Username) != -1) {
@@ -208,7 +206,7 @@ module.exports.prototype.hitTestPlanets = function(rect) {
       if (target.rectHitTest(rect)) {
         target.select();
         if (this.selectedPlanets.indexOf(target) == -1)
-          this.selectedPlanets.push(target);
+          this.selectPlanet(target);
       }
     }
   }
@@ -220,13 +218,31 @@ module.exports.prototype.hitTestPlanets = function(rect) {
 module.exports.prototype.deselectAll = function() {
   for (var i=0;i < this.selectedPlanets.length;i ++)
     this.selectedPlanets[i].deselect();
+  
   this.selectedPlanets = [];
+  this.dispatchEvent({
+    type: "deselectAllPlanets"
+  });
 }
 
-module.exports.prototype.deselectPlanet = function(planet) {
-  var index = this.selectedPlanets.indexOf(planet);
-  if (index > -1) {
-    this.selectedPlanets.splice(index, 1); 
+module.exports.prototype.selectPlanet = function(planet) {
+  this.selectedPlanets.push(planet);
+  this.dispatchEvent({
+    type: "selectPlanet", 
+    planet: planet
+  });
+}
+
+module.exports.prototype.deselectPlanet = function(planet, index) {
+  console.log("1.deselectPlanet")
+  var ind = index || this.selectedPlanets.indexOf(planet);
+  if (ind != -1) {
+    this.selectedPlanets.splice(ind, 1);
+
+    this.dispatchEvent({
+      type: "deselectPlanet", 
+      planet: planet
+    });
   }
 }
 
@@ -273,6 +289,14 @@ module.exports.prototype.getSelectedPlanetsIds = function() {
     if (!this.supportTarget || this.supportTarget.data.id != this.selectedPlanets[i].data.id)
       ids.push(this.selectedPlanets[i].data.id);
   return ids;
+}
+
+module.exports.prototype.getSelectedPlanetsData = function() {
+  var planets = [];
+  for (var i = 0;i < this.selectedPlanets.length;i ++) 
+    if (!this.supportTarget || this.supportTarget.data.id != this.selectedPlanets[i].data.id)
+      planets.push(this.selectedPlanets[i].data);
+  return planets;
 }
 
 module.exports.prototype.getPlanetТоAttackId = function() {
