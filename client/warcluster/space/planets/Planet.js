@@ -114,13 +114,19 @@ module.exports.prototype.update = function(data) {
   var updatePopulation = this.data.ShipCount !== data.planetData.ShipCount && (this.data.Owner === this.context.playerData.Username || this.data.Owner === "")
   var updateOwner = this.data.Owner !== data.planetData.Owner;
   var updateColor = this.data.Color !== data.planetData.Color;
+  var currentOwner = this.data.Owner;
 
   _.extend(this.data, data.planetData);
 
   if (updatePopulation)
     this.updatePopulationInfo();
-  if (updateOwner)
+  if (updateOwner) {
+    if (currentOwner === this.context.playerData.Username) {
+      this.deselect();
+      this.context.spaceViewController.selection.deselectPlanet(data.planetData.id);
+    }
     this.updateOwnerInfo();
+  }
   if (updateColor)
     this.updateColor();
 }

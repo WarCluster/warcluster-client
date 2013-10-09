@@ -223,6 +223,15 @@ module.exports.prototype.deselectAll = function() {
   this.selectedPlanets = [];
 }
 
+module.exports.prototype.deselectPlanet = function(planetID) {
+  for (var index = 0; index < this.selectedPlanets.length; index++){
+    if (this.selectedPlanets[index].data.id === planetID) {
+      this.selectedPlanets.splice(index, 1);
+      break;
+    }
+  }
+}
+
 module.exports.prototype.onPlanetMouseOver = function(e) {
   if (this.selectedPlanets.length > 0) 
     if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1){
