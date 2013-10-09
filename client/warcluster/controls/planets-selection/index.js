@@ -45,8 +45,15 @@ module.exports = Backbone.View.extend({
   },
   togglePlanets: function() {
     if (this.expanded()) {
+      this.$(".collapsed-icon").hide();
+      this.$(".expanded-icon").show();
+
       this.$(".expanded-list-container").removeClass("hide");
+      
     } else {
+      this.$(".collapsed-icon").show();
+      this.$(".expanded-icon").hide();
+
       this.$(".expanded-list-container").addClass("hide");
     }
   },
