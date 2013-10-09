@@ -123,7 +123,7 @@ module.exports.prototype.update = function(data) {
   if (updateOwner) {
     if (currentOwner === this.context.playerData.Username) {
       this.deselect();
-      this.context.spaceViewController.selection.deselectPlanet(data.planetData.id);
+      this.context.spaceViewController.selection.deselectPlanet(this);
     }
     this.updateOwnerInfo();
   }

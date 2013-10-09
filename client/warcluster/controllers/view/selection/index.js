@@ -223,12 +223,10 @@ module.exports.prototype.deselectAll = function() {
   this.selectedPlanets = [];
 }
 
-module.exports.prototype.deselectPlanet = function(planetID) {
-  for (var index = 0; index < this.selectedPlanets.length; index++){
-    if (this.selectedPlanets[index].data.id === planetID) {
-      this.selectedPlanets.splice(index, 1);
-      break;
-    }
+module.exports.prototype.deselectPlanet = function(planet) {
+  var index = this.selectedPlanets.indexOf(planet);
+  if (index > -1) {
+    this.selectedPlanets.splice(index, 1); 
   }
 }
 
