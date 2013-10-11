@@ -31,6 +31,9 @@ module.exports = function(){
   $(".ui-container").append(this.missionsMenu.render().el);
 
   this.planetsSelection = new PlanetsSelection();
+  this.planetsSelection.on("deselectPlanet", function(id) {
+    self.spaceViewController.selection.deselectPlanetById(id);
+  });
   $(".ui-container").append(this.planetsSelection.render().el);
 	
 	this.context.resourcesLoader = new ResourcesLoader();

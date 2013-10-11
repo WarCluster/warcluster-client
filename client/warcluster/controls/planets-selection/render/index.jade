@@ -1,6 +1,6 @@
-.selection-planet-item
+.selection-planet-item(data-id= model.id)
   img(src="/images/planets/planet0.png")
   span= model.id
   span.pull-right(style="padding-top: 6px;padding-right: 6px;")
-    a(href="#")
+    a.deselect-planet(href="#", data-id= model.id)
       i.icon-remove

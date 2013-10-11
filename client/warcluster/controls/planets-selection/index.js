@@ -3,7 +3,8 @@ var Render = jadeCompile(require("./render/index.jade"));
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
-    "click .collapsed-list": "togglePlanets"
+    "click .collapsed-list": "togglePlanets",
+    "click .deselect-planet": "executeDeselectPlanet"
   },
   className: "planets-selection hide",
   initialize: function(context) {
@@ -29,8 +30,12 @@ module.exports = Backbone.View.extend({
       this.selectedPlanets.splice(index, 1);
       this.updateSelection();
 
-      if (this.selectedPlanets.length == 0)
+      this.$('.selection-planet-item[data-id="'+planetData.id+'"]').remove();
+
+      if (this.selectedPlanets.length == 0) {
         this.$el.hide();
+        this.$(".expanded-list-container").addClass("hide");
+      }
     }
   },
   deselectAllPlanets: function() {
@@ -39,6 +44,10 @@ module.exports = Backbone.View.extend({
     this.updateSelection();
 
     this.$el.hide();
+    this.$(".expanded-list-container").addClass("hide");
+  },
+  executeDeselectPlanet: function(e) {
+    this.trigger("deselectPlanet", $(e.currentTarget).attr("data-id"));
   },
   updateSelection: function() {
     this.$(".selected-planets").html(this.selectedPlanets.length);

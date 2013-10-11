@@ -104,16 +104,12 @@ module.exports = function(context, config){
         } else if (self.shiftKey && !self.ctrlKey) {
           var index = self.selectedPlanets.indexOf(target);
           if (index == -1) {
-            target.select();
             self.selectPlanet(target);  
           } else {
-            target.deselect();
-            self.deselectPlanet(target, index);
+            self.deselectPlanet(target);
           }
         } else {
           self.deselectAll();
-
-          target.select();
           self.selectPlanet(target);  
           
         }
@@ -203,11 +199,8 @@ module.exports.prototype.hitTestPlanets = function(rect) {
     if (target.data.Owner.indexOf(this.context.playerData.Username) != -1) {
       if (!this.shiftKey)
         target.deselect();
-      if (target.rectHitTest(rect)) {
-        target.select();
-        if (this.selectedPlanets.indexOf(target) == -1)
-          this.selectPlanet(target);
-      }
+      if (target.rectHitTest(rect) && this.selectedPlanets.indexOf(target) == -1)
+        this.selectPlanet(target);
     }
   }
 
@@ -226,6 +219,7 @@ module.exports.prototype.deselectAll = function() {
 }
 
 module.exports.prototype.selectPlanet = function(planet) {
+  planet.select();
   this.selectedPlanets.push(planet);
   this.dispatchEvent({
     type: "selectPlanet", 
@@ -233,17 +227,31 @@ module.exports.prototype.selectPlanet = function(planet) {
   });
 }
 
-module.exports.prototype.deselectPlanet = function(planet, index) {
-  console.log("1.deselectPlanet")
-  var ind = index || this.selectedPlanets.indexOf(planet);
-  if (ind != -1) {
-    this.selectedPlanets.splice(ind, 1);
+module.exports.prototype.deselectPlanet = function(planet) {
+  var index = planet ? this.selectedPlanets.indexOf(planet) : -1;
+  if (index != -1) {
+    planet.deselect();
 
+    this.selectedPlanets.splice(index, 1);
     this.dispatchEvent({
       type: "deselectPlanet", 
       planet: planet
     });
   }
+}
+
+module.exports.prototype.deselectPlanetById = function(id) {
+  var planet = this.getSelectedPlanetById(id);
+  if (planet)
+    this.deselectPlanet(planet);
+}
+
+module.exports.prototype.getSelectedPlanetById = function(id) {
+  for (var i = 0;i < this.selectedPlanets.length;i ++) {
+    if (this.selectedPlanets[i].data.id == id)
+      return this.selectedPlanets[i];
+  }
+  return null;
 }
 
 module.exports.prototype.onPlanetMouseOver = function(e) {
