@@ -222,13 +222,6 @@ html, body {
     width: 30px;
     height: 30px;
   }
-  .empty-element {
-    display: inline;
-    margin-left: 15px;
-    margin-right: 15px;
-    width: 30px;
-    height: 30px;
-  }
   position: absolute;
   width: 250px;
   top: 200px;
@@ -253,11 +246,24 @@ html, body {
 .selection-planet-item {
   margin-top: 5px;
   margin-bottom: 5px;
+  .deselect-icon {
+    padding-right: 6px;
+    padding-top: 2px;
+  }
 }
 
 .collapsed-list {
   background: rgba(255, 255, 255, 0.1);
   padding-top: 5px;
   padding-bottom: 5px; 
-  width: 250px;
+  width: 250px; 
+  .icon-expand-selection {
+    padding-right: 5px;
+  }
+  .selected-planets {
+    padding: 5px 5px 5px 5px;
+  }
+  .selection-planets {
+    padding: 5px 15px 5px 59px;
+  }
 }
