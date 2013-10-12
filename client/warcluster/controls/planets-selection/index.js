@@ -4,7 +4,8 @@ module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
     "click .collapsed-list": "togglePlanets",
-    "click .deselect-planet": "executeDeselectPlanet"
+    "click .deselect-planet": "executeDeselectPlanet",
+    "click .planet-link": "moveCameraToPlanet"
   },
   className: "planets-selection hide",
   initialize: function(context) {
@@ -68,5 +69,8 @@ module.exports = Backbone.View.extend({
   },
   expanded: function() {
     return this.$(".expanded-list-container").hasClass("hide");
+  },
+  moveCameraToPlanet: function(e) {
+    debugger;
   }
 })

@@ -30,29 +30,24 @@ module.exports = function(){
   this.missionsMenu = new MissionsMenu();
   $(".ui-container").append(this.missionsMenu.render().el);
 
-  this.planetsSelection = new PlanetsSelection();
-  this.planetsSelection.on("deselectPlanet", function(id) {
-    self.spaceViewController.selection.deselectPlanetById(id);
-  });
-  $(".ui-container").append(this.planetsSelection.render().el);
-	
-	this.context.resourcesLoader = new ResourcesLoader();
+  
+  this.context.resourcesLoader = new ResourcesLoader();
 
-	this.context.planetsHitObjectsFactory = new PlanetsFactory(this.context);
-	this.context.missionsFactory = new MissionsFactory(this.context);
-	this.context.shipsFactory = new ShipsFactory(this.context);
-	this.context.sunsFactory = new SunsFactory(this.context);
+  this.context.planetsHitObjectsFactory = new PlanetsFactory(this.context);
+  this.context.missionsFactory = new MissionsFactory(this.context);
+  this.context.shipsFactory = new ShipsFactory(this.context);
+  this.context.sunsFactory = new SunsFactory(this.context);
 
   this.context.canvasTextFactory = new CanvasTextFactory(true, this.context);
 
-	this.context.spaceScene = new SpaceScene(this.context);
-	this.context.spaceScene.addEventListener("complete", function() { 
-		console.log("--complete space scene--");
-		self.connect();
-	});
+  this.context.spaceScene = new SpaceScene(this.context);
+  this.context.spaceScene.addEventListener("complete", function() { 
+    console.log("--complete space scene--");
+    self.connect();
+  });
   this.context.spaceScene.prepare();
 
-	this.spaceViewController = new SpaceViewController(this.context, {
+  this.spaceViewController = new SpaceViewController(this.context, {
     zoomer: {
       zoom: 8000,
       maxZoom: 60000000,
@@ -91,7 +86,7 @@ module.exports = function(){
     self.planetsSelection.deselectAllPlanets();
   });
 
-	this.context.spaceViewController = this.spaceViewController;
+  this.context.spaceViewController = this.spaceViewController;
 
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
@@ -109,6 +104,11 @@ module.exports = function(){
   this.commandsManager.renderViewFn = function(data) {
     self.context.spaceScene.render(data);
   }
+  this.planetsSelection = new PlanetsSelection(this.context);
+  this.planetsSelection.on("deselectPlanet", function(id) {
+    self.spaceViewController.selection.deselectPlanetById(id);
+  });
+  $(".ui-container").append(this.planetsSelection.render().el);
 }
 
 module.exports.prototype.connect = function() {
