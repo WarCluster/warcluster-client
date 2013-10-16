@@ -205,6 +205,11 @@ module.exports.prototype.tick = function() {
     this.nextTick = this.context.currentTime + 60000;
     this.data.ShipCount += this.data.BuildPerMinutes;
 
+    var index = this.context.spaceViewController.selection.selectedPlanets.indexOf(this);
+    if(index !== -1) {
+      this.context.planetsSelection.updatePilots(this.data);
+    }
+
     this.updatePopulationInfo();  
   }
 }

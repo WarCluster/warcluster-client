@@ -89,6 +89,9 @@ module.exports = Backbone.View.extend({
   expanded: function() {
     return this.$(".expanded-list-container").hasClass("hide");
   },
+  updatePilots: function(planetData) {
+    this.$('.selection-planet-item[data-id="'+planetData.id+'"] .shipCount').html(planetData.ShipCount);
+  },
   moveCameraToPlanet: function(e) {
     var x = e.currentTarget.attributes[1].nodeValue.split(".")[1].split("_")[0];
     var y = e.currentTarget.attributes[1].nodeValue.split(".")[1].split("_")[1];

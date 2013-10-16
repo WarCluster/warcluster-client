@@ -108,6 +108,7 @@ module.exports = function(){
   this.planetsSelection.on("deselectPlanet", function(id) {
     self.spaceViewController.selection.deselectPlanetById(id);
   });
+  this.context.planetsSelection = this.planetsSelection;
   $(".ui-container").append(this.planetsSelection.render().el);
 }
 
