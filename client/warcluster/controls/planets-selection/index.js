@@ -19,12 +19,10 @@ module.exports = Backbone.View.extend({
     return this;
   },
   hoverSelectedPlanet: function(e) {
-    debugger;
     var planetIndex = this.getPlanetIndex(e.currentTarget.attributes[0].nodeValue)
     this.context.spaceViewController.selection.selectedPlanets[planetIndex].showHoverSelection();
   },
   unhoverSelectedPlanet: function(e) {
-    debugger;
     var planetIndex = this.getPlanetIndex(e.currentTarget.attributes[0].nodeValue)
     this.context.spaceViewController.selection.selectedPlanets[planetIndex].hideHoverSelection();
   },
@@ -95,7 +93,6 @@ module.exports = Backbone.View.extend({
     return this.$(".expanded-list-container").hasClass("hide");
   },
   moveCameraToPlanet: function(e) {
-    debugger;
     var x = e.currentTarget.attributes[1].nodeValue.split(".")[1].split("_")[0];
     var y = e.currentTarget.attributes[1].nodeValue.split(".")[1].split("_")[1];
     this.context.spaceScene.moveTo(x, y);
