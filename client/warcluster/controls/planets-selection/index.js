@@ -75,14 +75,11 @@ module.exports = Backbone.View.extend({
   },
   togglePlanets: function() {
     if (this.expanded()) {
-      this.$(".selection-planet-item").css("bottom", "");
       this.$(".collapsed-icon").hide();
       this.$(".expanded-icon").show();
 
       this.$(".expanded-list-container").removeClass("hide");
-      
     } else {
-      this.$(".selection-planet-item").css("bottom", "70px");
       this.$(".collapsed-icon").show();
       this.$(".expanded-icon").hide();
 
