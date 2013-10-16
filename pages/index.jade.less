@@ -78,7 +78,7 @@ html, body {
   .buttonBackground(#F24960, #F24960, #FFF, 0 1px 1px rgba(255,255,255,.75));
   .border-radius(0px);
   padding: 10px 50px;
-  &:hover{
+  &:hover {
     .buttonBackground(#2AA9E0, #2AA9E0, #FFF, 0 1px 1px rgba(255,255,255,.75));
   }
 }
@@ -225,7 +225,6 @@ html, body {
   position: absolute;
   width: 250px;
   top: 200px;
-  bottom: 70px;
   left: 0px;
 }
 
@@ -244,11 +243,17 @@ html, body {
 }
 
 .selection-planet-item {
+  &:hover {
+    background: rgba(255, 255, 255, 0.7); 
+  };
   margin-top: 5px;
   margin-bottom: 5px;
   .deselect-icon {
     padding-right: 6px;
-    padding-top: 2px;
+    padding-top: 3px;
+  }
+  .planet-link {
+    cursor: pointer;
   }
 }
 

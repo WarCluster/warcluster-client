@@ -42,6 +42,8 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.loadTexture("./images/planets/planet_selection_glow.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet_support_glow.png");
   this.context.resourcesLoader.loadTexture("./images/planets/planet_attack_glow.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet_hover_glow.png");
+  this.context.resourcesLoader.loadTexture("./images/planets/planet_spy_glow.png");
 
   this.context.resourcesLoader.loadModel("./models/ship1.js");
   this.context.resourcesLoader.loadModel("./models/ship2.js");

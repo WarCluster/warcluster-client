@@ -19,26 +19,36 @@ module.exports = function(context, data){
 
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet"+this.data.Texture+".png");
-	var bmd2 = context.resourcesLoader.get("./images/planets/planet_selection_glow.png");
-  var bmd3 = context.resourcesLoader.get("./images/planets/planet_support_glow.png");
-  var bmd4 = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
+	var selectionGlow = context.resourcesLoader.get("./images/planets/planet_selection_glow.png");
+  var supportGlow = context.resourcesLoader.get("./images/planets/planet_support_glow.png");
+  var attackGlow = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
+  var selectedHoverGlow = context.resourcesLoader.get("./images/planets/planet_hover_glow.png");
+  var spyGlow = context.resourcesLoader.get("./images/planets/planet_spy_glow.png");
 
   var color = new THREE.Color().setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
 
 	this.planet =  new THREE.Mesh(new THREE.SphereGeometry(this.data.width / 2, 12, 12), new THREE.MeshLambertMaterial({map: bmd1, color: color, ambient: color}));
 	this.add(this.planet);
 
-  this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: bmd2, transparent : true}));
+  this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: selectionGlow, transparent : true}));
   this.selection.visible = false;
   this.add(this.selection);
 
-  this.supportSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: bmd3, transparent : true}));
+  this.supportSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: supportGlow, transparent : true}));
   this.supportSelection.visible = false;
   this.add(this.supportSelection);
 
-  this.attackSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: bmd4, transparent : true}));
+  this.attackSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: attackGlow, transparent : true}));
   this.attackSelection.visible = false;
   this.add(this.attackSelection);
+
+  this.spySelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: spyGlow, transparent : true}));
+  this.spySelection.visible = false;
+  this.add(this.spySelection);
+
+  this.selectedHover =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: selectedHoverGlow, transparent : true}));
+  this.selectedHover.visible = false;
+  this.add(this.selectedHover);
 
 	//TODO: refactor for DRY(Don't Repeat Yourself)
 	var result = this.context.canvasTextFactory.buildUint8Array(this.data.ShipCount, null, 45);
@@ -102,9 +112,30 @@ module.exports.prototype.hideAttackSelection = function() {
   this.attackSelection.visible = false;
 }
 
+module.exports.prototype.showSpySelection = function() {
+  this.spySelection.visible = true;
+}
+
+module.exports.prototype.hideSpySelection = function() {
+  this.spySelection.visible = false;
+}
+
+module.exports.prototype.showHoverSelection = function() {
+  this.selectedHover.visible = true;
+}
+
+module.exports.prototype.hideHoverSelection = function() {
+  this.selectedHover.visible = false;
+}
+
 module.exports.prototype.showSupportSelection = function() {
   this.supportSelection.visible = true;
   this.selection.visible = false;
+}
+
+module.exports.prototype.hideSupportSelection = function() {
+  this.supportSelection.visible = false;
+  this.selection.visible = this.selected;
 }
 
 module.exports.prototype.update = function(data) {
@@ -129,10 +160,6 @@ module.exports.prototype.update = function(data) {
     this.updateColor();
 }
 
-module.exports.prototype.hideSupportSelection = function() {
-  this.supportSelection.visible = false;
-  this.selection.visible = this.selected;
-}
 
 module.exports.prototype.updateColor = function() {
   this.planet.material.color.setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
