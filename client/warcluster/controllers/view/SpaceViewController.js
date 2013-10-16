@@ -31,6 +31,16 @@ module.exports = function(context, config){
   this.selection.addEventListener("supportPlanet", function(e) {
     self.dispatchEvent(e);
   });
+  this.selection.addEventListener("selectPlanet", function(e) {
+    self.dispatchEvent(e);
+  });
+  this.selection.addEventListener("deselectPlanet", function(e) {
+    console.log("deselectPlanet")
+    self.dispatchEvent(e);
+  });
+  this.selection.addEventListener("deselectAllPlanets", function(e) {
+    self.dispatchEvent(e);
+  });
 
   this.info = new Info(context);
   this.info.addEventListener("attackPlanet", function(e) {
