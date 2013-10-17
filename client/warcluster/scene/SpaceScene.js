@@ -198,11 +198,6 @@ module.exports.prototype.moveTo = function(x, y) {
   this.camera.position.y = y;
 }
 
-module.exports.prototype.attack = function(x, y) {
-  this.camera.position.x = x;
-  this.camera.position.y = y;
-}
-
 module.exports.prototype.clear = function() {
   var obj;
   this.context.objects = [];

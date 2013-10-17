@@ -10,8 +10,7 @@ module.exports = Backbone.View.extend({
     "mouseout .selection-planet-item":  "unhoverSelectedPlanet"
   },
   className: "planets-selection hide",
-  initialize: function(context) {
-    this.context = context;
+  initialize: function() {
     this.selectedPlanets = [];
   },
   render: function() {
@@ -19,22 +18,10 @@ module.exports = Backbone.View.extend({
     return this;
   },
   hoverSelectedPlanet: function(e) {
-    var planetIndex = this.getPlanetIndex(e.currentTarget.attributes[0].nodeValue)
-    this.context.spaceViewController.selection.selectedPlanets[planetIndex].showHoverSelection();
+    this.trigger("planetOver", $(e.currentTarget).attr("data-id"));
   },
   unhoverSelectedPlanet: function(e) {
-    var planetIndex = this.getPlanetIndex(e.currentTarget.attributes[0].nodeValue)
-    this.context.spaceViewController.selection.selectedPlanets[planetIndex].hideHoverSelection();
-  },
-  getPlanetIndex: function(planetId) {
-    var i , len = this.context.spaceViewController.selection.selectedPlanets.length;
-    var temp = this.context.spaceViewController.selection.selectedPlanets;
-    var planetIndex;
-    for (i = 0; i < len; i++) {
-      if (planetId === temp[i].data.id) {
-        return planetIndex = i;
-      }
-    }
+    this.trigger("planetOut", $(e.currentTarget).attr("data-id"));
   },
   selectPlanet: function(planetData) {
     if (this.selectedPlanets.length == 0)
@@ -93,8 +80,6 @@ module.exports = Backbone.View.extend({
     this.$('.selection-planet-item[data-id="'+planetData.id+'"] .shipCount').html(planetData.ShipCount);
   },
   moveCameraToPlanet: function(e) {
-    var x = e.currentTarget.attributes[1].nodeValue.split(".")[1].split("_")[0];
-    var y = e.currentTarget.attributes[1].nodeValue.split(".")[1].split("_")[1];
-    this.context.spaceScene.moveTo(x, y);
+    this.trigger("scrollToPlanet", $(e.currentTarget).attr("data-id"));
   }
 })
