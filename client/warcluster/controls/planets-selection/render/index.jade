@@ -1,0 +1,7 @@
+.selection-planet-item(data-id= model.id)
+  img.planet-link(src="/images/planets/planet"+ model.Texture +".png", data-id=model.id)
+  span Pilot count: 
+  span.shipCount= model.ShipCount
+  span.pull-right.deselect-icon
+    a.deselect-planet(href="#", data-id= model.id)
+      i.icon-remove
