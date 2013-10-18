@@ -18,8 +18,7 @@ module.exports = function(){
 
 	this.context = new GameContext();
   this.context.$content = $(".content");
-	this.context.activationTime = (new Date()).getTime();
-	this.context.currentTime = this.context.activationTime;
+	this.context.currentTime = (new Date()).getTime();
 	this.context.playerData = {
     twitter: twitter
   };

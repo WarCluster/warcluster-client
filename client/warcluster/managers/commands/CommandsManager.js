@@ -50,6 +50,7 @@ module.exports.prototype.parseMessage = function(command) {
 
   console.log("###.parseMessage:", data);
   if (data.Command) {
+    this.context.currentTime =  data.Timestamp;
     switch (data.Command) {
       case "login_success":
         var pd = new PlayerData();
@@ -68,7 +69,6 @@ module.exports.prototype.parseMessage = function(command) {
         this.renderViewFn(renderData);
       break;
       case "send_mission":
-        this.context.currentTime =  data.Mission.CurrentTime;
         this.context.missionsFactory.build(data.Mission);
         break;
     }

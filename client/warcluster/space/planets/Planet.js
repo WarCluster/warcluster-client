@@ -20,10 +20,6 @@ module.exports = function(context, data){
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet"+this.data.Texture+".png");
 	var selectionGlow = context.resourcesLoader.get("./images/planets/planet_selection_glow.png");
-  var supportGlow = context.resourcesLoader.get("./images/planets/planet_support_glow.png");
-  var attackGlow = context.resourcesLoader.get("./images/planets/planet_attack_glow.png");
-  var selectedHoverGlow = context.resourcesLoader.get("./images/planets/planet_hover_glow.png");
-  var spyGlow = context.resourcesLoader.get("./images/planets/planet_spy_glow.png");
 
   var color = new THREE.Color().setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
 
@@ -33,22 +29,6 @@ module.exports = function(context, data){
   this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: selectionGlow, transparent : true}));
   this.selection.visible = false;
   this.add(this.selection);
-
-  this.supportSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: supportGlow, transparent : true}));
-  this.supportSelection.visible = false;
-  this.add(this.supportSelection);
-
-  this.attackSelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: attackGlow, transparent : true}));
-  this.attackSelection.visible = false;
-  this.add(this.attackSelection);
-
-  this.spySelection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: spyGlow, transparent : true}));
-  this.spySelection.visible = false;
-  this.add(this.spySelection);
-
-  this.selectedHover =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: selectedHoverGlow, transparent : true}));
-  this.selectedHover.visible = false;
-  this.add(this.selectedHover);
 
 	//TODO: refactor for DRY(Don't Repeat Yourself)
 	var result = this.context.canvasTextFactory.buildUint8Array(this.data.ShipCount, null, 45);
@@ -95,6 +75,7 @@ module.exports = function(context, data){
 
 module.exports.prototype = new InteractiveObject();
 module.exports.prototype.select = function() {
+  this.selection.material.color.set(module.exports.colors.select);
 	this.selection.visible = true;
   this.selected = true;
 }
@@ -105,37 +86,44 @@ module.exports.prototype.deselect = function() {
 }
 
 module.exports.prototype.showAttackSelection = function() {
-  this.attackSelection.visible = true;
+  this.selection.material.color.set(module.exports.colors.attack);
+  this.selection.visible = true;
 }
 
 module.exports.prototype.hideAttackSelection = function() {
-  this.attackSelection.visible = false;
-}
-
-module.exports.prototype.showSpySelection = function() {
-  this.spySelection.visible = true;
-}
-
-module.exports.prototype.hideSpySelection = function() {
-  this.spySelection.visible = false;
-}
-
-module.exports.prototype.showHoverSelection = function() {
-  this.selectedHover.visible = true;
-}
-
-module.exports.prototype.hideHoverSelection = function() {
-  this.selectedHover.visible = false;
-}
-
-module.exports.prototype.showSupportSelection = function() {
-  this.supportSelection.visible = true;
   this.selection.visible = false;
 }
 
-module.exports.prototype.hideSupportSelection = function() {
-  this.supportSelection.visible = false;
+module.exports.prototype.showSpySelection = function() {
+  this.selection.material.color.set(module.exports.colors.spy);
+  this.selection.visible = true;
+}
+
+module.exports.prototype.hideSpySelection = function() {
+  this.selection.visible = false;
+}
+
+module.exports.prototype.showHoverSelection = function() {
+  this.selection.material.color.set(module.exports.colors.over);
+  this.selection.visible = true;
+}
+
+module.exports.prototype.hideHoverSelection = function() {
   this.selection.visible = this.selected;
+  if (this.selected)
+    this.selection.material.color.set(module.exports.colors.select);
+  console.log(this.selected)
+}
+
+module.exports.prototype.showSupportSelection = function() {
+  this.selection.material.color.set(module.exports.colors.support);
+  this.selection.visible = true;
+}
+
+module.exports.prototype.hideSupportSelection = function() {
+  this.selection.visible = this.selected;
+  if (this.selected)
+    this.selection.material.color.set(module.exports.colors.select);
 }
 
 module.exports.prototype.update = function(data) {
@@ -191,10 +179,8 @@ module.exports.prototype.updateOwnerInfo = function() {
 
   this.owner.visible = true;
 
-  if (this.data.Owner == this.context.playerData.Username) {
-    this.updatePopulationProduction();
+  if (this.data.Owner == this.context.playerData.Username)
     this.activate();
-  }
 
   this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
 }
@@ -259,6 +245,13 @@ module.exports.prototype.updatePopulationProduction = function () {
   }
 }
 
+module.exports.colors = {
+  select: 0xFFFFFF,
+  over: 0x00ccff,
+  attack: 0xd80e0e,
+  support: 0x12d80e,
+  spy: 0xfff717
+};
 
 /*odule.exports.prototype.intersects = function(rect) {
   var circleDistance.x = Math.abs(this.circle.x - rect.x);

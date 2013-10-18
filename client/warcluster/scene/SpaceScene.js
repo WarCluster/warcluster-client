@@ -40,10 +40,6 @@ module.exports.prototype.prepare = function() {
 
 
   this.context.resourcesLoader.loadTexture("./images/planets/planet_selection_glow.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet_support_glow.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet_attack_glow.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet_hover_glow.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet_spy_glow.png");
 
   this.context.resourcesLoader.loadModel("./models/ship1.js");
   this.context.resourcesLoader.loadModel("./models/ship2.js");
@@ -181,8 +177,6 @@ module.exports.prototype.render = function(data) {
 
   for (var i = 0;i < data.missions.length;i ++) {
     var mission = this.context.objectsById[data.missions[i].id];
-    this.context.currentTime =  data.missions[i].CurrentTime;
-    
     if (!mission)
       this.context.missionsFactory.build(data.missions[i]);
     else

@@ -51,8 +51,8 @@ module.exports = Backbone.View.extend({
     this.$(".expanded-list").html("");
     this.updateSelection();
 
-    this.$el.hide();
-    this.$(".expanded-list-container").addClass("hide");
+    /*this.$el.hide();
+    this.$(".expanded-list-container").addClass("hide");*/
   },
   executeDeselectPlanet: function(e) {
     this.trigger("deselectPlanet", $(e.currentTarget).attr("data-id"));
