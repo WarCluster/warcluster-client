@@ -53,7 +53,7 @@ module.exports = function(){
   this.planetsSelection.on("scrollToPlanet", function(id) {
     var planet = self.context.objectsById[id];
     if (planet)
-      self.context.spaceScene.moveTo(planet.position.x, planet.position.y);
+      self.spaceViewController.setPosition(planet.position.x, planet.position.y);
   });
 
   this.context.planetsSelection = this.planetsSelection;

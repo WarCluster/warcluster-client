@@ -187,11 +187,6 @@ module.exports.prototype.render = function(data) {
     this.afterRenderFn();
 }
 
-module.exports.prototype.moveTo = function(x, y) {
-  this.camera.position.x = x;
-  this.camera.position.y = y;
-}
-
 module.exports.prototype.clear = function() {
   var obj;
   this.context.objects = [];

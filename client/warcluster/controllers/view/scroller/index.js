@@ -77,5 +77,6 @@ module.exports.prototype.setPosition = function (x, y) {
   this.scrollPositon.x = -x;
   this.scrollPositon.y = y;
 
-  this.context.spaceScene.moveTo(x, y);
+  this.context.camera.position.x = x;
+  this.context.camera.position.y = y;
 }
