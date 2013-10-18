@@ -188,8 +188,8 @@ module.exports.prototype.updateOwnerInfo = function() {
 module.exports.prototype.tick = function() {
   if (this.data.Owner && this.context.currentTime >= this.nextTick) {
     console.log("-tick-")
-    /*this.nextTick = this.context.currentTime + 60000;
-    this.data.ShipCount += this.data.BuildPerMinutes;*/
+    this.nextTick = this.context.currentTime + 60000;
+    this.data.ShipCount += this.data.BuildPerMinutes;
 
     // This should be removed, population update in selection shouldn't depends on planet on screen
     var index = this.context.spaceViewController.selection.selectedPlanets.indexOf(this);
