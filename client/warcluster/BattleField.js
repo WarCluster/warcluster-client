@@ -30,6 +30,36 @@ module.exports = function(){
   this.missionsMenu = new MissionsMenu();
   $(".ui-container").append(this.missionsMenu.render().el);
 
+  this.planetsSelection = new PlanetsSelection(this.context);
+  this.planetsSelection.on("deselectPlanet", function(id) {
+    var planet = self.context.objectsById[id];
+    if (planet)
+      planet.hideHoverSelection();
+    
+    self.spaceViewController.selection.deselectPlanetById(id);
+  });
+
+  this.planetsSelection.on("planetOver", function(id) {
+    var planet = self.context.objectsById[id];
+    if (planet)
+      planet.showHoverSelection();
+  });
+
+  this.planetsSelection.on("planetOut", function(id) {
+    var planet = self.context.objectsById[id];
+    if (planet)
+      planet.hideHoverSelection();
+  });
+
+  this.planetsSelection.on("scrollToPlanet", function(id) {
+    var planet = self.context.objectsById[id];
+    if (planet)
+      self.context.spaceScene.moveTo(planet.position.x, planet.position.y);
+  });
+
+  this.context.planetsSelection = this.planetsSelection;
+  $(".ui-container").append(this.planetsSelection.render().el);
+
   
   this.context.resourcesLoader = new ResourcesLoader();
 
@@ -101,15 +131,10 @@ module.exports = function(){
     
     humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
   }
+
   this.commandsManager.renderViewFn = function(data) {
     self.context.spaceScene.render(data);
   }
-  this.planetsSelection = new PlanetsSelection(this.context);
-  this.planetsSelection.on("deselectPlanet", function(id) {
-    self.spaceViewController.selection.deselectPlanetById(id);
-  });
-  this.context.planetsSelection = this.planetsSelection;
-  $(".ui-container").append(this.planetsSelection.render().el);
 }
 
 module.exports.prototype.connect = function() {
