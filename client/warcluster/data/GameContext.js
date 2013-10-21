@@ -6,7 +6,9 @@ module.exports = function(){
 	this.planetsHitObjects = [];
   this.objectsById = {};
   this.objects = [];
+  this.planets = [];
   this.interactiveObjects = [];
 
   this.currentTime = 0;
+  this.processingTime = 0;
 }
