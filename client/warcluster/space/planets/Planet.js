@@ -1,21 +1,15 @@
-var InteractiveObject = require("../InteractiveObject");
-
 module.exports = function(context, data){
-	InteractiveObject.call(this);
+	THREE.Object3D.call(this);
 	
   this.selected = false;
-  this.prevShipCount = 0;
-
 	this.context = context;
-	
-	this.position.x = data.position.x;
-  this.position.y = data.position.y;
+
+	this.position.x = data.x;
+  this.position.y = data.y;
   
-	this.data = data.planetData;
+	this.data = data;
   this.data.width = 90 + 10 * this.data.Size;
   this.data.height = 90 + 10 * this.data.Size;
-	
-  this.updatePopulationProduction();
 
 	var pz = Math.random() * (-50);
 	var bmd1 = context.resourcesLoader.get("./images/planets/planet"+this.data.Texture+".png");
@@ -25,6 +19,8 @@ module.exports = function(context, data){
 
 	this.planet =  new THREE.Mesh(new THREE.SphereGeometry(this.data.width / 2, 12, 12), new THREE.MeshLambertMaterial({map: bmd1, color: color, ambient: color}));
 	this.add(this.planet);
+
+  this.hitObject = this.planet;
 
   this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: selectionGlow, transparent : true}));
   this.selection.visible = false;
@@ -45,7 +41,6 @@ module.exports = function(context, data){
   this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
 
 	this.add(this.population);
-	this.hitObject = this.planet;
   
   if (this.data.Owner) {
     result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner, null, 45);
@@ -70,10 +65,9 @@ module.exports = function(context, data){
     this.owner.visible = false;
 
   this.add(this.owner);
-  this.nextTick = this.context.currentTime + 60000;
 }
 
-module.exports.prototype = new InteractiveObject();
+module.exports.prototype = new THREE.Object3D();
 module.exports.prototype.select = function() {
   this.selection.material.color.set(module.exports.colors.select);
 	this.selection.visible = true;
@@ -112,7 +106,6 @@ module.exports.prototype.hideHoverSelection = function() {
   this.selection.visible = this.selected;
   if (this.selected)
     this.selection.material.color.set(module.exports.colors.select);
-  console.log(this.selected)
 }
 
 module.exports.prototype.showSupportSelection = function() {
@@ -125,29 +118,6 @@ module.exports.prototype.hideSupportSelection = function() {
   if (this.selected)
     this.selection.material.color.set(module.exports.colors.select);
 }
-
-module.exports.prototype.update = function(data) {
-  if (this.data.Owner != data.planetData.Owner)
-    this.nextTick = this.context.currentTime + 60000;
-
-  var updatePopulation = this.data.ShipCount !== data.planetData.ShipCount && (this.data.Owner === this.context.playerData.Username || this.data.Owner === "")
-  var updateOwner = this.data.Owner !== data.planetData.Owner;
-  var updateColor = this.data.Color !== data.planetData.Color;
-  var currentOwner = this.data.Owner;
-
-  _.extend(this.data, data.planetData);
-
-  if (updatePopulation)
-    this.updatePopulationInfo();
-  if (updateOwner) {
-    if (currentOwner === this.context.playerData.Username)
-      this.context.spaceViewController.selection.deselectPlanet(this);
-    this.updateOwnerInfo();
-  }
-  if (updateColor)
-    this.updateColor();
-}
-
 
 module.exports.prototype.updateColor = function() {
   this.planet.material.color.setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
@@ -185,20 +155,16 @@ module.exports.prototype.updateOwnerInfo = function() {
   this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
 }
 
-module.exports.prototype.tick = function() {
-  if (this.data.Owner && this.context.currentTime >= this.nextTick) {
-    console.log("-tick-")
-    this.nextTick = this.context.currentTime + 60000;
-    this.data.ShipCount += this.data.BuildPerMinutes;
+module.exports.prototype.activate = function() {
+  var index = this.context.planets.indexOf(this);
+  if (index == -1)
+    this.context.planets.push(this);
+}
 
-    // This should be removed, population update in selection shouldn't depends on planet on screen
-    var index = this.context.spaceViewController.selection.selectedPlanets.indexOf(this);
-    if(index !== -1) {
-      this.context.planetsSelection.updatePilots(this.data);
-    }
-
-    this.updatePopulationInfo();  
-  }
+module.exports.prototype.deactivate = function() {
+  var index = this.context.planets.indexOf(this);
+  if (index != -1)
+    this.context.planets.splice(index, 1);
 }
 
 module.exports.prototype.setOwner = function(value) {
@@ -229,20 +195,6 @@ module.exports.prototype.toScreenXY = function (position) {
   	x: ( pos.x + 1 ) * this.context.$content.width() / 2 + this.context.$content.offset().left,
     y: ( - pos.y + 1) * this.context.$content.height() / 2 + this.context.$content.offset().top 
   };
-}
-
-module.exports.prototype.updatePopulationProduction = function () {
-  if(this.data.Owner === "") {
-    this.data.BuildPerMinutes = 0;
-  } else if (this.data.Size <= 2) {
-    this.data.BuildPerMinutes = 1;
-  } else if ((this.data.Size > 2) &&  (this.data.Size <= 5)) {
-    this.data.BuildPerMinutes = 2;
-  } else if ((this.data.Size > 5) &&  (this.data.Size <= 8)) {
-    this.data.BuildPerMinutes = 3;
-  } else if ((this.data.Size > 8) &&  (this.data.Size <= 10)) {
-    this.data.BuildPerMinutes = 4;
-  }
 }
 
 module.exports.colors = {

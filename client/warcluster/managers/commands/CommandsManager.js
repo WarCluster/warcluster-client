@@ -6,6 +6,12 @@ module.exports = function(url, context){
 
   this.loginFn = null;
   this.renderViewFn = null;
+
+  this.renderData = {
+    suns: [],
+    planets: [],
+    missions: []
+  }
 }
 
 module.exports.prototype.prepare = function(username, twitterId) {
@@ -61,12 +67,10 @@ module.exports.prototype.parseMessage = function(command) {
         this.loginFn(pd);
       break;
       case "scope_of_view_result":
-        var renderData = this.parseData(data);
-        this.renderViewFn(renderData);
+        this.renderViewFn(this.prepareData(data));
       break;
       case "state_change":
-        var renderData = this.parseData(data);
-        this.renderViewFn(renderData);
+        this.renderViewFn(this.prepareData(data));
       break;
       case "send_mission":
         this.context.missionsFactory.build(data.Mission);
@@ -78,11 +82,10 @@ module.exports.prototype.parseMessage = function(command) {
   
 }
 
-module.exports.prototype.parseData = function(data) {
-  var renderData = {
-    objects: [],
-    missions: []
-  }
+module.exports.prototype.prepareData = function(data) {
+  this.renderData.suns = [];
+  this.renderData.planets = [];
+  this.renderData.missions = [];
   
   var pos, item;
   var sc = 1;
@@ -91,42 +94,32 @@ module.exports.prototype.parseData = function(data) {
     item = data.Planets[s];
     item.id = s;
 
-    if (s.indexOf("planet") != -1) {
-      pos = s.split("planet.").join("").split("_");
-      renderData.objects.push({
-        xtype: "PLANET",
-        planetData: item,
-        position: {
-          x: pos[0] * sc,
-          y: pos[1] * sc
-        }
-      });
-    } 
-  }
-  for (var _sun in data.Suns) {    
-    if (_sun.indexOf("sun") != -1) {
-      item = data.Suns[_sun];
-      item.id = _sun;
-      pos = _sun.split("sun.").join("").split("_");
-      renderData.objects.push({
-        xtype: "SUN",
-        sunData: item,
-        position: {
-          x: pos[0] * sc,
-          y: pos[1] * sc
-        }
-      });
-    }
-  }
-  for (var mission in data.Missions) {
-    if (mission.indexOf("mission") != -1) {
-      item = data.Missions[mission];
-      item.id = mission;
-      renderData.missions.push(item);
-    }  
+    pos = s.split("planet.").join("").split("_");
+
+    item.x = pos[0];
+    item.y = pos[1];
+
+    this.renderData.planets.push(item);
   }
 
-  return renderData;
+  for (s in data.Suns) {    
+    item = data.Suns[s];
+    item.id = s;
+    pos = s.split("sun.").join("").split("_");
+
+    item.x = pos[0];
+    item.y = pos[1];
+
+    this.renderData.suns.push(item);
+  }
+
+  for (s in data.Missions) {
+    item = data.Missions[s];
+    item.id = s;
+    this.renderData.missions.push(item);
+  }
+
+  return this.renderData;
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
