@@ -4,6 +4,7 @@ var Planet = require("../space/planets/Planet");
 
 module.exports = function(context){
   this.context = context;
+  this.interval = null;
   this.afterRenderFn = null;
 }
 
@@ -49,6 +50,7 @@ module.exports.prototype.prepare = function() {
   this.context.resourcesLoader.addEventListener("complete", function() { 
     self.buildScene();
     self.startRendering();
+    self.context.planetsManager.start();
     self.dispatchEvent({type: "complete"});
   });
 }
@@ -131,11 +133,13 @@ module.exports.prototype.startRendering = function() {
   var self = this;
   var ct = (new Date()).getTime();
   var t = ct;
+
   var render = function() {
     requestAnimationFrame(render);
 
     ct = (new Date()).getTime();
-    self.context.currentTime += ct - t;
+    self.context.processingTime = ct - t;
+    self.context.currentTime += self.context.processingTime;
     t = ct;
 
     for(var i = 0;i < self.context.interactiveObjects.length;i ++)
@@ -152,28 +156,19 @@ module.exports.prototype.startRendering = function() {
 }
 
 module.exports.prototype.render = function(data) {
-  if (data.objects.length > 0) {
+  if (data.suns.length > 0) {
     //this.clear();
-    for (var i = 0;i < data.objects.length;i ++) {
-      var obj = data.objects[i];
-      switch (obj.xtype) {
-        case "SUN":
-          var sun = this.context.objectsById[obj.sunData.id];
+    for (var i = 0;i < data.suns.length;i ++) {
+      var obj = data.suns[i];
+      var sun = this.context.objectsById[obj.id];
 
-          if (!sun)
-            sun = this.context.sunsFactory.build(obj);
-        break;
-        case "PLANET":
-          var planet = this.context.objectsById[obj.planetData.id];
-
-          if (!planet)
-            planet = this.context.planetsHitObjectsFactory.build(obj);
-          else
-            planet.update(obj);
-        break;
-      }
+      if (!sun)
+        sun = this.context.sunsFactory.build(obj);
     }
   }
+
+  if (data.planets.length > 0)
+    this.context.planetsManager.managePlanetData(data.planets);
 
   for (var i = 0;i < data.missions.length;i ++) {
     var mission = this.context.objectsById[data.missions[i].id];

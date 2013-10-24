@@ -9,6 +9,8 @@ var CanvasTextFactory = require("./factories/text/CanvasTextFactory");
 var SunsFactory = require("./factories/suns/SunsFactory");
 
 var CommandsManager = require("./managers/commands/CommandsManager");
+var PlanetsManager = require("./managers/planets/PlanetsManager");
+
 var SpaceScene = require("./scene/SpaceScene");
 var MissionsMenu = require("./controls/mission-menu");
 var PlanetsSelection = require("./controls/planets-selection");
@@ -29,7 +31,7 @@ module.exports = function(){
   this.missionsMenu = new MissionsMenu();
   $(".ui-container").append(this.missionsMenu.render().el);
 
-  this.planetsSelection = new PlanetsSelection(this.context);
+  this.planetsSelection = new PlanetsSelection({context: this.context});
   this.planetsSelection.on("deselectPlanet", function(id) {
     var planet = self.context.objectsById[id];
     if (planet)
@@ -68,6 +70,11 @@ module.exports = function(){
   this.context.sunsFactory = new SunsFactory(this.context);
 
   this.context.canvasTextFactory = new CanvasTextFactory(true, this.context);
+
+  this.context.planetsManager = new PlanetsManager(this.context);
+  this.context.planetsManager.addEventListener("selectionDataUpdated", function(e) { 
+    self.planetsSelection.updatePopulations(e.updated);
+  });
 
   this.context.spaceScene = new SpaceScene(this.context);
   this.context.spaceScene.addEventListener("complete", function() { 

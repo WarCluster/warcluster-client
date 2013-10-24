@@ -10,7 +10,8 @@ module.exports = Backbone.View.extend({
     "mouseout .selection-planet-item":  "unhoverSelectedPlanet"
   },
   className: "planets-selection hide",
-  initialize: function() {
+  initialize: function(options) {
+    this.context = options.context;
     this.selectedPlanets = [];
   },
   render: function() {
@@ -24,19 +25,21 @@ module.exports = Backbone.View.extend({
     this.trigger("planetOut", $(e.currentTarget).attr("data-id"));
   },
   selectPlanet: function(planetData) {
+    var self = this;
     if (this.selectedPlanets.length == 0)
       this.$el.show();
 
     this.selectedPlanets.push(planetData);
-    this.updateSelection();
-
+    this.updateSelectedPlanets();
+      
     this.$(".expanded-list").append(Render({model: planetData}));
   },
   deselectPlanet: function(planetData) {
-    var index = this.selectedPlanets.indexOf(planetData);
+    var index = this.getPlanetIndex(planetData);
+
     if (index != -1) {
       this.selectedPlanets.splice(index, 1);
-      this.updateSelection();
+      this.updateSelectedPlanets();
 
       this.$('.selection-planet-item[data-id="'+planetData.id+'"]').remove();
 
@@ -48,16 +51,16 @@ module.exports = Backbone.View.extend({
   },
   deselectAllPlanets: function() {
     this.selectedPlanets = [];
-    this.$(".expanded-list").html("");
-    this.updateSelection();
 
-    /*this.$el.hide();
-    this.$(".expanded-list-container").addClass("hide");*/
+    this.$(".expanded-list").html("");
+    this.$el.hide();
+
+    this.updateSelectedPlanets();
   },
   executeDeselectPlanet: function(e) {
     this.trigger("deselectPlanet", $(e.currentTarget).attr("data-id"));
   },
-  updateSelection: function() {
+  updateSelectedPlanets: function() {
     this.$(".selected-planets").html(this.selectedPlanets.length);
   },
   togglePlanets: function() {
@@ -79,7 +82,16 @@ module.exports = Backbone.View.extend({
   updatePilots: function(planetData) {
     this.$('.selection-planet-item[data-id="'+planetData.id+'"] .shipCount').html(planetData.ShipCount);
   },
+  updatePopulations: function(updated) {
+    for (var i = 0;i < updated.length;i ++)
+      this.$('[data-id="'+updated[i].id+'"]').find(".shipCount").html(parseInt(updated[i].ShipCount));
+  },
   moveCameraToPlanet: function(e) {
     this.trigger("scrollToPlanet", $(e.currentTarget).attr("data-id"));
+  },
+  getPlanetIndex: function(planetData) {
+    for (var i = 0;i < this.selectedPlanets.length;i ++)
+      if (this.selectedPlanets[i].id == planetData.id)
+        return i;
   }
 })

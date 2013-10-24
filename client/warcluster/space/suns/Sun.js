@@ -4,14 +4,14 @@ module.exports = function(context, data){
 
   this.sc = 2.6 + Math.random() * 0.4 + 1;
   this.context = context;
-  this.data = data.sunData;
+  this.data = data;
 
-  this.position.x = data.position.x;
-  this.position.y = data.position.y;
+  this.position.x = data.x;
+  this.position.y = data.y;
   this.position.z = -1000;
 
   this.light = new THREE.PointLight( 0xfffdbd, 1.5, 5000 );
-  this.light.position.set( data.position.x, data.position.y, 0 );
+  this.light.position.set( data.x, data.y, 0 );
   this.context.scene.add( this.light );
 
   var bmd1 = context.resourcesLoader.get("./images/suns/sun1.png");

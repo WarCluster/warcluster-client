@@ -13,7 +13,7 @@ module.exports.prototype.build = function(sunData) {
 
   this.context.container.add(sun);
   this.context.objects.push(sun);
-  this.context.objectsById[sun.data.id] = sun;
+  this.context.objectsById[sunData.id] = sun;
   
   return sun;
 }
