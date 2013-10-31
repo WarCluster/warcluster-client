@@ -42,19 +42,15 @@ module.exports.prototype.prepare = function(username, twitterId) {
   };
 }
 
-// ***********************************************************************************
-// ***********************************************************************************
-// ***********************************************************************************
-
 module.exports.prototype.parseMessage = function(command) {
   try {
     var data = JSON.parse(command);
+    console.log("###.parseMessage:", data);
   } catch(err) {
     console.log("###.InvalidData:", command);
     return false;
   }
-
-  console.log("###.parseMessage:", data);
+  
   if (data.Command) {
     this.context.currentTime =  data.Timestamp;
     switch (data.Command) {
@@ -67,59 +63,16 @@ module.exports.prototype.parseMessage = function(command) {
         this.loginFn(pd);
       break;
       case "scope_of_view_result":
-        this.renderViewFn(this.prepareData(data));
+        this.renderViewFn(data);
       break;
       case "state_change":
-        this.renderViewFn(this.prepareData(data));
+        this.renderViewFn(data);
       break;
       case "send_mission":
         this.context.missionsFactory.build(data.Mission);
         break;
     }
-  } else {
-      debugger;
-    }
-  
-}
-
-module.exports.prototype.prepareData = function(data) {
-  this.renderData.suns = [];
-  this.renderData.planets = [];
-  this.renderData.missions = [];
-  
-  var pos, item;
-  var sc = 1;
-
-  for (var s in data.Planets) {
-    item = data.Planets[s];
-    item.id = s;
-
-    pos = s.split("planet.").join("").split("_");
-
-    item.x = pos[0];
-    item.y = pos[1];
-
-    this.renderData.planets.push(item);
   }
-
-  for (s in data.Suns) {    
-    item = data.Suns[s];
-    item.id = s;
-    pos = s.split("sun.").join("").split("_");
-
-    item.x = pos[0];
-    item.y = pos[1];
-
-    this.renderData.suns.push(item);
-  }
-
-  for (s in data.Missions) {
-    item = data.Missions[s];
-    item.id = s;
-    this.renderData.missions.push(item);
-  }
-
-  return this.renderData;
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
@@ -136,6 +89,3 @@ module.exports.prototype.sendMission = function(type, source, target, ships) {
     "Fleet": ships
   }));
 }
-
-
-

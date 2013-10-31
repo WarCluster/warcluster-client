@@ -2,6 +2,8 @@ var SpaceSceneEnviroment = require("./SpaceSceneEnviroment");
 var Sun = require("../space/suns/Sun");
 var Planet = require("../space/planets/Planet");
 
+var resources = require("../../config/resources.js");
+
 module.exports = function(context){
   this.context = context;
   this.interval = null;
@@ -18,34 +20,11 @@ module.exports.prototype.prepare = function() {
   this.stats.domElement.style.right = '50px';
   this.context.$content.append(this.stats.domElement);
 
-  this.context.resourcesLoader.loadTexture("./images/ships/ship1.png");
-  this.context.resourcesLoader.loadTexture("./images/ships/ship2.png");
-  this.context.resourcesLoader.loadTexture("./images/ships/ship3.png");
-  this.context.resourcesLoader.loadTexture("./images/ships/ship4.png");
+  for (var i = 0;i < resources.textures.length;i ++)
+    this.context.resourcesLoader.loadTexture(resources.textures[i]);
 
-  this.context.resourcesLoader.loadTexture("./images/backgrounds/background5.jpg");
-  this.context.resourcesLoader.loadTexture("./images/backgrounds/background6.jpg");
-  this.context.resourcesLoader.loadTexture("./images/backgrounds/background7.jpg");
-  this.context.resourcesLoader.loadTexture("./images/backgrounds/background8.jpg");
-  this.context.resourcesLoader.loadTexture("./images/suns/sun1.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet0.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet1.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet2.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet3.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet4.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet5.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet6.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet7.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet8.png");
-  this.context.resourcesLoader.loadTexture("./images/planets/planet9.png");
-
-
-  this.context.resourcesLoader.loadTexture("./images/planets/planet_selection_glow.png");
-
-  this.context.resourcesLoader.loadModel("./models/ship1.js");
-  this.context.resourcesLoader.loadModel("./models/ship2.js");
-  this.context.resourcesLoader.loadModel("./models/ship3.js");
-  this.context.resourcesLoader.loadModel("./models/ship4.js");
+  for (var i = 0;i < resources.models.length;i ++)
+    this.context.resourcesLoader.loadModel(resources.models[i]);
 
   this.context.resourcesLoader.addEventListener("complete", function() { 
     self.buildScene();
@@ -156,26 +135,21 @@ module.exports.prototype.startRendering = function() {
 }
 
 module.exports.prototype.render = function(data) {
-  if (data.suns.length > 0) {
-    //this.clear();
-    for (var i = 0;i < data.suns.length;i ++) {
-      var obj = data.suns[i];
-      var sun = this.context.objectsById[obj.id];
-
-      if (!sun)
-        sun = this.context.sunsFactory.build(obj);
-    }
+  //this.clear();
+  for (s in data.Suns) { 
+    var sun = this.context.objectsById[data.Suns[s].id];
+    if (!sun)
+      sun = this.context.sunsFactory.build(data.Suns[s]);
   }
 
-  if (data.planets.length > 0)
-    this.context.planetsManager.managePlanetData(data.planets);
+  this.context.planetsManager.managePlanetData(data.Planets);
 
-  for (var i = 0;i < data.missions.length;i ++) {
-    var mission = this.context.objectsById[data.missions[i].id];
+  for (s in data.Missions) {
+    var mission = this.context.objectsById[data.Missions[s].id];
     if (!mission)
-      this.context.missionsFactory.build(data.missions[i]);
+      this.context.missionsFactory.build(data.Missions[s]);
     else
-      mission.update(data.missions[i]);
+      mission.update(data.Missions[s]);
   }
 
   if (this.afterRenderFn != null)

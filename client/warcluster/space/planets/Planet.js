@@ -4,8 +4,8 @@ module.exports = function(context, data){
   this.selected = false;
 	this.context = context;
 
-	this.position.x = data.x;
-  this.position.y = data.y;
+	this.position.x = data.Coords[0];
+  this.position.y = data.Coords[1];
   
 	this.data = data;
   this.data.width = 90 + 10 * this.data.Size;
