@@ -60,9 +60,6 @@ module.exports = function(context){
 
     stars.position.x = 9000000 * (i - 10) / 20 - 9000000 / 2; //Math.random() * 9000000 - 9000000 / 2;
 
-    /*s = i * 10;
-    stars.scale.set( s, s, s );*/
-
     stars.matrixAutoUpdate = false;
     stars.updateMatrix();
 

@@ -27,27 +27,25 @@ module.exports.prototype.stop = function() {
 }
 
 module.exports.prototype.managePlanetData = function(planets) {
-  var planetData;
   var updated = [];
-
-  for (var i = 0;i < planets.length;i ++) {
-    planetData = planets[i];
-    
-    var planet = this.context.objectsById[planetData.id];
+  
+  for (var id in planets) {
+    var planet = this.context.objectsById[id];
+    planets[id].id = id;
 
     if (!planet) {
-      planet = this.context.planetsHitObjectsFactory.build(planetData);
+      planet = this.context.planetsHitObjectsFactory.build(planets[id]);
     } else {
-      var updatePopulation = planet.data.ShipCount !== planetData.ShipCount && (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
-      var updateOwner = planet.data.Owner !== planetData.Owner;
-      var updateColor = planet.data.Color !== planetData.Color;
+      var updatePopulation = planet.data.ShipCount !== planets[id].ShipCount && (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
+      var updateOwner = planet.data.Owner !== planets[id].Owner;
+      var updateColor = planet.data.Color !== planets[id].Color;
       var currentOwner = planet.data.Owner;
 
-      _.extend(planet.data, planetData);
+      _.extend(planet.data, planets[id]);
 
       if (updatePopulation) {
         if (planet.data.Owner === this.context.playerData.Username)
-          updated.push(planetData);
+          updated.push(planets[id]);
         planet.updatePopulationInfo();
       }
 
