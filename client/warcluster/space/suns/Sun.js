@@ -6,8 +6,8 @@ module.exports = function(context, data){
   this.context = context;
   this.data = data;
 
-  this.position.x = data.x;
-  this.position.y = data.y;
+  this.position.x = data.Coords[0];
+  this.position.y = data.Coords[1];
   this.position.z = -1000;
 
   this.light = new THREE.PointLight( 0xfffdbd, 1.5, 5000 );
