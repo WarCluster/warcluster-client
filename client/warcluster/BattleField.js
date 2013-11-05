@@ -135,7 +135,7 @@ module.exports = function(){
 
     this.scopeOfView(self.context.playerData.Position);
     
-    humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
+    //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
   }
 
   this.commandsManager.renderViewFn = function(data) {
