@@ -137,6 +137,7 @@ module.exports.prototype.startRendering = function() {
 module.exports.prototype.render = function(data) {
   //this.clear();
   for (s in data.Suns) {
+    data.Suns[s].id = s;
     if (!data.Suns[s].Coords) {
       var c = s.split("sun.").join("").split("_");
       data.Suns[s].Coords = [parseFloat(c[0]), parseFloat(c[1])];
