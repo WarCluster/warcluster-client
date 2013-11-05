@@ -11,7 +11,7 @@ module.exports = function(context, data){
   this.position.z = -1000;
 
   this.light = new THREE.PointLight( 0xfffdbd, 1.5, 5000 );
-  this.light.position.set( data.Coords[0], data.Coords[1], 0 );
+  this.light.position.set( this.position.x, this.position.y, 0 );
   this.context.scene.add( this.light );
 
   var bmd1 = context.resourcesLoader.get("./images/suns/sun1.png");
