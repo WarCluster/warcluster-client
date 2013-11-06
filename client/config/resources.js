@@ -20,7 +20,9 @@ module.exports = {
     "./images/planets/planet7.png",
     "./images/planets/planet8.png",
     "./images/planets/planet9.png",
-    "./images/planets/planet_selection_glow.png"
+    "./images/planets/planet_selection_glow.png",
+
+    "./images/planets/ring.png"
   ],
   models: [
     "./models/ship1.js",
