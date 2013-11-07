@@ -56,6 +56,7 @@ module.exports = function(){
     var planet = self.context.objectsById[id];
     if (planet)
       self.spaceViewController.setPosition(planet.position.x, planet.position.y);
+      self.spaceViewController.info.popover.remove();
   });
 
   this.context.planetsSelection = this.planetsSelection;
