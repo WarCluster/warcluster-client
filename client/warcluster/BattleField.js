@@ -132,7 +132,7 @@ module.exports = function(){
     // console.log("-loginFn-", self.context.playerData);
 
     self.spaceViewController.activate();
-    self.spaceViewController.setPosition(data.Position[0], data.Position[1]);
+    self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
 
     this.scopeOfView(self.context.playerData.Position);
     
