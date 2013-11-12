@@ -45,8 +45,16 @@ module.exports = function(size, context) {
 
 module.exports.prototype = new InteractiveObject();
 module.exports.prototype.send = function() {
-	this.delta_x = this.mission.data.Target[0] - this.mission.data.Source[0];
-	this.delta_y = this.mission.data.Target[1] - this.mission.data.Source[1];
+	var len = this.context.objects.length;
+	for (var i = 0; i < len; i++) {
+		if (this.context.objects[i].data && this.context.objects[i].data.Name === this.mission.data.Source)
+			this.source =  this.context.objects[i].data;
+		if (this.context.objects[i].data && this.context.objects[i].data.Name === this.mission.data.Target)
+			this.target = this.context.objects[i].data;
+	}
+	
+	this.delta_x = this.target.Position.X - this.source.Position.X;
+	this.delta_y = this.target.Position.Y - this.source.Position.Y;
 	
 	this.rotation.z = -Math.atan2(this.delta_x, this.delta_y) + Math.PI;
 	this.ship.rotation.y = Math.PI * Math.random();
@@ -67,8 +75,8 @@ module.exports.prototype.tick = function() {
 		if (this.progress > 1)
 			this.progress = 1;
 
-		this.position.x = this.mission.data.Source[0] + this.delta_x * this.progress;
-		this.position.y = this.mission.data.Source[1] + this.delta_y * this.progress;
+		this.position.x = this.source.Position.X + this.delta_x * this.progress;
+		this.position.y = this.source.Position.Y + this.delta_y * this.progress;
 
 		this.angle += this.direction;
 

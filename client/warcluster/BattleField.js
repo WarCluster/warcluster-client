@@ -128,7 +128,6 @@ module.exports = function(){
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
     _.extend(self.context.playerData, data);
-
     // console.log("-loginFn-", self.context.playerData);
 
     self.spaceViewController.activate();
