@@ -13,6 +13,7 @@ module.exports = Backbone.View.extend({
   initialize: function(options) {
     this.context = options.context;
     this.selectedPlanets = [];
+    this.allPilots = 0;
   },
   render: function() {
     this.$el.html(this.template());
@@ -29,6 +30,7 @@ module.exports = Backbone.View.extend({
     if (this.selectedPlanets.length == 0)
       this.$el.show();
 
+    this.allPilots += Math.ceil(planetData.ShipCount);
     this.selectedPlanets.push(planetData);
     this.updateSelectedPlanets();
       
@@ -38,6 +40,7 @@ module.exports = Backbone.View.extend({
     var index = this.getPlanetIndex(planetData);
 
     if (index != -1) {
+      this.allPilots -= Math.ceil(this.selectedPlanets[index].ShipCount);
       this.selectedPlanets.splice(index, 1);
       this.updateSelectedPlanets();
 
@@ -51,6 +54,7 @@ module.exports = Backbone.View.extend({
   },
   deselectAllPlanets: function() {
     this.selectedPlanets = [];
+    this.allPilots = 0;
 
     this.$(".expanded-list").html("");
     this.$el.hide();
@@ -62,6 +66,7 @@ module.exports = Backbone.View.extend({
   },
   updateSelectedPlanets: function() {
     this.$(".selected-planets").html(this.selectedPlanets.length);
+    this.$(".total-pilots").html("(" + this.allPilots + " pilots)");
   },
   togglePlanets: function() {
     if (this.expanded()) {
@@ -79,6 +84,7 @@ module.exports = Backbone.View.extend({
   expanded: function() {
     return this.$(".expanded-list-container").hasClass("hide");
   },
+  //TODO: figure out why we have updatePilots && updatePoPulations :D
   updatePilots: function(planetData) {
     this.$('.selection-planet-item[data-id="'+planetData.id+'"] .shipCount').html(planetData.ShipCount);
   },
