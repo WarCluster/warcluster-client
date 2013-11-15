@@ -45,8 +45,8 @@ module.exports = function(size, context) {
 
 module.exports.prototype = new InteractiveObject();
 module.exports.prototype.send = function() {
-	this.delta_x = this.mission.data.Target[0] - this.mission.data.Source[0];
-	this.delta_y = this.mission.data.Target[1] - this.mission.data.Source[1];
+	this.delta_x = this.mission.data.Target.Position.X - this.mission.data.Source.Position.X;
+	this.delta_y = this.mission.data.Target.Position.Y - this.mission.data.Source.Position.Y;
 	
 	this.rotation.z = -Math.atan2(this.delta_x, this.delta_y) + Math.PI;
 	this.ship.rotation.y = Math.PI * Math.random();
@@ -67,8 +67,8 @@ module.exports.prototype.tick = function() {
 		if (this.progress > 1)
 			this.progress = 1;
 
-		this.position.x = this.mission.data.Source[0] + this.delta_x * this.progress;
-		this.position.y = this.mission.data.Source[1] + this.delta_y * this.progress;
+		this.position.x = this.mission.data.Source.Position.X + this.delta_x * this.progress;
+		this.position.y = this.mission.data.Source.Position.Y + this.delta_y * this.progress;
 
 		this.angle += this.direction;
 
