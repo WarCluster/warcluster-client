@@ -13,6 +13,7 @@ module.exports = Backbone.View.extend({
   initialize: function(options) {
     this.context = options.context;
     this.selectedPlanets = [];
+    this.allPilotsSelected = 0;
   },
   render: function() {
     this.$el.html(this.template());
@@ -27,8 +28,9 @@ module.exports = Backbone.View.extend({
   selectPlanet: function(planetData) {
     var self = this;
     if (this.selectedPlanets.length == 0)
-      this.$el.show();
+      this.$el.show("fast");
 
+    this.allPilotsSelected += Math.ceil(planetData.ShipCount);
     this.selectedPlanets.push(planetData);
     this.updateSelectedPlanets();
       
@@ -38,22 +40,24 @@ module.exports = Backbone.View.extend({
     var index = this.getPlanetIndex(planetData);
 
     if (index != -1) {
+      this.allPilotsSelected -= Math.ceil(this.selectedPlanets[index].ShipCount);
       this.selectedPlanets.splice(index, 1);
       this.updateSelectedPlanets();
 
       this.$('.selection-planet-item[data-id="'+planetData.id+'"]').remove();
 
       if (this.selectedPlanets.length == 0) {
-        this.$el.hide();
+        this.$el.hide("slow");
         this.$(".expanded-list-container").addClass("hide");
       }
     }
   },
   deselectAllPlanets: function() {
     this.selectedPlanets = [];
+    this.allPilotsSelected = 0;
 
     this.$(".expanded-list").html("");
-    this.$el.hide();
+    this.$el.hide("slow");
 
     this.updateSelectedPlanets();
   },
@@ -62,6 +66,7 @@ module.exports = Backbone.View.extend({
   },
   updateSelectedPlanets: function() {
     this.$(".selected-planets").html(this.selectedPlanets.length);
+    this.$(".total-pilots").html("(" + this.allPilotsSelected + " pilots)");
   },
   togglePlanets: function() {
     if (this.expanded()) {

@@ -113,14 +113,17 @@ module.exports = function(){
 
   this.spaceViewController.addEventListener("selectPlanet", function(e) {
     self.planetsSelection.selectPlanet(e.planet.data);
+    self.missionsMenu.showMenu();
   });
 
   this.spaceViewController.addEventListener("deselectPlanet", function(e) {
     self.planetsSelection.deselectPlanet(e.planet.data);
+    self.missionsMenu.hideMenu(e.planet.data.Name);
   });
 
   this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
     self.planetsSelection.deselectAllPlanets();
+    self.missionsMenu.hideMenu();
   });
 
   this.context.spaceViewController = this.spaceViewController;

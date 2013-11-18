@@ -3,7 +3,7 @@ module.exports = Backbone.View.extend({
   events: {
     "click .unit": "onSwitchType"
   },
-  className: "missions-menu",
+  className: "missions-menu hide",
   initialize: function(options) {
     var self = this;
     this.currentType = 1;
@@ -14,6 +14,7 @@ module.exports = Backbone.View.extend({
       4: 50,
       5: 100
     };
+    this.selectedPlanetsCount = 0;
 
     $(document).keydown(function(e){
       if (e.keyCode > 48 && e.keyCode < 54)
@@ -35,5 +36,22 @@ module.exports = Backbone.View.extend({
   },
   getCurrentType: function(){
     return  this.percentArray[this.currentType];
+  },
+  showMenu: function(){
+    if (this.selectedPlanetsCount > 0) 
+      this.$el.show("fast");
+    this.selectedPlanetsCount += 1;
+  },
+  hideMenu: function(planetName){
+    if (planetName === undefined) {
+      this.$el.hide("fast");
+      this.selectedPlanetsCount = 0;
+    }
+    else {
+      this.selectedPlanetsCount -= 1;
+      if (this.selectedPlanetsCount < 1) {
+        this.$el.hide("fast");
+      }
+    }
   }
 })
