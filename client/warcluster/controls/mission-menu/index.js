@@ -3,7 +3,7 @@ module.exports = Backbone.View.extend({
   events: {
     "click .unit": "onSwitchType"
   },
-  className: "missions-menu hide",
+  className: "missions-menu",
   initialize: function(options) {
     var self = this;
     this.currentType = 1;
@@ -38,19 +38,31 @@ module.exports = Backbone.View.extend({
     return  this.percentArray[this.currentType];
   },
   showMenu: function(){
-    if (this.selectedPlanetsCount > 0) 
-      this.$el.show("fast");
     this.selectedPlanetsCount += 1;
+    if (this.selectedPlanetsCount > 0) {
+      TweenLite.to(this.$el, 0.3, {
+        css:  {top: "0px"},
+        ease: Cubic.easeOut
+      });
+      // this.$el.show("fast");
+    }
   },
   hideMenu: function(planetName){
     if (planetName === undefined) {
-      this.$el.hide("fast");
+      // this.$el.hide("fast");
+      TweenLite.to(this.$el, 0.3, {
+        css:  {top: "-141px"},
+        ease: Cubic.easeOut
+      });
       this.selectedPlanetsCount = 0;
     }
     else {
       this.selectedPlanetsCount -= 1;
       if (this.selectedPlanetsCount < 1) {
-        this.$el.hide("fast");
+        TweenLite.to(this.$el, 0.3, {
+          css:  {top: "-141px"},
+          ease: Cubic.easeOut
+        });
       }
     }
   }
