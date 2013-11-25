@@ -9,10 +9,11 @@ module.exports = function(context, config){
   this.minZoom = config.minZoom || null;
   this.maxZoom = config.maxZoom || null;
 
-  window.addEventListener('mousewheel', function(e) {
+  $(window).mousewheel(function(e) {
     e.preventDefault();
+    console.log(e);
 
-    var st = e.wheelDelta > 0 ? -self.zoomStep : self.zoomStep;
+    var st = e.deltaY > 0 ? -self.zoomStep : self.zoomStep;
 
     if (self.minZoom != null && self.maxZoom != null) {
       if (self.zoom + st < self.minZoom)
