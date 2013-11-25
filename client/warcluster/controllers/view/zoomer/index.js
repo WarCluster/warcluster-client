@@ -11,7 +11,6 @@ module.exports = function(context, config){
 
   $(window).mousewheel(function(e) {
     e.preventDefault();
-    console.log(e);
 
     var st = e.deltaY > 0 ? -self.zoomStep : self.zoomStep;
 
