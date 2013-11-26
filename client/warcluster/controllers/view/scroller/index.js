@@ -1,4 +1,4 @@
-module.exports = function(context, config){
+module.exports = function(context, config) {
   THREE.EventDispatcher.call(this);
 
   config = config || {};
@@ -41,11 +41,11 @@ module.exports = function(context, config){
       self.scrollPositon.y = self.yMax;
     else
       self.scrollPositon.y = dy;
-
+    // console.log("mpos before: " + self.mpos.x + "," + self.mpos.y);
     self.mpos.x = e.clientX * self.scaleIndex;
     self.mpos.y = e.clientY * self.scaleIndex;
-     
-    scrolled = true;
+    // console.log("mpos after: " + self.mpos.x + "," + self.mpos.y);
+    // console.log("scrollPosition: " + self.scrollPositon.x + "," + self.scrollPositon.y);
 
     TweenLite.to(self.context.spaceScene.camera.position, 0.7, {
       x: -self.scrollPositon.x, 
@@ -79,4 +79,41 @@ module.exports.prototype.setPosition = function (x, y) {
 
   this.context.camera.position.x = x;
   this.context.camera.position.y = y;
+}
+//refactor acording to DRY principle
+module.exports.prototype.scrollToPosition = function(xPos, yPos){
+  var self = this;
+  debugger;
+  var windowCenterY = $(window).scrollTop() + $(window).height() / 2;
+  var windowCenterX = $(window).scrollLeft() + $(window).width() / 2;
+  var dx = self.scrollPositon.x + (xPos * self.scaleIndex - windowCenterX * self.scaleIndex);
+  var dy = self.scrollPositon.y + (yPos * self.scaleIndex - windowCenterY * self.scaleIndex);
+
+    if (dx < self.xMin)
+      self.scrollPositon.x = self.xMin;
+    else if (dx > self.xMax)
+      self.scrollPositon.x = self.xMax;
+    else
+      self.scrollPositon.x = dx;
+      
+    if (dy < self.yMin)
+      self.scrollPositon.y = self.yMin;
+    else if (dy > self.yMax)
+      self.scrollPositon.y = self.yMax;
+    else
+      self.scrollPositon.y = dy;
+
+    TweenLite.to(self.context.spaceScene.camera.position, 1, {
+      x: self.scrollPositon.x, 
+      y: -self.scrollPositon.y,
+      ease: Cubic.easeInOut,
+      onUpdate: function() {
+        // self.setPosition(self.scrollPositon.x,self.scrollPositon.y);
+        self.dispatchEvent({
+          type: "scroll", 
+          objects: self.selectedPlanets
+        });
+      }
+    });
+  
 }

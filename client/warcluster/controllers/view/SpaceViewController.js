@@ -13,7 +13,10 @@ module.exports = function(context, config){
   this.zoomer = new Zoomer(context, config.zoomer);
   this.zoomer.addEventListener("zoom", function(e) {
     self.scroller.scaleIndex = e.zoom / 6000;
-    // console.log("zoom", e.zoom)
+    if (e.mode === "zoomin") {
+      debugger;
+      self.scroller.scrollToPosition(e.target.mousePosition.x, e.target.mousePosition.y);
+    }
     self.dispatchEvent(e);
     self.info.updatePosition();
   });
