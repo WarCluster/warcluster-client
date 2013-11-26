@@ -2,7 +2,8 @@ require("../client/vendor/jquery");
 require("../client/vendor/bootstrap.min");
 require("../client/vendor/bootstrap-fileupload.min");
 
-require("../client/vendor/TweenLite.min");
+require("../client/vendor/TweenLite.min");	
+require("../client/vendor/plugins/jquery-mousewheel.min")($);
 require("../client/vendor/plugins/CSSPlugin.min");
 require("../client/vendor/easing/EasePack.min");
 
