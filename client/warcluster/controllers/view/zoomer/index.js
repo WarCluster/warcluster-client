@@ -14,10 +14,9 @@ module.exports = function(context, config){
     e.preventDefault();
 
     var st = e.deltaY > 0 ? -self.zoomStep : self.zoomStep;
-    //TODO: refactor the zoommode
     var zoomMode = e.deltaY > 0 ? "zoomin" : "zoomout";
-    self.mousePosition.x = (e.deltaY > 0) ? e.clientX : 0;
-    self.mousePosition.y = (e.deltaY > 0) ? e.clientY : 0;
+    self.mousePosition.x = (zoomMode === "zoomin") ? e.clientX : 0;
+    self.mousePosition.y = (zoomMode === "zoomin") ? e.clientY : 0;
 
     if (self.minZoom != null && self.maxZoom != null) {
       if (self.zoom + st < self.minZoom)
@@ -40,7 +39,7 @@ module.exports = function(context, config){
       self.zoom += st;
     }
 
-    TweenLite.to(self.context.spaceScene.camera.position, 0.7, {
+    TweenLite.to(self.context.spaceScene.camera.position, 0.5, {
       z: self.zoom,
       ease: Cubic.easeOut,
       onComplete: function() {

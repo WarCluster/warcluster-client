@@ -25,22 +25,7 @@ module.exports = function(context, config) {
     var dx = self.scrollPositon.x + (e.clientX * self.scaleIndex - self.mpos.x);
     var dy = self.scrollPositon.y + (e.clientY * self.scaleIndex - self.mpos.y);
 
-    if (dx < self.xMin)
-      self.scrollPositon.x = self.xMin;
-    else
-    if (dx > self.xMax)
-      self.scrollPositon.x = self.xMax;
-    else
-      self.scrollPositon.x = dx;
-      
-
-    if (dy < self.yMin)
-      self.scrollPositon.y = self.yMin;
-    else
-    if (dy > self.yMax)
-      self.scrollPositon.y = self.yMax;
-    else
-      self.scrollPositon.y = dy;
+    setScrollPosition(dx, dy);
     // console.log("mpos before: " + self.mpos.x + "," + self.mpos.y);
     self.mpos.x = e.clientX * self.scaleIndex;
     self.mpos.y = e.clientY * self.scaleIndex;
@@ -58,6 +43,21 @@ module.exports = function(context, config) {
         });
       }
     });
+  }
+  var setScrollPosition = function(dx, dy) {
+     if (dx < self.xMin)
+      self.scrollPositon.x = self.xMin;
+    else if (dx > self.xMax)
+      self.scrollPositon.x = self.xMax;
+    else
+      self.scrollPositon.x = dx;
+      
+    if (dy < self.yMin)
+      self.scrollPositon.y = self.yMin;
+    else if (dy > self.yMax)
+      self.scrollPositon.y = self.yMax;
+    else
+      self.scrollPositon.y = dy;
   }
   
   this.scrollMouseDown = function(e) {
@@ -80,40 +80,29 @@ module.exports.prototype.setPosition = function (x, y) {
   this.context.camera.position.x = x;
   this.context.camera.position.y = y;
 }
-//refactor acording to DRY principle
+//TODO: refactor acording to DRY principle
 module.exports.prototype.scrollToPosition = function(xPos, yPos){
   var self = this;
-  debugger;
   var windowCenterY = $(window).scrollTop() + $(window).height() / 2;
   var windowCenterX = $(window).scrollLeft() + $(window).width() / 2;
-  var dx = self.scrollPositon.x + (xPos * self.scaleIndex - windowCenterX * self.scaleIndex);
-  var dy = self.scrollPositon.y + (yPos * self.scaleIndex - windowCenterY * self.scaleIndex);
+  var dx = self.scrollPositon.x + (xPos * self.scaleIndex - windowCenterX * self.scaleIndex)*3;
+  var dy = self.scrollPositon.y + (yPos * self.scaleIndex - windowCenterY * self.scaleIndex)*3;
 
-    if (dx < self.xMin)
-      self.scrollPositon.x = self.xMin;
-    else if (dx > self.xMax)
-      self.scrollPositon.x = self.xMax;
-    else
-      self.scrollPositon.x = dx;
-      
-    if (dy < self.yMin)
-      self.scrollPositon.y = self.yMin;
-    else if (dy > self.yMax)
-      self.scrollPositon.y = self.yMax;
-    else
-      self.scrollPositon.y = dy;
+  setScrollPosition(dx, dy);
 
-    TweenLite.to(self.context.spaceScene.camera.position, 1, {
-      x: self.scrollPositon.x, 
-      y: -self.scrollPositon.y,
-      ease: Cubic.easeInOut,
-      onUpdate: function() {
-        // self.setPosition(self.scrollPositon.x,self.scrollPositon.y);
-        self.dispatchEvent({
-          type: "scroll", 
-          objects: self.selectedPlanets
-        });
-      }
-    });
-  
+  // self.mpos.x = xPos * self.scaleIndex;
+  // self.mpos.y = yPos * self.scaleIndex;
+
+  TweenLite.to(self.context.spaceScene.camera.position, 0.5, {
+    x: self.scrollPositon.x, 
+    y: -self.scrollPositon.y,
+    ease: Cubic.easeInOut,
+    onComplete: function() {
+      // self.setPosition(self.scrollPositon.x,-self.scrollPositon.y);
+      self.dispatchEvent({
+        type: "scroll", 
+        objects: self.selectedPlanets
+      });
+    }
+  });
 }
