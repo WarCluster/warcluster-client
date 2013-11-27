@@ -25,7 +25,7 @@ module.exports = function(context, config) {
     var dx = self.scrollPositon.x + (e.clientX * self.scaleIndex - self.mpos.x);
     var dy = self.scrollPositon.y + (e.clientY * self.scaleIndex - self.mpos.y);
 
-    setScrollPosition(dx, dy);
+    self.setScrollPosition(dx, dy);
     // console.log("mpos before: " + self.mpos.x + "," + self.mpos.y);
     self.mpos.x = e.clientX * self.scaleIndex;
     self.mpos.y = e.clientY * self.scaleIndex;
@@ -44,7 +44,7 @@ module.exports = function(context, config) {
       }
     });
   }
-  var setScrollPosition = function(dx, dy) {
+  this.setScrollPosition = function(dx, dy) {
      if (dx < self.xMin)
       self.scrollPositon.x = self.xMin;
     else if (dx > self.xMax)
@@ -88,7 +88,7 @@ module.exports.prototype.scrollToPosition = function(xPos, yPos){
   var dx = self.scrollPositon.x + (xPos * self.scaleIndex - windowCenterX * self.scaleIndex)*3;
   var dy = self.scrollPositon.y + (yPos * self.scaleIndex - windowCenterY * self.scaleIndex)*3;
 
-  setScrollPosition(dx, dy);
+  self.setScrollPosition(dx, dy);
 
   // self.mpos.x = xPos * self.scaleIndex;
   // self.mpos.y = yPos * self.scaleIndex;
