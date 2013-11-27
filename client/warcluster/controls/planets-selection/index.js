@@ -9,7 +9,7 @@ module.exports = Backbone.View.extend({
     "mouseover .selection-planet-item": "hoverSelectedPlanet",
     "mouseout .selection-planet-item":  "unhoverSelectedPlanet"
   },
-  className: "planets-selection hide",
+  className: "planets-selection",
   initialize: function(options) {
     this.context = options.context;
     this.selectedPlanets = [];
@@ -28,7 +28,10 @@ module.exports = Backbone.View.extend({
   selectPlanet: function(planetData) {
     var self = this;
     if (this.selectedPlanets.length == 0)
-      this.$el.show("fast");
+      TweenLite.to(this.$el, 0.3, {
+        css:  {left: "0px"},
+        ease: Cubic.easeOut
+      });
 
     this.allPilotsSelected += Math.ceil(planetData.ShipCount);
     this.selectedPlanets.push(planetData);
@@ -47,7 +50,10 @@ module.exports = Backbone.View.extend({
       this.$('.selection-planet-item[data-id="'+planetData.id+'"]').remove();
 
       if (this.selectedPlanets.length == 0) {
-        this.$el.hide("slow");
+        TweenLite.to(this.$el, 0.3, {
+          css:  {left: "-250px"},
+          ease: Cubic.easeOut
+        });
         this.$(".expanded-list-container").addClass("hide");
       }
     }
@@ -57,7 +63,10 @@ module.exports = Backbone.View.extend({
     this.allPilotsSelected = 0;
 
     this.$(".expanded-list").html("");
-    this.$el.hide("slow");
+    TweenLite.to(this.$el, 0.3, {
+        css:  {left: "-250px"},
+        ease: Cubic.easeOut
+      });
 
     this.updateSelectedPlanets();
   },
