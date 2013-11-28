@@ -11,6 +11,7 @@ module.exports = function(context, config) {
   this.yMin = config.yMin || -4000000;
   this.yMax = config.yMax || 4000000;
   this.scaleIndex = 1;
+  // this.uselessFlag = false;
 
   // *****************************************************************
 
@@ -30,7 +31,7 @@ module.exports = function(context, config) {
     self.mpos.x = e.clientX * self.scaleIndex;
     self.mpos.y = e.clientY * self.scaleIndex;
     // console.log("mpos after: " + self.mpos.x + "," + self.mpos.y);
-    // console.log("scrollPosition: " + self.scrollPositon.x + "," + self.scrollPositon.y);
+    console.log("-----scrollPosition: " + self.scrollPositon.x + "," + self.scrollPositon.y);
 
     TweenLite.to(self.context.spaceScene.camera.position, 0.7, {
       x: -self.scrollPositon.x, 
@@ -62,6 +63,12 @@ module.exports = function(context, config) {
   
   this.scrollMouseDown = function(e) {
     e.preventDefault();
+    // if (self.uselessFlag) {
+    //   self.context.spaceScene.camera.position.y = -self.context.spaceScene.camera.position.y;
+    // }
+    console.log("spaceScene.camera MouseMove: " + self.context.camera.position.x + "," + self.context.spaceScene.camera.position.y);
+    console.log("camera MouseMove: " + self.context.spaceScene.camera.position.x + "," + self.context.spaceScene.camera.position.y);
+    
     self.mpos.x = e.clientX * self.scaleIndex;
     self.mpos.y = e.clientY * self.scaleIndex;
 
@@ -76,12 +83,11 @@ module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.setPosition = function (x, y) {
   this.scrollPositon.x = -x;
   this.scrollPositon.y = y;
-
   this.context.camera.position.x = x;
   this.context.camera.position.y = y;
 }
-//TODO: refactor acording to DRY principle
-module.exports.prototype.scrollToPosition = function(xPos, yPos){
+//TODO: refactor according to DRY principle
+module.exports.prototype.scrollToMousePosition = function(xPos, yPos){
   var self = this;
 
   var windowCenterY = $(window).scrollTop() + $(window).height() / 2;
@@ -94,17 +100,40 @@ module.exports.prototype.scrollToPosition = function(xPos, yPos){
 
   // self.mpos.x = xPos * self.scaleIndex;
   // self.mpos.y = yPos * self.scaleIndex;
-
+  console.log("camera before ZoomIn: " + self.context.spaceScene.camera.position.x + "," + self.context.spaceScene.camera.position.y);
+  console.log("scroll before ZoomIn: " + self.scrollPositon.x + "," + self.scrollPositon.y);
+  self.context.spaceScene.camera.position.x = -self.scrollPositon.x;
   TweenLite.to(self.context.spaceScene.camera.position, 0.5, {
     x: self.scrollPositon.x, 
     y: -self.scrollPositon.y,
-    ease: Cubic.easeInOut,
-    onComplete: function() {
-      // self.setPosition(self.scrollPositon.x,-self.scrollPositon.y);
+    ease: Cubic.easeOut,
+    onUpdate: function() {
       self.dispatchEvent({
         type: "scroll", 
         objects: self.selectedPlanets
       });
+    },
+    onComplete: function(){
+      debugger;
+      console.log("spaceScene.camera after ZoomIn: " + self.context.spaceScene.camera.position.x + "," + self.context.spaceScene.camera.position.y);
+      console.log("camera after ZoomIn: " + self.context.camera.position.x + "," + self.context.camera.position.y);
+      
+      console.log("scroll after ZoomIn: " + self.scrollPositon.x + "," + self.scrollPositon.y);
+      // self.setPosition(self.scrollPositon.x,-self.scrollPositon.y);
+      // self.context.spaceScene.camera.position.x = self.scrollPositon.x;
+      // self.context.spaceScene.camera.position.y = -self.scrollPositon.y;
+      self.scrollPositon.y = self.context.camera.position.y;
+      // self.context.spaceScene.camera.position.y = self.scrollPositon.y;
+      
+      // self.uselessFlag = true;
+      // self.scrollPositon.x = -self.scrollPositon.x;
+      // self.scrollPositon.y = self.scrollPositon.y;
+      console.log("spaceScene.camera position after ZoomIn: " + self.context.spaceScene.camera.position.x + "," + self.context.spaceScene.camera.position.y);
+      console.log("camera position after ZoomIn: " + self.context.camera.position.x + "," + self.context.camera.position.y);
+      
+      console.log("scroll position after ZoomIn: " + self.scrollPositon.x + "," + self.scrollPositon.y);
+      console.log("------------------------------------- end--------------------");
     }
   });
+  
 }

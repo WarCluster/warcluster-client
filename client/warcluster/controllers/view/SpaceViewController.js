@@ -14,7 +14,7 @@ module.exports = function(context, config){
   this.zoomer.addEventListener("zoom", function(e) {
     self.scroller.scaleIndex = e.zoom / 6000;
     if (e.mode === "zoomin") {
-      self.scroller.scrollToPosition(e.target.mousePosition.x, e.target.mousePosition.y);
+      self.scroller.scrollToMousePosition(e.target.mousePosition.x, e.target.mousePosition.y);
     }
     self.dispatchEvent(e);
     self.info.updatePosition();
