@@ -83,10 +83,12 @@ module.exports.prototype.setPosition = function (x, y) {
 //TODO: refactor acording to DRY principle
 module.exports.prototype.scrollToPosition = function(xPos, yPos){
   var self = this;
+
   var windowCenterY = $(window).scrollTop() + $(window).height() / 2;
   var windowCenterX = $(window).scrollLeft() + $(window).width() / 2;
-  var dx = self.scrollPositon.x + (xPos * self.scaleIndex - windowCenterX * self.scaleIndex)*3;
-  var dy = self.scrollPositon.y + (yPos * self.scaleIndex - windowCenterY * self.scaleIndex)*3;
+  var factor = (this.context.spaceViewController.zoomer.zoom > 84000) ? 13 : 7;
+  var dx = self.scrollPositon.x + (xPos * self.scaleIndex - windowCenterX * self.scaleIndex)/factor;
+  var dy = self.scrollPositon.y + (yPos * self.scaleIndex - windowCenterY * self.scaleIndex)/factor;
 
   self.setScrollPosition(dx, dy);
 

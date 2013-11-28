@@ -38,11 +38,12 @@ module.exports = function(context, config){
     } else {
       self.zoom += st;
     }
+    console.log(self.zoom);
 
     TweenLite.to(self.context.spaceScene.camera.position, 0.5, {
       z: self.zoom,
       ease: Cubic.easeOut,
-      onComplete: function() {
+      onStart: function() {
         self.dispatchEvent({
           type:     "zoom", 
           zoom:     self.zoom,
