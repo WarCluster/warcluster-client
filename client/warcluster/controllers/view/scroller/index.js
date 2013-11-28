@@ -5,7 +5,7 @@ module.exports = function(context, config){
 
   this.context = context;
   this.mpos = {x: 0, y: 0};
-  this.scrollPositon = {x: 0, y: 0};
+  this.scrollPosition = {x: 0, y: 0};
   this.xMin = config.xMin || -5000000;
   this.xMax = config.xMax || 5000000;
   this.yMin = config.yMin || -4000000;
@@ -22,25 +22,25 @@ module.exports = function(context, config){
   }
 
   var scrollMouseMove = function(e) {
-    var dx = self.scrollPositon.x + (e.clientX * self.scaleIndex - self.mpos.x);
-    var dy = self.scrollPositon.y + (e.clientY * self.scaleIndex - self.mpos.y);
+    var dx = self.scrollPosition.x + (e.clientX * self.scaleIndex - self.mpos.x);
+    var dy = self.scrollPosition.y + (e.clientY * self.scaleIndex - self.mpos.y);
 
     if (dx < self.xMin)
-      self.scrollPositon.x = self.xMin;
+      self.scrollPosition.x = self.xMin;
     else
     if (dx > self.xMax)
-      self.scrollPositon.x = self.xMax;
+      self.scrollPosition.x = self.xMax;
     else
-      self.scrollPositon.x = dx;
+      self.scrollPosition.x = dx;
       
 
     if (dy < self.yMin)
-      self.scrollPositon.y = self.yMin;
+      self.scrollPosition.y = self.yMin;
     else
     if (dy > self.yMax)
-      self.scrollPositon.y = self.yMax;
+      self.scrollPosition.y = self.yMax;
     else
-      self.scrollPositon.y = dy;
+      self.scrollPosition.y = dy;
 
     self.mpos.x = e.clientX * self.scaleIndex;
     self.mpos.y = e.clientY * self.scaleIndex;
@@ -48,13 +48,19 @@ module.exports = function(context, config){
     scrolled = true;
 
     TweenLite.to(self.context.spaceScene.camera.position, 0.7, {
-      x: -self.scrollPositon.x, 
-      y: self.scrollPositon.y,
+      x: -self.scrollPosition.x, 
+      y: self.scrollPosition.y,
       ease: Cubic.easeOut,
       onUpdate: function() {
         self.dispatchEvent({
           type: "scroll", 
           objects: self.selectedPlanets
+        });
+      },
+      onComplete: function() {
+        self.dispatchEvent({
+          type: "scopeOfView", 
+          zoom: self.zoom
         });
       }
     });
@@ -74,8 +80,8 @@ module.exports = function(context, config){
 
 module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.setPosition = function (x, y) {
-  this.scrollPositon.x = -x;
-  this.scrollPositon.y = y;
+  this.scrollPosition.x = -x;
+  this.scrollPosition.y = y;
 
   this.context.camera.position.x = x;
   this.context.camera.position.y = y;

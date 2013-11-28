@@ -79,7 +79,8 @@ module.exports.prototype.parseMessage = function(command) {
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
-  this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": resolution || [1920, 1080]}));
+  debugger;
+  this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}));
 }
 
 module.exports.prototype.sendMission = function(type, source, target, ships) {

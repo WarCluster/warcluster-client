@@ -43,6 +43,14 @@ module.exports = function(context, config){
           type: "zoom", 
           zoom: self.zoom
         });
+      },
+      onComplete: function(){
+        if (self.zoom % 4000 === 0) {
+          self.dispatchEvent({
+            type: "scopeOfView", 
+            zoom: self.zoom
+          }); 
+        }
       }
     });
 
