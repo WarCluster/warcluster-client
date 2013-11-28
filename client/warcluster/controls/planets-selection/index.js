@@ -27,17 +27,28 @@ module.exports = Backbone.View.extend({
   },
   selectPlanet: function(planetData) {
     var self = this;
-    if (this.selectedPlanets.length == 0)
-      TweenLite.to(this.$el, 0.3, {
-        css:  {left: "0px"},
-        ease: Cubic.easeOut
-      });
+
+    if (this.selectedPlanets.length == 0){
+      this.showPlanetsSelection();
+    }
 
     this.allPilotsSelected += Math.ceil(planetData.ShipCount);
     this.selectedPlanets.push(planetData);
     this.updateSelectedPlanets();
       
     this.$(".expanded-list").append(Render({model: planetData}));
+  },
+  showPlanetsSelection: function() {
+      TweenLite.to(this.$el, 0.3, {
+        css:  {left: "0px"},
+        ease: Cubic.easeOut
+      });
+  },
+  hidePlanetsSelection: function() {
+    TweenLite.to(this.$el, 0.3, {
+      css:  {left: "-250px"},
+      ease: Cubic.easeOut
+    });
   },
   deselectPlanet: function(planetData) {
     var index = this.getPlanetIndex(planetData);
@@ -50,10 +61,7 @@ module.exports = Backbone.View.extend({
       this.$('.selection-planet-item[data-id="'+planetData.id+'"]').remove();
 
       if (this.selectedPlanets.length == 0) {
-        TweenLite.to(this.$el, 0.3, {
-          css:  {left: "-250px"},
-          ease: Cubic.easeOut
-        });
+        this.hidePlanetsSelection();
         this.$(".expanded-list-container").addClass("hide");
       }
     }
@@ -63,10 +71,7 @@ module.exports = Backbone.View.extend({
     this.allPilotsSelected = 0;
 
     this.$(".expanded-list").html("");
-    TweenLite.to(this.$el, 0.3, {
-        css:  {left: "-250px"},
-        ease: Cubic.easeOut
-      });
+    this.hidePlanetsSelection();
 
     this.updateSelectedPlanets();
   },
