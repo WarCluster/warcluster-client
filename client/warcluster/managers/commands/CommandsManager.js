@@ -70,7 +70,10 @@ module.exports.prototype.parseMessage = function(command) {
       break;
       case "send_mission":
         this.context.missionsFactory.build(data.Mission);
-        break;
+      break;
+      case "send_mission_failed":
+        humane.error(data.Error, {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
+      break;
     }
   }
 }
