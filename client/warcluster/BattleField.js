@@ -104,13 +104,6 @@ module.exports = function(){
     for (var i = 0;i < e.attackSourcesIds.length;i ++)
       self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.missionsMenu.getCurrentType());
   });
-  this.spaceViewController.addEventListener("scopeOfView", function(e) {
-    var position = {
-      x: Math.ceil(self.context.spaceViewController.scroller.scrollPosition.x),
-      y: Math.ceil(self.context.spaceViewController.scroller.scrollPosition.y)
-    };
-    self.commandsManager.scopeOfView(position, self.context.spaceViewController.getResolution());
-  });
 
   this.spaceViewController.addEventListener("supportPlanet", function(e) {
     // console.log("-SEND SUPPORT MISSION-");
@@ -130,6 +123,14 @@ module.exports = function(){
     self.planetsSelection.deselectAllPlanets();
   });
 
+  this.spaceViewController.addEventListener("scopeOfView", function(e) {
+    var position = {
+      x: Math.ceil(self.context.spaceViewController.scroller.scrollPosition.x),
+      y: Math.ceil(self.context.spaceViewController.scroller.scrollPosition.y)
+    };
+    self.commandsManager.scopeOfView(position, self.context.spaceViewController.getResolution());
+  });
+  
   this.context.spaceViewController = this.spaceViewController;
 
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
@@ -137,16 +138,17 @@ module.exports = function(){
     _.extend(self.context.playerData, data);
 
     // console.log("-loginFn-", self.context.playerData);
-
+    var currentPosition = {x: data.Position.X, y: data.Position.Y};
     self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
 
-    this.scopeOfView(self.context.playerData.Position, self.context.spaceViewController.getResolution());
+    this.scopeOfView(currentPosition, self.context.spaceViewController.getResolution());
     
     //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
   }
 
   this.commandsManager.renderViewFn = function(data) {
+    self.context.planetsManager.garbageCollectPlanets(data);
     self.context.spaceScene.render(data);
   }
 }

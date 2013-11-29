@@ -121,3 +121,21 @@ module.exports.prototype.getBuildIndex = function (planetData) {
 
   return 0;
 }
+module.exports.prototype.garbageCollectPlanets = function(scopeOfView) {
+  // debugger;
+  // var self = this;
+  // for (var i = 0; i < self.context.objects.length; i++) {
+  //   for (missionsKey in scopeOfView.Missions) 
+  //     for (planetsKey in scopeOfView.Planets)
+  //       for (sunsKey in scopeOfView.Suns)
+  //         if (self.context.objects[i].data.id !== scopeOfView.Missions[missionsKey].id &&
+  //             self.context.objects[i].data.id !== scopeOfView.Planets[planetsKey].id &&
+  //             self.context.objects[i].data.id !== scopeOfView.Suns[sunsKey].id) {
+  //               self.context.planetsHitObjectsFactory.destroy(self.context.objects[i]);
+  //             //this.context.mission.destroy(this);
+  //             //this.context.sunsFactory.destroy(obj);
+  //         }
+     
+  //   }
+
+}

@@ -12,10 +12,6 @@ module.exports = function(context, config){
   
   this.zoomer = new Zoomer(context, config.zoomer);
   this.zoomer.addEventListener("scopeOfView", function(e) {
-    // self.scroller.scaleIndex = e.zoom / 6000;
-    // // console.log("zoom", e.zoom)
-    // //TODO: don't call scope of view everytime
-    // if (e.zoom % 4 === 0)
     self.dispatchEvent(e);
     self.info.updatePosition();
   });
@@ -23,8 +19,7 @@ module.exports = function(context, config){
     self.scroller.scaleIndex = e.zoom / 6000;
     // console.log("zoom", e.zoom)
     //TODO: don't call scope of view everytime
-    if (e.zoom % 4 === 0)
-      self.dispatchEvent(e);
+    self.dispatchEvent(e);
     self.info.updatePosition();
   });
 

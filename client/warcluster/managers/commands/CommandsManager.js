@@ -79,7 +79,6 @@ module.exports.prototype.parseMessage = function(command) {
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
-  debugger;
   this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}));
 }
 
