@@ -61,7 +61,6 @@ module.exports = function(){
 
   this.context.planetsSelection = this.planetsSelection;
   $(".ui-container").append(this.planetsSelection.render().el);
-
   
   this.context.resourcesLoader = new ResourcesLoader();
 
@@ -148,9 +147,17 @@ module.exports = function(){
   }
 
   this.commandsManager.renderViewFn = function(data) {
-    self.context.planetsManager.garbageCollectPlanets(data);
+    // self.context.planetsManager.garbageCollectPlanets(data);
     self.context.spaceScene.render(data);
   }
+  
+  this.context.garbageWorker = new Worker("../../js/GarbageCollector.js");
+
+  garbageWorker.addEventListener('message', function(e) {
+    console.log('Worker said: ', e.data);
+  }, false);
+
+  garbageWorker.postMessage('Hello World'); // Send data to our worker.
 }
 
 module.exports.prototype.connect = function() {

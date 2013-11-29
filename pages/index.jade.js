@@ -1,6 +1,5 @@
 var boot = require("../client/boot");
 
-
 $(document).ready(function() {
   var windowLocation = window.location.host;
   if(windowLocation !== "0.0.0.0:8118" && windowLocation !== "127.0.0.1:8118"){
