@@ -147,17 +147,34 @@ module.exports = function(){
   }
 
   this.commandsManager.renderViewFn = function(data) {
-    // self.context.planetsManager.garbageCollectPlanets(data);
     self.context.spaceScene.render(data);
+    // self.context.garbageWorker.postMessage("GARBAGE");
   }
   
   this.context.garbageWorker = new Worker("../../js/GarbageCollector.js");
 
-  garbageWorker.addEventListener('message', function(e) {
-    console.log('Worker said: ', e.data);
+  this.context.garbageWorker.addEventListener('message', function(e) {
+    if (e.data.length) {
+      for (var i = 0; i < e.data.length; i++) {
+        self.context.spaceScene.destroyObject(i);
+      }
+    }
   }, false);
 
-  garbageWorker.postMessage('Hello World'); // Send data to our worker.
+  var garbageInterval = setInterval(function() {
+    try {
+      var objects = _.map(self.context.objects, function(j) {
+        return j.data;
+      });
+      objects.push(self.context.spaceViewController.scroller.scaleIndex);
+      objects.push(self.context.spaceViewController.scroller.scrollPosition);
+      debugger;
+      self.context.garbageWorker.postMessage(objects);
+    }
+    catch(err) {
+      console.log(err);
+    }
+  }, 1000);
 }
 
 module.exports.prototype.connect = function() {

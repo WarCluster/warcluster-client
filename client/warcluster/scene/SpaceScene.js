@@ -1,6 +1,7 @@
 var SpaceSceneEnviroment = require("./SpaceSceneEnviroment");
 var Sun = require("../space/suns/Sun");
 var Planet = require("../space/planets/Planet");
+var Mission = require("../space/missions/Mission");
 
 var resources = require("../../config/resources.js");
 
@@ -174,4 +175,13 @@ module.exports.prototype.clear = function() {
     else if (obj instanceof Planet)  
       this.context.planetsHitObjectsFactory.destroy(obj);
   }
+}
+module.exports.prototype.destroyObject = function(index) {
+  var obj = this.context.objects[index];
+  if (obj instanceof Sun)  
+    this.context.sunsFactory.destroy(obj);
+  else if (obj instanceof Planet)
+    this.context.planetsHitObjectsFactory.destroy(obj);
+  else if (obj instanceof Mission)
+    this.context.missionsFactory.destroy(obj);
 }

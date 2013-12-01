@@ -6,7 +6,11 @@ module.exports = function(context, data){
 
 	this.position.x = data.Position.X;
   this.position.y = data.Position.Y;
-  
+
+  this.metaInfo = {
+    timestamp: (new Date()).getTime()
+  };
+
 	this.data = data;
   this.data.width = 90 + 10 * this.data.Size;
   this.data.height = 90 + 10 * this.data.Size;

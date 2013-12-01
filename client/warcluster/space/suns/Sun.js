@@ -4,6 +4,11 @@ module.exports = function(context, data){
 
   this.sc = 2.6 + Math.random() * 0.4 + 1;
   this.context = context;
+
+  this.metaInfo = {
+    timestamp: (new Date()).getTime()
+  };
+
   this.data = data;
 
   this.position.x = data.Position.X;
