@@ -59,6 +59,7 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Username = this.username;
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
+        pd.ClusterTeam = data.ClusterTeam || "WarClusterInitLab";
 
         this.loginFn(pd);
       break;

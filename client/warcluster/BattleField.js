@@ -12,24 +12,27 @@ var CommandsManager = require("./managers/commands/CommandsManager");
 var PlanetsManager = require("./managers/planets/PlanetsManager");
 
 var SpaceScene = require("./scene/SpaceScene");
+
 var MissionsMenu = require("./controls/mission-menu");
 var PlanetsSelection = require("./controls/planets-selection");
+var TwitterStream = require("./controls/twitter-stream");
 
 module.exports = function(){
-	var self = this;
+  var self = this;
 
-	this.context = new GameContext();
+  this.context = new GameContext();
   this.context.$content = $(".content");
-	this.context.currentTime = (new Date()).getTime();
-	this.context.playerData = {
+  this.context.currentTime = (new Date()).getTime();
+  this.context.playerData = {
     twitter: twitter
   };
-
   // Clear twitter credentials from global object
   twitter = null;
 
   this.missionsMenu = new MissionsMenu();
   $(".ui-container").append(this.missionsMenu.render().el);
+
+  this.twitterStream = new TwitterStream();
 
   this.planetsSelection = new PlanetsSelection({context: this.context});
   this.planetsSelection.on("deselectPlanet", function(id) {
@@ -128,7 +131,8 @@ module.exports = function(){
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
     _.extend(self.context.playerData, data);
-
+   
+    $(".ui-container").append(self.twitterStream.render(self.context.playerData.ClusterTeam).el);
     // console.log("-loginFn-", self.context.playerData);
 
     self.spaceViewController.activate();
