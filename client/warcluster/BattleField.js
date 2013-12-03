@@ -18,17 +18,17 @@ var PlanetsSelection = require("./controls/planets-selection");
 module.exports = function(){
 	var self = this;
 
-	this.context = new GameContext();
+  this.context = new GameContext();
   this.context.$content = $(".content");
-	this.context.currentTime = (new Date()).getTime();
-	this.context.playerData = {
+  this.context.currentTime = (new Date()).getTime();
+  this.context.playerData = {
     twitter: twitter
   };
-
   // Clear twitter credentials from global object
   twitter = null;
 
-  this.missionsMenu = new MissionsMenu();
+  this.missionsMenu = new MissionsMenu({context: this.context});
+  this.context.planetsSelection = this.planetsSelection;
   $(".ui-container").append(this.missionsMenu.render().el);
 
   this.planetsSelection = new PlanetsSelection({context: this.context});
@@ -112,15 +112,18 @@ module.exports = function(){
   });
 
   this.spaceViewController.addEventListener("selectPlanet", function(e) {
-    self.planetsSelection.selectPlanet(e.planet.data);
+      self.planetsSelection.selectPlanet(e.planet.data);
+      self.missionsMenu.showMenu();
   });
 
   this.spaceViewController.addEventListener("deselectPlanet", function(e) {
     self.planetsSelection.deselectPlanet(e.planet.data);
+    self.missionsMenu.hideMenu(e.planet.data.Name);
   });
 
   this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
-    self.planetsSelection.deselectAllPlanets();
+      self.planetsSelection.deselectAllPlanets();
+      self.missionsMenu.hideMenu();    
   });
 
   this.context.spaceViewController = this.spaceViewController;

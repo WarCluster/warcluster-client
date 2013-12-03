@@ -5,7 +5,7 @@ module.exports = Backbone.View.extend({
   },
   className: "missions-menu",
   initialize: function(options) {
-    var self = this;
+    this.context = options.context;
     this.currentType = 1;
     this.percentArray = {
       1: 5,
@@ -35,5 +35,27 @@ module.exports = Backbone.View.extend({
   },
   getCurrentType: function(){
     return  this.percentArray[this.currentType];
+  },
+  showMenu: function(){
+    if (this.context.planets.length != 0) {
+      TweenLite.to(this.$el, 0.3, {
+        css:  {top: "0px"},
+        ease: Cubic.easeOut
+      });
+    }
+  },
+  hideMenu: function(planetName){
+    if (planetName === undefined) {
+      TweenLite.to(this.$el, 0.3, {
+        css:  {top: "-141px"},
+        ease: Cubic.easeOut
+      });
+    }
+    else if (this.context.planets.length < 1) {
+      TweenLite.to(this.$el, 0.3, {
+        css:  {top: "-141px"},
+        ease: Cubic.easeOut
+      });
+    }
   }
 })
