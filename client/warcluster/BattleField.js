@@ -137,44 +137,41 @@ module.exports = function(){
     _.extend(self.context.playerData, data);
 
     // console.log("-loginFn-", self.context.playerData);
-    var currentPosition = {x: data.Position.X, y: data.Position.Y};
     self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
 
-    this.scopeOfView(currentPosition, self.context.spaceViewController.getResolution());
+    this.scopeOfView(data.Position, self.context.spaceViewController.getResolution());
     
     //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
   }
 
   this.commandsManager.renderViewFn = function(data) {
     self.context.spaceScene.render(data);
-    // self.context.garbageWorker.postMessage("GARBAGE");
   }
-  
-  this.context.garbageWorker = new Worker("../../js/GarbageCollector.js");
 
-  this.context.garbageWorker.addEventListener('message', function(e) {
-    if (e.data.length) {
-      for (var i = 0; i < e.data.length; i++) {
-        self.context.spaceScene.destroyObject(i);
+  var garbageCollectLoop = function() {
+    // var rect = {
+    //   x1: 
+    //   y1:
+    //   x2:
+    //   y2:
+    // };
+    var obj = {};
+    for (var i = self.context.objects.length - 1; i >= 0; i--) {
+      obj = self.context.objects[i];
+      if (obj.x < rect.x1 || obj.y < rect.y2 || obj.x > rect.x2 || obj.y > rect.y2 ) {
+        //if the object is 10seconds old we delete it :)
+        //if (self.context.currentTime - obj.metaInfo.timestamp > 10000) {
+        //   self.context.spaceScene.destroyObjectByIndex(i);
+        // }
       }
     }
-  }, false);
 
-  var garbageInterval = setInterval(function() {
-    try {
-      var objects = _.map(self.context.objects, function(j) {
-        return j.data;
-      });
-      objects.push(self.context.spaceViewController.scroller.scaleIndex);
-      objects.push(self.context.spaceViewController.scroller.scrollPosition);
-      debugger;
-      self.context.garbageWorker.postMessage(objects);
-    }
-    catch(err) {
-      console.log(err);
-    }
-  }, 1000);
+    //set recursively the loop after everything else has completed
+    setTimeout(garbageCollectLoop, 1000);
+  }
+  //init the garbage collecting loop
+  setTimeout(garbageCollectLoop, 1000);
 }
 
 module.exports.prototype.connect = function() {
