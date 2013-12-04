@@ -10,6 +10,7 @@ var SunsFactory = require("./factories/suns/SunsFactory");
 
 var CommandsManager = require("./managers/commands/CommandsManager");
 var PlanetsManager = require("./managers/planets/PlanetsManager");
+var KeyboardManager = require("./managers/keyboard/KeyboardManager");
 
 var SpaceScene = require("./scene/SpaceScene");
 
@@ -131,6 +132,8 @@ module.exports = function(){
   });
 
   this.context.spaceViewController = this.spaceViewController;
+
+  this.KeyboardManager = new KeyboardManager(this.context);
 
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
