@@ -5,6 +5,7 @@ module.exports = Backbone.View.extend({
   },
   className: "missions-menu",
   initialize: function(options) {
+    var self = this;
     this.context = options.context;
     this.currentType = 1;
     this.percentArray = {
