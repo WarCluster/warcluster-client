@@ -16,6 +16,7 @@ var SpaceScene = require("./scene/SpaceScene");
 var MissionsMenu = require("./controls/mission-menu");
 var PlanetsSelection = require("./controls/planets-selection");
 var TwitterStream = require("./controls/twitter-stream");
+var Tutorial = require("./controls/tutorial");
 
 module.exports = function(){
   var self = this;
@@ -28,6 +29,10 @@ module.exports = function(){
   };
   // Clear twitter credentials from global object
   twitter = null;
+
+  this.tutorialMenu = new Tutorial();
+  $(".ui-container").append(this.tutorialMenu.render().el);
+
 
   this.missionsMenu = new MissionsMenu({context: this.context});
   this.context.planetsSelection = this.planetsSelection;
@@ -134,6 +139,9 @@ module.exports = function(){
 
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
+    if (data.JustRegistered) {
+      self.tutorialMenu.showMenu();
+    }
     _.extend(self.context.playerData, data);
    
     $(".ui-container").append(self.twitterStream.render(self.context.playerData.ClusterTeam).el);
