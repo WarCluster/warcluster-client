@@ -75,8 +75,14 @@ module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.setPosition = function (x, y) {
   this.scrollPositon.x = -x;
   this.scrollPositon.y = y;
-  this.context.camera.position.x = x;
-  this.context.camera.position.y = y;
+  TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
+    x: -this.scrollPositon.x, 
+    y: this.scrollPositon.y,
+    ease: Cubic.easeOut,
+    onUpdate: function() {
+  // figure out what brilliant to do here
+    }
+  });
 }
 
 module.exports.prototype.scrollToMousePosition = function(xPos, yPos){

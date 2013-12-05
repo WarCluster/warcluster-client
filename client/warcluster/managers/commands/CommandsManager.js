@@ -60,6 +60,7 @@ module.exports.prototype.parseMessage = function(command) {
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
         pd.ClusterTeam = data.ClusterTeam || "WarClusterInitLab";
+        pd.HomePlanet = data.HomePlanet;
 
         this.loginFn(pd);
       break;

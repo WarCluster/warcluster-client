@@ -30,9 +30,9 @@ module.exports = function(){
   // Clear twitter credentials from global object
   twitter = null;
 
-  this.missionsMenu = new MissionsMenu({context: this.context});
+  this.context.missionsMenu = new MissionsMenu({context: this.context});
   this.context.planetsSelection = this.planetsSelection;
-  $(".ui-container").append(this.missionsMenu.render().el);
+  $(".ui-container").append(this.context.missionsMenu.render().el);
 
   this.twitterStream = new TwitterStream();
 
@@ -59,9 +59,10 @@ module.exports = function(){
 
   this.planetsSelection.on("scrollToPlanet", function(id) {
     var planet = self.context.objectsById[id];
-    if (planet)
+    if (planet) {
       self.spaceViewController.setPosition(planet.position.x, planet.position.y);
       self.spaceViewController.info.popover.remove();
+    }
   });
 
   this.context.planetsSelection = this.planetsSelection;
@@ -107,33 +108,32 @@ module.exports = function(){
   this.spaceViewController.addEventListener("attackPlanet", function(e) {
     // console.log("-SEND ATTACK MISSION-");
     for (var i = 0;i < e.attackSourcesIds.length;i ++)
-      self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.context.missionsMenu.getCurrentType());
   });
 
   this.spaceViewController.addEventListener("supportPlanet", function(e) {
     // console.log("-SEND SUPPORT MISSION-");
     for (var i = 0;i < e.supportSourcesIds.length;i ++)
-      self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
   });
 
   this.spaceViewController.addEventListener("selectPlanet", function(e) {
       self.planetsSelection.selectPlanet(e.planet.data);
-      self.missionsMenu.showMenu();
+      self.context.missionsMenu.showMenu();
   });
 
   this.spaceViewController.addEventListener("deselectPlanet", function(e) {
     self.planetsSelection.deselectPlanet(e.planet.data);
-    self.missionsMenu.hideMenu(e.planet.data.Name);
+    self.context.missionsMenu.hideMenu(e.planet.data.Name);
   });
 
   this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
       self.planetsSelection.deselectAllPlanets();
-      self.missionsMenu.hideMenu();    
+      self.context.missionsMenu.hideMenu();    
   });
 
   this.context.spaceViewController = this.spaceViewController;
 
-  this.KeyboardManager = new KeyboardManager(this.context);
 
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
@@ -147,6 +147,7 @@ module.exports = function(){
 
     this.scopeOfView(self.context.playerData.Position);
     
+    this.context.KeyboardManager = new KeyboardManager(self.context);
     //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
   }
 
