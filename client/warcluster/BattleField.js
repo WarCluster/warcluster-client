@@ -31,11 +31,11 @@ module.exports = function(){
   // Clear twitter credentials from global object
   twitter = null;
 
-  this.tutorialMenu = new Tutorial();
-  $(".ui-container").append(this.tutorialMenu.render().el);
-
   this.context.windowCenterY = $(window).height()/2;
   this.context.windowCenterX = $(window).width()/2;
+
+  this.tutorialMenu = new Tutorial({context: this.context});
+  $(".ui-container").append(this.tutorialMenu.render().el);
 
   this.context.missionsMenu = new MissionsMenu({context: this.context});
 
@@ -145,9 +145,6 @@ module.exports = function(){
 
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
-    if (data.JustRegistered) {
-      self.tutorialMenu.showMenu();
-    }
     _.extend(self.context.playerData, data);
    
     $(".ui-container").append(self.twitterStream.render(self.context.playerData.ClusterTeam).el);
@@ -157,6 +154,9 @@ module.exports = function(){
     self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
 
     this.scopeOfView(self.context.playerData.Position);
+    if (data.JustRegistered) {
+      self.tutorialMenu.showMenu();
+    }
     
     this.context.KeyboardManager = new KeyboardManager(self.context);
     //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});

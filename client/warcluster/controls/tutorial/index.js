@@ -3,20 +3,19 @@ module.exports = Backbone.View.extend({
   events: {
     "click .close-btn": "removeTutorial"
   },
-  className: "tutorialMenu hide",
+  className: "tutorial-menu hide",
   initialize: function(context) {
-    this.context = context;
-    $(".tutorialMenu").css({"top":this.context.windowCenterY,"left":this.context.windowCenterY});
+    this.context = context.context;
   },
   render: function() {
     this.$el.html(this.template());
     return this;
   },
   showMenu: function() {
-    $(".tutorialMenu").show();
+    $(".tutorial-menu").show();
   },
   removeTutorial: function(e) {
     e.preventDefault();
-    $(".tutorialMenu").hide();
+    $(".tutorial-menu").hide();
   }
 })
