@@ -75,18 +75,22 @@ module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.setPosition = function (x, y) {
   this.scrollPositon.x = -x;
   this.scrollPositon.y = y;
-  this.context.camera.position.x = x;
-  this.context.camera.position.y = y;
+  TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
+    x: -this.scrollPositon.x, 
+    y: this.scrollPositon.y,
+    ease: Cubic.easeOut,
+    onUpdate: function() {
+  // figure out what brilliant to do here
+    }
+  });
 }
 
 module.exports.prototype.scrollToMousePosition = function(xPos, yPos){
   var self = this;
 
-  var windowCenterY = $(window).scrollTop() + $(window).height() / 2;
-  var windowCenterX = $(window).scrollLeft() + $(window).width() / 2;
   var factor = (this.context.spaceViewController.zoomer.zoom > 84000) ? 13 : 7;
-  var dx = self.scrollPositon.x + (windowCenterX * self.scaleIndex - xPos * self.scaleIndex)/factor;
-  var dy = self.scrollPositon.y + (windowCenterY * self.scaleIndex - yPos * self.scaleIndex)/factor;
+  var dx = self.scrollPositon.x + (self.context.windowCenterX * self.scaleIndex - xPos * self.scaleIndex)/factor;
+  var dy = self.scrollPositon.y + (self.context.windowCenterY * self.scaleIndex - yPos * self.scaleIndex)/factor;
 
   self.setScrollPosition(dx, dy);
 

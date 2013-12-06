@@ -33,42 +33,6 @@ module.exports = function(context, config){
     }
   }
 
-  var keymap = {};
-  $(document).keydown(function(e){
-    if (keymap[e.keyCode])
-      return ;
-    keymap[e.keyCode] = true;
-    
-    switch (e.keyCode) {
-      case 16:
-        self.shiftKey = true;
-        if (self.supportTarget)
-          self.supportTarget.hideSupportSelection();
-      break;
-      case 17:
-        self.ctrlKey = true;
-        if (self.supportTarget)
-          self.handleShowSupportSelection();
-      break;
-    }
-  });
-
-  $(document).keyup(function(e){
-    delete keymap[e.keyCode];
-    switch (e.keyCode) {
-      case 16:
-        self.shiftKey = false;
-        if (self.supportTarget)
-          self.handleShowSupportSelection();
-      break;
-      case 17:
-        self.ctrlKey = false;
-        if (self.supportTarget)
-          self.supportTarget.hideSupportSelection();
-      break;
-    }
-  });
-
   $(document).bind("contextmenu",function(e){
     if (!self.shiftKey)
       return false;
