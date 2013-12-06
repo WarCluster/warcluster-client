@@ -61,6 +61,7 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Position = data.Position;
         pd.ClusterTeam = data.ClusterTeam || "WarClusterInitLab";
         pd.HomePlanet = data.HomePlanet;
+        pd.JustRegistered = data.JustRegistered;
 
         this.loginFn(pd);
       break;

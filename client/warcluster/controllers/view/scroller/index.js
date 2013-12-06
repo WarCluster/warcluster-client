@@ -79,19 +79,23 @@ module.exports = function(context, config) {
 module.exports.prototype = new THREE.EventDispatcher();
 
 module.exports.prototype.setPosition = function (x, y) {
+  var self = this;
   this.scrollPosition.x = -x;
   this.scrollPosition.y = y;
   TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
     x: -this.scrollPosition.x, 
     y: this.scrollPosition.y,
     ease: Cubic.easeOut,
-    onUpdate: function() {
-  // figure out what brilliant to do here
-    }
+    onComplete: function(){        
+        self.dispatchEvent({
+          type: "scopeOfView", 
+          zoom: self.zoom
+        }); 
+      }
   });
 }
 
-module.exports.prototype.scrollToMousePosition = function(xPos, yPos){
+module.exports.prototype.scrollToMousePosition = function(xPos, yPos, invokeScopeOfViewFlag){
   var self = this;
 
   var factor = (this.context.spaceViewController.zoomer.zoom > 84000) ? 13 : 7;
@@ -109,6 +113,14 @@ module.exports.prototype.scrollToMousePosition = function(xPos, yPos){
         type: "scroll", 
         objects: self.selectedPlanets
       });
+    },
+    onComplete: function(){
+      if (invokeScopeOfViewFlag) {
+        self.dispatchEvent({
+          type: "scopeOfView", 
+          zoom: self.zoom
+        });     
+      }        
     }
   });
   
