@@ -49,18 +49,18 @@ module.exports = function(context, config) {
 
   this.setScrollPosition = function(dx, dy) {
      if (dx < self.xMin)
-      self.scrollPositon.x = self.xMin;
+      self.scrollPosition.x = self.xMin;
     else if (dx > self.xMax)
-      self.scrollPositon.x = self.xMax;
+      self.scrollPosition.x = self.xMax;
     else
-      self.scrollPositon.x = dx;
+      self.scrollPosition.x = dx;
       
     if (dy < self.yMin)
-      self.scrollPositon.y = self.yMin;
+      self.scrollPosition.y = self.yMin;
     else if (dy > self.yMax)
-      self.scrollPositon.y = self.yMax;
+      self.scrollPosition.y = self.yMax;
     else
-      self.scrollPositon.y = dy;
+      self.scrollPosition.y = dy;
   }
   
   this.scrollMouseDown = function(e) {
@@ -79,11 +79,11 @@ module.exports = function(context, config) {
 module.exports.prototype = new THREE.EventDispatcher();
 
 module.exports.prototype.setPosition = function (x, y) {
-  this.scrollPositon.x = -x;
-  this.scrollPositon.y = y;
+  this.scrollPosition.x = -x;
+  this.scrollPosition.y = y;
   TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
-    x: -this.scrollPositon.x, 
-    y: this.scrollPositon.y,
+    x: -this.scrollPosition.x, 
+    y: this.scrollPosition.y,
     ease: Cubic.easeOut,
     onUpdate: function() {
   // figure out what brilliant to do here
@@ -95,14 +95,14 @@ module.exports.prototype.scrollToMousePosition = function(xPos, yPos){
   var self = this;
 
   var factor = (this.context.spaceViewController.zoomer.zoom > 84000) ? 13 : 7;
-  var dx = self.scrollPositon.x + (self.context.windowCenterX * self.scaleIndex - xPos * self.scaleIndex)/factor;
-  var dy = self.scrollPositon.y + (self.context.windowCenterY * self.scaleIndex - yPos * self.scaleIndex)/factor;
+  var dx = self.scrollPosition.x + (self.context.windowCenterX * self.scaleIndex - xPos * self.scaleIndex)/factor;
+  var dy = self.scrollPosition.y + (self.context.windowCenterY * self.scaleIndex - yPos * self.scaleIndex)/factor;
 
   self.setScrollPosition(dx, dy);
 
   TweenLite.to(self.context.spaceScene.camera.position, 0.5, {
-    x: -self.scrollPositon.x, 
-    y: self.scrollPositon.y,
+    x: -self.scrollPosition.x, 
+    y: self.scrollPosition.y,
     ease: Cubic.easeOut,
     onUpdate: function() {
       self.dispatchEvent({
