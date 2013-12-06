@@ -33,42 +33,6 @@ module.exports = function(context, config){
     }
   }
 
-  var keymap = {};
-  $(document).keydown(function(e){
-    if (keymap[e.keyCode])
-      return ;
-    keymap[e.keyCode] = true;
-    
-    switch (e.keyCode) {
-      case 16:
-        self.shiftKey = true;
-        if (self.supportTarget)
-          self.supportTarget.hideSupportSelection();
-      break;
-      case 17:
-        self.ctrlKey = true;
-        if (self.supportTarget)
-          self.handleShowSupportSelection();
-      break;
-    }
-  });
-
-  $(document).keyup(function(e){
-    delete keymap[e.keyCode];
-    switch (e.keyCode) {
-      case 16:
-        self.shiftKey = false;
-        if (self.supportTarget)
-          self.handleShowSupportSelection();
-      break;
-      case 17:
-        self.ctrlKey = false;
-        if (self.supportTarget)
-          self.supportTarget.hideSupportSelection();
-      break;
-    }
-  });
-
   $(document).bind("contextmenu",function(e){
     if (!self.shiftKey)
       return false;
@@ -147,7 +111,6 @@ module.exports = function(context, config){
       width: w >= 0 ? w : Math.abs(w),
       height: h >= 0 ? h : Math.abs(h)
     };
-
     if (rect.width < 4 && rect.height < 4)
       handleMouseActions(e);
     else
@@ -193,8 +156,18 @@ module.exports.prototype.getMouseIntersectionObjects = function(e) {
 }
 
 module.exports.prototype.hitTestPlanets = function(rect) {
-  if (!this.shiftKey)
-    this.deselectAll();
+  if (!this.shiftKey) {
+    //TODO: need to refactor...
+    for (var i=0;i < this.selectedPlanets.length;i ++) {
+      var planet = this.context.objectsById[this.selectedPlanets[i].id];
+      if (planet)
+        planet.deselect();
+    }
+    this.selectedPlanets = [];
+    this.context.planetsSelection.allPilotsSelected = 0;
+    this.context.planetsSelection.selectedPlanets = [];
+    //TODO: ... this block
+  }
   for (var i=0;i < this.context.planetsHitObjects.length;i ++) {
     var target = this.context.planetsHitObjects[i].parent;
     if (target.data.Owner.indexOf(this.context.playerData.Username) != -1) {
@@ -205,8 +178,10 @@ module.exports.prototype.hitTestPlanets = function(rect) {
     }
   }
 
-  if (this.selectedPlanets.length == 0)
+  if (this.selectedPlanets.length == 0) {
     this.onPlanetMouseOut();
+    this.deselectAll();
+  }
 }
 
 module.exports.prototype.deselectAll = function() {

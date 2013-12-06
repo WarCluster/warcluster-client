@@ -10,26 +10,39 @@ var SunsFactory = require("./factories/suns/SunsFactory");
 
 var CommandsManager = require("./managers/commands/CommandsManager");
 var PlanetsManager = require("./managers/planets/PlanetsManager");
+var KeyboardManager = require("./managers/keyboard/KeyboardManager");
 
 var SpaceScene = require("./scene/SpaceScene");
+
 var MissionsMenu = require("./controls/mission-menu");
 var PlanetsSelection = require("./controls/planets-selection");
+var TwitterStream = require("./controls/twitter-stream");
+var Tutorial = require("./controls/tutorial");
 
 module.exports = function(){
-	var self = this;
+  var self = this;
 
-	this.context = new GameContext();
+  this.context = new GameContext();
   this.context.$content = $(".content");
-	this.context.currentTime = (new Date()).getTime();
-	this.context.playerData = {
+  this.context.currentTime = (new Date()).getTime();
+  this.context.playerData = {
     twitter: twitter
   };
-
   // Clear twitter credentials from global object
   twitter = null;
 
-  this.missionsMenu = new MissionsMenu();
-  $(".ui-container").append(this.missionsMenu.render().el);
+  this.context.windowCenterY = $(window).height()/2;
+  this.context.windowCenterX = $(window).width()/2;
+
+  this.tutorialMenu = new Tutorial({context: this.context});
+  $(".ui-container").append(this.tutorialMenu.render().el);
+
+  this.context.missionsMenu = new MissionsMenu({context: this.context});
+
+  this.context.planetsSelection = this.planetsSelection;
+  $(".ui-container").append(this.context.missionsMenu.render().el);
+
+  this.twitterStream = new TwitterStream();
 
   this.planetsSelection = new PlanetsSelection({context: this.context});
   this.planetsSelection.on("deselectPlanet", function(id) {
@@ -54,9 +67,10 @@ module.exports = function(){
 
   this.planetsSelection.on("scrollToPlanet", function(id) {
     var planet = self.context.objectsById[id];
-    if (planet)
+    if (planet) {
       self.spaceViewController.setPosition(planet.position.x, planet.position.y);
       self.spaceViewController.info.popover.remove();
+    }
   });
 
   this.context.planetsSelection = this.planetsSelection;
@@ -101,25 +115,28 @@ module.exports = function(){
   this.spaceViewController.addEventListener("attackPlanet", function(e) {
     // console.log("-SEND ATTACK MISSION-");
     for (var i = 0;i < e.attackSourcesIds.length;i ++)
-      self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.context.missionsMenu.getCurrentType());
   });
 
   this.spaceViewController.addEventListener("supportPlanet", function(e) {
     // console.log("-SEND SUPPORT MISSION-");
     for (var i = 0;i < e.supportSourcesIds.length;i ++)
-      self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
   });
 
   this.spaceViewController.addEventListener("selectPlanet", function(e) {
-    self.planetsSelection.selectPlanet(e.planet.data);
+      self.planetsSelection.selectPlanet(e.planet.data);
+      self.context.missionsMenu.showMenu();
   });
 
   this.spaceViewController.addEventListener("deselectPlanet", function(e) {
     self.planetsSelection.deselectPlanet(e.planet.data);
+    self.context.missionsMenu.hideMenu(e.planet.data.Name);
   });
 
   this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
-    self.planetsSelection.deselectAllPlanets();
+      self.planetsSelection.deselectAllPlanets();
+      self.context.missionsMenu.hideMenu();    
   });
 
   this.spaceViewController.addEventListener("scopeOfView", function(e) {
@@ -132,16 +149,22 @@ module.exports = function(){
   
   this.context.spaceViewController = this.spaceViewController;
 
+
   this.commandsManager = new CommandsManager(config.socketUrl, this.context);
   this.commandsManager.loginFn = function(data) {
     _.extend(self.context.playerData, data);
-
+   
+    $(".ui-container").append(self.twitterStream.render(self.context.playerData.ClusterTeam).el);
     // console.log("-loginFn-", self.context.playerData);
     self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
-
     this.scopeOfView(data.Position, self.context.spaceViewController.getResolution());
-    
+
+    if (data.JustRegistered) {
+      self.tutorialMenu.showMenu();
+    }
+
+    this.context.KeyboardManager = new KeyboardManager(self.context);
     //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
   }
 

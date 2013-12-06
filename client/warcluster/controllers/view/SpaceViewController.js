@@ -17,8 +17,10 @@ module.exports = function(context, config){
   });
   this.zoomer.addEventListener("zoom", function(e) {
     self.scroller.scaleIndex = e.zoom / 6000;
-    // console.log("zoom", e.zoom)
     //TODO: don't call scope of view everytime
+    if (e.mode === "zoomin") {
+      self.scroller.scrollToMousePosition(e.target.mousePosition.x, e.target.mousePosition.y);
+    }
     self.dispatchEvent(e);
     self.info.updatePosition();
   });
