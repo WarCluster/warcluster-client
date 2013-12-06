@@ -5,6 +5,24 @@ module.exports = function(context) {
   var homePlanet = this.context.playerData.HomePlanet.Position;
 
   $(document).keydown(function(e) {
+    switch (e.keyCode) {
+      //left arrow
+      case 37 && 65:
+        self.context.spaceViewController.scroller.scrollToMousePosition(-self.context.windowCenterX,self.context.windowCenterY); 
+      break;
+      //up arrow
+      case 38 && 87:
+        self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY); 
+      break;
+      //right arrow
+      case 39 && 68:
+        self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*3,self.context.windowCenterY); 
+      break;
+      //down arrow
+      case 40 && 83:
+        self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,self.context.windowCenterY*3);
+      break;
+    }
     if (keymap[e.keyCode]) {
       return ;
     }

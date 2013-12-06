@@ -30,6 +30,9 @@ module.exports = function(){
   // Clear twitter credentials from global object
   twitter = null;
 
+  this.context.windowCenterY = $(window).height()/2;
+  this.context.windowCenterX = $(window).width()/2;
+
   this.context.missionsMenu = new MissionsMenu({context: this.context});
   this.context.planetsSelection = this.planetsSelection;
   $(".ui-container").append(this.context.missionsMenu.render().el);

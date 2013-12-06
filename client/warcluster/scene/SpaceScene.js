@@ -76,6 +76,8 @@ module.exports.prototype.buildScene = function() {
     //var hh = $(".content").offsetHeight;
      self.camera.aspect = window.innerWidth / window.innerHeight;
      self.camera.updateProjectionMatrix();
+     self.context.windowCenterY = $(window).height()/2;
+     self.context.windowCenterX = $(window).width()/2;
 
      self.renderer.setSize( window.innerWidth, window.innerHeight );
   }
