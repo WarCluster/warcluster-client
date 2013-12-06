@@ -70,34 +70,14 @@ module.exports.prototype.buildScene = function() {
 
   this.ctrlKey = false;
   this.spaceKey = false;
-  $(document).keydown(function(e){
-    switch (e.keyCode) {
-      case 32:
-        self.spaceKey = true;
-      break;
-      case 17:
-        self.ctrlKey = true;
-      break;
-    }
-  });
-
-  $(document).keyup(function(e){
-    switch (e.keyCode) {
-      case 32:
-        self.spaceKey = false;
-      break;
-      case 17:
-        self.ctrlKey = false;
-      break;
-    }
-  });
-
 
   var onWindowResize = function() {
     //var ww = $(".content").offsetWidth;
     //var hh = $(".content").offsetHeight;
      self.camera.aspect = window.innerWidth / window.innerHeight;
      self.camera.updateProjectionMatrix();
+     self.context.windowCenterY = $(window).height()/2;
+     self.context.windowCenterX = $(window).width()/2;
 
      self.renderer.setSize( window.innerWidth, window.innerHeight );
   }

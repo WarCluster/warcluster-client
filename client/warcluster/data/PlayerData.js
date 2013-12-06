@@ -3,4 +3,5 @@ module.exports = function(){
   this.TwitterID = null;
   this.Position = null;
   this.ClusterTeam = null;
+  this.HomePlanet = null;
 }
