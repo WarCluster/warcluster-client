@@ -1,4 +1,7 @@
 module.exports = function(data, context) {
+  this.metaInfo = {
+    timestamp: (new Date()).getTime()
+  };
   this.data = data;
   this.context = context;
   this.ships = [];

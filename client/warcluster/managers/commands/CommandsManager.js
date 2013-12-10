@@ -59,6 +59,8 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Username = this.username;
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
+        pd.ClusterTeam = data.ClusterTeam || "WarClusterInitLab";
+        pd.HomePlanet = data.HomePlanet;
 
         this.loginFn(pd);
       break;
@@ -70,13 +72,16 @@ module.exports.prototype.parseMessage = function(command) {
       break;
       case "send_mission":
         this.context.missionsFactory.build(data.Mission);
-        break;
+      break;
+      case "send_mission_failed":
+        humane.error(data.Error, {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
+      break;
     }
   }
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
-  this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": resolution || [1920, 1080]}));
+  this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}));
 }
 
 module.exports.prototype.sendMission = function(type, source, target, ships) {

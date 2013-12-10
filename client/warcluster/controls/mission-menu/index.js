@@ -6,6 +6,7 @@ module.exports = Backbone.View.extend({
   className: "missions-menu",
   initialize: function(options) {
     var self = this;
+    this.context = options.context;
     this.currentType = 1;
     this.percentArray = {
       1: 5,
@@ -14,12 +15,6 @@ module.exports = Backbone.View.extend({
       4: 50,
       5: 100
     };
-    this.selectedPlanetsCount = 0;
-
-    $(document).keydown(function(e){
-      if (e.keyCode > 48 && e.keyCode < 54)
-        self.switchType(e.keyCode - 48);
-    });
   },
   onSwitchType: function(e) {
     var index = parseFloat($(e.currentTarget).attr("data-index"));
@@ -38,32 +33,25 @@ module.exports = Backbone.View.extend({
     return  this.percentArray[this.currentType];
   },
   showMenu: function(){
-    this.selectedPlanetsCount += 1;
-    if (this.selectedPlanetsCount > 0) {
+    if (this.context.planets.length != 0) {
       TweenLite.to(this.$el, 0.3, {
         css:  {top: "0px"},
         ease: Cubic.easeOut
       });
-      // this.$el.show("fast");
     }
   },
   hideMenu: function(planetName){
     if (planetName === undefined) {
-      // this.$el.hide("fast");
       TweenLite.to(this.$el, 0.3, {
         css:  {top: "-141px"},
         ease: Cubic.easeOut
       });
-      this.selectedPlanetsCount = 0;
     }
-    else {
-      this.selectedPlanetsCount -= 1;
-      if (this.selectedPlanetsCount < 1) {
-        TweenLite.to(this.$el, 0.3, {
-          css:  {top: "-141px"},
-          ease: Cubic.easeOut
-        });
-      }
+    else if (this.context.planets.length < 1) {
+      TweenLite.to(this.$el, 0.3, {
+        css:  {top: "-141px"},
+        ease: Cubic.easeOut
+      });
     }
   }
 })

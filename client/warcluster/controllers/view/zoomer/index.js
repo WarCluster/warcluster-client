@@ -8,11 +8,15 @@ module.exports = function(context, config){
   this.zoomStep = config.zoomStep || 250;
   this.minZoom = config.minZoom || null;
   this.maxZoom = config.maxZoom || null;
+  this.mousePosition = { x: 0, y: 0};
 
   $(window).mousewheel(function(e) {
     e.preventDefault();
 
     var st = e.deltaY > 0 ? -self.zoomStep : self.zoomStep;
+    var zoomMode = e.deltaY > 0 ? "zoomin" : "zoomout";
+    self.mousePosition.x = (zoomMode === "zoomin") ? e.clientX : 0;
+    self.mousePosition.y = (zoomMode === "zoomin") ? e.clientY : 0;
 
     if (self.minZoom != null && self.maxZoom != null) {
       if (self.zoom + st < self.minZoom)
@@ -35,18 +39,23 @@ module.exports = function(context, config){
       self.zoom += st;
     }
 
-    TweenLite.to(self.context.spaceScene.camera.position, 0.7, {
+    TweenLite.to(self.context.spaceScene.camera.position, 0.5, {
       z: self.zoom,
       ease: Cubic.easeOut,
-      onUpdate: function() {
+      onStart: function() {
         self.dispatchEvent({
           type: "zoom", 
-          zoom: self.zoom
+          zoom: self.zoom,
+          mode: zoomMode
         });
+      },
+      onComplete: function()
+{        self.dispatchEvent({
+          type: "scopeOfView", 
+          zoom: self.zoom
+        }); 
       }
     });
-
-    self.dispatchEvent({type: "zoom", wheelDelta: st, zoom: self.zoom});
   });
 }
 

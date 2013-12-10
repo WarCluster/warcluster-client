@@ -11,15 +11,26 @@ module.exports = function(context, config){
   this.context = context;
   
   this.zoomer = new Zoomer(context, config.zoomer);
+  this.zoomer.addEventListener("scopeOfView", function(e) {
+    self.dispatchEvent(e);
+    self.info.updatePosition();
+  });
   this.zoomer.addEventListener("zoom", function(e) {
     self.scroller.scaleIndex = e.zoom / 6000;
-    // console.log("zoom", e.zoom)
+    //TODO: don't call scope of view everytime
+    if (e.mode === "zoomin") {
+      self.scroller.scrollToMousePosition(e.target.mousePosition.x, e.target.mousePosition.y);
+    }
     self.dispatchEvent(e);
     self.info.updatePosition();
   });
 
   this.scroller = new Scroller(context, config.scroller);
   this.scroller.addEventListener("scroll", function(e) {
+    self.dispatchEvent(e);
+    self.info.updatePosition();
+  });
+  this.scroller.addEventListener("scopeOfView", function(e) {
     self.dispatchEvent(e);
     self.info.updatePosition();
   });
@@ -84,4 +95,11 @@ module.exports.prototype.deactivate = function() {
 
 module.exports.prototype.setPosition = function (x, y) {
   this.scroller.setPosition(x, y);
+}
+
+module.exports.prototype.getResolution = function() {
+  return {
+    width: Math.ceil($(window).width()*this.scroller.scaleIndex), 
+    height: Math.ceil($(window).height()*this.scroller.scaleIndex) 
+  }
 }

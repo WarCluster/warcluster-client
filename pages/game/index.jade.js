@@ -13,7 +13,7 @@ $(document).ready(function() {
     forum_id: 214551,
     tab_label: 'Feedback & Support',
     tab_color: '#a9466f',
-    tab_position: 'middle-right',
+    tab_position: 'bottom-left',
     tab_inverted: false
   }]);
   // end of UserVoice widget
