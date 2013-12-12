@@ -7,7 +7,7 @@ require("../client/vendor/plugins/jquery-mousewheel.min")($);
 require("../client/vendor/plugins/CSSPlugin.min");
 require("../client/vendor/easing/EasePack.min");
 
-KeyboardJS = require("./vendor/keyboardjs");
+KeyboardJS = require("./vendor/keyboardjs.min");
 
 _ = require("../client/vendor/underscore");
 Backbone = require("../client/vendor/backbone");
