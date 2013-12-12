@@ -12,7 +12,7 @@ module.exports = Backbone.View.extend({
   render: function(){
     var planetCategory = this.planetData.IsHome ? "Home Planet: " : "Planet Name: ";
     var screenName = this.planetData && this.planetData.Owner ? this.planetData.Owner.split("player.").join("") : null;
-    var planetName = "PlanetName";//this.planetData.PlanetName
+    var planetName = this.planetData.Name;
     var twitterAvatar = screenName ? "https://twitter.com/api/users/profile_image/"+screenName+"?size=bigger" : "/images/default_avatar.jpg";
     var owner = screenName ? "@" + screenName : "Neutral Planet"; 
     var production = this.planetData && this.planetData.Size ? this.planetData.Size : 0;
@@ -20,7 +20,7 @@ module.exports = Backbone.View.extend({
     this.$el.html(this.template({
      playerName:        owner,
      twitterAvatar:     twitterAvatar,
-     planetProduction:  production,
+     planetProduction:  Math.round(production/3),
      planetLink:        planetName,
      planetCategory:    planetCategory
     }));
