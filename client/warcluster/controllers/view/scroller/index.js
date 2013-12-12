@@ -95,7 +95,7 @@ module.exports.prototype.setPosition = function (x, y) {
   });
 }
 
-module.exports.prototype.scrollToMousePosition = function(xPos, yPos, invokeScopeOfViewFlag){
+module.exports.prototype.scrollToMousePosition = function(xPos, yPos){
   var self = this;
 
   var factor = (this.context.spaceViewController.zoomer.zoom > 84000) ? 13 : 7;
@@ -115,12 +115,10 @@ module.exports.prototype.scrollToMousePosition = function(xPos, yPos, invokeScop
       });
     },
     onComplete: function(){
-      if (invokeScopeOfViewFlag) {
-        self.dispatchEvent({
-          type: "scopeOfView", 
-          zoom: self.zoom
-        });     
-      }        
+      self.dispatchEvent({
+        type: "scopeOfView", 
+        zoom: self.zoom
+      });            
     }
   });
   

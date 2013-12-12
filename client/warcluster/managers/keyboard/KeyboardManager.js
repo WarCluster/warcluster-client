@@ -1,82 +1,73 @@
 module.exports = function(context) {
   var self = this;
   this.context = context;
-  var keymap = {};
   var homePlanet = this.context.playerData.HomePlanet.Position;
 
-  $(document).keydown(function(e) {
-    //left arrow || a
-    if (e.keyCode == 37 || e.keyCode == 65)
-      self.context.spaceViewController.scroller.scrollToMousePosition(-self.context.windowCenterX,self.context.windowCenterY, false); 
-    //up arrow || w
-    if (e.keyCode == 38 || e.keyCode == 87)
-      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY, false); 
-    //right arrow || d
-    if (e.keyCode == 39 || e.keyCode == 68)
-      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*3,self.context.windowCenterY, false); 
-    //down arrow || s
-    if (e.keyCode == 40 || e.keyCode == 83)
-      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,self.context.windowCenterY*3, false);
-    if (keymap[e.keyCode]) {
-      return ;
+  KeyboardJS.KeyboardJS.on('w, up', function() {
+    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY);
+  });
+  KeyboardJS.KeyboardJS.on('a, left', function() {
+    self.context.spaceViewController.scroller.scrollToMousePosition(-self.context.windowCenterX,self.context.windowCenterY); 
+  });
+  KeyboardJS.KeyboardJS.on('d, right', function() {
+    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*3,self.context.windowCenterY); 
+  });
+  KeyboardJS.KeyboardJS.on('s, down', function() {
+    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,self.context.windowCenterY*3);
+  });
+  KeyboardJS.KeyboardJS.on('w + a, up + left', function() {
+    self.context.spaceViewController.scroller.scrollToMousePosition(0,0);
+  });
+  KeyboardJS.KeyboardJS.on('w + d, up + right', function() {
+    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*2,0);
+  });
+  KeyboardJS.KeyboardJS.on('s + d, s + right', function() {
+    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*2,self.context.windowCenterY*2);
+  });
+  KeyboardJS.KeyboardJS.on('s + a, s + left', function() {
+    self.context.spaceViewController.scroller.scrollToMousePosition(0,self.context.windowCenterY*2);
+  });
+  KeyboardJS.KeyboardJS.on('space', function() {
+    self.context.spaceViewController.scroller.setPosition(homePlanet.X, homePlanet.Y);
+    self.context.spaceViewController.info.popover.remove();  
+  });
+  KeyboardJS.KeyboardJS.on('ctrl',
+  //onDownCallback
+  function() {
+    self.context.spaceViewController.selection.ctrlKey = true;
+    if (self.context.spaceViewController.selection.supportTarget) {
+      self.context.spaceViewController.selection.handleShowSupportSelection();
+      self.context.spaceScene.ctrlKey = true;
     }
-    keymap[e.keyCode] = true;
+  },
+  //onUpCallback
+  function() {
+    self.context.spaceScene.ctrlKey = false;
+    self.context.spaceViewController.selection.ctrlKey = false;
+    if (self.context.spaceViewController.selection.supportTarget) {
+     self.context.spaceViewController.selection.supportTarget.hideSupportSelection();
+    }
+  });
+  KeyboardJS.KeyboardJS.on('shift',
+  //onDownCallback
+  function() {
+    self.context.spaceViewController.selection.shiftKey = true;
+    // if (self.context.spaceViewController.selection.supportTarget) {
+    //   self.context.spaceViewController.selection.supportTarget.hideSupportSelection();
+    // }
+  },
+  //onUpCallback
+  function() {
+    self.context.spaceViewController.selection.shiftKey = false;
+    // if (self.context.spaceViewController.selection.supportTarget) {
+    //   self.context.spaceViewController.selection.handleShowSupportSelection();
+    // }
+  });
+
+  $(document).keydown(function(e) {
     // number buttons from 1 to 5
     if (e.keyCode > 48 && e.keyCode < 54) {
       self.context.missionsMenu.switchType(e.keyCode - 48);
-    }
-    // ctrl
-    else if(e.keyCode === 17) {
-      self.context.spaceViewController.selection.ctrlKey = true;
-      if (self.context.spaceViewController.selection.supportTarget) {
-        self.context.spaceViewController.selection.handleShowSupportSelection();
-        self.context.spaceScene.ctrlKey = true;
-      }
-    }
-    // shift
-    else if(e.keyCode === 16) {
-    	self.context.spaceViewController.selection.shiftKey = true;
-    	if (self.context.spaceViewController.selection.supportTarget) {
-		    self.context.spaceViewController.selection.supportTarget.hideSupportSelection();
-      }
-    }
-  });
-
-  $(document).keyup(function(e) {
-  	delete keymap[e.keyCode];
-    if (e.keyCode == 37 || e.keyCode == 65)
-      self.context.spaceViewController.scroller.scrollToMousePosition(-self.context.windowCenterX,self.context.windowCenterY, true); 
-    //up arrow || w
-    if (e.keyCode == 38 || e.keyCode == 87)
-      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY, true); 
-    //right arrow || d
-    if (e.keyCode == 39 || e.keyCode == 68)
-      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*3,self.context.windowCenterY, true); 
-    //down arrow || s
-    if (e.keyCode == 40 || e.keyCode == 83)
-      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,self.context.windowCenterY*3, true);
-    if (keymap[e.keyCode]) {
-      return ;
-    }
-    //spacebar
-    if (e.keyCode === 32) {
-      self.context.spaceViewController.scroller.setPosition(homePlanet.X, homePlanet.Y);
-      self.context.spaceViewController.info.popover.remove();
-    }
-    //ctrl
-    if (e.keyCode === 17) {
-      self.context.spaceScene.ctrlKey = false;
-      self.context.spaceViewController.selection.ctrlKey = false;
-    	if (self.context.spaceViewController.selection.supportTarget) {
-			 self.context.spaceViewController.selection.supportTarget.hideSupportSelection();
-    	}
-    }
-    //shift
-    else if (e.keyCode === 16) {
-    	self.context.spaceViewController.selection.shiftKey = false;
-    	if (self.context.spaceViewController.selection.supportTarget) {
-    		self.context.spaceViewController.selection.handleShowSupportSelection();
-    	}
     }
   });
 }
