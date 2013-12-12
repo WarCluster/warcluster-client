@@ -160,8 +160,9 @@ module.exports.prototype.hitTestPlanets = function(rect) {
     //TODO: need to refactor...
     for (var i=0;i < this.selectedPlanets.length;i ++) {
       var planet = this.context.objectsById[this.selectedPlanets[i].id];
-      if (planet)
+      if (planet) {
         planet.deselect();
+      }
     }
     this.selectedPlanets = [];
     this.context.planetsSelection.allPilotsSelected = 0;
@@ -171,10 +172,14 @@ module.exports.prototype.hitTestPlanets = function(rect) {
   for (var i=0;i < this.context.planetsHitObjects.length;i ++) {
     var target = this.context.planetsHitObjects[i].parent;
     if (target.data.Owner.indexOf(this.context.playerData.Username) != -1) {
-      if (!this.shiftKey)
+      if (!this.shiftKey) {
         target.deselect();
-      if (target.rectHitTest(rect) && this.getSelectedPlanetIndexById(target.data.id) == -1)
+        //TODO: refactor this because it causes flickering in the planet selection control
+        this.context.planetsSelection.$('.selection-planet-item[data-id="'+target.data.id+'"]').remove();
+      }
+      if (target.rectHitTest(rect) && this.getSelectedPlanetIndexById(target.data.id) == -1) {
         this.selectPlanet(target.data);
+      }
     }
   }
 

@@ -40,6 +40,7 @@ module.exports = Backbone.View.extend({
       });
     }
   },
+  //the planetName argument is there for a reason
   hideMenu: function(planetName){
     if (planetName === undefined) {
       TweenLite.to(this.$el, 0.3, {
