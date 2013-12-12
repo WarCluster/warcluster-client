@@ -15,6 +15,18 @@ module.exports = function(context){
       id: id
     });
   });
+  this.popover.on("spy", function(id) {
+    self.dispatchEvent({
+      type: "spyPlanet",
+      id: id
+    });
+  });
+  this.popover.on("supply", function(id) {
+    self.dispatchEvent({
+      type: "supplyPlanet",
+      id: id
+    });
+  });
 
   var click = function(e) {
     if (e.button == 0)

@@ -63,7 +63,7 @@ module.exports = function(context, config){
       if (target.data.Owner.indexOf(self.context.playerData.Username) != -1) {
         if (self.supportTarget && self.ctrlKey) {
           self.dispatchEvent({
-            type: "supportPlanet", 
+            type: "supplyPlanet", 
             supportSourcesIds: self.getSelectedPlanetsIds(),
             planetToSupportId: self.getPlanetТоSupportId()
           });
@@ -82,7 +82,7 @@ module.exports = function(context, config){
         if (self.selectedPlanets.length > 0) {
             if (self.ctrlKey) {
               self.dispatchEvent({
-                type: "supportPlanet", 
+                type: "supplyPlanet", 
                 supportSourcesIds: self.getSelectedPlanetsIds(),
                 planetToSupportId: self.getPlanetТоSupportId()
               });

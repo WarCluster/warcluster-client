@@ -4,7 +4,8 @@ module.exports = Backbone.View.extend({
   events: {
     "click .close-btn": "removePopover",
     "click .attack":    "attack",
-    "click .spy":       "spy"
+    "click .spy":       "spy",
+    "click .supply":    "supply"
   },
   initialize: function() {
     this.planetData = null;
@@ -53,5 +54,8 @@ module.exports = Backbone.View.extend({
   spy: function(e) {
     console.log("spy: " + e);
     this.trigger("spy", this.planetData.id);
+  },
+  supply: function(e) {
+    this.trigger("supply", this.planetData.id);
   }
 })
