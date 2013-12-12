@@ -87,7 +87,7 @@ module.exports.prototype.select = function() {
 }
 
 module.exports.prototype.deselect = function() {
-	this.selection.visible = false;
+  this.selection.visible = false;
   this.selected = false;
 }
 

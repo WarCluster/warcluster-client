@@ -26,17 +26,16 @@ module.exports = Backbone.View.extend({
     this.trigger("planetOut", $(e.currentTarget).attr("data-id"));
   },
   selectPlanet: function(planetData) {
-    var self = this;
-
     if (this.selectedPlanets.length == 0){
       this.showPlanetsSelection();
     }
-
-    this.allPilotsSelected += Math.ceil(planetData.ShipCount);
-    this.selectedPlanets.push(planetData);
-    this.updateSelectedPlanets();
-      
-    this.$(".expanded-list").append(Render({model: planetData}));
+    if (!(this.selectedPlanets.indexOf(planetData) > -1)) {
+      this.allPilotsSelected += Math.floor(planetData.ShipCount);
+      this.selectedPlanets.push(planetData);
+      this.updateSelectedPlanets();
+        
+      this.$(".expanded-list").append(Render({model: planetData}));
+    }
   },
   showPlanetsSelection: function() {
       TweenLite.to(this.$el, 0.3, {
@@ -54,13 +53,14 @@ module.exports = Backbone.View.extend({
     var index = this.getPlanetIndex(planetData);
 
     if (index != -1) {
-      this.allPilotsSelected -= Math.ceil(this.selectedPlanets[index].ShipCount);
+      this.allPilotsSelected -= Math.floor(this.selectedPlanets[index].ShipCount);
       this.selectedPlanets.splice(index, 1);
       this.updateSelectedPlanets();
 
       this.$('.selection-planet-item[data-id="'+planetData.id+'"]').remove();
 
       if (this.selectedPlanets.length == 0) {
+        this.context.missionsMenu.hideMenu();
         this.hidePlanetsSelection();
         this.$(".expanded-list-container").addClass("hide");
       }
@@ -106,11 +106,12 @@ module.exports = Backbone.View.extend({
       this.$('[data-id="'+updated[i].id+'"]').find(".shipCount").html(parseInt(updated[i].ShipCount));
   },
   moveCameraToPlanet: function(e) {
-    this.trigger("scrollToPlanet", $(e.currentTarget).attr("data-id"));
+    this.trigger("scrollToPlanet", $(e.currentTarget).parent().attr("data-id"));
   },
   getPlanetIndex: function(planetData) {
     for (var i = 0;i < this.selectedPlanets.length;i ++)
       if (this.selectedPlanets[i].id == planetData.id)
         return i;
+    return -1;
   }
 })

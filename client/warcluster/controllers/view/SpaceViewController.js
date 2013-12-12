@@ -19,7 +19,7 @@ module.exports = function(context, config){
     self.scroller.scaleIndex = e.zoom / 6000;
     //TODO: don't call scope of view everytime
     if (e.mode === "zoomin") {
-      self.scroller.scrollToMousePosition(e.target.mousePosition.x, e.target.mousePosition.y);
+      self.scroller.scrollToMousePosition(e.target.mousePosition.x, e.target.mousePosition.y, true);
     }
     self.dispatchEvent(e);
     self.info.updatePosition();
@@ -39,7 +39,7 @@ module.exports = function(context, config){
   this.selection.addEventListener("attackPlanet", function(e) {
     self.dispatchEvent(e);
   });
-  this.selection.addEventListener("supportPlanet", function(e) {
+  this.selection.addEventListener("supplyPlanet", function(e) {
     self.dispatchEvent(e);
   });
   this.selection.addEventListener("selectPlanet", function(e) {
@@ -61,6 +61,18 @@ module.exports = function(context, config){
         attackSourcesIds: attackSourcesIds,
         planetToAttackId: e.id
       });
+  });
+  this.info.addEventListener("supplyPlanet", function(e) {
+    var supplySourcesIds = self.selection.getSelectedPlanetsIds()
+    if (supplySourcesIds.length > 0)
+      self.dispatchEvent({
+        type: "supplyPlanet", 
+        supportSourcesIds: supplySourcesIds,
+        planetToSupportId: e.id
+      });
+  });
+  this.info.addEventListener("spyPlanet", function(e) {
+    //spy logic 
   });
 
   // *****************************************************************

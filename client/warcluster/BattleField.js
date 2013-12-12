@@ -35,7 +35,6 @@ module.exports = function(){
   this.context.windowCenterX = $(window).width()/2;
 
   this.tutorialMenu = new Tutorial({context: this.context});
-  $(".ui-container").append(this.tutorialMenu.render().el);
 
   this.context.missionsMenu = new MissionsMenu({context: this.context});
 
@@ -118,10 +117,13 @@ module.exports = function(){
       self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.context.missionsMenu.getCurrentType());
   });
 
-  this.spaceViewController.addEventListener("supportPlanet", function(e) {
+  this.spaceViewController.addEventListener("supplyPlanet", function(e) {
     // console.log("-SEND SUPPORT MISSION-");
     for (var i = 0;i < e.supportSourcesIds.length;i ++)
       self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
+  });
+  this.spaceViewController.addEventListener("supplyPlanet", function(e) {
+    //spy logic goes here
   });
 
   this.spaceViewController.addEventListener("selectPlanet", function(e) {
@@ -159,7 +161,6 @@ module.exports = function(){
     self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
     this.scopeOfView(data.Position, self.context.spaceViewController.getResolution());
-
     if (data.JustRegistered) {
       self.tutorialMenu.showMenu();
     }
@@ -173,6 +174,8 @@ module.exports = function(){
   }
 
   var garbageCollectLoop = function() {
+    //have to use CanvasPoints from scope_of_view_result in order to destroy objects
+    //that are too far away 
     // var rect = {
     //   x1: 
     //   y1:
@@ -183,7 +186,7 @@ module.exports = function(){
     // for (var i = self.context.objects.length - 1; i >= 0; i--) {
     //   obj = self.context.objects[i];
     //   if (obj.x < rect.x1 || obj.y < rect.y2 || obj.x > rect.x2 || obj.y > rect.y2 ) {
-    //     if the object is 10seconds old we delete it :)
+    //     //if the object is 10seconds old we delete it :)
     //     if (self.context.currentTime - obj.metaInfo.timestamp > 10000) {
     //       self.context.spaceScene.destroyObjectByIndex(i);
     //     }

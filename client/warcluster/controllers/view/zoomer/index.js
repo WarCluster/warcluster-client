@@ -49,8 +49,8 @@ module.exports = function(context, config){
           mode: zoomMode
         });
       },
-      onComplete: function()
-{        self.dispatchEvent({
+      onComplete: function(){        
+        self.dispatchEvent({
           type: "scopeOfView", 
           zoom: self.zoom
         }); 

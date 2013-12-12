@@ -5,24 +5,18 @@ module.exports = function(context) {
   var homePlanet = this.context.playerData.HomePlanet.Position;
 
   $(document).keydown(function(e) {
-    switch (e.keyCode) {
-      //left arrow
-      case 37 && 65:
-        self.context.spaceViewController.scroller.scrollToMousePosition(-self.context.windowCenterX,self.context.windowCenterY); 
-      break;
-      //up arrow
-      case 38 && 87:
-        self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY); 
-      break;
-      //right arrow
-      case 39 && 68:
-        self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*3,self.context.windowCenterY); 
-      break;
-      //down arrow
-      case 40 && 83:
-        self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,self.context.windowCenterY*3);
-      break;
-    }
+    //left arrow || a
+    if (e.keyCode == 37 || e.keyCode == 65)
+      self.context.spaceViewController.scroller.scrollToMousePosition(-self.context.windowCenterX,self.context.windowCenterY, false); 
+    //up arrow || w
+    if (e.keyCode == 38 || e.keyCode == 87)
+      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY, false); 
+    //right arrow || d
+    if (e.keyCode == 39 || e.keyCode == 68)
+      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*3,self.context.windowCenterY, false); 
+    //down arrow || s
+    if (e.keyCode == 40 || e.keyCode == 83)
+      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,self.context.windowCenterY*3, false);
     if (keymap[e.keyCode]) {
       return ;
     }
@@ -50,6 +44,20 @@ module.exports = function(context) {
 
   $(document).keyup(function(e) {
   	delete keymap[e.keyCode];
+    if (e.keyCode == 37 || e.keyCode == 65)
+      self.context.spaceViewController.scroller.scrollToMousePosition(-self.context.windowCenterX,self.context.windowCenterY, true); 
+    //up arrow || w
+    if (e.keyCode == 38 || e.keyCode == 87)
+      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY, true); 
+    //right arrow || d
+    if (e.keyCode == 39 || e.keyCode == 68)
+      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*3,self.context.windowCenterY, true); 
+    //down arrow || s
+    if (e.keyCode == 40 || e.keyCode == 83)
+      self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,self.context.windowCenterY*3, true);
+    if (keymap[e.keyCode]) {
+      return ;
+    }
     //spacebar
     if (e.keyCode === 32) {
       self.context.spaceViewController.scroller.setPosition(homePlanet.X, homePlanet.Y);
