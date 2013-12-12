@@ -61,6 +61,7 @@ module.exports = Backbone.View.extend({
       this.$('.selection-planet-item[data-id="'+planetData.id+'"]').remove();
 
       if (this.selectedPlanets.length == 0) {
+        this.context.missionsMenu.hideMenu();
         this.hidePlanetsSelection();
         this.$(".expanded-list-container").addClass("hide");
       }
