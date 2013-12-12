@@ -75,7 +75,9 @@ module.exports.prototype.parseMessage = function(command) {
         this.context.missionsFactory.build(data.Mission);
       break;
       case "send_mission_failed":
-        humane.error(data.Error, {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
+        if (!humane._animating) {
+          humane.error("You're attacking with less than one pilot", {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
+        }
       break;
     }
   }

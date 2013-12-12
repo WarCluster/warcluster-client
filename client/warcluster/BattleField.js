@@ -158,7 +158,6 @@ module.exports = function(){
     self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
     this.scopeOfView(data.Position, self.context.spaceViewController.getResolution());
-    debugger;
     if (data.JustRegistered) {
       self.tutorialMenu.showMenu();
     }
@@ -172,6 +171,8 @@ module.exports = function(){
   }
 
   var garbageCollectLoop = function() {
+    //have to use CanvasPoints from scope_of_view_result in order to destroy objects
+    //that are too far away 
     // var rect = {
     //   x1: 
     //   y1:
@@ -182,7 +183,7 @@ module.exports = function(){
     // for (var i = self.context.objects.length - 1; i >= 0; i--) {
     //   obj = self.context.objects[i];
     //   if (obj.x < rect.x1 || obj.y < rect.y2 || obj.x > rect.x2 || obj.y > rect.y2 ) {
-    //     if the object is 10seconds old we delete it :)
+    //     //if the object is 10seconds old we delete it :)
     //     if (self.context.currentTime - obj.metaInfo.timestamp > 10000) {
     //       self.context.spaceScene.destroyObjectByIndex(i);
     //     }
