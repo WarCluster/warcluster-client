@@ -35,6 +35,7 @@ module.exports = function(){
   this.context.windowCenterX = $(window).width()/2;
 
   this.tutorialMenu = new Tutorial({context: this.context});
+  $(".ui-container").append(this.tutorialMenu.render().el);
 
   this.context.missionsMenu = new MissionsMenu({context: this.context});
 
@@ -163,7 +164,7 @@ module.exports = function(){
     self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
     this.scopeOfView(data.Position, self.context.spaceViewController.getResolution());
     if (data.JustRegistered) {
-      self.tutorialMenu.showMenu();
+      self.tutorialMenu.toggleTutorial();
     }
 
     this.context.KeyboardManager = new KeyboardManager(self.context);

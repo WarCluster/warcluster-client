@@ -1,22 +1,25 @@
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
-    "click .close-btn": "removeTutorial"
+    "click .close-btn":   "toggleTutorial",
+    "click .toggle-btn":  "toggleTutorial"
   },
   className: "tutorial-menu",
   initialize: function(context) {
-    this.context = context.context;
+    // this.context = context.context;
   },
   render: function() {
     this.$el.html(this.template());
-    $(".ui-container").append(this.el);
     return this;
   },
-  showMenu: function() {
-    this.render();
+  toggleTutorial: function() {
+    if (this.expanded()) {
+      this.$(".tutorial-content").removeClass("hide");
+    } else {
+      this.$(".tutorial-content").addClass("hide");
+    }
   },
-  removeTutorial: function(e) {
-    e.preventDefault();
-    this.remove();
+  expanded: function() {
+    return this.$(".tutorial-content").hasClass("hide");
   }
 })

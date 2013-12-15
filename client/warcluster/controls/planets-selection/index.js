@@ -29,6 +29,7 @@ module.exports = Backbone.View.extend({
     if (this.selectedPlanets.length == 0){
       this.showPlanetsSelection();
     }
+
     if (!(this.selectedPlanets.indexOf(planetData) > -1)) {
       this.allPilotsSelected += Math.floor(planetData.ShipCount);
       this.selectedPlanets.push(planetData);
