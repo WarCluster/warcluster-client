@@ -99,12 +99,17 @@ module.exports = Backbone.View.extend({
   expanded: function() {
     return this.$(".expanded-list-container").hasClass("hide");
   },
-  updatePilots: function(planetData) {
-    this.$('.selection-planet-item[data-id="'+planetData.id+'"] .shipCount').html(planetData.ShipCount);
-  },
   updatePopulations: function(updated) {
-    for (var i = 0;i < updated.length;i ++)
+    var lastShipCount;
+    for (var i = 0;i < updated.length;i ++) {
+      lastShipCount = parseInt(this.$('[data-id="'+updated[i].id+'"]').find(".shipCount").html()) || -1;
+      if (lastShipCount === -1) {
+        continue;
+      }
+      this.allPilotsSelected += Math.round(updated[i].ShipCount - lastShipCount);
       this.$('[data-id="'+updated[i].id+'"]').find(".shipCount").html(parseInt(updated[i].ShipCount));
+    }
+    this.$(".total-pilots").html("(" + this.allPilotsSelected + " pilots)");    
   },
   moveCameraToPlanet: function(e) {
     this.trigger("scrollToPlanet", $(e.currentTarget).parent().attr("data-id"));
