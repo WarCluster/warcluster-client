@@ -187,19 +187,19 @@ module.exports = function(){
     // var obj = {};
     // for (var i = self.context.objects.length - 1; i >= 0; i--) {
     //   obj = self.context.objects[i];
-    //   if (obj.x < rect.x1 || obj.y < rect.y2 || obj.x > rect.x2 || obj.y > rect.y2 ) {
+    //   // if (obj.x < rect.x1 || obj.y < rect.y2 || obj.x > rect.x2 || obj.y > rect.y2 ) {
     //     //if the object is 10seconds old we delete it :)
-    //     if (self.context.currentTime - obj.metaInfo.timestamp > 10000) {
+    //     // if (self.context.currentTime - obj.metaInfo.timestamp > 10000) {
     //       self.context.spaceScene.destroyObjectByIndex(i);
-    //     }
-    //   }
+    //     // }
+    //   // }
     // }
 
-    // //set recursively the loop after everything else has completed
-    // setTimeout(garbageCollectLoop, 1000);
+    //set recursively the loop after everything else has completed
+    setTimeout(garbageCollectLoop, 15000);
   }
   //init the garbage collecting loop
-  setTimeout(garbageCollectLoop, 1000);
+  setTimeout(garbageCollectLoop, 15000);
 }
 
 module.exports.prototype.connect = function() {

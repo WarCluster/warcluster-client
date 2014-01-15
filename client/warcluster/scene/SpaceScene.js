@@ -164,6 +164,6 @@ module.exports.prototype.destroyObjectByIndex = function(index) {
     this.context.planetsHitObjectsFactory.destroy(obj);
   }
   else {
-    this.context.missionsFactory.destroy(obj);
+    this.context.shipsFactory.destroy(obj);
   }
 }
