@@ -2,7 +2,12 @@ module.exports = function(context) {
   var self = this;
   this.context = context;
   var homePlanet = this.context.playerData.HomePlanet.Position;
-
+  KeyboardJS.KeyboardJS.on('ctrl + equal', function() {
+    self.context.spaceViewController.zoomer.zoomIt("in");
+  });
+  KeyboardJS.KeyboardJS.on('ctrl + dash', function() {
+    self.context.spaceViewController.zoomer.zoomIt("out");
+  });
   KeyboardJS.KeyboardJS.on('w, up', function() {
     self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY);
   });

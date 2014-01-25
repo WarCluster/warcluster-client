@@ -85,6 +85,7 @@ module.exports.prototype.parseMessage = function(command) {
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
+  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
   this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}));
 }
 
