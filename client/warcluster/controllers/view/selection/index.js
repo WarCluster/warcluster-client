@@ -13,6 +13,7 @@ module.exports = function(context, config){
 
   this.attackTarget = null;
   this.supportTarget = null;
+  this.spyTarget = null;
 
   this.selectedPlanets = [];
   this.ctrlKey = false;
@@ -244,11 +245,16 @@ module.exports.prototype.deselectPlanetById = function(id) {
 module.exports.prototype.onPlanetMouseOver = function(e) {
   if (this.selectedPlanets.length > 0) 
     if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1){
-      if (this.ctrlKey){
+      debugger;
+      if (this.ctrlKey && this.shiftKey) {
+        this.spyTarget = e.target.parent;
+        this.spyTarget.showSpySelection();
+        return;
+      } else if (this.ctrlKey){
         this.supportTarget = e.target.parent;
         this.handleShowSupportSelection();
         return;
-      }
+      } 
         this.attackTarget = e.target.parent;
         this.attackTarget.showAttackSelection();
     } else {
@@ -265,6 +271,9 @@ module.exports.prototype.onPlanetMouseOut = function(e) {
   } else if (this.supportTarget) {
     this.supportTarget.hideSupportSelection();
     this.supportTarget = null;
+  } else if (this.spyTarget) {
+    this.spyTarget.hideSpySelection();
+    this.spyTarget = null;
   }
 }
 
