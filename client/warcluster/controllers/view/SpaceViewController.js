@@ -39,6 +39,9 @@ module.exports = function(context, config){
   this.selection.addEventListener("attackPlanet", function(e) {
     self.dispatchEvent(e);
   });
+  this.selection.addEventListener("spyPlanet", function(e) {
+    self.dispatchEvent(e);
+  });
   this.selection.addEventListener("supplyPlanet", function(e) {
     self.dispatchEvent(e);
   });
@@ -72,7 +75,13 @@ module.exports = function(context, config){
       });
   });
   this.info.addEventListener("spyPlanet", function(e) {
-    //spy logic 
+    var spySourcesIds = self.selection.getSelectedPlanetsIds()
+    if (spySourcesIds.length > 0)
+      self.dispatchEvent({
+        type: "spyPlanet", 
+        spySourcesIds: spySourcesIds,
+        planetToSpyId: e.id
+      });
   });
 
   // *****************************************************************

@@ -81,7 +81,7 @@ module.exports = function(context, config){
         }
       } else {
         if (self.selectedPlanets.length > 0) {
-            if (self.ctrlKey) {
+            if (self.ctrlKey && !self.shiftKey) {
               self.dispatchEvent({
                 type: "supplyPlanet", 
                 supportSourcesIds: self.getSelectedPlanetsIds(),
@@ -93,7 +93,13 @@ module.exports = function(context, config){
                 attackSourcesIds: self.getSelectedPlanetsIds(),
                 planetToAttackId: self.getPlanetТоAttackId()
               });
-            }
+          } else if (self.spyTarget && self.ctrlKey && self.shiftKey) {
+            self.dispatchEvent({
+              type: "spyPlanet",
+              spySourcesIds: self.getSelectedPlanetsIds(),
+              planetToSpyId: self.getPlanetТоSpyId()
+            });
+          }
         }
       }
     } else {
@@ -245,7 +251,6 @@ module.exports.prototype.deselectPlanetById = function(id) {
 module.exports.prototype.onPlanetMouseOver = function(e) {
   if (this.selectedPlanets.length > 0) 
     if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1){
-      debugger;
       if (this.ctrlKey && this.shiftKey) {
         this.spyTarget = e.target.parent;
         this.spyTarget.showSpySelection();
@@ -325,4 +330,8 @@ module.exports.prototype.getPlanetТоAttackId = function() {
 
 module.exports.prototype.getPlanetТоSupportId = function() {
   return this.supportTarget.data.id;
+}
+
+module.exports.prototype.getPlanetТоSpyId = function() {
+  return this.spyTarget.data.id;
 }

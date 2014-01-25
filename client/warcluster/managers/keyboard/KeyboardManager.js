@@ -4,7 +4,6 @@ module.exports = function(context) {
   var homePlanet = this.context.playerData.HomePlanet.Position;
 
   // KeyboardJS.KeyboardJS.on('ctrl + shift', function() {
-  //   debugger;
   // });
   KeyboardJS.KeyboardJS.on('ctrl + equal', function() {
     self.context.spaceViewController.zoomer.zoomIt("in");
