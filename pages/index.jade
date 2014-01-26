@@ -23,32 +23,41 @@ html
 
   body(style='background-image: url(\'/images/backgrounds/pattern.png\');')
     .label  version !{version}
-    .elements
-      #logo_container.logo_container
-        div
-          img.circle1(src='images/logo/circle1.png')
-        div
-          img.circle2(src='images/logo/circle2.png')
-        div
-          img.circle3(src='images/logo/circle3.png')
-        div
-          img.circle4(src='images/logo/circle4.png')
-        div
-          img.circle5(src='images/logo/circle5.png')
-        .logo
-          img(src='images/logo/planet.png')
-        div
-          img.white_particles(src='images/logo/white_particles.png')
-        div
-          img.orange_particles(src='images/logo/orange_particles.png')
-        .x_ring
-          img(src='images/logo/x_ring.png')
-        .y_ring
-          img(src='images/logo/y_ring.png')
-      .additional
-        .description Real-time massively multiplayer online space strategy arcade browser game! A lot of words describing the first social game on Twitter that relies on total annihilation! :D
-        .loginBtn.text-center
-          a.btn.login(href="/twitter/connect") Login with Twitter
-
+    .welcomePage
+      .elements
+        #logo_container.logo_container
+          div
+            img.circle1(src='images/logo/circle1.png')
+          div
+            img.circle2(src='images/logo/circle2.png')
+          div
+            img.circle3(src='images/logo/circle3.png')
+          div
+            img.circle4(src='images/logo/circle4.png')
+          div
+            img.circle5(src='images/logo/circle5.png')
+          .logo
+            img(src='images/logo/planet.png')
+          div
+            img.white_particles(src='images/logo/white_particles.png')
+          div
+            img.orange_particles(src='images/logo/orange_particles.png')
+          .x_ring
+            img(src='images/logo/x_ring.png')
+          .y_ring
+            img(src='images/logo/y_ring.png')
+        .additional
+          .description Real-time massively multiplayer online space strategy arcade browser game! A lot of words describing the first social game on Twitter that relies on total annihilation! :D
+          .loginBtn.text-center
+            a.btn.login(href="/twitter/connect") Login with Twitter
+          .text-center
+            a.btn.leaderboardBtn(id="leaderboard", onclick="return goToLeaderboard();") Leaderboard
+              span.pull-left.icon-arrow-up.icon-white
+               
+    .leaderboardPage
+      iframe(id="leaderboardFrame", src='/leaderboard', width='100%', height='100%', frameborder='0') Browser not compatible.
+    .welcome.text-center
+      a.btn.welcomeBtn(id="leaderboard", onclick="return goToWelcome();") Back to Welcome Screen
+        span.pull-left.icon-arrow-down.icon-white
     canvas#myCanvas(style="width:10px;height:10px;")
 

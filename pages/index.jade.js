@@ -1,6 +1,13 @@
 var boot = require("../client/boot");
 
+// $(window).resize(function() {
+//     var test = $('body').height() - $('#header_wrapper').height() - $('#menu_wrapper').height() - $('#footer_wrapper').height();
+//     $("#thframe").height(test);
+// });
+
 $(document).ready(function() {
+  // var test = $('body').height() - $('#header_wrapper').height() - $('#menu_wrapper').height() - $('#footer_wrapper').height();
+  // $("#thframe").height(test);
   var windowLocation = window.location.host;
   if(windowLocation !== "0.0.0.0:8118" && windowLocation !== "127.0.0.1:8118"){
     $('.login').click( function() {
@@ -34,5 +41,23 @@ $(document).ready(function() {
     }
   console.log('webgl-success');
   }
+  $(".welcomeBtn").hide();
 
 });
+
+goToLeaderboard = function(e){
+  $(".leaderboardPage").animate({top: 0},{ 
+      duration: "slow", 
+      easing: "easeOutBounce"
+    });
+  $(".welcomeBtn").show();
+}
+goToWelcome = function(e){
+  $(".leaderboardPage").animate({top: "100%"},{ 
+      duration: "slow", 
+      easing: "easeOutBounce"
+    });
+  $(".welcomeBtn").hide();
+}
+
+
