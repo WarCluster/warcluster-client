@@ -2,7 +2,8 @@ module.exports = Backbone.Router.extend({
 
   routes: {
     "": "landing",
-    "game": "index"
+    "game": "index",
+    "leaderboard": "index"
   },
   initialize: function(options) {
     

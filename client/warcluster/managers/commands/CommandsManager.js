@@ -1,5 +1,4 @@
 var PlayerData = require("../../data/PlayerData");
-var SocketManager = require("../socket/SocketManager");
 
 module.exports = function(url, context){
   this.url = url;
