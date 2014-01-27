@@ -72,20 +72,20 @@ module.exports.prototype.buildScene = function() {
   this.spaceKey = false;
 
   var onWindowResize = function() {
-    //var ww = $(".content").offsetWidth;
-    //var hh = $(".content").offsetHeight;
-     self.camera.aspect = window.innerWidth / window.innerHeight;
-     self.camera.updateProjectionMatrix();
-     self.context.windowCenterY = $(window).height()/2;
-     self.context.windowCenterX = $(window).width()/2;
+    var ww = self.context.$content.width();
+    var hh = self.context.$content.height();
+    self.camera.aspect = ww / hh;
+    self.camera.updateProjectionMatrix();
+    self.context.width = ww;
+    self.context.height = hh;
 
-     self.renderer.setSize( window.innerWidth, window.innerHeight );
+    self.renderer.setSize( ww, hh );
   }
+
+  this.context.$content.append(this.renderer.domElement);
 
   onWindowResize();
   window.addEventListener('resize', onWindowResize, false);
-
-  $(".content").append(this.renderer.domElement);
 }
 
 module.exports.prototype.startRendering = function() {
@@ -166,4 +166,15 @@ module.exports.prototype.destroyObjectByIndex = function(index) {
   else {
     this.context.shipsFactory.destroy(obj);
   }
+}
+
+module.exports.prototype.getMouseIntersectionObjects = function(x, y) {
+  var pX = (x / window.innerWidth) * 2 - 1;
+  var pY = - (y / window.innerHeight) * 2 + 1;
+
+  var vector = new THREE.Vector3( pX, pY, 0.5 );
+  this.context.projector.unprojectVector( vector, this.context.camera );
+
+  var raycaster = new THREE.Raycaster(this.context.camera.position, vector.sub(this.context.camera.position ).normalize());
+  return raycaster.intersectObjects(this.context.planetsHitObjects);
 }

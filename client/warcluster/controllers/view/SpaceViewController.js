@@ -12,15 +12,13 @@ module.exports = function(context, config){
   
   this.zoomer = new Zoomer(context, config.zoomer);
   this.zoomer.addEventListener("scopeOfView", function(e) {
+    self.scroller.scaleIndex = e.zoom;
     self.dispatchEvent(e);
     self.info.updatePosition();
   });
   this.zoomer.addEventListener("zoom", function(e) {
-    self.scroller.scaleIndex = e.zoom / 6000;
-    //TODO: don't call scope of view everytime
-    if (e.mode === "zoomin") {
-      self.scroller.scrollToMousePosition(e.target.mousePosition.x, e.target.mousePosition.y);
-    }
+    self.scroller.scaleIndex = e.zoom;
+    console.log("e.zoom:", e.zoom)
     self.dispatchEvent(e);
     self.info.updatePosition();
   });
@@ -94,6 +92,8 @@ module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.activate = function() {
 	if (!this.active) {
 		this.active = true;
+    this.scroller.scaleIndex = this.zoomer.getZoomIndex();
+    this.zoomer.zoom = this.context.camera.position.z;
 		window.addEventListener("mousedown", this.onMouseDown);
 	}
 }
@@ -105,13 +105,14 @@ module.exports.prototype.deactivate = function() {
 	}
 }
 
-module.exports.prototype.setPosition = function (x, y) {
-  this.scroller.setPosition(x, y);
+module.exports.prototype.scrollTo = function (x, y, animated) {
+  this.scroller.scrollTo(x, y, animated);
 }
 
 module.exports.prototype.getResolution = function() {
-  return {
-    width: Math.ceil($(window).width()*this.scroller.scaleIndex), 
-    height: Math.ceil($(window).height()*this.scroller.scaleIndex) 
+  var data = {
+    width: Math.ceil(this.context.width*this.scroller.scaleIndex), 
+    height: Math.ceil(this.context.height*this.scroller.scaleIndex) 
   }
+  return data
 }

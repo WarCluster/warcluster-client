@@ -68,7 +68,7 @@ module.exports = function(){
   this.planetsSelection.on("scrollToPlanet", function(id) {
     var planet = self.context.objectsById[id];
     if (planet) {
-      self.spaceViewController.setPosition(planet.position.x, planet.position.y);
+      self.spaceViewController.scrollTo(planet.position.x, planet.position.y);
       self.spaceViewController.info.popover.remove();
     }
   });
@@ -99,9 +99,8 @@ module.exports = function(){
 
   this.spaceViewController = new SpaceViewController(this.context, {
     zoomer: {
-      zoom: 8000,
       maxZoom: 60000000,
-      minZoom: 8000,
+      minZoom: 6000,
       zoomStep: 2000
     },
     scroller: {
@@ -159,10 +158,10 @@ module.exports = function(){
     _.extend(self.context.playerData, data);
    
     $(".ui-container").append(self.twitterStream.render(self.context.playerData.ClusterTeam).el);
-    // console.log("-loginFn-", self.context.playerData);
+    console.log("-loginFn-", self.context.playerData);
     self.spaceViewController.activate();
-    self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
-    this.scopeOfView(data.Position, self.context.spaceViewController.getResolution());
+    self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
+    
     if (data.JustRegistered) {
       self.tutorialMenu.toggleTutorial();
     }
