@@ -1,4 +1,5 @@
 var PlayerData = require("../../data/PlayerData");
+var SocketManager = require("../socket/SocketManager");
 
 module.exports = function(url, context){
   this.url = url;
@@ -25,21 +26,21 @@ module.exports.prototype.prepare = function(username, twitterId) {
     "Username": username, 
     "TwitterId": twitterId
   };
-  
-  this.sockjs = new SockJS(this.url);
-  this.sockjs.onopen = function() {
+  var new_status = function(status) {
+    console.log(status);
+  };
+  var on_message = function(msg) {
+    self.parseMessage(msg.data);
+  };
+  var on_open = function() {
     console.log('open');
 
     self.sockjs.send(JSON.stringify(msg));
-  };
-  
-  this.sockjs.onmessage = function(e) {
-    self.parseMessage(e.data);
-  };
+  }
+  //TODO: figure out why I need to do SockReconnect.SockReconnect (double time instead of just ones)
+  this.sockjs = new SockReconnect.SockReconnect(this.url, null, new_status, on_message, on_open);
+  this.sockjs.connect();
 
-  this.sockjs.onclose = function() {
-    console.log('close');
-  };
 }
 
 module.exports.prototype.parseMessage = function(command) {
@@ -61,6 +62,7 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Position = data.Position;
         pd.ClusterTeam = data.ClusterTeam || "WarClusterInitLab";
         pd.HomePlanet = data.HomePlanet;
+        pd.JustRegistered = data.JustRegistered;
 
         this.loginFn(pd);
       break;
@@ -74,13 +76,16 @@ module.exports.prototype.parseMessage = function(command) {
         this.context.missionsFactory.build(data.Mission);
       break;
       case "send_mission_failed":
-        humane.error(data.Error, {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
+        if (!humane._animating) {
+          humane.error("You're attacking with less than one pilot", {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
+        }
       break;
     }
   }
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
+  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
   this.sockjs.send(JSON.stringify({"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}));
 }
 

@@ -118,10 +118,13 @@ module.exports = function(){
       self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.context.missionsMenu.getCurrentType());
   });
 
-  this.spaceViewController.addEventListener("supportPlanet", function(e) {
+  this.spaceViewController.addEventListener("supplyPlanet", function(e) {
     // console.log("-SEND SUPPORT MISSION-");
     for (var i = 0;i < e.supportSourcesIds.length;i ++)
       self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
+  });
+  this.spaceViewController.addEventListener("supplyPlanet", function(e) {
+    //spy logic goes here
   });
 
   this.spaceViewController.addEventListener("selectPlanet", function(e) {
@@ -140,6 +143,7 @@ module.exports = function(){
   });
 
   this.spaceViewController.addEventListener("scopeOfView", function(e) {
+    //TODO: https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view-to-not-spam
     var position = {
       x: Math.ceil(self.context.spaceViewController.scroller.scrollPosition.x),
       y: Math.ceil(self.context.spaceViewController.scroller.scrollPosition.y)
@@ -159,9 +163,8 @@ module.exports = function(){
     self.spaceViewController.activate();
     self.spaceViewController.setPosition(data.Position.X, data.Position.Y);
     this.scopeOfView(data.Position, self.context.spaceViewController.getResolution());
-
     if (data.JustRegistered) {
-      self.tutorialMenu.showMenu();
+      self.tutorialMenu.toggleTutorial();
     }
 
     this.context.KeyboardManager = new KeyboardManager(self.context);
@@ -173,6 +176,8 @@ module.exports = function(){
   }
 
   var garbageCollectLoop = function() {
+    //have to use CanvasPoints from scope_of_view_result in order to destroy objects
+    //that are too far away 
     // var rect = {
     //   x1: 
     //   y1:
@@ -182,19 +187,19 @@ module.exports = function(){
     // var obj = {};
     // for (var i = self.context.objects.length - 1; i >= 0; i--) {
     //   obj = self.context.objects[i];
-    //   if (obj.x < rect.x1 || obj.y < rect.y2 || obj.x > rect.x2 || obj.y > rect.y2 ) {
-    //     if the object is 10seconds old we delete it :)
-    //     if (self.context.currentTime - obj.metaInfo.timestamp > 10000) {
+    //   // if (obj.x < rect.x1 || obj.y < rect.y2 || obj.x > rect.x2 || obj.y > rect.y2 ) {
+    //     //if the object is 10seconds old we delete it :)
+    //     // if (self.context.currentTime - obj.metaInfo.timestamp > 10000) {
     //       self.context.spaceScene.destroyObjectByIndex(i);
-    //     }
-    //   }
+    //     // }
+    //   // }
     // }
 
-    // //set recursively the loop after everything else has completed
-    // setTimeout(garbageCollectLoop, 1000);
+    //set recursively the loop after everything else has completed
+    setTimeout(garbageCollectLoop, 15000);
   }
   //init the garbage collecting loop
-  setTimeout(garbageCollectLoop, 1000);
+  setTimeout(garbageCollectLoop, 15000);
 }
 
 module.exports.prototype.connect = function() {

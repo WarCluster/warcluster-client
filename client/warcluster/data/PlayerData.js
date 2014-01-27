@@ -4,4 +4,5 @@ module.exports = function(){
   this.Position = null;
   this.ClusterTeam = null;
   this.HomePlanet = null;
+  this.JustRegistered = null;
 }

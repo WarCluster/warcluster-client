@@ -9,16 +9,26 @@
 */
 .customPop {
   background-color: #CCC;
-  .meta-information {
+  .popover-content {
     color: #000;
   }
 }
 .tutorial-menu {
-  z-index: 3001;
-  display: inline-block;
-  position: absolute;
-  left:20%;
-  top:100px;
+  .toggle-btn {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+  }
+  .tutorial-content {
+    z-index: 3001;
+    position: absolute;
+    left:20%;
+    top:100px;
+    .close-btn {
+      position: absolute;
+      margin-left: -95px;
+    }
+  }
 }
 .avatar {
   .square(50px);
@@ -50,13 +60,16 @@ html, body {
   top: -1000px;
   position: absolute;
 }
-.twitter-chat {
+.twitter-stream {
   position: absolute;
-  right: 10px;
+  right: 0px;
   top: 80px;
+  .toggle-btn {
+    left:-35px;
+    position: inherit;
+  }
 }
 .ui-container {
-  position: absolute;
   z-index: 3000;
   top: 0px;
   left: 0px;
@@ -248,7 +261,7 @@ html, body {
   border-top-style: solid;
   border-width: 1px;
   overflow: auto;
-  height: 300px;
+  max-height: 300px;
 }
 
 .expanded-list {

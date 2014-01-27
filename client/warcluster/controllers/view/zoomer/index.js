@@ -10,37 +10,47 @@ module.exports = function(context, config){
   this.maxZoom = config.maxZoom || null;
   this.mousePosition = { x: 0, y: 0};
 
-  $(window).mousewheel(function(e) {
-    e.preventDefault();
+  this.zoomIt = function(e) {
+    var zoomMode, step,
+        self = this;
+    if (e === "in" || e === "out") {
+      step = (e === "in") ? -this.zoomStep : this.zoomStep;
+      zoomMode = "zoom" + e; 
+      this.mousePosition.x = (zoomMode === "zoomin") ? this.context.windowCenterX : 0;
+      this.mousePosition.y = (zoomMode === "zoomin") ? this.context.windowCenterY : 0;
+    }
+    else {
+      e.preventDefault();
 
-    var st = e.deltaY > 0 ? -self.zoomStep : self.zoomStep;
-    var zoomMode = e.deltaY > 0 ? "zoomin" : "zoomout";
-    self.mousePosition.x = (zoomMode === "zoomin") ? e.clientX : 0;
-    self.mousePosition.y = (zoomMode === "zoomin") ? e.clientY : 0;
-
-    if (self.minZoom != null && self.maxZoom != null) {
-      if (self.zoom + st < self.minZoom)
-        self.zoom = self.minZoom;
-      else if (self.zoom + st > self.maxZoom)
-        self.zoom = self.maxZoom;
-      else
-        self.zoom += st;
-    } else if (self.minZoom != null && self.maxZoom == null) {
-      if (self.zoom + st < self.minZoom)
-        self.zoom = self.minZoom;
-      else
-        self.zoom += st;
-    } else if (self.minZoom == null && self.maxZoom != null) {
-      if (self.zoom + st > self.maxZoom)
-        self.zoom = self.maxZoom;
-      else
-        self.zoom += st;
-    } else {
-      self.zoom += st;
+      step = e.deltaY > 0 ? -this.zoomStep : this.zoomStep;
+      zoomMode = e.deltaY > 0 ? "zoomin" : "zoomout";
+      this.mousePosition.x = (zoomMode === "zoomin") ? e.clientX : 0;
+      this.mousePosition.y = (zoomMode === "zoomin") ? e.clientY : 0;
     }
 
-    TweenLite.to(self.context.spaceScene.camera.position, 0.5, {
-      z: self.zoom,
+    if (this.minZoom != null && this.maxZoom != null) {
+      if (this.zoom + step < this.minZoom)
+        this.zoom = this.minZoom;
+      else if (this.zoom + step > this.maxZoom)
+        this.zoom = this.maxZoom;
+      else
+        this.zoom += step;
+    } else if (this.minZoom != null && this.maxZoom == null) {
+      if (this.zoom + step < this.minZoom)
+        this.zoom = this.minZoom;
+      else
+        this.zoom += step;
+    } else if (this.minZoom == null && this.maxZoom != null) {
+      if (this.zoom + step > this.maxZoom)
+        this.zoom = this.maxZoom;
+      else
+        this.zoom += step;
+    } else {
+      this.zoom += step;
+    }
+
+    TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
+      z: this.zoom,
       ease: Cubic.easeOut,
       onStart: function() {
         self.dispatchEvent({
@@ -49,13 +59,17 @@ module.exports = function(context, config){
           mode: zoomMode
         });
       },
-      onComplete: function()
-{        self.dispatchEvent({
+      onComplete: function(){        
+        self.dispatchEvent({
           type: "scopeOfView", 
           zoom: self.zoom
         }); 
       }
     });
+  }
+
+  $(window).mousewheel(function(e){
+    self.zoomIt(e);
   });
 }
 
