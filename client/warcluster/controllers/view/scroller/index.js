@@ -1,11 +1,11 @@
-module.exports = function(context, config) {
+module.exports = function(context, config, controller) {
   THREE.EventDispatcher.call(this);
 
   config = config || {};
 
   this.context = context;
   this.mpos = {x: 0, y: 0};
-  this.scrollPosition = {x: 0, y: 0};
+  this.controller = controller;
   this.xMin = config.xMin || -5000000;
   this.xMax = config.xMax || 5000000;
   this.yMin = config.yMin || -4000000;
@@ -20,106 +20,63 @@ module.exports = function(context, config) {
   }
 
   var scrollMouseMove = function(e) {
-    var dx = self.scrollPosition.x + (e.clientX * self.scaleIndex - self.mpos.x);
-    var dy = self.scrollPosition.y + (e.clientY * self.scaleIndex - self.mpos.y);
+    var dx = (self.mpos.x - e.clientX) * self.scaleIndex;
+    var dy = (e.clientY - self.mpos.y) * self.scaleIndex;
 
-    self.setScrollPosition(dx, dy);
+    self.mpos.x = e.clientX;
+    self.mpos.y = e.clientY;
 
-    self.mpos.x = e.clientX * self.scaleIndex;
-    self.mpos.y = e.clientY * self.scaleIndex;
-
-    TweenLite.to(self.context.spaceScene.camera.position, 0.7, {
-      x: -self.scrollPosition.x, 
-      y: self.scrollPosition.y,
-      ease: Cubic.easeOut,
-      onUpdate: function() {
-        self.dispatchEvent({
-          type: "scroll", 
-          objects: self.selectedPlanets
-        });
-      },
-      onComplete: function() {
-        self.dispatchEvent({
-          type: "scopeOfView", 
-          zoom: self.zoom
-        });
-      }
-    });
+    self.scroll(dx, dy, true)
   }
 
-  this.setScrollPosition = function(dx, dy) {
-     if (dx < self.xMin)
-      self.scrollPosition.x = self.xMin;
-    else if (dx > self.xMax)
-      self.scrollPosition.x = self.xMax;
-    else
-      self.scrollPosition.x = dx;
-      
-    if (dy < self.yMin)
-      self.scrollPosition.y = self.yMin;
-    else if (dy > self.yMax)
-      self.scrollPosition.y = self.yMax;
-    else
-      self.scrollPosition.y = dy;
-  }
-  
   this.scrollMouseDown = function(e) {
     e.preventDefault();
 
-    self.mpos.x = e.clientX * self.scaleIndex;
-    self.mpos.y = e.clientY * self.scaleIndex;
+    self.mpos.x = e.clientX;
+    self.mpos.y = e.clientY;
 
-    t = (new Date()).getTime();
-    
     window.addEventListener("mousemove", scrollMouseMove);
     window.addEventListener("mouseup", scrollMouseUp);
   }
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
-
-module.exports.prototype.setPosition = function (x, y) {
-  var self = this;
-  this.scrollPosition.x = -x;
-  this.scrollPosition.y = y;
-  TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
-    x: -this.scrollPosition.x, 
-    y: this.scrollPosition.y,
-    ease: Cubic.easeOut,
-    onComplete: function(){        
-        self.dispatchEvent({
-          type: "scopeOfView", 
-          zoom: self.zoom
-        }); 
-      }
-  });
+module.exports.prototype.scroll = function(dx, dy, animated){
+  this.scrollTo(this.controller.scrollPosition.x + dx, this.controller.scrollPosition.y + dy, animated)
 }
 
-module.exports.prototype.scrollToMousePosition = function(xPos, yPos){
+module.exports.prototype.scaledScroll = function(dx, dy, animated){
+  this.scrollTo(this.controller.scrollPosition.x + (dx * this.scaleIndex), this.controller.scrollPosition.y + (dy * this.scaleIndex), animated)
+}
+
+module.exports.prototype.scrollTo = function(x, y, animated){
+  if (!this.controller.setScrollPosition(x, y))
+    return false;
+
   var self = this;
 
-  var factor = (this.context.spaceViewController.zoomer.zoom > 84000) ? 13 : 7;
-  var dx = self.scrollPosition.x + (self.context.windowCenterX * self.scaleIndex - xPos * self.scaleIndex)/factor;
-  var dy = self.scrollPosition.y + (self.context.windowCenterY * self.scaleIndex - yPos * self.scaleIndex)/factor;
+  if (animated)
+    TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
+      x: this.controller.scrollPosition.x, 
+      y: this.controller.scrollPosition.y,
+      ease: Cubic.easeOut,
+      onUpdate: function() {
+        self.dispatchEvent({
+          type: "scroll"
+        });
+      },
+      onComplete: function(){
+        self.dispatchEvent({
+          type: "scopeOfView"
+        });            
+      }
+    });
+  else {
+    this.context.camera.position.x = this.controller.scrollPosition.x;
+    this.context.camera.position.y = this.controller.scrollPosition.y;
 
-  self.setScrollPosition(dx, dy);
-
-  TweenLite.to(self.context.spaceScene.camera.position, 0.5, {
-    x: -self.scrollPosition.x, 
-    y: self.scrollPosition.y,
-    ease: Cubic.easeOut,
-    onUpdate: function() {
-      self.dispatchEvent({
-        type: "scroll", 
-        objects: self.selectedPlanets
-      });
-    },
-    onComplete: function(){
-      self.dispatchEvent({
-        type: "scopeOfView", 
-        zoom: self.zoom
-      });            
-    }
-  });
-  
+    this.dispatchEvent({
+      type: "scopeOfView"
+    }); 
+  }
 }

@@ -3,37 +3,37 @@ module.exports = function(context) {
   this.context = context;
   var homePlanet = this.context.playerData.HomePlanet.Position;
   KeyboardJS.KeyboardJS.on('ctrl + equal', function() {
-    self.context.spaceViewController.zoomer.zoomIt("in");
+    self.context.spaceViewController.zoomer.zoomIn();
   });
   KeyboardJS.KeyboardJS.on('ctrl + dash', function() {
-    self.context.spaceViewController.zoomer.zoomIt("out");
+    self.context.spaceViewController.zoomer.zoomOut();
   });
   KeyboardJS.KeyboardJS.on('w, up', function() {
-    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,-self.context.windowCenterY);
+    self.context.spaceViewController.scroller.scaledScroll(0, self.context.height / 2, true);
   });
   KeyboardJS.KeyboardJS.on('a, left', function() {
-    self.context.spaceViewController.scroller.scrollToMousePosition(-self.context.windowCenterX,self.context.windowCenterY); 
+    self.context.spaceViewController.scroller.scaledScroll(-self.context.width / 2 , 0, true); 
   });
   KeyboardJS.KeyboardJS.on('d, right', function() {
-    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*3,self.context.windowCenterY); 
+    self.context.spaceViewController.scroller.scaledScroll(self.context.width / 2, 0, true); 
   });
   KeyboardJS.KeyboardJS.on('s, down', function() {
-    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX,self.context.windowCenterY*3);
+    self.context.spaceViewController.scroller.scaledScroll(0, -self.context.height / 2, true);
   });
   KeyboardJS.KeyboardJS.on('w + a, up + left', function() {
-    self.context.spaceViewController.scroller.scrollToMousePosition(0,0);
+    self.context.spaceViewController.scroller.scaledScroll(0,0, true);
   });
   KeyboardJS.KeyboardJS.on('w + d, up + right', function() {
-    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*2,0);
+    self.context.spaceViewController.scroller.scaledScroll(self.context.width*2,0, true);
   });
   KeyboardJS.KeyboardJS.on('s + d, s + right', function() {
-    self.context.spaceViewController.scroller.scrollToMousePosition(self.context.windowCenterX*2,self.context.windowCenterY*2);
+    self.context.spaceViewController.scroller.scaledScroll(self.context.width*2,self.context.height*2, true);
   });
   KeyboardJS.KeyboardJS.on('s + a, s + left', function() {
-    self.context.spaceViewController.scroller.scrollToMousePosition(0,self.context.windowCenterY*2);
+    self.context.spaceViewController.scroller.scaledScroll(0,self.context.height*2, true);
   });
   KeyboardJS.KeyboardJS.on('space', function() {
-    self.context.spaceViewController.scroller.setPosition(homePlanet.X, homePlanet.Y);
+    self.context.spaceViewController.scroller.scrollTo(homePlanet.X, homePlanet.Y, true);
     self.context.spaceViewController.info.popover.remove();  
   });
   KeyboardJS.KeyboardJS.on('ctrl',
@@ -57,6 +57,7 @@ module.exports = function(context) {
   //onDownCallback
   function() {
     self.context.spaceViewController.selection.shiftKey = true;
+    self.context.spaceViewController.zoomer.shiftKey = true;
     // if (self.context.spaceViewController.selection.supportTarget) {
     //   self.context.spaceViewController.selection.supportTarget.hideSupportSelection();
     // }
@@ -64,6 +65,7 @@ module.exports = function(context) {
   //onUpCallback
   function() {
     self.context.spaceViewController.selection.shiftKey = false;
+    self.context.spaceViewController.zoomer.shiftKey = false;
     // if (self.context.spaceViewController.selection.supportTarget) {
     //   self.context.spaceViewController.selection.handleShowSupportSelection();
     // }
