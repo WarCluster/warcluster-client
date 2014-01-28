@@ -144,8 +144,8 @@ module.exports = function(){
   this.spaceViewController.addEventListener("scopeOfView", function(e) {
     //TODO: https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view-to-not-spam
     var position = {
-      x: Math.ceil(self.context.spaceViewController.scroller.scrollPosition.x),
-      y: Math.ceil(self.context.spaceViewController.scroller.scrollPosition.y)
+      x: Math.ceil(self.context.spaceViewController.scrollPosition.x),
+      y: Math.ceil(self.context.spaceViewController.scrollPosition.y)
     };
     self.commandsManager.scopeOfView(position, self.context.spaceViewController.getResolution());
   });

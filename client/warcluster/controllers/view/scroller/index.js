@@ -1,11 +1,11 @@
-module.exports = function(context, config) {
+module.exports = function(context, config, controller) {
   THREE.EventDispatcher.call(this);
 
   config = config || {};
 
   this.context = context;
   this.mpos = {x: 0, y: 0};
-  this.scrollPosition = {x: 0, y: 0};
+  this.controller = controller;
   this.xMin = config.xMin || -5000000;
   this.xMax = config.xMax || 5000000;
   this.yMin = config.yMin || -4000000;
@@ -42,35 +42,23 @@ module.exports = function(context, config) {
 
 module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.scroll = function(dx, dy, animated){
-  this.scrollTo(this.scrollPosition.x + dx, this.scrollPosition.y + dy, animated)
+  this.scrollTo(this.controller.scrollPosition.x + dx, this.controller.scrollPosition.y + dy, animated)
+}
+
+module.exports.prototype.scaledScroll = function(dx, dy, animated){
+  this.scrollTo(this.controller.scrollPosition.x + (dx * this.scaleIndex), this.controller.scrollPosition.y + (dy * this.scaleIndex), animated)
 }
 
 module.exports.prototype.scrollTo = function(x, y, animated){
-  if (x == this.scrollPosition.x && y == this.scrollPosition.y)
+  if (!this.controller.setScrollPosition(x, y))
     return false;
 
   var self = this;
 
-  if (x < this.xMin)
-    this.scrollPosition.x = this.xMin;
-  else if (x > this.xMax)
-    this.scrollPosition.x = this.xMax;
-  else
-    this.scrollPosition.x = x;
-    
-  if (y < this.yMin)
-    this.scrollPosition.y = this.yMin;
-  else if (y > this.yMax)
-    this.scrollPosition.y = this.yMax;
-  else
-    this.scrollPosition.y = y;
-
-  //console.log("scrollTo:", this.scrollPosition.x, this.scrollPosition.y)
-
   if (animated)
     TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
-      x: this.scrollPosition.x, 
-      y: this.scrollPosition.y,
+      x: this.controller.scrollPosition.x, 
+      y: this.controller.scrollPosition.y,
       ease: Cubic.easeOut,
       onUpdate: function() {
         self.dispatchEvent({
@@ -84,8 +72,8 @@ module.exports.prototype.scrollTo = function(x, y, animated){
       }
     });
   else {
-    this.context.camera.position.x = this.scrollPosition.x;
-    this.context.camera.position.y = this.scrollPosition.y;
+    this.context.camera.position.x = this.controller.scrollPosition.x;
+    this.context.camera.position.y = this.controller.scrollPosition.y;
 
     this.dispatchEvent({
       type: "scopeOfView"

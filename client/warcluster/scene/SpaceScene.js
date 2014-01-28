@@ -62,6 +62,8 @@ module.exports.prototype.buildScene = function() {
   this.enviroment = new SpaceSceneEnviroment(this.context);
   this.container.add(this.enviroment);
 
+  this.context.hitPlane = this.enviroment.hitPlane;
+
   this.context.camera = this.camera;
   this.context.scene = this.scene;
   this.context.projector = this.projector;
