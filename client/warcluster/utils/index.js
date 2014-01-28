@@ -20,8 +20,8 @@ module.exports.toWorldPosition = function(target) {
 }
 
 module.exports.getMouseIntersectionObjects = function(clientX, clientY, objects, context) {
-  var mouseX = (clientX / window.innerWidth) * 2 - 1;
-  var mouseY = - (clientY / window.innerHeight) * 2 + 1;
+  var mouseX = (clientX / context.$content.width()) * 2 - 1;
+  var mouseY = - (clientY / context.$content.height()) * 2 + 1;
 
   var vector = new THREE.Vector3( mouseX, mouseY, 0.5 );
   context.projector.unprojectVector( vector, context.camera );
