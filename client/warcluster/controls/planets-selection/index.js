@@ -25,6 +25,34 @@ module.exports = Backbone.View.extend({
   unhoverSelectedPlanet: function(e) {
     this.trigger("planetOut", $(e.currentTarget).attr("data-id"));
   },
+  selectionChanged: function(e) {
+    console.log("selectionChanged", this.selectedPlanets.length, e.selectedPlanets.length, e.deselectedPlanets.length)
+    if (this.selectedPlanets.length == 0)
+      this.showPlanetsSelection();
+
+    for (i = 0;i < e.deselectedPlanets.length;i ++)
+      this.removePlanet(e.deselectedPlanets[i].data)
+
+    for (var i = 0;i < e.selectedPlanets.length;i ++)
+      this.addPlanet(e.selectedPlanets[i].data)
+
+    if (this.selectedPlanets.length == 0) {
+      this.hidePlanetsSelection();
+      this.$(".expanded-list-container").addClass("hide");
+    }
+  },
+  addPlanet: function(planetData) {
+    this.selectedPlanets.push(planetData);
+    this.$(".expanded-list").append(Render({model: planetData}));
+  },
+  removePlanet: function(planetData) {
+    var index = this.getPlanetIndex(planetData);
+
+    if (index != -1) {
+      this.selectedPlanets.splice(index, 1);
+      this.$('.selection-planet-item[data-id="'+planetData.id+'"]').remove();
+    }
+  },
   selectPlanet: function(planetData) {
     if (this.selectedPlanets.length == 0){
       this.showPlanetsSelection();
@@ -68,6 +96,7 @@ module.exports = Backbone.View.extend({
     }
   },
   deselectAllPlanets: function() {
+    console.log("---- deselectAllPlanets -----")
     this.selectedPlanets = [];
     this.allPilotsSelected = 0;
 
@@ -119,5 +148,8 @@ module.exports = Backbone.View.extend({
       if (this.selectedPlanets[i].id == planetData.id)
         return i;
     return -1;
+  },
+  hasPlanets: function(planetData) {
+    return this.selectedPlanets.length != 0;
   }
 })

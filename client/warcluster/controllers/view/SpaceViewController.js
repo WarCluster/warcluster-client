@@ -41,10 +41,13 @@ module.exports = function(context, config){
   this.selection.addEventListener("supplyPlanet", function(e) {
     self.dispatchEvent(e);
   });
-  this.selection.addEventListener("selectPlanet", function(e) {
+  /*this.selection.addEventListener("selectPlanet", function(e) {
     self.dispatchEvent(e);
   });
   this.selection.addEventListener("deselectPlanet", function(e) {
+    self.dispatchEvent(e);
+  });*/
+  this.selection.addEventListener("selectionChanged", function(e) {
     self.dispatchEvent(e);
   });
   this.selection.addEventListener("deselectAllPlanets", function(e) {
@@ -173,3 +176,22 @@ module.exports.prototype.setScrollPosition = function(x, y, z){
   
   return true;
 }
+
+module.exports.prototype.pressCtrlKey = function(){
+  this.selection.pressCtrlKey();
+}
+
+module.exports.prototype.releaseCtrlKey = function(){
+  this.selection.releaseCtrlKey();
+}
+
+module.exports.prototype.pressShiftKey = function(){
+  this.selection.pressShiftKey();
+  this.zoomer.shiftKey = true;
+}
+
+module.exports.prototype.releaseShiftKey = function(){
+  this.selection.releaseShiftKey();
+  this.zoomer.shiftKey = false;
+}
+

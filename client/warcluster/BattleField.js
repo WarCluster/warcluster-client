@@ -131,9 +131,19 @@ module.exports = function(){
       self.context.missionsMenu.showMenu();
   });
 
-  this.spaceViewController.addEventListener("deselectPlanet", function(e) {
+  /*this.spaceViewController.addEventListener("deselectPlanet", function(e) {
     self.planetsSelection.deselectPlanet(e.planet.data);
     self.context.missionsMenu.hideMenu(e.planet.data.Name);
+  });
+
+  this.spaceViewController.addEventListener("selectPlanet", function(e) {
+      self.planetsSelection.selectPlanet(e.planet.data);
+      self.context.missionsMenu.showMenu();
+  });*/
+  this.spaceViewController.addEventListener("selectionChanged", function(e) {
+    self.planetsSelection.selectionChanged(e);
+    if (self.planetsSelection.hasPlanets())
+    self.context.missionsMenu.showMenu();
   });
 
   this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
