@@ -84,7 +84,7 @@ module.exports.prototype.managePopulation = function() {
     
     if (parseInt(shc) != parseInt(pd.ShipCount)) {
       this.context.objectsById[pd.id].updatePopulationInfo();
-      if (selection.getSelectedPlanetById(pd.id))
+      if (selection.getSelectedPlanetDataById(pd.id))
         updated.push(pd);
     }
   }

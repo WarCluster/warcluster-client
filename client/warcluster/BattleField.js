@@ -143,7 +143,9 @@ module.exports = function(){
   this.spaceViewController.addEventListener("selectionChanged", function(e) {
     self.planetsSelection.selectionChanged(e);
     if (self.planetsSelection.hasPlanets())
-    self.context.missionsMenu.showMenu();
+      self.context.missionsMenu.showMenu();
+    else
+      self.context.missionsMenu.hideMenu();
   });
 
   this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {

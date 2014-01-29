@@ -57,7 +57,6 @@ module.exports = function(context, config){
   }
 
   var handleMouseActions = function(e) {
-    console.log("handleMouseActions:")
     var intersects = self.getMouseIntersectionObjects(e);
     if (intersects.length > 0) {
       var target = intersects[0].object.parent;
@@ -166,15 +165,15 @@ module.exports.prototype.hitTestPlanets = function(rect) {
       if (target.rectHitTest(rect)) {
         var index = this.getSelectedPlanetIndexById(target.data.id);
         if (index == -1) {
-          this.selectPlanet(target.data);
-          selectedPlanets.push(target);
+          this.selectPlanet(target.data, true);
+          selectedPlanets.push(target.data);
         } else if (this.shiftKey) {
-          this.deselectPlanet(target.data);
-          deselectedPlanets.push(target);
+          this.deselectPlanet(target.data, true);
+          deselectedPlanets.push(target.data);
         }
       } else if (!this.shiftKey && target.selected) {
-        deselectedPlanets.push(target);
-        this.deselectPlanet(target.data);
+        deselectedPlanets.push(target.data);
+        this.deselectPlanet(target.data, true);
       }
     }
   }
@@ -200,43 +199,43 @@ module.exports.prototype.deselectAll = function() {
   });
 }
 
-module.exports.prototype.selectPlanet = function(planetData) {
+module.exports.prototype.selectPlanet = function(planetData, notDispatch) {
   var planet = this.context.objectsById[planetData.id];
-
   if (planet) {
     planet.select();
-    
     this.selectedPlanets.push(planetData);
-    this.dispatchEvent({
-      type: "selectPlanet", 
-      planet: planet,
-      planetData: planetData
-    });  
+    if (!notDispatch)
+      this.dispatchEvent({
+        type: "selectionChanged", 
+        selectedPlanets: [planetData]
+      });  
   }
 }
 
-module.exports.prototype.deselectPlanet = function(planetData) {
+module.exports.prototype.deselectPlanet = function(planetData, notDispatch) {
   var index = this.getSelectedPlanetIndexById(planetData.id);
-  
   if (index != -1) {
     var planet = this.context.objectsById[planetData.id];
-
     if (planet) 
       planet.deselect();
-
     this.selectedPlanets.splice(index, 1);
-    this.dispatchEvent({
-      type: "deselectPlanet", 
-      planet: planet,
-      planetData: planetData
-    });
+    if (!notDispatch)
+      this.dispatchEvent({
+        type: "selectionChanged", 
+        deselectedPlanets: [planetData]
+      });
   }
 }
 
 module.exports.prototype.deselectPlanetById = function(id) {
-  var planet = this.getSelectedPlanetById(id);
-  if (planet)
-    this.deselectPlanet(planet);
+  var planetData = this.getSelectedPlanetDataById(id);
+  if (planetData) {
+    this.deselectPlanet(planetData);
+    this.dispatchEvent({
+      type: "selectionChanged", 
+      deselectedPlanets: [planetData]
+    });
+  }
 }
 
 module.exports.prototype.onPlanetMouseOver = function(e) {
@@ -291,7 +290,7 @@ module.exports.prototype.getSelectedPlanetsData = function() {
   return planets;
 }
 
-module.exports.prototype.getSelectedPlanetById = function(id) {
+module.exports.prototype.getSelectedPlanetDataById = function(id) {
   for (var i = 0;i < this.selectedPlanets.length;i ++) {
     if (this.selectedPlanets[i].id == id)
       return this.selectedPlanets[i];
