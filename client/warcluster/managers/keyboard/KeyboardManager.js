@@ -21,16 +21,16 @@ module.exports = function(context) {
     self.context.spaceViewController.scroller.scaledScroll(0, -self.context.height / 2, true);
   });
   KeyboardJS.KeyboardJS.on('w + a, up + left', function() {
-    self.context.spaceViewController.scroller.scaledScroll(0,0, true);
+    self.context.spaceViewController.scroller.scaledScroll(-self.context.width / 2, self.context.height / 2, true);
   });
   KeyboardJS.KeyboardJS.on('w + d, up + right', function() {
-    self.context.spaceViewController.scroller.scaledScroll(self.context.width*2,0, true);
+    self.context.spaceViewController.scroller.scaledScroll(self.context.width / 2, self.context.height / 2, true);
   });
-  KeyboardJS.KeyboardJS.on('s + d, s + right', function() {
-    self.context.spaceViewController.scroller.scaledScroll(self.context.width*2,self.context.height*2, true);
+  KeyboardJS.KeyboardJS.on('s + d, down + right', function() {
+    self.context.spaceViewController.scroller.scaledScroll(self.context.width / 2, -self.context.height / 2, true);
   });
-  KeyboardJS.KeyboardJS.on('s + a, s + left', function() {
-    self.context.spaceViewController.scroller.scaledScroll(0,self.context.height*2, true);
+  KeyboardJS.KeyboardJS.on('s + a, down + left', function() {
+    self.context.spaceViewController.scroller.scaledScroll(-self.context.width / 2, -self.context.height / 2, true);
   });
   KeyboardJS.KeyboardJS.on('space', function() {
     /*self.context.spaceViewController.scroller.scrollTo(homePlanet.X, homePlanet.Y, true);
