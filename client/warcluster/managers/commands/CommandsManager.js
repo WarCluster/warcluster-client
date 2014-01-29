@@ -92,7 +92,7 @@ module.exports.prototype.scopeOfView = function(position, resolution) {
 }
 
 module.exports.prototype.sendMission = function(type, source, target, ships) {
-  console.log("sendMission:", type, source, target, ships)
+  //console.log("sendMission:", type, source, target, ships)
   this.sockjs.send(JSON.stringify({
     "Command": "start_mission",
     "Type": type,

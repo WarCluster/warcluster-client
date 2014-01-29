@@ -229,13 +229,8 @@ module.exports.prototype.deselectPlanet = function(planetData, notDispatch) {
 
 module.exports.prototype.deselectPlanetById = function(id) {
   var planetData = this.getSelectedPlanetDataById(id);
-  if (planetData) {
+  if (planetData)
     this.deselectPlanet(planetData);
-    this.dispatchEvent({
-      type: "selectionChanged", 
-      deselectedPlanets: [planetData]
-    });
-  }
 }
 
 module.exports.prototype.onPlanetMouseOver = function(e) {
