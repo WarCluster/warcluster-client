@@ -156,37 +156,34 @@ module.exports.prototype.getMouseIntersectionObjects = function(e) {
 }
 
 module.exports.prototype.hitTestPlanets = function(rect) {
-  if (!this.shiftKey) {
-    //TODO: need to refactor...
-    for (var i=0;i < this.selectedPlanets.length;i ++) {
-      var planet = this.context.objectsById[this.selectedPlanets[i].id];
-      if (planet) {
-        planet.deselect();
-      }
-    }
-    this.selectedPlanets = [];
-    this.context.planetsSelection.allPilotsSelected = 0;
-    this.context.planetsSelection.selectedPlanets = [];
-    //TODO: ... this block
-  }
+  var selectedPlanets = [];
+  var deselectedPlanets = [];
+
   for (var i=0;i < this.context.planetsHitObjects.length;i ++) {
     var target = this.context.planetsHitObjects[i].parent;
     if (target.data.Owner.indexOf(this.context.playerData.Username) != -1) {
-      if (!this.shiftKey) {
-        target.deselect();
-        //TODO: refactor this because it causes flickering in the planet selection control
-        this.context.planetsSelection.$('.selection-planet-item[data-id="'+target.data.id+'"]').remove();
-      }
-      if (target.rectHitTest(rect) && this.getSelectedPlanetIndexById(target.data.id) == -1) {
-        this.selectPlanet(target.data);
+      if (target.rectHitTest(rect)) {
+        var index = this.getSelectedPlanetIndexById(target.data.id);
+        if (index == -1) {
+          this.selectPlanet(target.data, true);
+          selectedPlanets.push(target.data);
+        } else if (this.shiftKey) {
+          this.deselectPlanet(target.data, true);
+          deselectedPlanets.push(target.data);
+        }
+      } else if (!this.shiftKey && target.selected) {
+        deselectedPlanets.push(target.data);
+        this.deselectPlanet(target.data, true);
       }
     }
   }
 
-  if (this.selectedPlanets.length == 0) {
-    this.onPlanetMouseOut();
-    this.deselectAll();
-  }
+  if (selectedPlanets.length > 0 || deselectedPlanets.length > 0)
+    this.dispatchEvent({
+      type: "selectionChanged", 
+      selectedPlanets: selectedPlanets,
+      deselectedPlanets: deselectedPlanets
+    });
 }
 
 module.exports.prototype.deselectAll = function() {
@@ -202,60 +199,54 @@ module.exports.prototype.deselectAll = function() {
   });
 }
 
-module.exports.prototype.selectPlanet = function(planetData) {
+module.exports.prototype.selectPlanet = function(planetData, notDispatch) {
   var planet = this.context.objectsById[planetData.id];
-
   if (planet) {
     planet.select();
-    
     this.selectedPlanets.push(planetData);
-    this.dispatchEvent({
-      type: "selectPlanet", 
-      planet: planet,
-      planetData: planetData
-    });  
+    if (!notDispatch)
+      this.dispatchEvent({
+        type: "selectionChanged", 
+        selectedPlanets: [planetData]
+      });  
   }
 }
 
-module.exports.prototype.deselectPlanet = function(planetData) {
+module.exports.prototype.deselectPlanet = function(planetData, notDispatch) {
   var index = this.getSelectedPlanetIndexById(planetData.id);
-  
   if (index != -1) {
     var planet = this.context.objectsById[planetData.id];
-
     if (planet) 
       planet.deselect();
-
     this.selectedPlanets.splice(index, 1);
-    this.dispatchEvent({
-      type: "deselectPlanet", 
-      planet: planet,
-      planetData: planetData
-    });
+    if (!notDispatch)
+      this.dispatchEvent({
+        type: "selectionChanged", 
+        deselectedPlanets: [planetData]
+      });
   }
 }
 
 module.exports.prototype.deselectPlanetById = function(id) {
-  var planet = this.getSelectedPlanetById(id);
-  if (planet)
-    this.deselectPlanet(planet);
+  var planetData = this.getSelectedPlanetDataById(id);
+  if (planetData)
+    this.deselectPlanet(planetData);
 }
 
 module.exports.prototype.onPlanetMouseOver = function(e) {
-  if (this.selectedPlanets.length > 0) 
-    if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1){
-      if (this.ctrlKey){
-        this.supportTarget = e.target.parent;
-        this.handleShowSupportSelection();
-        return;
-      }
-        this.attackTarget = e.target.parent;
-        this.attackTarget.showAttackSelection();
+  if (this.selectedPlanets.length > 0) {
+    if (this.ctrlKey){
+      this.supportTarget = e.target.parent;
+      this.handleShowSupportSelection();
+    } else if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1){
+      this.attackTarget = e.target.parent;
+      this.attackTarget.showAttackSelection();
     } else {
-        this.supportTarget = e.target.parent;
-        if (this.ctrlKey)
-          this.handleShowSupportSelection();
-      }
+      this.supportTarget = e.target.parent;
+      if (this.ctrlKey)
+        this.handleShowSupportSelection();
+    }
+  }
 }
 
 module.exports.prototype.onPlanetMouseOut = function(e) {
@@ -294,7 +285,7 @@ module.exports.prototype.getSelectedPlanetsData = function() {
   return planets;
 }
 
-module.exports.prototype.getSelectedPlanetById = function(id) {
+module.exports.prototype.getSelectedPlanetDataById = function(id) {
   for (var i = 0;i < this.selectedPlanets.length;i ++) {
     if (this.selectedPlanets[i].id == id)
       return this.selectedPlanets[i];
@@ -316,4 +307,40 @@ module.exports.prototype.getPlanetТоAttackId = function() {
 
 module.exports.prototype.getPlanetТоSupportId = function() {
   return this.supportTarget.data.id;
+}
+
+module.exports.prototype.pressCtrlKey = function(){
+  this.ctrlKey = true;
+
+  if (this.attackTarget) {
+    this.supportTarget = this.attackTarget;
+    this.supportTarget.showSupportSelection();
+
+    this.attackTarget = null;
+  } else if (this.supportTarget) {
+    this.supportTarget.showSupportSelection();
+  }
+}
+
+module.exports.prototype.releaseCtrlKey = function(){
+  this.ctrlKey = false;
+
+  if (this.supportTarget) {
+    if (this.supportTarget.data.Owner.indexOf(this.context.playerData.Username) == -1) {
+      this.attackTarget = this.supportTarget;
+      this.attackTarget.showAttackSelection();
+
+      this.supportTarget = null;  
+    } else {
+      this.supportTarget.hideSupportSelection();
+    }
+  }
+}
+
+module.exports.prototype.pressShiftKey = function(){
+  this.shiftKey = true;
+}
+
+module.exports.prototype.releaseShiftKey = function(){
+  this.shiftKey = false;
 }

@@ -20,55 +20,28 @@ module.exports = function(context) {
   KeyboardJS.KeyboardJS.on('s, down', function() {
     self.context.spaceViewController.scroller.scaledScroll(0, -self.context.height / 2, true);
   });
-  KeyboardJS.KeyboardJS.on('w + a, up + left', function() {
-    self.context.spaceViewController.scroller.scaledScroll(0,0, true);
-  });
-  KeyboardJS.KeyboardJS.on('w + d, up + right', function() {
-    self.context.spaceViewController.scroller.scaledScroll(self.context.width*2,0, true);
-  });
-  KeyboardJS.KeyboardJS.on('s + d, s + right', function() {
-    self.context.spaceViewController.scroller.scaledScroll(self.context.width*2,self.context.height*2, true);
-  });
-  KeyboardJS.KeyboardJS.on('s + a, s + left', function() {
-    self.context.spaceViewController.scroller.scaledScroll(0,self.context.height*2, true);
-  });
+
   KeyboardJS.KeyboardJS.on('space', function() {
-    self.context.spaceViewController.scroller.scrollTo(homePlanet.X, homePlanet.Y, true);
-    self.context.spaceViewController.info.popover.remove();  
+    /*self.context.spaceViewController.scroller.scrollTo(homePlanet.X, homePlanet.Y, true);
+    self.context.spaceViewController.info.popover.remove(); */
   });
   KeyboardJS.KeyboardJS.on('ctrl',
   //onDownCallback
   function() {
-    self.context.spaceViewController.selection.ctrlKey = true;
-    if (self.context.spaceViewController.selection.supportTarget) {
-      self.context.spaceViewController.selection.handleShowSupportSelection();
-      self.context.spaceScene.ctrlKey = true;
-    }
+    self.context.spaceViewController.pressCtrlKey();
   },
   //onUpCallback
   function() {
-    self.context.spaceScene.ctrlKey = false;
-    self.context.spaceViewController.selection.ctrlKey = false;
-    if (self.context.spaceViewController.selection.supportTarget) {
-     self.context.spaceViewController.selection.supportTarget.hideSupportSelection();
-    }
+    self.context.spaceViewController.releaseCtrlKey();
   });
   KeyboardJS.KeyboardJS.on('shift',
   //onDownCallback
   function() {
-    self.context.spaceViewController.selection.shiftKey = true;
-    self.context.spaceViewController.zoomer.shiftKey = true;
-    // if (self.context.spaceViewController.selection.supportTarget) {
-    //   self.context.spaceViewController.selection.supportTarget.hideSupportSelection();
-    // }
+    self.context.spaceViewController.pressShiftKey();
   },
   //onUpCallback
   function() {
-    self.context.spaceViewController.selection.shiftKey = false;
-    self.context.spaceViewController.zoomer.shiftKey = false;
-    // if (self.context.spaceViewController.selection.supportTarget) {
-    //   self.context.spaceViewController.selection.handleShowSupportSelection();
-    // }
+    self.context.spaceViewController.releaseShiftKey();
   });
 
   $(document).keydown(function(e) {
