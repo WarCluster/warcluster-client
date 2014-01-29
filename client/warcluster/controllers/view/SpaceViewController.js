@@ -41,12 +41,6 @@ module.exports = function(context, config){
   this.selection.addEventListener("supplyPlanet", function(e) {
     self.dispatchEvent(e);
   });
-  /*this.selection.addEventListener("selectPlanet", function(e) {
-    self.dispatchEvent(e);
-  });
-  this.selection.addEventListener("deselectPlanet", function(e) {
-    self.dispatchEvent(e);
-  });*/
   this.selection.addEventListener("selectionChanged", function(e) {
     self.dispatchEvent(e);
   });
