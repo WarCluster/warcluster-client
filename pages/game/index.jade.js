@@ -1,5 +1,5 @@
 var boot = require("../../client/boot");
-var BattleField = require("../../client/warcluster/BattleField");
+var AppRouter = require("../../client/AppRouter");
 
 $(document).ready(function() {
   // USERVOICE widget
@@ -27,6 +27,9 @@ $(document).ready(function() {
   ga('send', 'pageview');
   //end of Google analytics tracking
 
-	var battleField = new BattleField();
+  router = new AppRouter();
+  Backbone.history.start({trigger: true});
 });
+
+
 
