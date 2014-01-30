@@ -15,6 +15,7 @@ html
     meta(name='twitter:image:src', content='http://warcluster.com/public/images/warcluster-logo.png.png')
 
     link(rel='stylesheet', href='/style.css')
+    
     //- TODO: think about security before closed beta testing
     script
       var twitter = !{JSON.stringify(session.twitter)}
@@ -27,6 +28,3 @@ html
     script(src="/game/code.js")
 
   body(style="background-color: #000000")
-    .content
-    .ui-container
-      .label !{version}
