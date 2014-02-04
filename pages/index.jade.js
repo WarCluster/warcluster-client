@@ -1,4 +1,5 @@
 var boot = require("../client/boot");
+var LeaderboardView = require("../client/warcluster/views/leaderboard");
 
 // $(window).resize(function() {
 //     var test = $('body').height() - $('#header_wrapper').height() - $('#menu_wrapper').height() - $('#footer_wrapper').height();
@@ -50,6 +51,9 @@ goToLeaderboard = function(e){
       duration: "slow", 
       easing: "easeOutBounce"
     });
+  var leaderboard = new LeaderboardView();
+  $(".leaderboardPage").html("").append(leaderboard.el)
+  leaderboard.render();
   $(".welcomeBtn").show();
 }
 goToWelcome = function(e){

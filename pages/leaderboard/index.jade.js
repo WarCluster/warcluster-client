@@ -1,5 +1,6 @@
 //TODO: need to refactor the whole leaderboard iframe process
 SockReconnect = require("../../client/vendor/SockReconnect.min");
+var Leaderboard = require("../../client/warcluster/views/leaderboard")
 // config = require("../../client/config");
 
 $(document).ready(function() {
@@ -13,8 +14,6 @@ $(document).ready(function() {
   ga('create', 'UA-42427250-1', 'warcluster.com');
   ga('send', 'pageview');
   //end of google analytics
-
-  $("#team").hide();
 
   var msg = {
     "Command": "login", 
@@ -49,4 +48,8 @@ showTeamLeaderboard = function(e){
   $("#team").show();
   $("#individualBtn").parent().removeClass("active");
   $("#teamBtn").parent().addClass("active");
+}
+
+renderLeaderboard = function(e) {
+
 }
