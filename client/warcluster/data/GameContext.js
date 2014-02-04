@@ -8,6 +8,9 @@ module.exports = function(){
   this.planets = [];
   this.interactiveObjects = [];
 
+  this.width = 0;
+  this.height = 0;
+
   this.currentTime = 0;
   this.processingTime = 0;
 }

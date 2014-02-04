@@ -1,7 +1,13 @@
-@import "../style/less/bootstrap.less";
-@import "../style/less/responsive.less";
-@import "../style/less/carousel.less";
-@import "../style/less/libnotify.less";
+@import "../style/bootstrap.less";
+@import "../style/bootstrap-responsive.less";
+@import "../style/bootstrap-colorselector.less";
+@import "../style/docs.less";
+@import "../style/prettify.less";
+
+//@import "../style/less/bootstrap.less";
+//@import "../style/less/responsive.less";
+//@import "../style/less/carousel.less";
+//@import "../style/less/libnotify.less";
 
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 /*TODO: 
@@ -36,10 +42,10 @@
     }
   }
 }
-.avatar {
+/*.avatar {
   .square(50px);
   display: inline-block;
-}
+}*/
 .float-left {
   float: left;
 }
@@ -112,14 +118,14 @@ html, body {
     background-color: #F24960;
     text-decoration: none;
 }*/
-.login {
+/*.login {
   .buttonBackground(#F24960, #F24960, #FFF, 0 1px 1px rgba(255,255,255,.75));
   .border-radius(0px);
   padding: 10px 50px;
   &:hover {
     .buttonBackground(#2AA9E0, #2AA9E0, #FFF, 0 1px 1px rgba(255,255,255,.75));
   }
-}
+}*/
 .leaderboardBtn {
   /*.buttonBackground(#F24960, #F24960, #FFF, 0 1px 1px rgba(255,255,255,.75));
   .border-radius(0px);*/
@@ -340,4 +346,8 @@ html, body {
   .selection-planets {
     padding: 5px 5px 5px 10px;
   }
+}
+
+.text-center {
+  text-align: center;
 }

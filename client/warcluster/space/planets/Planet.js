@@ -16,9 +16,9 @@ module.exports = function(context, data){
   this.data.height = 90 + 10 * this.data.Size;
   var ring;
   var pz = Math.random() * (-50);
-  var bmd1 = context.resourcesLoader.get("./images/planets/planet"+this.data.Texture+".png");
-  var selectionGlow = context.resourcesLoader.get("./images/planets/planet_selection_glow.png");
-
+  var bmd1 = context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
+  var selectionGlow = context.resourcesLoader.get("/images/planets/planet_selection_glow.png");
+  
   var color = new THREE.Color().setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
 
   this.planet =  new THREE.Mesh(new THREE.SphereGeometry(this.data.width / 2, 12, 12), new THREE.MeshLambertMaterial({map: bmd1, color: color, ambient: color}));
@@ -31,7 +31,7 @@ module.exports = function(context, data){
   this.add(this.selection);
 
   if (this.data.IsHome) {
-    ring = context.resourcesLoader.get("./images/planets/ring.png");
+    ring = context.resourcesLoader.get("/images/planets/ring.png");
     this.ring = new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: ring, transparent : true}))
     this.ring.position.setZ(pz + 250);
     this.ring.rotateX(0.99);

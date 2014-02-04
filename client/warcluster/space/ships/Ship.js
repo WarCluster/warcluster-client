@@ -11,23 +11,23 @@ module.exports = function(size, context) {
 
 	switch (size) {
 		case 1:
-			resource = this.context.resourcesLoader.get("./models/ship1.js");
+			resource = this.context.resourcesLoader.get("/models/ship1.js");
 		break;
 		case 2:
-			resource = this.context.resourcesLoader.get("./models/ship2.js");
+			resource = this.context.resourcesLoader.get("/models/ship2.js");
 		break;
 		case 3:
-			resource = this.context.resourcesLoader.get("./models/ship3.js");
+			resource = this.context.resourcesLoader.get("/models/ship3.js");
 		break;
 		case 4:
-			resource = this.context.resourcesLoader.get("./models/ship4.js");
+			resource = this.context.resourcesLoader.get("/models/ship4.js");
 		break;
 		default:
-			resource = this.context.resourcesLoader.get("./models/ship4.js");
+			resource = this.context.resourcesLoader.get("/models/ship4.js");
 		break;
 	}
 
-	var map = this.context.resourcesLoader.get("./images/ships/ship1.png");
+	var map = this.context.resourcesLoader.get("/images/ships/ship1.png");
 	this.material = new THREE.MeshPhongMaterial({map: map});
 
 	this.ship = new THREE.Mesh(resource.geometry, this.material);

@@ -7,8 +7,8 @@ module.exports = function(context){
   var _self = this;
   var mouse = { x: 0, y: 0 };
 
-  var bgd1 = this.context.resourcesLoader.get("./images/backgrounds/background1.jpg");
-  var bgd2 = this.context.resourcesLoader.get("./images/backgrounds/background3.jpg");
+  var bgd1 = this.context.resourcesLoader.get("/images/backgrounds/background1.jpg");
+  var bgd2 = this.context.resourcesLoader.get("/images/backgrounds/background3.jpg");
 
   var i;
 
@@ -73,7 +73,7 @@ module.exports = function(context){
   var backgrounds = [];
 
   for(i = 0;i < 4; i ++) {
-    var bgd = this.context.resourcesLoader.get("./images/backgrounds/background" + (i + 5) + ".jpg");
+    var bgd = this.context.resourcesLoader.get("/images/backgrounds/background" + (i + 5) + ".jpg");
     var mat = new THREE.MeshBasicMaterial({map: bgd, transparent : true});
     mat.opacity = 0.25;
 
