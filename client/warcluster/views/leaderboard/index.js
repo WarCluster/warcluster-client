@@ -7,19 +7,25 @@ module.exports = Backbone.View.extend({
     "click #individualBtn": "showIndividualLeaderboard",
     "click #teamBtn": "showTeamLeaderboard"
   },
-  className: "content",
-  initialize: function(options) {
+  className: "leaderboard-content",
+  initialize: function() {
     
   },
   render: function() {
-    this.$el.html(this.template({twitter: this.twitter}));
-    this.$(".content").append(individualRender({model: planetData}));
+    this.$el.html(this.template());
+    this.showIndividualLeaderboard();
     return this;
   },
   showIndividualLeaderboard: function() {
-    this.$(".content").append(individualRender({model: planetData}));
-  }
+    $("#team").remove();
+    if ($("#individual").length === 0) {
+      this.$el.append(individualRender());
+    }
+  },
   showTeamLeaderboard: function() {
-    this.$(".content").append(teamRender({model: planetData}));
+    $("#individual").remove();
+    if ($("#team").length === 0) {
+      this.$el.append(teamRender());
+    }
   }
 })

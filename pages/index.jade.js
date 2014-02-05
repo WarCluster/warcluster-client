@@ -47,13 +47,13 @@ $(document).ready(function() {
 });
 
 goToLeaderboard = function(e){
+  var leaderboard = new LeaderboardView();
+  $(".leaderboardPage").html("").append(leaderboard.el)
+  leaderboard.render();
   $(".leaderboardPage").animate({top: 0},{ 
       duration: "slow", 
       easing: "easeOutBounce"
     });
-  var leaderboard = new LeaderboardView();
-  $(".leaderboardPage").html("").append(leaderboard.el)
-  leaderboard.render();
   $(".welcomeBtn").show();
 }
 goToWelcome = function(e){
