@@ -19,7 +19,7 @@ module.exports = function(context, data){
   var bmd1 = context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
   var selectionGlow = context.resourcesLoader.get("/images/planets/planet_selection_glow.png");
   
-  var color = new THREE.Color().setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
+  var color = new THREE.Color().setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
 
   this.planet =  new THREE.Mesh(new THREE.SphereGeometry(this.data.width / 2, 12, 12), new THREE.MeshLambertMaterial({map: bmd1, color: color, ambient: color}));
   this.add(this.planet);
@@ -132,8 +132,8 @@ module.exports.prototype.hideSupportSelection = function() {
 }
 
 module.exports.prototype.updateColor = function() {
-  this.planet.material.color.setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
-  this.planet.material.ambient.setRGB(this.data.Color.R/255, this.data.Color.G/255, this.data.Color.B/255);
+  this.planet.material.color.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
+  this.planet.material.ambient.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
 }
 
 module.exports.prototype.updatePopulationInfo = function() {
