@@ -187,8 +187,8 @@ module.exports = Backbone.View.extend({
   },
   connect: function() {
     this.commandsManager.prepare(
-      this.context.playerData.twitter.screen_name + Math.random(), 
-      String(this.context.playerData.twitter.id + Math.random())
+      this.context.playerData.twitter.screen_name, 
+      String(this.context.playerData.twitter.id)
     );
   }
 })
