@@ -50,7 +50,7 @@ module.exports = function(context, data){
 	this.population = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.populationMaterial);
 	this.population.scale.set(ww, hh, 1.0);
 	this.population.position.set(0, this.data.height * (0.78), pz + 50);
-  this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
+  this.population.visible = (this.data.ShipCount !== -1) || (this.data.Owner === this.context.playerData.Username);
 
 	this.add(this.population);
   
@@ -138,6 +138,8 @@ module.exports.prototype.updateColor = function() {
 
 module.exports.prototype.updatePopulationInfo = function() {
   var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
+  
+  this.population.visible = (this.data.ShipCount !== -1);
   this.populationTexture.image.data = result.uint8Array;
   this.populationTexture.image.width = result.canvas2d.width;
   this.populationTexture.image.height = result.canvas2d.height;
@@ -146,6 +148,7 @@ module.exports.prototype.updatePopulationInfo = function() {
 
   this.population.scale.x = result.canvas2d.width;
   this.population.scale.y = result.canvas2d.height;
+
 }
 
 module.exports.prototype.updateOwnerInfo = function() {

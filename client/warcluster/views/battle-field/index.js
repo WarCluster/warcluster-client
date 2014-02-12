@@ -82,7 +82,7 @@ module.exports = Backbone.View.extend({
     
     this.context.resourcesLoader = new ResourcesLoader();
 
-    this.context.planetsHitObjectsFactory = new PlanetsFactory(this.context);
+    this.context.planetsFactory = new PlanetsFactory(this.context);
     this.context.missionsFactory = new MissionsFactory(this.context);
     this.context.shipsFactory = new ShipsFactory(this.context);
     this.context.sunsFactory = new SunsFactory(this.context);
@@ -126,8 +126,10 @@ module.exports = Backbone.View.extend({
       for (var i = 0;i < e.supportSourcesIds.length;i ++)
         self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
     });
-    this.spaceViewController.addEventListener("supplyPlanet", function(e) {
-      //spy logic goes here
+    this.spaceViewController.addEventListener("spyPlanet", function(e) {
+      for (var i = 0; i < e.spySourcesIds.length; i++) {
+        self.commandsManager.sendMission("Spy", e.spySourcesIds[i], e.planetToSpyId, self.context.missionsMenu.getCurrentType())
+      };
     });
 
     this.spaceViewController.addEventListener("selectPlanet", function(e) {

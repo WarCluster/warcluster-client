@@ -13,6 +13,7 @@ module.exports = function(context, config){
 
   this.attackTarget = null;
   this.supportTarget = null;
+  this.spyTarget = null;
 
   this.selectedPlanets = [];
   this.ctrlKey = false;
@@ -80,7 +81,7 @@ module.exports = function(context, config){
         }
       } else {
         if (self.selectedPlanets.length > 0) {
-            if (self.ctrlKey) {
+            if (self.ctrlKey && !self.shiftKey) {
               self.dispatchEvent({
                 type: "supplyPlanet", 
                 supportSourcesIds: self.getSelectedPlanetsIds(),
@@ -92,7 +93,13 @@ module.exports = function(context, config){
                 attackSourcesIds: self.getSelectedPlanetsIds(),
                 planetToAttackId: self.getPlanetТоAttackId()
               });
-            }
+          } else if (self.spyTarget && self.ctrlKey && self.shiftKey) {
+            self.dispatchEvent({
+              type: "spyPlanet",
+              spySourcesIds: self.getSelectedPlanetsIds(),
+              planetToSpyId: self.getPlanetТоSpyId()
+            });
+          }
         }
       }
     } else {
@@ -235,16 +242,17 @@ module.exports.prototype.deselectPlanetById = function(id) {
 
 module.exports.prototype.onPlanetMouseOver = function(e) {
   if (this.selectedPlanets.length > 0) {
-    if (this.ctrlKey){
+    if (this.ctrlKey && !this.shiftKey){
       this.supportTarget = e.target.parent;
       this.handleShowSupportSelection();
     } else if (e.target.parent.data.Owner.indexOf(this.context.playerData.Username) == -1){
-      this.attackTarget = e.target.parent;
-      this.attackTarget.showAttackSelection();
-    } else {
-      this.supportTarget = e.target.parent;
-      if (this.ctrlKey)
-        this.handleShowSupportSelection();
+      if (this.ctrlKey && this.shiftKey) {
+        this.spyTarget = e.target.parent;
+        this.spyTarget.showSpySelection();
+      } else {
+        this.attackTarget = e.target.parent;
+        this.attackTarget.showAttackSelection();  
+      }
     }
   }
 }
@@ -256,6 +264,9 @@ module.exports.prototype.onPlanetMouseOut = function(e) {
   } else if (this.supportTarget) {
     this.supportTarget.hideSupportSelection();
     this.supportTarget = null;
+  } else if (this.spyTarget) {
+    this.spyTarget.hideSpySelection();
+    this.spyTarget = null;
   }
 }
 
@@ -313,10 +324,15 @@ module.exports.prototype.pressCtrlKey = function(){
   this.ctrlKey = true;
 
   if (this.attackTarget) {
-    this.supportTarget = this.attackTarget;
-    this.supportTarget.showSupportSelection();
+    if (this.shiftKey) {
+      this.spyTarget = this.attackTarget;
+      this.spyTarget.showSpySelection();
+    } else {
+      this.supportTarget = this.attackTarget;
+      this.supportTarget.showSupportSelection();
+    }
 
-    this.attackTarget = null;
+    this.attackTarget = null;  
   } else if (this.supportTarget) {
     this.supportTarget.showSupportSelection();
   }
@@ -325,7 +341,16 @@ module.exports.prototype.pressCtrlKey = function(){
 module.exports.prototype.releaseCtrlKey = function(){
   this.ctrlKey = false;
 
-  if (this.supportTarget) {
+  if (this.spyTarget) {
+    if (this.spyTarget.data.Owner.indexOf(this.context.playerData.Username) == -1) {
+      this.attackTarget = this.spyTarget;
+      this.attackTarget.showAttackSelection();
+
+      this.spyTarget = null;  
+    } else {
+      this.spyTarget.hideSpySelection();
+    }
+  } else if (this.supportTarget) {
     if (this.supportTarget.data.Owner.indexOf(this.context.playerData.Username) == -1) {
       this.attackTarget = this.supportTarget;
       this.attackTarget.showAttackSelection();
@@ -339,8 +364,29 @@ module.exports.prototype.releaseCtrlKey = function(){
 
 module.exports.prototype.pressShiftKey = function(){
   this.shiftKey = true;
+  if (this.supportTarget) {
+    this.spyTarget = this.supportTarget;
+    this.spyTarget.showSpySelection();
+
+    this.supportTarget = null;
+  } else if (this.spyTarget && this.ctrlKey) {
+    this.spyTarget.showSpySelection();
+  }
 }
 
 module.exports.prototype.releaseShiftKey = function(){
   this.shiftKey = false;
+  if (this.spyTarget) {
+    if (this.ctrlKey) {
+      this.supportTarget = this.spyTarget;
+      this.supportTarget.showSupportSelection();
+
+      this.spyTarget = null;
+    } else
+      this.spyTarget.hideSpySelection();
+  }
+}
+
+module.exports.prototype.getPlanetТоSpyId = function() {
+  return this.spyTarget.data.id;
 }

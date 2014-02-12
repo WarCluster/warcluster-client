@@ -34,9 +34,9 @@ module.exports.prototype.managePlanetData = function(planets) {
     planets[id].id = id;
 
     if (!planet) {
-      planet = this.context.planetsHitObjectsFactory.build(planets[id]);
+      planet = this.context.planetsFactory.build(planets[id]);
     } else {
-      var updatePopulation = planet.data.ShipCount !== planets[id].ShipCount && (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
+      var updatePopulation = (planet.data.ShipCount !== -1 || planet.data.ShipCount !== planets[id].ShipCount) && (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
       var updateOwner = planet.data.Owner !== planets[id].Owner;
       var updateColor = planet.data.Color !== planets[id].Color;
       var currentOwner = planet.data.Owner;
