@@ -1,4 +1,3 @@
-//TODO: need to refactor the whole leaderboard iframe process
 var boot = require("../../client/boot");
 SockReconnect = require("../../client/vendor/SockReconnect.min");
 var LeaderboardView = require("../../client/warcluster/views/leaderboard")
@@ -38,6 +37,7 @@ $(document).ready(function() {
     self.sockjs.send(JSON.stringify(msg));
   }
   //TODO: figure out why I need to do SockReconnect.SockReconnect (double time instead of just ones)
+  //TODO: use another socket url for connecting
   this.sockjs = new SockReconnect.SockReconnect("http://127.0.0.1:7000/universe", null, new_status, on_message, on_open);
   this.sockjs.connect();
 
