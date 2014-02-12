@@ -5,8 +5,7 @@ module.exports = Backbone.View.extend({
     "click .toggle-btn":  "toggleTutorial"
   },
   className: "tutorial-menu",
-  initialize: function(context) {
-    // this.context = context.context;
+  initialize: function() {
   },
   render: function() {
     this.$el.html(this.template());
