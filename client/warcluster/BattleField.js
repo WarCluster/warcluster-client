@@ -78,7 +78,7 @@ module.exports = function(){
   
   this.context.resourcesLoader = new ResourcesLoader();
 
-  this.context.planetsHitObjectsFactory = new PlanetsFactory(this.context);
+  this.context.planetsFactory = new PlanetsFactory(this.context);
   this.context.missionsFactory = new MissionsFactory(this.context);
   this.context.shipsFactory = new ShipsFactory(this.context);
   this.context.sunsFactory = new SunsFactory(this.context);

@@ -50,7 +50,7 @@ module.exports = function(context, data){
 	this.population = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.populationMaterial);
 	this.population.scale.set(ww, hh, 1.0);
 	this.population.position.set(0, this.data.height * (0.78), pz + 50);
-  this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
+  this.population.visible = this.data.ShipCount !== -1 || this.data.Owner == this.context.playerData.Username;
 
 	this.add(this.population);
   

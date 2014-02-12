@@ -152,7 +152,7 @@ module.exports.prototype.clear = function() {
     if (obj instanceof Sun)  
       this.context.sunsFactory.destroy(obj);
     else if (obj instanceof Planet)  
-      this.context.planetsHitObjectsFactory.destroy(obj);
+      this.context.planetsFactory.destroy(obj);
   }
 }
 module.exports.prototype.destroyObjectByIndex = function(index) {
@@ -161,7 +161,7 @@ module.exports.prototype.destroyObjectByIndex = function(index) {
     this.context.sunsFactory.destroy(obj);
   }
   else if (obj instanceof Planet) {
-    this.context.planetsHitObjectsFactory.destroy(obj);
+    this.context.planetsFactory.destroy(obj);
   }
   else {
     this.context.shipsFactory.destroy(obj);
