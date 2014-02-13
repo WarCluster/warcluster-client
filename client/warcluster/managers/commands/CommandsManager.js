@@ -1,5 +1,4 @@
 var PlayerData = require("../../data/PlayerData");
-var SocketManager = require("../socket/SocketManager");
 
 module.exports = function(url, context){
   this.url = url;
@@ -46,7 +45,7 @@ module.exports.prototype.prepare = function(username, twitterId) {
 module.exports.prototype.parseMessage = function(command) {
   try {
     var data = JSON.parse(command);
-    //console.log("###.parseMessage:", data);
+    console.log("###.parseMessage:", data);
   } catch(err) {
     console.log("###.InvalidData:", command);
     return false;
