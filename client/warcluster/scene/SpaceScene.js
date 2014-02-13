@@ -74,8 +74,8 @@ module.exports.prototype.buildScene = function() {
   this.spaceKey = false;
 
   var onWindowResize = function() {
-    var ww = self.context.$content.width();
-    var hh = self.context.$content.height();
+    var ww = $("body").width();
+    var hh = $("body").height();
     self.camera.aspect = ww / hh;
     self.camera.updateProjectionMatrix();
     self.context.width = ww;
