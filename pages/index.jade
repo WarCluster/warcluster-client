@@ -18,6 +18,7 @@ html
     link(rel='stylesheet', href='http://bootswatch.com/cosmo/bootstrap.min.css')
     link(rel='stylesheet', href='/style.css')
 
+    script(src="/js/sockjs-0.3.min.js")
     script(src='/js/jade.js')
     script(src="/code.js")
     
@@ -54,13 +55,12 @@ html
           .loginBtn.text-center
             a.btn.login(href="/twitter/connect") Login with Twitter
           .text-center
-            a.btn.leaderboardBtn(id="leaderboard", onclick="return goToLeaderboard();") Leaderboard
+            a.btn.leaderboardBtn(id="leaderboardBtn", onclick="return goToLeaderboard();") Leaderboard
               span.pull-left.icon-arrow-up.icon-white
                
     .leaderboardPage
-      //iframe(id="leaderboardFrame", src='/leaderboard', width='100%', height='100%', frameborder='0') Browser not compatible.
     .welcome.text-center
-      a.btn.welcomeBtn(id="leaderboard", onclick="return goToWelcome();") Back to Welcome Screen
+      a.btn.welcomeBtn(id="leaderboardBtn", onclick="return goToWelcome();") Back to Welcome Screen
         span.pull-left.icon-arrow-down.icon-white
     canvas#myCanvas(style="width:10px;height:10px;")
 

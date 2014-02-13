@@ -18,10 +18,12 @@ var MissionsMenu = require("../../controls/mission-menu");
 var PlanetsSelection = require("../../controls/planets-selection");
 var TwitterStream = require("../../controls/twitter-stream");
 var Tutorial = require("../../controls/tutorial");
+var LeaderboardView = require("../leaderboard");
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
+    "click .toggle-leaderboard-btn": "showLeaderboard"
   },
   className: "game-container",
   initialize: function(options) {
@@ -29,6 +31,15 @@ module.exports = Backbone.View.extend({
     this.context.playerData = {
       twitter: options.twitter
     };
+  },
+  showLeaderboard: function() {
+    if ($(".leaderboard-content").length === 0) {
+      this.leaderboard = new LeaderboardView();
+      $(".leaderboard-panel").html("").addClass("leaderboard-view").append(this.leaderboard.render().el);
+    } else {
+      $(".leaderboard-content").remove();
+      $(".leaderboard-panel").removeClass("leaderboard-view");
+    }
   },
   render: function() {
     this.$el.html(this.template());

@@ -1,5 +1,4 @@
 var boot = require("../../client/boot");
-SockReconnect = require("../../client/vendor/SockReconnect.min");
 var LeaderboardView = require("../../client/warcluster/views/leaderboard")
 // config = require("../../client/config");
 
@@ -18,27 +17,4 @@ $(document).ready(function() {
   var leaderboard = new LeaderboardView();
   $("body").html("").append(leaderboard.el)
   leaderboard.render();
-
-  var msg = {
-    "Command": "login", 
-    "Username": "username", 
-    "TwitterId": "twitterId"
-  };
-  var new_status = function(status) {
-    console.log(status);
-  };
-  var on_message = function(msg) {
-    // self.parseMessage(msg.data);
-    // console.log(msg);
-  };
-  var on_open = function() {
-    console.log('open');
-
-    self.sockjs.send(JSON.stringify(msg));
-  }
-  //TODO: figure out why I need to do SockReconnect.SockReconnect (double time instead of just ones)
-  //TODO: use another socket url for connecting
-  this.sockjs = new SockReconnect.SockReconnect("http://127.0.0.1:7000/universe", null, new_status, on_message, on_open);
-  this.sockjs.connect();
-
 });

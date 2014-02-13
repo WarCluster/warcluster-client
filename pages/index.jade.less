@@ -13,10 +13,24 @@
 /*TODO: 
   refactor css in less style
 */
+.leaderboard-view {
+  z-index: 3002;
+  position: absolute;
+  top: 0px;
+  width: 600px;
+  height: 500px;  
+}
+
+.leaderboard-content {
+  position: absolute;
+  color: black;
+  background-color: white;
+  top:0px;
+  width: 100%;
+  height: 100%;
+}
 .leaderboardPage {
   position: absolute;
-  background-color: white;
-  color: black;
   top: 100%;
   width: 100%;
   height: 100%;
@@ -26,6 +40,11 @@
   .popover-content {
     color: #000;
   }
+}
+.toggle-leaderboard-btn {
+  position: absolute;
+  bottom: 0px;
+  right: 60px;
 }
 .tutorial-menu {
   .toggle-btn {
@@ -38,6 +57,11 @@
     position: absolute;
     bottom:20px;
     right:20px;
+    .tutorialImage {
+      width: 882px;
+      height: 574px;
+      background-image: url('/images/tutorial.png');
+    }
     .close-btn {
       position: absolute;
       margin-left: -95px;
@@ -145,7 +169,7 @@ html, body {
 .welcome {
   margin: 10px auto;
     width: 140px;
-  #leaderboard {
+  #leaderboardBtn {
     top:93%;
   };
   .welcomeBtn {
