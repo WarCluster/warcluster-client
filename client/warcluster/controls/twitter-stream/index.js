@@ -13,20 +13,16 @@ module.exports = Backbone.View.extend({
     return this;
   },
   toggleTwitterStream: function() {
-    if (this.expanded()) {
-      this.$(".icon-circle-arrow-right").removeClass("hide");
-      this.$(".icon-circle-arrow-left").addClass("hide");
-
+    if (!this.expanded()) {
+      this.$(".icon-play").addClass("icon-white");
       this.showTwitterStream();
     } else {
-      this.$(".icon-circle-arrow-right").addClass("hide");
-      this.$(".icon-circle-arrow-left").removeClass("hide");
-
+      this.$(".icon-play").removeClass("icon-white");
       this.hideTwitterStream();
     }
   },
   expanded: function() {
-    return this.$(".icon-circle-arrow-right").hasClass("hide");
+    return this.$(".icon-play").hasClass("icon-white");
   },
   showTwitterStream: function() {
       TweenLite.to(this.$el, 0.3, {
@@ -36,7 +32,7 @@ module.exports = Backbone.View.extend({
   },
   hideTwitterStream: function() {
     TweenLite.to(this.$el, 0.3, {
-      css:  {right: "-230px"},
+      css:  {right: "-246px"},
       ease: Cubic.easeOut
     });
   }
