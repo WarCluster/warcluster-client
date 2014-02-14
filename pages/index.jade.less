@@ -13,12 +13,27 @@
 /*TODO: 
   refactor css in less style
 */
+.start-game {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+}
+.landing-content-statistics {
+  text-align: right;
+  width: 35%;
+  float: right;
+  ul {
+    margin: 10px -15px 0px 20px;
+    height: 40px;
+  }
+  .social {
+    li {
+      float: right;
+    }
+  }
+}
 .leaderboard-view {
-  z-index: 3002;
-  position: relative;
-  top: 0px;
-  margin-top: 50px;
-  height: 500px;  
+  z-index: 3003;
 }
 .landing-view {
   z-index: 3003;
@@ -26,9 +41,16 @@
   top: 0px;
   height: 100%;
   width: 100%;
-  background-color: black;  
+  background-color: #222222;  
 }
-
+.leaderboard-view-statistics {
+  top: 0px;
+  left:0px;
+  /*margin-top: 50px;*/
+  height: 100%;
+  position: absolute;
+  width: 65%;
+}  
 .leaderboard-content {
   position: absolute;
   color: black;

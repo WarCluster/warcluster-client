@@ -1,6 +1,6 @@
 var LeaderboardView = require("../leaderboard");
 var statisticsRender = jadeCompile(require("./render/statistics.jade"));
-var pickTeamRender = jadeCompile(require("./render/pick-team.jade"));
+var pickRaceRender = jadeCompile(require("./render/pick-race.jade"));
 
 
 module.exports = Backbone.View.extend({
@@ -15,21 +15,23 @@ module.exports = Backbone.View.extend({
   },
   renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
-    this.$el.append(pickTeamRender());
+    this.$el.append(statisticsRender());
     this.leaderboard = new LeaderboardView();
-    $(".leaderboard-panel").html("").addClass("leaderboard-view").append(this.leaderboard.render().el);
+    $(".leaderboard-panel").html("").addClass("leaderboard-view-statistics").append(this.leaderboard.render().el);
+    $(".landing-content").addClass("landing-content-statistics");
+    return this;
+  },
+  renderRacePick: function() {
+    this.$el.html(this.template({twitter: this.twitter}));
+    this.$el.append(pickRaceRender());
+    this.leaderboard = new LeaderboardView();
+    $(".leaderboard-panel").html("").addClass("leaderboard-view-race").append(this.leaderboard.render().el);
+    $(".landing-content").addClass("landing-content-race");
     return this;
   },
   startGame: function() {
-     $(".ui-container").css({"overflow": "hidden"});
     $(".landing-view").remove();
+    delete this.leaderboard;
     // router.navigate("battle-field", true)
-  },
-  showLeaderboard: function() {
-    if ($(".leaderboard-content").length === 0) {
-    } else {
-      $(".leaderboard-content").remove();
-      $(".leaderboard-panel").removeClass("leaderboard-view");
-    }
   }
 })

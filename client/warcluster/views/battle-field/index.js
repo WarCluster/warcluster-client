@@ -176,14 +176,11 @@ module.exports = Backbone.View.extend({
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       
-      // self.landingView = new LandingView({twitter: self.context.playerData.twitter});
-      // $(".ui-container").append(self.landingView.el);
-      // $(".ui-container").css({"overflow": "auto"});
       if (data.JustRegistered) {
         self.tutorialMenu.toggleTutorial();
-        // self.landingView.renderPickTeam();
+        self.landingView.renderRacePick();
       } else {
-        // self.toggleLandingStatisticsView();
+        self.toggleLandingStatisticsView();
       }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
@@ -202,13 +199,6 @@ module.exports = Backbone.View.extend({
       $(".ui-container").append(this.landingView.el);
       this.landingView.renderStatistics();
     } 
-    // if ($(".leaderboard-content").length === 0) {
-    //   this.leaderboard = new LeaderboardView();
-    //   $(".leaderboard-panel").html("").addClass("leaderboard-view").append(this.leaderboard.render().el);
-    // } else {
-    //   $(".leaderboard-content").remove();
-    //   $(".leaderboard-panel").removeClass("leaderboard-view");
-    // }
   },
   connect: function() {
     this.commandsManager.prepare(
