@@ -176,11 +176,13 @@ module.exports = Backbone.View.extend({
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       
+      debugger;
       if (data.JustRegistered) {
         self.tutorialMenu.toggleTutorial();
-        self.landingView.renderRacePick();
+        self.toggleLandingRaceView();
       } else {
-        self.toggleLandingStatisticsView();
+        self.toggleLandingRaceView();
+        // self.toggleLandingStatisticsView();
       }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
@@ -192,6 +194,11 @@ module.exports = Backbone.View.extend({
     }
 
     return this;
+  },
+  toggleLandingRaceView: function() {
+    this.landingView = new LandingView({twitter: this.context.playerData.twitter});
+    $(".ui-container").append(this.landingView.el);
+    this.landingView.renderRacePick();
   },
   toggleLandingStatisticsView: function() {
     if ($(".landing-view").length === 0) {

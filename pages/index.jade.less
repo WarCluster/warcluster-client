@@ -13,14 +13,62 @@
 /*TODO: 
   refactor css in less style
 */
+.pick-race-panel {
+  width: 65%;
+  height: 100%;
+  text-align: right;
+  float: right;
+  .race-menu-container {
+    margin: 15px auto;
+    display: block;
+    width: 95%;
+    max-width: 1100px;
+  }
+  .races {
+    display: block;
+    position: relative;
+    width: 98%;
+    margin: -389px auto;
+  }
+  .race {
+    .race-description {
+      padding: 10px 10px 10px 0px;
+      position: relative;
+      margin: -75px 0px 0px 80px;
+      text-align: left;
+      font-size: 1em;
+    }
+    cursor: pointer;
+    .race-color {
+      width: 80px;
+    }
+    img {
+      padding: 10px;
+    }
+    &:hover > .race-color {
+      border-color: #f26a21;
+      border-top-style: outset;
+      border-width: 5px;
+    }
+    &:hover > .race-color > img {
+      padding-top: 5px;
+    }
+    width: 40%;
+    height: 80px;
+    margin-top: 15px;
+    background-size: 100% 100%;
+    background-image: url("/images/ui/race-background.png");
+  }
+}
 .start-game {
   position: absolute;
   bottom: 10px;
   right: 15px;
 }
-.landing-content-statistics {
+.landing-content {
   text-align: right;
   width: 35%;
+  height: 100%;
   float: right;
   ul {
     margin: 10px -15px 0px 20px;
@@ -43,7 +91,7 @@
   width: 100%;
   background-color: #222222;  
 }
-.leaderboard-view-statistics {
+.left-panel {
   top: 0px;
   left:0px;
   /*margin-top: 50px;*/
