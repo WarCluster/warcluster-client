@@ -15,17 +15,24 @@
 */
 .leaderboard-view {
   z-index: 3002;
+  position: relative;
+  top: 0px;
+  margin-top: 50px;
+  height: 500px;  
+}
+.landing-view {
+  z-index: 3003;
   position: absolute;
   top: 0px;
-  width: 600px;
-  height: 500px;  
+  height: 100%;
+  width: 100%;
+  background-color: black;  
 }
 
 .leaderboard-content {
   position: absolute;
   color: black;
   background-color: white;
-  top:0px;
   width: 100%;
   height: 100%;
 }
@@ -41,7 +48,7 @@
     color: #000;
   }
 }
-.toggle-leaderboard-btn {
+.toggle-landing-btn {
   position: absolute;
   bottom: 0px;
   right: 60px;

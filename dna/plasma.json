@@ -17,7 +17,7 @@
     "consumerSecret": "uwLIgSNDqWPfSnySydV46gWBkISwPN9XaHW4yrpd3g",
     "connectUrl": "/twitter/connect",
     "callbackUrl": "/game",
-    "callbackFullUrl": "http://127.0.0.1:8118/game/#landing"
+    "callbackFullUrl": "http://127.0.0.1:8118/game/#battle-field"
   },
   "RenderPage": {
     "source": "node_modules/organic-webcell/plasma/RenderPage",
