@@ -176,7 +176,6 @@ module.exports = Backbone.View.extend({
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       
-      debugger;
       if (data.JustRegistered) {
         self.tutorialMenu.toggleTutorial();
         self.toggleLandingRaceView();

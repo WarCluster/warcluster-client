@@ -36,4 +36,5 @@ module.exports = Backbone.View.extend({
   },
   selectRace: function(e) {
     // $(e.currentTarget).find(".race-color").css({"border-bottom": "5px outset #f26a21"});  }
+  }
 })
