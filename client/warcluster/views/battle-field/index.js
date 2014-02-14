@@ -180,8 +180,7 @@ module.exports = Backbone.View.extend({
         self.tutorialMenu.toggleTutorial();
         self.toggleLandingRaceView();
       } else {
-        self.toggleLandingRaceView();
-        // self.toggleLandingStatisticsView();
+        self.toggleLandingStatisticsView();
       }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
