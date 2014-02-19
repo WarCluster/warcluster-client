@@ -18,12 +18,12 @@ var MissionsMenu = require("../../controls/mission-menu");
 var PlanetsSelection = require("../../controls/planets-selection");
 var TwitterStream = require("../../controls/twitter-stream");
 var Tutorial = require("../../controls/tutorial");
-var LeaderboardView = require("../leaderboard");
+var LandingView = require("../landing");
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
-  events: {
-    "click .toggle-leaderboard-btn": "showLeaderboard"
+  events: { 
+    "click .toggle-landing-btn": "toggleLandingStatisticsView"
   },
   className: "game-container",
   initialize: function(options) {
@@ -31,16 +31,7 @@ module.exports = Backbone.View.extend({
     this.context.playerData = {
       twitter: options.twitter
     };
-  },
-  showLeaderboard: function() {
-    if ($(".leaderboard-content").length === 0) {
-      this.leaderboard = new LeaderboardView();
-      $(".leaderboard-panel").html("").addClass("leaderboard-view").append(this.leaderboard.render().el);
-    } else {
-      $(".leaderboard-content").remove();
-      $(".leaderboard-panel").removeClass("leaderboard-view");
-    }
-  },
+  }, 
   render: function() {
     this.$el.html(this.template());
 
@@ -51,6 +42,9 @@ module.exports = Backbone.View.extend({
     
     this.tutorialMenu = new Tutorial({context: this.context});
     $(".ui-container").append(this.tutorialMenu.render().el);
+
+    // this.landingView = new LandingView({context: this.context});
+    // $(".ui-container").append(this.landingView.render().el);
 
     this.context.missionsMenu = new MissionsMenu({context: this.context});
 
@@ -184,6 +178,9 @@ module.exports = Backbone.View.extend({
       
       if (data.JustRegistered) {
         self.tutorialMenu.toggleTutorial();
+        self.toggleLandingRaceView();
+      } else {
+        self.toggleLandingStatisticsView();
       }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
@@ -195,6 +192,18 @@ module.exports = Backbone.View.extend({
     }
 
     return this;
+  },
+  toggleLandingRaceView: function() {
+    this.landingView = new LandingView({twitter: this.context.playerData.twitter});
+    $(".ui-container").append(this.landingView.el);
+    this.landingView.renderRacePick();
+  },
+  toggleLandingStatisticsView: function() {
+    if ($(".landing-view").length === 0) {
+      this.landingView = new LandingView({twitter: this.context.playerData.twitter});
+      $(".ui-container").append(this.landingView.el);
+      this.landingView.renderStatistics();
+    } 
   },
   connect: function() {
     this.commandsManager.prepare(
