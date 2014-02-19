@@ -21,9 +21,9 @@ module.exports = Backbone.View.extend({
     this.switchType(index);
   },
   switchType: function(index) {
-    this.$(".type" + this.currentType).hide();
+    this.$("#type" + this.currentType).addClass("hide");
     this.currentType = index;
-    this.$(".type" + this.currentType).show();
+    this.$("#type" + this.currentType).removeClass("hide");
   },
   render: function() {
     this.$el.html(this.template());

@@ -25,10 +25,10 @@ module.exports = Backbone.View.extend({
       "TwitterId": this.twitterId
     };
     var new_status = function(status) {
-      console.log(status);
+      // console.log(status);
     };
     var on_message = function(msg) {
-      console.log(msg);
+      // console.log(msg);
     };
     var on_open = function() {
       console.log('Leaderboard on open');
