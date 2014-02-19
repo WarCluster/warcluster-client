@@ -1,6 +1,6 @@
 {
   "name": "warcluster",
-  "version": "0.0.70",
+  "version": "0.0.71",
   "main": "index.js",
   "private": true,
   "dependencies": {
