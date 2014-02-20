@@ -12,21 +12,21 @@ module.exports = function(context) {
     self.context.spaceViewController.zoomer.zoomOut();
   });
   KeyboardJS.KeyboardJS.on('w, up', function() {
-    self.context.spaceViewController.scroller.scaledScroll(0, self.context.height / 2, true);
+    self.context.spaceViewController.scroller.scaledScroll(0, self.context.height / 10, true);
   });
   KeyboardJS.KeyboardJS.on('a, left', function() {
-    self.context.spaceViewController.scroller.scaledScroll(-self.context.width / 2 , 0, true); 
+    self.context.spaceViewController.scroller.scaledScroll(-self.context.width / 10, 0, true); 
   });
   KeyboardJS.KeyboardJS.on('d, right', function() {
-    self.context.spaceViewController.scroller.scaledScroll(self.context.width / 2, 0, true); 
+    self.context.spaceViewController.scroller.scaledScroll(self.context.width / 10, 0, true); 
   });
   KeyboardJS.KeyboardJS.on('s, down', function() {
-    self.context.spaceViewController.scroller.scaledScroll(0, -self.context.height / 2, true);
+    self.context.spaceViewController.scroller.scaledScroll(0, -self.context.height / 10, true);
   });
 
   KeyboardJS.KeyboardJS.on('space', function() {
-    /*self.context.spaceViewController.scroller.scrollTo(homePlanet.X, homePlanet.Y, true);
-    self.context.spaceViewController.info.popover.remove(); */
+    // this.trigger("scrollToPlanet", self.context.playerData.HomePlanet);
+    self.context.spaceViewController.scroller.scrollTo(homePlanet.X, homePlanet.Y, true);
   });
   KeyboardJS.KeyboardJS.on('ctrl',
   //onDownCallback
