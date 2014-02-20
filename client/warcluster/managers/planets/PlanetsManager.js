@@ -36,7 +36,8 @@ module.exports.prototype.managePlanetData = function(planets) {
     if (!planet) {
       planet = this.context.planetsFactory.build(planets[id]);
     } else {
-      var updatePopulation = (planet.data.ShipCount !== -1 || planet.data.ShipCount !== planets[id].ShipCount) && (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
+      planet.population.visible = (planets[id].ShipCount !== -1);
+      var updatePopulation = (planets[id].ShipCount !== -1); //|| planet.data.ShipCount !== planets[id].ShipCount); //&& (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
       var updateOwner = planet.data.Owner !== planets[id].Owner;
       var updateColor = planet.data.Color !== planets[id].Color;
       var currentOwner = planet.data.Owner;
@@ -71,32 +72,33 @@ module.exports.prototype.managePopulation = function() {
   var t = (new Date()).getTime();
   var time = t - this.t;
   var updated = [];
-  var pd = null;
-  var shc = 0;
+  var planetData = null;
+  var shipCount = 0;
   this.t = t;
 
   var selection = this.context.spaceViewController.selection;
   
   for(var i = 0;i < this.context.planets.length;i ++) {
-    pd = this.context.planets[i].data;
-    shc = pd.ShipCount;
-    pd.ShipCount += time * this.getBuildIndex(pd);  
+    if (this.context.planets[i].data.ShipCount === -1) continue;
+    planetData = this.context.planets[i].data;
+    shipCount = planetData.ShipCount;
+    planetData.ShipCount += time * this.getBuildIndex(planetData);  
     
-    if (parseInt(shc) != parseInt(pd.ShipCount)) {
-      this.context.objectsById[pd.id].updatePopulationInfo();
-      if (selection.getSelectedPlanetDataById(pd.id))
-        updated.push(pd);
+    if (parseInt(shipCount) != parseInt(planetData.ShipCount)) {
+      this.context.objectsById[planetData.id].updatePopulationInfo();
+      if (selection.getSelectedPlanetDataById(planetData.id))
+        updated.push(planetData);
     }
   }
 
   for(var i = 0;i < selection.selectedPlanets.length;i ++) {
-    pd = selection.selectedPlanets[i];
-    if (!this.context.objectsById[pd.id]) {
-      shc = pd.ShipCount;
-      pd.ShipCount += time * this.getBuildIndex(pd); 
+    planetData = selection.selectedPlanets[i];
+    if (!this.context.objectsById[planetData.id]) {
+      shipCount = planetData.ShipCount;
+      planetData.ShipCount += time * this.getBuildIndex(planetData); 
       
-      if (parseInt(shc) != parseInt(pd.ShipCount))
-        updated.push(pd);
+      if (parseInt(shipCount) != parseInt(planetData.ShipCount))
+        updated.push(planetData);
     }
   }
 
