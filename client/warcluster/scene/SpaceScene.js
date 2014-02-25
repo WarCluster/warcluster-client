@@ -128,7 +128,6 @@ module.exports.prototype.render = function(data) {
     if (!sun)
       sun = this.context.sunsFactory.build(data.Suns[s]);
   }
-
   this.context.planetsManager.managePlanetData(data.Planets);
 
   for (s in data.Missions) {

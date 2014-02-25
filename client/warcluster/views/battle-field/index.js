@@ -168,6 +168,7 @@ module.exports = Backbone.View.extend({
 
 
     this.commandsManager = new CommandsManager(config.socketUrl, this.context);
+    this.context.commandsManager = this.commandsManager;
     this.commandsManager.loginFn = function(data) {
       _.extend(self.context.playerData, data);
      
@@ -176,12 +177,12 @@ module.exports = Backbone.View.extend({
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       
-      if (data.JustRegistered) {
-        self.tutorialMenu.toggleTutorial();
-        self.toggleLandingRaceView();
-      } else {
-        self.toggleLandingStatisticsView();
-      }
+      // if (data.JustRegistered) {
+      self.tutorialMenu.toggleTutorial();
+      // self.toggleLandingRaceView();
+      // } else {
+      self.toggleLandingStatisticsView();
+      // }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
       //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
@@ -191,16 +192,20 @@ module.exports = Backbone.View.extend({
       self.context.spaceScene.render(data);
     }
 
+    this.commandsManager.requestSetupParameters = function() {
+      self.toggleLandingRaceView();
+    }
+
     return this;
   },
   toggleLandingRaceView: function() {
-    this.landingView = new LandingView({twitter: this.context.playerData.twitter});
+    this.landingView = new LandingView(this.context);
     $(".ui-container").append(this.landingView.el);
     this.landingView.renderRacePick();
   },
   toggleLandingStatisticsView: function() {
     if ($(".landing-view").length === 0) {
-      this.landingView = new LandingView({twitter: this.context.playerData.twitter});
+      this.landingView = new LandingView(this.context);
       $(".ui-container").append(this.landingView.el);
       this.landingView.renderStatistics();
     } 

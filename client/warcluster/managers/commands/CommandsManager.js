@@ -71,6 +71,9 @@ module.exports.prototype.parseMessage = function(command) {
       case "state_change":
         this.renderViewFn(data);
       break;
+      case "request_setup_params":
+        this.requestSetupParameters();
+      break;
       case "send_mission":
         this.context.missionsFactory.build(data.Mission);
       break;
@@ -79,6 +82,8 @@ module.exports.prototype.parseMessage = function(command) {
           humane.error("You're attacking with less than one pilot", {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
         }
       break;
+      default:
+        console.log(data);
     }
   }
 }
@@ -99,4 +104,12 @@ module.exports.prototype.sendMission = function(type, source, target, ships) {
     "EndPlanet": target,
     "Fleet": ships
   }));
+}
+
+module.exports.prototype.setupParameters = function(team, sun) {
+  this.sockjs.send(JSON.stringify({
+    "Command": "setup_parameters",
+    "Fraction": team,
+    "SunTextureId": sun
+  }))
 }

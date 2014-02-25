@@ -2,7 +2,6 @@ var LeaderboardView = require("../leaderboard");
 var statisticsRender = jadeCompile(require("./render/statistics.jade"));
 var pickRaceRender = jadeCompile(require("./render/pick-race.jade"));
 
-
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
@@ -12,7 +11,8 @@ module.exports = Backbone.View.extend({
   },
   className: "landing-view container text-center",
   initialize: function(context) {
-    this.twitter = context.twitter;
+    this.context = context;
+    this.twitter = context.playerData.twitter;
   },
   renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
@@ -30,6 +30,9 @@ module.exports = Backbone.View.extend({
     return this;
   },
   startGame: function() {
+    if ($(".start-game").html() === "Start Game") {
+      this.context.commandsManager.setupParameters(0, 1);
+    }
     $(".landing-view").remove();
     delete this.leaderboard;
     // router.navigate("battle-field", true)

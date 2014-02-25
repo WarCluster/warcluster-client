@@ -35,8 +35,8 @@ module.exports = Backbone.View.extend({
 
       self.sockjs.send(JSON.stringify(msg));
     };
-    this.sockjs = new SockReconnect.SockReconnect("http://127.0.0.1:7000/universe", null, new_status, on_message, on_open);
-    this.sockjs.connect();
+    // this.sockjs = new SockReconnect.SockReconnect("http://127.0.0.1:7000/universe", null, new_status, on_message, on_open);
+    // this.sockjs.connect();
     return this;
   },
   showIndividualLeaderboard: function() {
