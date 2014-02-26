@@ -47,7 +47,6 @@ module.exports = Backbone.View.extend({
     // router.navigate("battle-field", true)
   },
   selectRace: function(e) {
-    debugger;
     if ($(e.currentTarget).attr("data-id") > 3) return; //they're locked
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).find(".race-color").addClass("selected");
@@ -55,7 +54,6 @@ module.exports = Backbone.View.extend({
     // $(e.currentTarget).find(".race-color").css({"border-bottom": "5px outset #f26a21"});  }
   },
   selectSun: function(e) {
-    debugger;
     if ($(e.currentTarget).attr("data-id") > 1) return; //they're locked
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).find("img").addClass("selected");
