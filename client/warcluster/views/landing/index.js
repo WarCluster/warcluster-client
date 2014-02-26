@@ -50,13 +50,13 @@ module.exports = Backbone.View.extend({
     if ($(e.currentTarget).attr("data-id") > 3) return; //they're locked
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).find(".race-color").addClass("selected");
-    this.selectedRace = $(e.currentTarget).attr("data-id");
+    this.selectedRace = parseInt($(e.currentTarget).attr("data-id"));
     // $(e.currentTarget).find(".race-color").css({"border-bottom": "5px outset #f26a21"});  }
   },
   selectSun: function(e) {
     if ($(e.currentTarget).attr("data-id") > 1) return; //they're locked
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).find("img").addClass("selected");
-    this.selectedSun = $(e.currentTarget).attr("data-id");   
+    this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
   }
 })
