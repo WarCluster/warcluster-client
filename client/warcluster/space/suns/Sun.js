@@ -19,7 +19,7 @@ module.exports = function(context, data){
   this.light.position.set( this.position.x, this.position.y, 0 );
   this.context.scene.add( this.light );
 
-  var bmd1 = context.resourcesLoader.get("/images/suns/sun1.png");
+  var bmd1 = context.resourcesLoader.get("/images/suns/sun" + data.SunTextureId + ".png");
 
   this.sunMaterial = new THREE.MeshBasicMaterial({map: bmd1, transparent : true});
   this.sun =  new THREE.Mesh(new THREE.PlaneGeometry(225, 225, 1, 1), this.sunMaterial);

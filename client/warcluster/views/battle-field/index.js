@@ -18,10 +18,12 @@ var MissionsMenu = require("../../controls/mission-menu");
 var PlanetsSelection = require("../../controls/planets-selection");
 var TwitterStream = require("../../controls/twitter-stream");
 var Tutorial = require("../../controls/tutorial");
+var LandingView = require("../landing");
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
-  events: {
+  events: { 
+    "click .toggle-landing-btn": "toggleLandingStatisticsView"
   },
   className: "game-container",
   initialize: function(options) {
@@ -29,7 +31,7 @@ module.exports = Backbone.View.extend({
     this.context.playerData = {
       twitter: options.twitter
     };
-  },
+  }, 
   render: function() {
     this.$el.html(this.template());
 
@@ -40,6 +42,9 @@ module.exports = Backbone.View.extend({
     
     this.tutorialMenu = new Tutorial({context: this.context});
     $(".ui-container").append(this.tutorialMenu.render().el);
+
+    // this.landingView = new LandingView({context: this.context});
+    // $(".ui-container").append(this.landingView.render().el);
 
     this.context.missionsMenu = new MissionsMenu({context: this.context});
 
@@ -163,6 +168,7 @@ module.exports = Backbone.View.extend({
 
 
     this.commandsManager = new CommandsManager(config.socketUrl, this.context);
+    this.context.commandsManager = this.commandsManager;
     this.commandsManager.loginFn = function(data) {
       _.extend(self.context.playerData, data);
      
@@ -171,9 +177,12 @@ module.exports = Backbone.View.extend({
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       
-      if (data.JustRegistered) {
-        self.tutorialMenu.toggleTutorial();
-      }
+      // if (data.JustRegistered) {
+      self.tutorialMenu.toggleTutorial();
+      // self.toggleLandingRaceView();
+      // } else {
+      self.toggleLandingStatisticsView();
+      // }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
       //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
@@ -183,7 +192,23 @@ module.exports = Backbone.View.extend({
       self.context.spaceScene.render(data);
     }
 
+    this.commandsManager.requestSetupParameters = function() {
+      self.toggleLandingRaceView();
+    }
+
     return this;
+  },
+  toggleLandingRaceView: function() {
+    this.landingView = new LandingView(this.context);
+    $(".ui-container").append(this.landingView.el);
+    this.landingView.renderRacePick();
+  },
+  toggleLandingStatisticsView: function() {
+    if ($(".landing-view").length === 0) {
+      this.landingView = new LandingView(this.context);
+      $(".ui-container").append(this.landingView.el);
+      this.landingView.renderStatistics();
+    } 
   },
   connect: function() {
     this.commandsManager.prepare(

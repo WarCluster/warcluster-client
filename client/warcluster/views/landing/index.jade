@@ -1,5 +1,19 @@
-h1 Hello !{twitter.name}
-h3 Username: !{twitter.screen_name}
-h6 this is not working! just click start game :D
-.btn.btn-primary.btn-large.start-game Start game
-img(src="/images/ui/pick-your-race.png")
+.landing-content
+  h1 Hello !{twitter.name}
+  h4 To experience maximum fun we suggest you to use our "bring a friend" policy ;)
+  
+  h2 Invite some friends now
+    ul.social
+      li
+        a.facebook-button.ease-all(target="_blank", href='http://www.facebook.com/sharer.php?u=http://warcluster.com')
+          i.fa.fa-facebook
+          span.hide-text Facebook
+      li
+        a.twitter-button.ease-all(target="_blank", href='https://twitter.com/intent/tweet?text=Hey friends, join me playing @warcluster so we can conquer the galaxy together! :D', data-size='large', data-related='warcluster', data-url='http://warcluster.com', data-dnt='true')
+          i.fa.fa-twitter
+          span.hide-text Twitter
+      li
+        a.google-button.ease-all(target="_blank", href='https://plusone.google.com/_/+1/confirm?hl=en&url=http://warcluster.com')
+          i.fa.fa-google-plus
+          span.hide-text Google Plus
+  p "The more, the merrier" ~ Winnie the Pooh :D

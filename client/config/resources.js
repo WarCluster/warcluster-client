@@ -9,6 +9,7 @@ module.exports = {
     "/images/backgrounds/background6.jpg",
     "/images/backgrounds/background7.jpg",
     "/images/backgrounds/background8.jpg",
+    "/images/suns/sun0.png",
     "/images/suns/sun1.png",
     "/images/planets/planet0.png",
     "/images/planets/planet1.png",
