@@ -5,7 +5,7 @@ module.exports = Backbone.View.extend({
   events: {
     "click .collapsed-list":            "togglePlanets",
     "click .deselect-planet":           "executeDeselectPlanet",
-    "click .planet-link":               "moveCameraToPlanet",
+    "click .selection-planet-item":     "moveCameraToPlanet",
     "mouseover .selection-planet-item": "hoverSelectedPlanet",
     "mouseout .selection-planet-item":  "unhoverSelectedPlanet"
   },
@@ -78,13 +78,13 @@ module.exports = Backbone.View.extend({
   },
   togglePlanets: function() {
     if (this.expanded()) {
-      this.$(".collapsed-icon").hide();
-      this.$(".expanded-icon").show();
+      this.$(".collapsed-icon").addClass("hide");
+      this.$(".expanded-icon").removeClass("hide");
 
       this.$(".expanded-list-container").removeClass("hide");
     } else {
-      this.$(".collapsed-icon").show();
-      this.$(".expanded-icon").hide();
+      this.$(".collapsed-icon").removeClass("hide");
+      this.$(".expanded-icon").addClass("hide");
 
       this.$(".expanded-list-container").addClass("hide");
     }
@@ -105,7 +105,7 @@ module.exports = Backbone.View.extend({
     this.$(".selected-planets").html(this.selectedPlanets.length);
   },
   moveCameraToPlanet: function(e) {
-    this.trigger("scrollToPlanet", $(e.currentTarget).parent().attr("data-id"));
+    this.trigger("scrollToPlanet", $(e.currentTarget).attr("data-id"));
   },
   getPlanetIndex: function(data) {
     var id = data.id || data
