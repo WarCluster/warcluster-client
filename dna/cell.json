@@ -2,7 +2,7 @@
   "remote-siblings": [
     {
       "name": "staging",
-      "remote": "node@178.79.148.84",
+      "remote": "owl@kiril.eu",
       
       "source": "git@warcluster.github.com:altras/warcluster-site.git",
       "target": "~/warcluster",
