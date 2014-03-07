@@ -10,17 +10,25 @@
   height: 100%;
   text-align: right;
   float: right;
+  .sun-menu-container {
+    padding-left: 10px;
+    height: 50%;
+  }
   .race-menu-container {
-    margin: 15px auto;
-    display: block;
-    width: 95%;
+    background-image: url("/images/ui/race-panel-background.png");
+    height: 50%;
+    width: 90%;
+    background-repeat: no-repeat;
+    background-size: contain;
     max-width: 1100px;
+    max-height: 760px;
+    margin: 15px auto;
   }
   .races {
     display: block;
     position: relative;
-    width: 98%;
-    margin: -389px auto;
+    width: 95%;
+    margin-top: 20px;
   }
   .selected {
     border-left: 5px outset #f26a21;
@@ -69,6 +77,9 @@
   height: 100%;
   float: right;
   ul {
+    span {
+      margin-right: 10px;
+    }
     margin: 10px -15px 0px 20px;
     height: 40px;
   }
