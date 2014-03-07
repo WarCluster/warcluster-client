@@ -1,7 +1,7 @@
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
-    "click .toggle-btn": "toggleTwitterStream"
+    "click .twitter-stream-toggle-btn": "toggleTwitterStream"
   },
   className: "twitter-stream",
   initialize: function() {    
@@ -13,16 +13,19 @@ module.exports = Backbone.View.extend({
     return this;
   },
   toggleTwitterStream: function() {
-    if (!this.expanded()) {
-      this.$(".icon-play").addClass("icon-white");
+    debugger;
+    if (this.expanded()) {
+      this.$(".icon-circle-arrow-right").removeClass("hide");
+      this.$(".icon-circle-arrow-left").addClass("hide");
       this.showTwitterStream();
     } else {
-      this.$(".icon-play").removeClass("icon-white");
+      this.$(".icon-circle-arrow-right").addClass("hide");
+      this.$(".icon-circle-arrow-left").removeClass("hide");
       this.hideTwitterStream();
     }
   },
   expanded: function() {
-    return this.$(".icon-play").hasClass("icon-white");
+    return this.$(".icon-circle-arrow-right").hasClass("hide");
   },
   showTwitterStream: function() {
       TweenLite.to(this.$el, 0.3, {
@@ -32,7 +35,7 @@ module.exports = Backbone.View.extend({
   },
   hideTwitterStream: function() {
     TweenLite.to(this.$el, 0.3, {
-      css:  {right: "-246px"},
+      css:  {right: "-240px"},
       ease: Cubic.easeOut
     });
   }
