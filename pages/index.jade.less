@@ -1,13 +1,5 @@
-/*@import "../style/bootstrap.less";*/
-/*@import "../style/bootstrap-responsive.less";*/
-/*@import "../style/bootstrap-colorselector.less";*/
-@import "../style/docs.less";
-@import "../style/prettify.less";
-
 @import "../style/less/bootstrap.less";
 @import "../style/less/responsive.less";
-//@import "../style/less/carousel.less";
-//@import "../style/less/libnotify.less";
 
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 /*TODO: 
@@ -18,17 +10,25 @@
   height: 100%;
   text-align: right;
   float: right;
+  .sun-menu-container {
+    padding-left: 10px;
+    height: 50%;
+  }
   .race-menu-container {
-    margin: 15px auto;
-    display: block;
-    width: 95%;
+    background-image: url("/images/ui/race-panel-background.png");
+    height: 50%;
+    width: 90%;
+    background-repeat: no-repeat;
+    background-size: contain;
     max-width: 1100px;
+    max-height: 760px;
+    margin: 15px auto;
   }
   .races {
     display: block;
     position: relative;
-    width: 98%;
-    margin: -389px auto;
+    width: 95%;
+    margin-top: 20px;
   }
   .selected {
     border-left: 5px outset #f26a21;
@@ -77,6 +77,9 @@
   height: 100%;
   float: right;
   ul {
+    span {
+      margin-right: 10px;
+    }
     margin: 10px -15px 0px 20px;
     height: 40px;
   }
@@ -131,6 +134,10 @@
 }
 .tutorial-menu {
   .toggle-btn {
+    height: 84px;
+    width: 84px;
+    background-image: url("/images/ui/tutorial-button-normal.png");
+    background-repeat: no-repeat;
     position: absolute;
     bottom: 0px;
     right: 0px;
@@ -151,10 +158,10 @@
     }
   }
 }
-/*.avatar {
+.player-avatar {
   .square(50px);
   display: inline-block;
-}*/
+}
 .float-left {
   float: left;
 }
@@ -184,10 +191,21 @@ html, body {
 }
 .twitter-stream {
   position: absolute;
+  height: 520px;
   right: 0px;
   top: 80px;
+  border-image: url("/images/ui/twitter-stream-timeline-border.png") 11 0 11 11 round;
+  border-width: 11px 0px 11px 11px;
   .toggle-btn {
-    left:-35px;
+    span {
+      margin-left: 7px;
+      margin-top: 5px;
+    }
+    background-image: url("/images/ui/twitter-stream-timeline-hide-button.png");
+    width: 45px;
+    height: 24px;
+    left: -40px;
+    top: -11px;
     position: inherit;
   }
 }
@@ -401,6 +419,7 @@ html, body {
 }
 
 .planets-selection {
+  cursor: pointer;
   img {
     margin-left: 15px;
     margin-right: 15px;
@@ -414,23 +433,28 @@ html, body {
 }
 
 .expanded-list-container {
-  border-color: #FFFFFF;
-  border-top-style: solid;
-  border-width: 1px;
   overflow: auto;
   max-height: 300px;
+  .expanded-list {
+    background-color: #333333;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .expanded-list-end {
+    background-image: url("/images/ui/planet-info-bottom.png");
+    width: 250px;
+    height: 10px;
+  }
 }
 
-.expanded-list {
-  background: rgba(255, 255, 255, 0.05);
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
 
 .selection-planet-item {
   &:hover {
     background: rgba(255, 255, 255, 0.1); 
+    border-right-color: #f26a21;
+    border-right-style: solid;
   };
+  /*background-image: url("/images/ui/planet-info-middle.png");*/
   padding-top: 5px;
   padding-bottom: 5px;
   .deselect-icon {
@@ -443,12 +467,18 @@ html, body {
 }
 
 .collapsed-list {
-  background: rgba(255, 255, 255, 0.1);
+  a {
+    color: rgb(245, 237, 237);
+  }
+  a:hover {
+    color: #3A3A2A;
+  }
+  background-image: url("/images/ui/planet-info-top.png");
   padding-top: 5px;
   padding-bottom: 5px; 
   width: 250px; 
   .icon-expand-selection {
-    padding-right: 5px;
+    padding-right: 20px;
   }
   .selected-planets {
     padding: 5px 5px 5px 5px;

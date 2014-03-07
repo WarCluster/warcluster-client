@@ -177,12 +177,7 @@ module.exports = Backbone.View.extend({
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       
-      // if (data.JustRegistered) {
-      self.tutorialMenu.toggleTutorial();
-      // self.toggleLandingRaceView();
-      // } else {
       self.toggleLandingStatisticsView();
-      // }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
       //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
@@ -194,6 +189,9 @@ module.exports = Backbone.View.extend({
 
     this.commandsManager.requestSetupParameters = function() {
       self.toggleLandingRaceView();
+    }
+    this.commandsManager.toggleTutorial = function() {
+      self.tutorialMenu.toggleTutorial();
     }
 
     return this;

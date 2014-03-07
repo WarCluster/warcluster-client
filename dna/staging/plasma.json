@@ -4,6 +4,6 @@
     "log": true
   },
   "TwitterOAuth": {
-    "callbackFullUrl": "http://178.79.148.84:8118/game/#battle-field"
+    "callbackFullUrl": "http://kiril.eu:8118/game/#battle-field"
   }
 }

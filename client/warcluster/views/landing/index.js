@@ -37,6 +37,7 @@ module.exports = Backbone.View.extend({
     if ($(".start-game").html() === "Start Game") {
       if ((this.selectedRace > -1 && this.selectedRace < 6) && (this.selectedSun > -1 && this.selectedSun < 2)) {
         this.context.commandsManager.setupParameters(this.selectedRace, this.selectedSun);
+        this.context.commandsManager.toggleTutorial();
       } else {
         alert("You must pick both your race and your sun in order to continue");
         return;
