@@ -35,7 +35,7 @@ module.exports = Backbone.View.extend({
   },
   hideTwitterStream: function() {
     TweenLite.to(this.$el, 0.3, {
-      css:  {right: "-240px"},
+      css:  {right: "-246px"},
       ease: Cubic.easeOut
     });
   }
