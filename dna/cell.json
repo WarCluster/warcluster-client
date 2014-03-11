@@ -5,7 +5,7 @@
       "remote": "owl@kiril.eu",
       
       "source": "git@warcluster.github.com:altras/warcluster-site.git",
-      "target": "~/warcluster",
+      "target": "~/warcluster-site",
 
       "main": "warcluster-staging.js"
     }
