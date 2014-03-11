@@ -4,6 +4,7 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 /*TODO: 
   refactor css in less style
+  make it responsive :D
 */
 .pick-race-panel {
   width: 65%;
@@ -141,20 +142,15 @@
     position: absolute;
     bottom: 0px;
     right: 0px;
+    z-index: 3002;
   }
   .tutorial-content {
     z-index: 3001;
     position: absolute;
-    bottom:20px;
-    right:20px;
-    .tutorialImage {
-      width: 882px;
-      height: 574px;
+    bottom: 20px;
+    right: 20px;
+    .tutorial-image {
       background-image: url('/images/tutorial.png');
-    }
-    .close-btn {
-      position: absolute;
-      margin-left: -95px;
     }
   }
 }

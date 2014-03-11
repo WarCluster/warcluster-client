@@ -13,9 +13,25 @@ module.exports = Backbone.View.extend({
   },
   toggleTutorial: function() {
     if (this.expanded()) {
-      this.$(".tutorial-content").removeClass("hide");
+      $(".tutorial-content").removeClass("hide");
+      TweenLite.to($(".tutorial-image"), 0.2, {
+        css:  { width: "882px",
+                height: "574px",
+                },
+        ease: Cubic.easeOut,
+        onComplete: function() {
+        }
+      });
     } else {
-      this.$(".tutorial-content").addClass("hide");
+      TweenLite.to($(".tutorial-image"), 0.3, {
+        css:  { width: "50px",
+                height: "50px",
+                },
+        ease: Cubic.easeOut,
+        onComplete: function() {
+          $(".tutorial-content").addClass("hide");
+        }
+      });
     }
   },
   expanded: function() {

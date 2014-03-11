@@ -13,7 +13,6 @@ module.exports = Backbone.View.extend({
     return this;
   },
   toggleTwitterStream: function() {
-    debugger;
     if (this.expanded()) {
       this.$(".icon-circle-arrow-right").removeClass("hide");
       this.$(".icon-circle-arrow-left").addClass("hide");

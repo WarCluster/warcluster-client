@@ -43,8 +43,19 @@ module.exports = Backbone.View.extend({
         return;
       }
     }
-    $(".landing-view").remove();
-    delete this.leaderboard;
+    TweenLite.to($(".landing-view"), 0.2, {
+      css: {
+        height: "120px",
+        width: "100px",
+        right: "0px",
+        top: "95%"
+      },
+      ease: Cubic.easeOut,
+      onComplete: function() {
+        $(".landing-view").remove();
+        delete this.leaderboard;    
+      }
+    });
     // router.navigate("battle-field", true)
   },
   selectRace: function(e) {
