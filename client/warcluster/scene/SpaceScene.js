@@ -131,6 +131,8 @@ module.exports.prototype.render = function(data) {
   this.context.planetsManager.managePlanetData(data.Planets);
 
   for (s in data.Missions) {
+    if (!data.Missions[s].id)
+      data.Missions[s].id = s;
     var mission = this.context.objectsById[data.Missions[s].id];
     if (!mission)
       this.context.missionsFactory.build(data.Missions[s]);
