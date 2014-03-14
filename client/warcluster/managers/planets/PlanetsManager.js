@@ -36,7 +36,8 @@ module.exports.prototype.managePlanetData = function(planets) {
     if (!planet) {
       planet = this.context.planetsFactory.build(planets[id]);
     } else {
-      planet.population.visible = (planets[id].ShipCount !== -1);
+      if (planet.population)
+        planet.population.visible = (planets[id].ShipCount !== -1);
       var updatePopulation = (planets[id].ShipCount !== -1); //|| planet.data.ShipCount !== planets[id].ShipCount); //&& (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
       var updateOwner = planet.data.Owner !== planets[id].Owner;
       var updateColor = planet.data.Color !== planets[id].Color;

@@ -42,7 +42,7 @@ module.exports.prototype.buildScene = function() {
   console.log(ww, hh);
 
   this.camera = new THREE.PerspectiveCamera(15, ww / hh, 0.1, 100000000);
-  this.camera.position.z = 6000;
+  this.camera.position.z = 12000;
 
   THREE.Object3D._threexDomEvent.camera(this.camera);
 
@@ -131,7 +131,9 @@ module.exports.prototype.render = function(data) {
   this.context.planetsManager.managePlanetData(data.Planets);
 
   for (s in data.Missions) {
+
     var mission = this.context.objectsById[data.Missions[s].id];
+    console.log("-render-mission-", s, mission)
     if (!mission)
       this.context.missionsFactory.build(data.Missions[s]);
     else
@@ -140,6 +142,23 @@ module.exports.prototype.render = function(data) {
 
   if (this.afterRenderFn != null)
     this.afterRenderFn();
+}
+
+module.exports.prototype.gc = function(rect) {
+  //console.log("-gc-", rect)
+  var forRemove = [];
+  for (var i = 0;i < this.context.objects.length;i ++) {
+    var object = this.context.objects[i];
+    if (object.position.x >= rect.x && object.position.x < rect.x + rect.width &&
+        object.position.y < rect.y && object.position.y >= rect.y - rect.height) {
+      forRemove.push(object)
+    }
+  }
+
+  //console.log("DESTROY OBJECT:", forRemove.length)
+
+  while (forRemove.length > 0) 
+    this.destroyObject(forRemove.shift())
 }
 
 module.exports.prototype.clear = function() {
@@ -156,15 +175,22 @@ module.exports.prototype.clear = function() {
       this.context.planetsFactory.destroy(obj);
   }
 }
+
 module.exports.prototype.destroyObjectByIndex = function(index) {
-  var obj = this.context.objects[index];
+  this.destroyObject(this.context.objects[index])
+}
+
+module.exports.prototype.destroyObject = function(obj) {
   if (obj instanceof Sun) {
+    //console.log("1.-destroyObject-", obj.data)
     this.context.sunsFactory.destroy(obj);
   }
   else if (obj instanceof Planet) {
+    //console.log("2.-destroyObject-", obj.data)
     this.context.planetsFactory.destroy(obj);
   }
   else {
+    //console.log("3.-destroyObject-", obj.data)
     this.context.shipsFactory.destroy(obj);
   }
 }

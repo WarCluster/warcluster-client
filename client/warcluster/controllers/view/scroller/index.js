@@ -66,17 +66,17 @@ module.exports.prototype.scrollTo = function(x, y, animated){
         });
       },
       onComplete: function(){
-        self.dispatchEvent({
+        /*self.dispatchEvent({
           type: "scopeOfView"
-        });            
+        });  */          
       }
     });
   else {
     this.context.camera.position.x = this.controller.scrollPosition.x;
     this.context.camera.position.y = this.controller.scrollPosition.y;
 
-    this.dispatchEvent({
+    /*this.dispatchEvent({
       type: "scopeOfView"
-    }); 
+    }); */
   }
 }

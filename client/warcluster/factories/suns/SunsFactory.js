@@ -9,9 +9,11 @@ module.exports.prototype.build = function(sunData) {
   var sun = this.cache.length > 0 ? this.cache.shift() : null;
 
   if (!sun)
-    sun = new Sun(this.context, sunData);
+    sun = new Sun(this.context);
 
   this.context.container.add(sun);
+  sun.prepare(sunData)
+
   this.context.objects.push(sun);
   this.context.objectsById[sunData.id] = sun;
   

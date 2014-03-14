@@ -4,42 +4,19 @@ module.exports = function(context, data){
   this.selected = false;
 	this.context = context;
 
-	this.position.x = data.Position.X;
-  this.position.y = data.Position.Y;
-
-  this.metaInfo = {
-    timestamp: (new Date()).getTime()
-  };
-
-	this.data = data;
-  this.data.width = 90 + 10 * this.data.Size;
-  this.data.height = 90 + 10 * this.data.Size;
-  var ring;
-  var pz = Math.random() * (-50);
-  var bmd1 = context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
   var selectionGlow = context.resourcesLoader.get("/images/planets/planet_selection_glow.png");
   
-  var color = new THREE.Color().setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
-
-  this.planet =  new THREE.Mesh(new THREE.SphereGeometry(this.data.width / 2, 12, 12), new THREE.MeshLambertMaterial({map: bmd1, color: color, ambient: color}));
+  this.planet =  new THREE.Mesh(new THREE.SphereGeometry(0.5, 12, 12), new THREE.MeshLambertMaterial());
   this.add(this.planet);
 
   this.hitObject = this.planet;
 
-  this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: selectionGlow, transparent : true}));
+  this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), new THREE.MeshBasicMaterial({map: selectionGlow, transparent : true}));
   this.selection.visible = false;
   this.add(this.selection);
 
-  if (this.data.IsHome) {
-    ring = context.resourcesLoader.get("/images/planets/ring.png");
-    this.ring = new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: ring, transparent : true}))
-    this.ring.position.setZ(pz + 250);
-    this.ring.rotateX(0.99);
-    this.add(this.ring);
-  }
-
 	//TODO: refactor for DRY(Don't Repeat Yourself)
-	var result = this.context.canvasTextFactory.buildUint8Array(this.data.ShipCount, null, 45);
+	var result = this.context.canvasTextFactory.buildUint8Array(0, null, 45);
 
   var ww = result.canvas2d.width;
   var hh = result.canvas2d.height;
@@ -48,38 +25,48 @@ module.exports = function(context, data){
 	this.populationMaterial = new THREE.MeshBasicMaterial({map: this.populationTexture, transparent : true})
 	this.populationMaterial.map.needsUpdate = true;
 	this.population = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.populationMaterial);
-	this.population.scale.set(ww, hh, 1.0);
-	this.population.position.set(0, this.data.height * (0.78), pz + 50);
-  this.population.visible = (this.data.ShipCount !== -1); //|| (this.data.Owner === this.context.playerData.Username);
 
 	this.add(this.population);
-  
-  if (this.data.Owner) {
-    result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner, null, 45);
 
-    this.ownerTexture = new THREE.DataTexture(result.uint8Array, result.canvas2d.width, result.canvas2d.height);
-    this.activate();
-  } else {
-    this.ownerTexture = new THREE.DataTexture();
-  }
+  var result = this.context.canvasTextFactory.buildUint8Array(" ", null, 45);
 
-  ww = result.canvas2d.width;
-  hh = result.canvas2d.height;
-
+  this.ownerTexture = new THREE.DataTexture(result.uint8Array, result.canvas2d.width, result.canvas2d.height);
   this.ownerMaterial = new THREE.MeshBasicMaterial({ map: this.ownerTexture, transparent: true});
   this.owner = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.ownerMaterial);
-  this.owner.scale.set(ww, hh, 1.0);
-  this.owner.position.set(0,this.data.height * (-0.78),0);
-
-  if (this.data.Owner) 
-    this.ownerMaterial.map.needsUpdate = true;
-  else 
-    this.owner.visible = false;
 
   this.add(this.owner);
 }
 
 module.exports.prototype = new THREE.Object3D();
+module.exports.prototype.prepare = function(data) {
+  this.position.x = data.Position.X;
+  this.position.y = data.Position.Y;
+
+  this.data = data;
+  this.planetSize = 90 + 10 * this.data.Size;
+
+  this.planet.scale.set(this.planetSize, this.planetSize, this.planetSize);
+  this.selection.scale.set(this.planetSize*1.35, this.planetSize*1.35, this.planetSize*1.35);
+
+  this.planet.material.map = this.context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
+
+  this.updateColor();
+  this.updatePopulationInfo();
+  this.updateOwnerInfo();
+
+  if (this.data.IsHome && !this.ring) {
+    var pz = Math.random() * (-50);
+    var ring = this.context.resourcesLoader.get("/images/planets/ring.png");
+    this.ring = new THREE.Mesh(new THREE.PlaneGeometry(this.planetSize*1.35, this.planetSize*1.35, 1, 1), new THREE.MeshBasicMaterial({map: ring, transparent : true}))
+    this.ring.position.setZ(pz + 250);
+    this.ring.rotateX(0.99);
+    this.add(this.ring);
+  } else if (this.ring) {
+    this.remove(this.ring);
+    this.ring = null;
+  }
+}
+
 module.exports.prototype.select = function() {
   this.selection.material.color.set(module.exports.colors.select);
 	this.selection.visible = true;
@@ -137,37 +124,46 @@ module.exports.prototype.updateColor = function() {
 }
 
 module.exports.prototype.updatePopulationInfo = function() {
-  var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
+  if (this.data.ShipCount !== -1) {
+    var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
   
-  // this.population.visible = (this.data.ShipCount !== -1);
-  this.populationTexture.image.data = result.uint8Array;
-  this.populationTexture.image.width = result.canvas2d.width;
-  this.populationTexture.image.height = result.canvas2d.height;
+    this.population.visible = (this.data.ShipCount !== -1);
+    this.populationTexture.image.data = result.uint8Array;
+    this.populationTexture.image.width = result.canvas2d.width;
+    this.populationTexture.image.height = result.canvas2d.height;
 
-  this.populationMaterial.map.needsUpdate = true;
+    this.populationMaterial.map.needsUpdate = true;
 
-  this.population.scale.x = result.canvas2d.width;
-  this.population.scale.y = result.canvas2d.height;
-
+    this.population.scale.x = result.canvas2d.width;
+    this.population.scale.y = result.canvas2d.height;
+    this.population.position.set(0, this.planetSize * (0.78), 50);
+    this.population.visible = true;
+  } else
+    this.population.visible = false;
 }
 
 module.exports.prototype.updateOwnerInfo = function() {
-  var result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner || " ", null, 45);
-  this.ownerTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
-  this.ownerTexture.image.width = result.canvas2d.width;
-  this.ownerTexture.image.height = result.canvas2d.height;
+  if (this.data.Owner) {
+    var result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner || " ", null, 45);
+    this.ownerTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
+    this.ownerTexture.image.width = result.canvas2d.width;
+    this.ownerTexture.image.height = result.canvas2d.height;
 
-  this.ownerMaterial.map.needsUpdate = true;
+    this.ownerMaterial.map.needsUpdate = true;
 
-  this.owner.scale.x = result.canvas2d.width;
-  this.owner.scale.y = result.canvas2d.height;
+    this.owner.scale.set(result.canvas2d.width, result.canvas2d.height, 1.0);
+    this.owner.position.set(0, this.planetSize * (-0.78), 0);
 
-  this.owner.visible = true;
+    this.owner.visible = true;
 
-  if (this.data.Owner == this.context.playerData.Username)
-    this.activate();
+    if (this.data.Owner == this.context.playerData.Username)
+      this.activate();
 
-  this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
+    this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
+  } else {
+    this.deactivate();
+    this.owner.visible = false;
+  }
 }
 
 module.exports.prototype.activate = function() {
@@ -191,7 +187,7 @@ module.exports.prototype.getOwner = function() {
 }
 
 module.exports.prototype.rectHitTest = function(rect) {
-	var halfSize = this.data.width / 2;
+	var halfSize = this.planetSize / 2;
   var worldPosition = new THREE.Vector3();
   worldPosition.getPositionFromMatrix(this.matrixWorld);
   var sc = this.toScreenXY(worldPosition);

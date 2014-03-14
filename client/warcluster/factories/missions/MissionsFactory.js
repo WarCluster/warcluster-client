@@ -1,4 +1,4 @@
-var Mission = require("../../space/missions/Mission");
+  var Mission = require("../../space/missions/Mission");
 
 module.exports = function(context){
 	this.context = context;
@@ -31,6 +31,7 @@ module.exports = function(context){
 module.exports.prototype.build = function(data) {
   if (data.ShipCount == 0)
     return;
+  console.log("-build MISSION-")
   var formation = this.formations[parseInt(this.formations.length * Math.random())]
   var mission = new Mission(data, this.context);
 

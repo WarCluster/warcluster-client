@@ -108,6 +108,7 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
+        zoom: 16000,
         maxZoom: 60000000,
         minZoom: 6000,
         zoomStep: 2000
@@ -157,11 +158,10 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("scopeOfView", function(e) {
       //TODO: https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view-to-not-spam
-      var position = {
+      /*self.commandsManager.scopeOfView({
         x: Math.ceil(self.context.spaceViewController.scrollPosition.x),
         y: Math.ceil(self.context.spaceViewController.scrollPosition.y)
-      };
-      self.commandsManager.scopeOfView(position, self.context.spaceViewController.getResolution());
+      }, self.context.spaceViewController.getResolution());*/
     });
     
     this.context.spaceViewController = this.spaceViewController;
@@ -174,8 +174,8 @@ module.exports = Backbone.View.extend({
      
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.ClusterTeam).el);
       console.log("-loginFn-", self.context.playerData);
-      self.spaceViewController.activate();
-      self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
+      self.spaceViewController.activate(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
+      //self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       
       self.toggleLandingStatisticsView();
 
@@ -184,6 +184,10 @@ module.exports = Backbone.View.extend({
     }
 
     this.commandsManager.renderViewFn = function(data) {
+      /*self.context.spaceScene.gc({
+        x: Math.ceil(self.context.spaceViewController.scrollPosition.x),
+        y: Math.ceil(self.context.spaceViewController.scrollPosition.y)
+      }, self.context.spaceViewController.getResolution());*/
       self.context.spaceScene.render(data);
     }
 
