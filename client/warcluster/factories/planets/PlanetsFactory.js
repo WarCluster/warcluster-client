@@ -6,10 +6,7 @@ module.exports = function(context){
 }
 
 module.exports.prototype.build = function(planetData) {
-	var planet = this.cache.length > 0 ? this.cache.shift() : null;
-
-	if (!planet)
-		planet = new Planet(this.context);
+	var planet = this.cache.length > 0 ? this.cache.shift() : new Planet(this.context);
 
 	this.context.container.add(planet);
 	planet.prepare(planetData)

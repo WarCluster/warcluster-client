@@ -12,7 +12,6 @@ module.exports = function(context, data){
   this.hitObject = this.planet;
 
   this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), new THREE.MeshBasicMaterial({map: selectionGlow, transparent : true}));
-  this.selection.visible = false;
   this.add(this.selection);
 
 	//TODO: refactor for DRY(Don't Repeat Yourself)
@@ -47,6 +46,7 @@ module.exports.prototype.prepare = function(data) {
 
   this.planet.scale.set(this.planetSize, this.planetSize, this.planetSize);
   this.selection.scale.set(this.planetSize*1.35, this.planetSize*1.35, this.planetSize*1.35);
+  this.selection.visible = false;
 
   this.planet.material.map = this.context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
 

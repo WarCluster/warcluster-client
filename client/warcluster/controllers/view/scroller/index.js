@@ -56,7 +56,7 @@ module.exports.prototype.scrollTo = function(x, y, animated){
   var self = this;
 
   if (animated)
-    TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
+    TweenLite.to(this.context.spaceScene.camera.position, 0.00000005, {
       x: this.controller.scrollPosition.x, 
       y: this.controller.scrollPosition.y,
       ease: Cubic.easeOut,

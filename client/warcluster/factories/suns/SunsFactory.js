@@ -6,10 +6,7 @@ module.exports = function(context){
 }
 
 module.exports.prototype.build = function(sunData) {
-  var sun = this.cache.length > 0 ? this.cache.shift() : null;
-
-  if (!sun)
-    sun = new Sun(this.context);
+  var sun = this.cache.length > 0 ? this.cache.shift() : new Sun(this.context);
 
   this.context.container.add(sun);
   sun.prepare(sunData)
@@ -21,7 +18,8 @@ module.exports.prototype.build = function(sunData) {
 }
 
 module.exports.prototype.destroy = function(sun) {
-  this.context.container.remove(sun);
+
+  this.context.container.remove(sun.remove());
 
   delete this.context.objectsById[sun.data.id];
   this.context.objects.splice(this.context.objects.indexOf(sun), 1);

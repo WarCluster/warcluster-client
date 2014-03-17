@@ -1,6 +1,7 @@
 var SpaceSceneEnviroment = require("./SpaceSceneEnviroment");
 var Sun = require("../space/suns/Sun");
 var Planet = require("../space/planets/Planet");
+var Mission = require("../space/missions/Mission");
 
 var resources = require("../../config/resources.js");
 
@@ -42,7 +43,7 @@ module.exports.prototype.buildScene = function() {
   console.log(ww, hh);
 
   this.camera = new THREE.PerspectiveCamera(15, ww / hh, 0.1, 100000000);
-  this.camera.position.z = 12000;
+  this.camera.position.z = 6000;
 
   THREE.Object3D._threexDomEvent.camera(this.camera);
 
@@ -189,9 +190,9 @@ module.exports.prototype.destroyObject = function(obj) {
     //console.log("2.-destroyObject-", obj.data)
     this.context.planetsFactory.destroy(obj);
   }
-  else {
+  else if (obj instanceof Mission) {
     //console.log("3.-destroyObject-", obj.data)
-    this.context.shipsFactory.destroy(obj);
+    this.context.missionsFactory.destroy(obj);
   }
 }
 

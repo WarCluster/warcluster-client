@@ -1,47 +1,31 @@
-  var Mission = require("../../space/missions/Mission");
+var Mission = require("../../space/missions/Mission");
+var Ship = require("../../space/ships/Ship");
 
 module.exports = function(context){
-	this.context = context;
-
-  this.formations = [
-    [
-      {x: 0, y: -100, z: 0},
-      {x: -70, y: 0, z: 100},
-      {x: 70, y: 0, z: 100},
-      {x: -140, y: 100, z: -100},
-      {x: 140, y: 100, z: -100}
-    ],
-    [
-      {x: 0, y: -100, z: 0},
-      {x: -100, y: 0, z: 100},
-      {x: 100, y: 0, z: 100},
-      {x: -50, y: 100, z: -200},
-      {x: 50, y: 100, z: -200}
-    ],
-    [
-      {x: -50, y: -70, z: 0},
-      {x: 50, y: -70, z: 0},
-      {x: 100, y: 0, z: 100},
-      {x: -100, y: 0, z: 100},
-      {x: 0, y: 70, z: -100}
-    ]
-  ];
+  this.context = context;
+  this.cache = [];
 }
 
-module.exports.prototype.build = function(data) {
-  if (data.ShipCount == 0)
-    return;
-  console.log("-build MISSION-")
-  var formation = this.formations[parseInt(this.formations.length * Math.random())]
-  var mission = new Mission(data, this.context);
+module.exports.prototype.build = function(missionData) {
+  var mission = this.cache.length > 0 ? this.cache.shift() : new Mission(this.context);
 
-  this.context.objectsById[data.id] = mission;
-  mission.send(formation, data.Color);
+  this.context.container.add(mission);
+  mission.send(missionData)
+  
+  this.context.objects.push(mission);
+  this.context.objectsById[missionData.id] = mission;
 
   return mission;
 }
 
 module.exports.prototype.destroy = function(mission) {
+  mission.deactivate();
+
+  this.context.container.remove(mission);
+  this.context.objects.splice(this.context.objects.indexOf(mission), 1);
+
   delete this.context.objectsById[mission.data.id];
+  this.cache.push(mission);
+
   return mission;
 }

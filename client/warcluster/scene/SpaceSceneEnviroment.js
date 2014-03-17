@@ -102,7 +102,7 @@ module.exports = function(context){
   var mat2 = new THREE.MeshBasicMaterial( { color: 0x534D00 , wireframe: true } );
   var mesh =  new THREE.Mesh(new THREE.PlaneGeometry(1000 * xGrid, 1000 * yGrid, xGrid, yGrid), mat2);
 
-  //this.add(mesh);
+  this.add(mesh);
 }
 
 module.exports.prototype = new THREE.Object3D();
