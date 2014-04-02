@@ -24,6 +24,8 @@ module.exports = Backbone.View.extend({
   },
   showIndividualLeaderboard: function(){
     $("#team").remove();
+    $("#teamBtn").parent().removeClass("active");
+    $("#individualBtn").parent().addClass("active");
     if ($("#individual").length === 0){
       this.connectIndividualLeaderboard();
       this.$el.append(individualRender());
@@ -31,6 +33,8 @@ module.exports = Backbone.View.extend({
   },
   showTeamLeaderboard: function(){
     $("#individual").remove();
+    $("#individualBtn").parent().removeClass("active");
+    $("#teamBtn").parent().addClass("active");
     if ($("#team").length === 0) {
       this.connectTeamLeaderboard();
       this.$el.append(teamRender());
@@ -57,10 +61,10 @@ module.exports = Backbone.View.extend({
           },
           success: function(data) {
             for(i=0;i<data.length;i++) {
-              $("tbody tr:nth-child(" + (i+1) + ") > td:nth-child(2)").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
-              $("tbody tr:nth-child(" + (i+1) + ") > td:nth-child(3)").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
-              $("tbody tr:nth-child(" + (i+1) + ") > td:nth-child(4)").html(data[i].HomePlanet);
-              $("tbody tr:nth-child(" + (i+1) + ") > td:nth-child(5)").html(data[i].Planets);
+              $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
+              $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
+              $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
+              $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
               // $("tbody tr:nth-child(" + 1 + ")").html("<td>1</td><td><a href='http://twitter.com/" + data[i].Username + "'>" + data[i].Username + "</td><td>" + data[i].Team + "</td><td>" + data[i].HomePlanet + "</td><td>" + data[i].Planets + "</td><td>");
               // if ($('#user-'+data[i].id).length == 0) {
               //   // this id doesn't exist, so add it to our list.
