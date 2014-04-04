@@ -1,5 +1,5 @@
 require("../client/vendor/jquery");
-require("../client/vendor/bootstrap.min");
+require("../client/vendor/bootstrap");
 require("../client/vendor/bootstrap-fileupload.min");
 require("../client/vendor/bootstrap-colorselector");
 require("../client/vendor/google-code-prettify/prettify");

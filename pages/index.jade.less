@@ -1,8 +1,10 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
+
 @import "../style/less/font-awesome/font-awesome.less";
-@import "../style/less/bootstrap.less";
+@import "../style/less/bootstrap/bootstrap.less";
+@import "../style/less/social.less";
 /*@import "../style/less/responsive.less";*/
 
-@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 /*TODO: 
   refactor css in less style
   make it responsive :D
@@ -118,7 +120,7 @@
 .leaderboard-content {
   position: absolute;
   color: black;
-  background-color: white;
+  background-color: #fff;
   width: 100%;
   height: 100%;
 }
@@ -137,7 +139,11 @@
 .toggle-landing-btn {
   position: absolute;
   bottom: 0px;
-  right: 60px;
+  &:hover {
+    padding: 15px 25px;
+    font-size: 1.8em;
+  }
+  right: 100px;
 }
 .tutorial-menu {
   .toggle-btn {
@@ -239,6 +245,9 @@ html, body {
 }
 
 .description {
+  margin-top: -150px;
+  width: 350px;
+  position: absolute;
   font-size: 18px;
   color: #fff;
 }
@@ -255,19 +264,16 @@ html, body {
   }
 }
 .leaderboardBtn {
-  /*background-color: #F24960;*/
-  /*border-radius: 0px;*/
   background: none;
   border: none;
   color: #D1CECE;
   margin: 10px 50px;
   &:hover {
-    /*background-color: #f69766;*/
     color: #F24960;
   }
-  span {
+/*  span {
     padding-right: 5px;
-  }
+  }*/
 }
 .welcome {
   margin: 10px auto;
@@ -286,11 +292,6 @@ html, body {
       color: #fff;
     }
   }
-}
-.description {
-  margin-top: -100px;
-  width: 350px;
-  position: absolute;
 }
 /*
   Logo specific stylesheets
