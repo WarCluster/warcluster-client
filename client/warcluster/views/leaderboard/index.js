@@ -15,7 +15,7 @@ module.exports = Backbone.View.extend({
     var self = this;
 
     this.$el.html(this.template());
-    this.currentPage = 0;
+    this.currentPage = 1;
     this.showIndividualLeaderboard();
     
     this.username = "username";
