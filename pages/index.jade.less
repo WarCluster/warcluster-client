@@ -255,15 +255,18 @@ html, body {
   }
 }
 .leaderboardBtn {
-  background-color: #F24960;
-  border-radius: 0px;
+  /*background-color: #F24960;*/
+  /*border-radius: 0px;*/
   background: none;
   border: none;
   color: #D1CECE;
   margin: 10px 50px;
   &:hover {
-    background-color: #f69766;
-    color: #fff;
+    /*background-color: #f69766;*/
+    color: #F24960;
+  }
+  span {
+    padding-right: 5px;
   }
 }
 .welcome {
@@ -271,13 +274,15 @@ html, body {
   width: 140px;
   #leaderboardBtn {
     top:93%;
-  };
+  }
   .welcomeBtn {
     position: absolute;
+    color: #fff;
+    background-color: #f24960;
     border-radius: 0px;
     margin: 0 auto;
     &:hover {
-      background-color: #f24960;
+      background-color: #f69766;
       color: #fff;
     }
   }
@@ -378,6 +383,7 @@ html, body {
   0% {-webkit-transform:rotate(0deg);}
   100% {-webkit-transform:rotate(-360deg);}
 }
+/* End of logo specific stylesheets*/
 
 .selection-rect {
   position: fixed;

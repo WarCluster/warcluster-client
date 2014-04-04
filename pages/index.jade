@@ -26,7 +26,7 @@ html
     // script(src="/js/bootstrap.min.js")
 
   body(style='background-image: url(\'/images/backgrounds/pattern.png\');')
-    .label  version !{version}
+    .label.label-default version !{version}
     .welcomePage
       .elements
         #logo_container.logo_container
@@ -56,7 +56,7 @@ html
             a.btn.login(href="/twitter/connect") Login with Twitter
           .text-center
             a.btn.leaderboardBtn(id="leaderboardBtn", onclick="return goToLeaderboard();") Leaderboard
-              span.pull-left.icon-arrow-up.icon-white
+              span.pull-left.glyphicon.glyphicon-info-sign
                
     .leaderboardPage
     .welcome.text-center
