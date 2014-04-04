@@ -14,17 +14,17 @@ module.exports = Backbone.View.extend({
   },
   toggleTwitterStream: function() {
     if (this.expanded()) {
-      this.$(".icon-circle-arrow-right").removeClass("hide");
-      this.$(".icon-circle-arrow-left").addClass("hide");
+      this.$(".visible-twitter-stream").removeClass("hide");
+      this.$(".invisible-twitter-stream").addClass("hide");
       this.showTwitterStream();
     } else {
-      this.$(".icon-circle-arrow-right").addClass("hide");
-      this.$(".icon-circle-arrow-left").removeClass("hide");
+      this.$(".visible-twitter-stream").addClass("hide");
+      this.$(".invisible-twitter-stream").removeClass("hide");
       this.hideTwitterStream();
     }
   },
   expanded: function() {
-    return this.$(".icon-circle-arrow-right").hasClass("hide");
+    return this.$(".visible-twitter-stream").hasClass("hide");
   },
   showTwitterStream: function() {
       TweenLite.to(this.$el, 0.3, {
