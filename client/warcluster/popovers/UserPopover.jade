@@ -1,20 +1,21 @@
 .arrow
 h5.popover-title
   a.player-name(href='http://www.twitter.com/'+playerName, target='_blank')  !{playerName}
-  a.close-btn
-    i.icon-remove.pull-right
+  button.close-btn.pull-right
+    span.glyphicon.glyphicon-remove
 .popover-content
   .row-fluid
-    img.player-avatar.span4(src="#{twitterAvatar}")
-    .meta-information.span8
+    .thumbnails.col-sm-4
+    img.player-avatar(src="#{twitterAvatar}")
+    .meta-information.col-sm-8
       p.float-right(style='white-space:pre;')
         span.planet-production !{planetProduction} 
-        span  ships/minute
+        span  pilots/minute
       .pull-right
-        .attack.btn Attack
-        .spy.btn Spy
-        .supply.btn Supply
-    .pull-right.span12
-      i.icon-globe
+        .attack.btn.btn-default Attack
+        .spy.btn.btn-default Spy
+        .supply.btn.btn-default Supply
+    .pull-right.col-sm-12
+      i.fa.fa-globe
       !{planetCategory}
       span !{planetLink}

@@ -52,6 +52,10 @@
       margin: -75px 0px 0px 80px;
       text-align: left;
       font-size: 1em;
+      .fa-lock {
+        font-size: 1.2em;
+        margin-left: 6px;
+      }
     }
     cursor: pointer;
     .race-color {
@@ -59,6 +63,7 @@
     }
     img {
       padding: 10px;
+      width: 80px;
     }
     &:hover > .race-color {
       border-color: #f26a21;
@@ -131,11 +136,21 @@
   height: 100%;
 }
 .customPop {
-  background-color: #CCC;
+  background-color: #222;
   .popover-content {
-    color: #000;
+    color: #fff;
   }
 }
+
+.close-btn {
+  color: #000;
+  background: none;
+  border: none;
+  &:hover {
+    color: #2b3e50;
+  }
+}
+
 .toggle-landing-btn {
   position: absolute;
   bottom: 0px;
@@ -167,7 +182,6 @@
   }
 }
 .player-avatar {
-  .square(50px);
   display: inline-block;
 }
 .float-left {
@@ -215,6 +229,9 @@ html, body {
     left: -40px;
     top: -11px;
     position: inherit;
+    &:hover {
+      color: #888;
+    }
   }
 }
 .ui-container {
