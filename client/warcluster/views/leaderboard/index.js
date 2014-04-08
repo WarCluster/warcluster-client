@@ -79,6 +79,7 @@ module.exports = Backbone.View.extend({
     this.pollTeams();
   },
   populateIndividual: function(data) {
+    var _that = this;
     for(i=0;i<data.length;i++) {
       //animate the shit out of it!
       $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
@@ -94,7 +95,6 @@ module.exports = Backbone.View.extend({
       //   $('#user-'+data[i].id).html(data[i].score);
       // }
     }
-    var _that = this;
     this.leaderboardAjaxTimeout = setTimeout(function() {
       _.bind(_that.pollIndividual,_that);
       _that.pollIndividual(_that.currentPage);
