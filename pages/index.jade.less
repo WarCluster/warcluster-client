@@ -1,8 +1,10 @@
-@import "../style/less/font-awesome/less/font-awesome.less";
-@import "../style/less/bootstrap.less";
-@import "../style/less/responsive.less";
-
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
+
+@import "../style/less/font-awesome/font-awesome.less";
+@import "../style/less/bootstrap/bootstrap.less";
+@import "../style/less/social.less";
+/*@import "../style/less/responsive.less";*/
+
 /*TODO: 
   refactor css in less style
   make it responsive :D
@@ -50,6 +52,10 @@
       margin: -75px 0px 0px 80px;
       text-align: left;
       font-size: 1em;
+      .fa-lock {
+        font-size: 1.2em;
+        margin-left: 6px;
+      }
     }
     cursor: pointer;
     .race-color {
@@ -57,6 +63,7 @@
     }
     img {
       padding: 10px;
+      width: 80px;
     }
     &:hover > .race-color {
       border-color: #f26a21;
@@ -118,7 +125,7 @@
 .leaderboard-content {
   position: absolute;
   color: black;
-  background-color: white;
+  background-color: #fff;
   width: 100%;
   height: 100%;
 }
@@ -129,15 +136,29 @@
   height: 100%;
 }
 .customPop {
-  background-color: #CCC;
+  background-color: #222;
   .popover-content {
-    color: #000;
+    color: #fff;
   }
 }
+
+.close-btn {
+  color: #000;
+  background: none;
+  border: none;
+  &:hover {
+    color: #2b3e50;
+  }
+}
+
 .toggle-landing-btn {
   position: absolute;
   bottom: 0px;
-  right: 60px;
+  &:hover {
+    padding: 15px 25px;
+    font-size: 1.8em;
+  }
+  right: 100px;
 }
 .tutorial-menu {
   .toggle-btn {
@@ -161,7 +182,6 @@
   }
 }
 .player-avatar {
-  .square(50px);
   display: inline-block;
 }
 .float-left {
@@ -194,7 +214,7 @@ html, body {
 .twitter-stream {
   position: absolute;
   height: 520px;
-  right: 0px;
+  right: 246px;
   top: 80px;
   border-image: url("/images/ui/twitter-stream-timeline-border.png") 11 0 11 11 round;
   border-width: 11px 0px 11px 11px;
@@ -209,6 +229,9 @@ html, body {
     left: -40px;
     top: -11px;
     position: inherit;
+    &:hover {
+      color: #888;
+    }
   }
 }
 .ui-container {
@@ -239,58 +262,53 @@ html, body {
 }
 
 .description {
-  font-size: 18px;
-  color: #fff;
-}
-/*.loginBtn {
-    width: 150px;
-    height: 50px;
-    background-color: #F24960;
-    text-decoration: none;
-}*/
-.login {
-  .buttonBackground(#F24960, #F24960, #FFF, 0 1px 1px rgba(255,255,255,.75));
-  .border-radius(0px);
-  padding: 10px 50px;
-  &:hover {
-    .buttonBackground(#2AA9E0, #2AA9E0, #FFF, 0 1px 1px rgba(255,255,255,.75));
-  }
-}
-.leaderboardBtn {
-  /*.buttonBackground(#F24960, #F24960, #FFF, 0 1px 1px rgba(255,255,255,.75));
-  .border-radius(0px);*/
-  background:none;
-  border:none;
-  color: #D1CECE;
-  margin: 10px 50px;
-  &:hover {
-    /*.buttonBackground(#f24960, #f24960, #FFF, 0 1px 1px rgba(255,255,255,.75));*/
-    background:none;
-    border:none;
-    color: #fff;
-  }
-}
-.welcome {
-  margin: 10px auto;
-    width: 140px;
-  #leaderboardBtn {
-    top:93%;
-  };
-  .welcomeBtn {
-    .buttonBackground(#F24960, #F24960, #FFF, 0 1px 1px rgba(255,255,255,.75));
-    .border-radius(0px);
-    position: absolute;
-    margin: 0 auto;
-    &:hover {
-      .buttonBackground(#f69766, #f69766, #FFF, 0 1px 1px rgba(255,255,255,.75));
-      color: #fff;
-    }
-  }
-}
-.description {
   margin-top: -100px;
   width: 350px;
   position: absolute;
+  font-size: 18px;
+  color: #fff;
+}
+
+.login {
+  background-color: #F24960;
+  margin-top: 10px;
+  color: #FFF;
+  border-radius: 0px;
+  padding: 10px 50px;
+  &:hover {
+    background-color: #2AA9E0;
+    color: #FFF;
+  }
+}
+.leaderboardBtn {
+  background: none;
+  border: none;
+  color: #D1CECE;
+  margin: 10px 50px;
+  &:hover {
+    color: #F24960;
+  }
+/*  span {
+    padding-right: 5px;
+  }*/
+}
+.welcome {
+  margin: 10px auto;
+  width: 140px;
+  #leaderboardBtn {
+    top:93%;
+  }
+  .welcomeBtn {
+    position: absolute;
+    color: #fff;
+    background-color: #f24960;
+    border-radius: 0px;
+    margin: 0 auto;
+    &:hover {
+      background-color: #f69766;
+      color: #fff;
+    }
+  }
 }
 /*
   Logo specific stylesheets
@@ -383,6 +401,7 @@ html, body {
   0% {-webkit-transform:rotate(0deg);}
   100% {-webkit-transform:rotate(-360deg);}
 }
+/* End of logo specific stylesheets*/
 
 .selection-rect {
   position: fixed;
@@ -401,10 +420,10 @@ html, body {
     height: 60px;
     margin-right: 18px;
   }
-  ul {
+  .list-inline {
     position: absolute;
-    left: 12px;
-    bottom: -14px;
+    left: 17px;
+    bottom: -3px;
   }
   background-image:url('/images/missions-menu.png');
   width: 405px;
@@ -479,6 +498,7 @@ html, body {
   background-image: url("/images/ui/planet-info-top.png");
   padding-top: 5px;
   padding-bottom: 5px; 
+  padding-right: 10px;
   width: 250px; 
   .icon-expand-selection {
     padding-right: 20px;
