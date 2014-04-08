@@ -1,3 +1,11 @@
+var OrangeRaceTwitterStreamRender = jadeCompile(require("./render/orange-stream.jade"));
+var RedRaceTwitterStreamRender = jadeCompile(require("./render/red-stream.jade"));
+var YellowRaceTwitterStreamRender = jadeCompile(require("./render/yellow-stream.jade"));
+var GreenRaceTwitterStreamRender =  jadeCompile(require("./render/green-stream.jade"));
+// var BlueRaceTwitterStreamRender =   jadeCompile(require("./render/blue-stream.jade"));
+// var PinkRaceTwitterStreamRender =   jadeCompile(require("./render/pink-stream.jade"));
+
+
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
@@ -7,9 +15,21 @@ module.exports = Backbone.View.extend({
   initialize: function() {    
   },
   render: function(clusterTeam) {
-    this.$el.html(this.template({
-      hashtag: clusterTeam
-    }));
+    this.$el.html(this.template());
+    switch (clusterTeam) {
+      case "InitLab":
+        this.$el.append(RedRaceTwitterStreamRender());
+        break;
+      case "VarnaLab":
+        this.$el.append(OrangeRaceTwitterStreamRender());
+        break;
+      case "Hackafe":
+        this.$el.append(YellowRaceTwitterStreamRender());
+        break;
+      case "BurgasLab":
+        this.$el.append(GreenRaceTwitterStreamRender());
+        break;
+    }
     return this;
   },
   toggleTwitterStream: function() {
