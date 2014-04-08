@@ -47,7 +47,7 @@ $(document).ready(function() {
 });
 
 goToLeaderboard = function(e){
-  var leaderboard = new LeaderboardView();
+  this.leaderboard = new LeaderboardView();
   $(".leaderboardPage").html("").append(leaderboard.el)
   leaderboard.render();
   $(".leaderboardPage").animate({top: 0},{ 
@@ -61,6 +61,8 @@ goToWelcome = function(e){
       duration: "slow", 
       easing: "easeOutBounce"
     });
+  clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
+  delete this.leaderboard;
   $(".welcomeBtn").hide();
 }
 

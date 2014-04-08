@@ -34,6 +34,7 @@ module.exports = Backbone.View.extend({
     return this;
   },
   startGame: function() {
+    debugger;
     if ($(".start-game").html() === "Start Game") {
       if ((this.selectedRace > -1 && this.selectedRace < 6) && (this.selectedSun > -1 && this.selectedSun < 2)) {
         this.context.commandsManager.setupParameters(this.selectedRace, this.selectedSun);
@@ -53,6 +54,7 @@ module.exports = Backbone.View.extend({
       ease: Cubic.easeOut,
       onComplete: function() {
         $(".landing-view").remove();
+        clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
         delete this.leaderboard;    
       }
     });
