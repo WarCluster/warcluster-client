@@ -11,7 +11,8 @@ module.exports = Backbone.View.extend({
     "click .race-color": "showTeamLeaderboard"
   },
   className: "leaderboard-content",
-  initialize: function() {
+  initialize: function(twitterUsername) {
+    this.username =  twitterUsername || "username";
   },
   render: function() {
     var self = this;
@@ -21,9 +22,6 @@ module.exports = Backbone.View.extend({
     this.$el.html(this.template());
     this.leaderboardAjaxTimeout = -1;
     this.showIndividualLeaderboard();
-    
-    this.username = "username";
-    this.twitterId = "twitterId";
 
     return this;
   },
@@ -45,14 +43,41 @@ module.exports = Backbone.View.extend({
       this.$el.append(teamRender());
     }
   },
+  connectIndividualLeaderboard: function(){
+    clearTimeout(this.leaderboardAjaxTimeout);
+    this.pollIndividual(this.currentPage);
+  },
+  connectTeamLeaderboard: function(){
+    clearTimeout(this.leaderboardAjaxTimeout);
+    this.pollTeams();
+  },
   pollTeams: function() {
-    $.ajax({});
+    $.ajax({
+      url: self.config.ajaxUrl + "/teams/",
+      dataType: 'json',
+      context: this,
+      statusCode: {
+        404: function () {
+          //TODO:
+          //not enough players, maybe go to page 1?;
+          console.log("Page Not Found - 404");
+          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+        },
+        400: function() {
+          //TODO:
+          //bad request, maybe go to page 1?;
+          console.log("Page Not Found - 404");
+          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+        }
+      },
+      success: this.populateTeams
+    });
   },
   pollIndividual: function(page) {
     $.ajax({
-      url: self.config.ajaxUrl + "/players/?page=" + page, 
+      url: self.config.ajaxUrl + "/players/?page=" + page,
       dataType: 'json',
-      context: this, 
+      context: this,
       statusCode: {
         404: function () {
           //TODO:
@@ -69,14 +94,6 @@ module.exports = Backbone.View.extend({
       },
       success: this.populateIndividual
     });
-  },
-  connectIndividualLeaderboard: function(){
-    clearTimeout(this.leaderboardAjaxTimeout);
-    this.pollIndividual(this.currentPage);
-  },
-  connectTeamLeaderboard: function(){
-    clearTimeout(this.leaderboardAjaxTimeout);
-    this.pollTeams();
   },
   populateIndividual: function(data) {
     var _that = this;
@@ -99,6 +116,29 @@ module.exports = Backbone.View.extend({
       _.bind(_that.pollIndividual,_that);
       _that.pollIndividual(_that.currentPage);
     }, 2500);
+  },
+  populateTeams: function(data) {
+    var _that = this;
+    for(i=0;i<data.length;i++) {
+      //animate the shit out of it!
+      $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Color.R*255)+","+parseInt(data[i].Color.G*255) +","+parseInt(data[i].Color.B*255)+")"});
+      $("tbody tr:nth-child(" + (i+1) + ") > .race-color").html(data[i].Name);
+      $("tbody tr:nth-child(" + (i+1) + ") > .players-number").html(data[i].Players);
+      $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
+      // $("tbody tr:nth-child(" + 1 + ")").html("<td>1</td><td><a href='http://twitter.com/" + data[i].Username + "'>" + data[i].Username + "</td><td>" + data[i].Team + "</td><td>" + data[i].HomePlanet + "</td><td>" + data[i].Planets + "</td><td>");
+      // if ($('#user-'+data[i].id).length == 0) {
+      //   // this id doesn't exist, so add it to our list.
+        // $("#leaderboard").append('<li><h1 style="display:inline" id="user-' + data[i].id + '">' + data[i].score + '</h1> <img style="height:50px" src="http://graph.facebook.com/' + data[i].facebook_id + '/picture"/> ' + data[i].username + '</li>');
+      // } else {
+      //   // this id does exist, so update 'score' count in the h1 tag in the list item.
+      //   $('#user-'+data[i].id).html(data[i].score);
+      // }
+    }
+    this.leaderboardAjaxTimeout = setTimeout(function() {
+      _.bind(_that.pollTeams,_that);
+      _that.pollTeams();
+    }, 2500);
   }
+
 
 })
