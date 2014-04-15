@@ -97,21 +97,45 @@ module.exports = Backbone.View.extend({
   },
   populateIndividual: function(data) {
     var _that = this;
-    for(i=0;i<data.length;i++) {
+    for(var i=0;i<=data.length-1;i++) {
       //animate the shit out of it!
-      $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
-      $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
-      $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
-      $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
-      // $("tbody tr:nth-child(" + 1 + ")").html("<td>1</td><td><a href='http://twitter.com/" + data[i].Username + "'>" + data[i].Username + "</td><td>" + data[i].Team + "</td><td>" + data[i].HomePlanet + "</td><td>" + data[i].Planets + "</td><td>");
-      // if ($('#user-'+data[i].id).length == 0) {
-      //   // this id doesn't exist, so add it to our list.
-        // $("#leaderboard").append('<li><h1 style="display:inline" id="user-' + data[i].id + '">' + data[i].score + '</h1> <img style="height:50px" src="http://graph.facebook.com/' + data[i].facebook_id + '/picture"/> ' + data[i].username + '</li>');
-      // } else {
-      //   // this id does exist, so update 'score' count in the h1 tag in the list item.
-      //   $('#user-'+data[i].id).html(data[i].score);
-      // }
+      if (jQuery.isEmptyObject(this.cache)) {
+        $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
+        $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
+        $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
+        $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+      } 
+      // else if (this.cache[i].Username === data[i].Username) {
+      //   //don't animate
+      //   $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+      // } 
+      else {
+        _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
+        _that.iter.animate({deg: 60}, {
+          duration: 200,
+          step: function(now) {
+            _that.iter.css({
+              transform: "rotateX(" + now*1.5 + "deg)" 
+            })
+          }
+        });
+
+        $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
+        $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
+        $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
+        $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+        
+        _that.iter.animate({deg: 0}, {
+          duration: 300,
+          step: function(now) {
+            _that.iter.css({
+              transform: "rotateX(" + now*1.5 + "deg)" 
+            })
+          }
+        });
+      }
     }
+    this.cache = data;
     this.leaderboardAjaxTimeout = setTimeout(function() {
       _.bind(_that.pollIndividual,_that);
       _that.pollIndividual(_that.currentPage);
@@ -119,20 +143,12 @@ module.exports = Backbone.View.extend({
   },
   populateTeams: function(data) {
     var _that = this;
-    for(i=0;i<data.length;i++) {
+    for(var i=0;i<data.length;i++) {
       //animate the shit out of it!
       $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Color.R*255)+","+parseInt(data[i].Color.G*255) +","+parseInt(data[i].Color.B*255)+")"});
       $("tbody tr:nth-child(" + (i+1) + ") > .race-color").html(data[i].Name);
       $("tbody tr:nth-child(" + (i+1) + ") > .players-number").html(data[i].Players);
       $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
-      // $("tbody tr:nth-child(" + 1 + ")").html("<td>1</td><td><a href='http://twitter.com/" + data[i].Username + "'>" + data[i].Username + "</td><td>" + data[i].Team + "</td><td>" + data[i].HomePlanet + "</td><td>" + data[i].Planets + "</td><td>");
-      // if ($('#user-'+data[i].id).length == 0) {
-      //   // this id doesn't exist, so add it to our list.
-        // $("#leaderboard").append('<li><h1 style="display:inline" id="user-' + data[i].id + '">' + data[i].score + '</h1> <img style="height:50px" src="http://graph.facebook.com/' + data[i].facebook_id + '/picture"/> ' + data[i].username + '</li>');
-      // } else {
-      //   // this id does exist, so update 'score' count in the h1 tag in the list item.
-      //   $('#user-'+data[i].id).html(data[i].score);
-      // }
     }
     this.leaderboardAjaxTimeout = setTimeout(function() {
       _.bind(_that.pollTeams,_that);
