@@ -8,11 +8,19 @@ module.exports = Backbone.View.extend({
   events: {
     "click #individualBtn": "showIndividualLeaderboard",
     "click #teamBtn": "showTeamLeaderboard",
-    "click .race-color": "showTeamLeaderboard"
+    "click .race-color": "showTeamLeaderboard",
+    //TODO: implement the pagination this way?
+    // use goToPage
+    "click .previous-page": "goToPreviousPage",
+    "click .next-page": "goToNextPage"
   },
   className: "leaderboard-content",
   initialize: function(twitterUsername) {
-    this.username =  twitterUsername || "username";
+    if (twitterUsername) {
+      this.username =  twitterUsername || "username";
+      //TODO: implement the focus on the player
+      //goToPageUsernamePage(this.username);
+    }
   },
   render: function() {
     var self = this;
@@ -30,6 +38,9 @@ module.exports = Backbone.View.extend({
     $("#teamBtn").parent().removeClass("active");
     $("#individualBtn").parent().addClass("active");
     if ($("#individual").length === 0){
+      //TODO: refactor the flow
+      //1. goToPage 
+      //2. then connectIndividualLeaderboard
       this.connectIndividualLeaderboard();
       this.$el.append(individualRender());
     }
@@ -66,7 +77,7 @@ module.exports = Backbone.View.extend({
         400: function() {
           //TODO:
           //bad request, maybe go to page 1?;
-          console.log("Page Not Found - 404");
+          console.log("Page Not Found - 400");
           $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
         }
       },
@@ -88,7 +99,7 @@ module.exports = Backbone.View.extend({
         400: function() {
           //TODO:
           //bad request, maybe go to page 1?;
-          console.log("Page Not Found - 404");
+          console.log("Page Not Found - 400");
           $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
         }
       },
