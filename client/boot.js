@@ -3,8 +3,7 @@ require("../client/vendor/bootstrap");
 require("../client/vendor/bootstrap-fileupload.min");
 require("../client/vendor/bootstrap-colorselector");
 require("../client/vendor/google-code-prettify/prettify");
-
-
+require("../client/vendor/typeahead.bundle")
 require("../client/vendor/TweenLite.min");	
 require("../client/vendor/plugins/jquery-mousewheel.min")($);
 require("../client/vendor/plugins/CSSPlugin.min");

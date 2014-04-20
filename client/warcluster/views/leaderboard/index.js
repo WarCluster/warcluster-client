@@ -8,11 +8,11 @@ module.exports = Backbone.View.extend({
   events: {
     "click #individualBtn": "showIndividualLeaderboard",
     "click #teamBtn": "showTeamLeaderboard",
-    "click .race-color": "showTeamLeaderboard",
+    "click .race-color": "showTeamLeaderboard"
     //TODO: implement the pagination this way?
     // use goToPage
-    "click .previous-page": "goToPreviousPage",
-    "click .next-page": "goToNextPage"
+    // "click .previous-page": "goToPreviousPage",
+    // "click .next-page": "goToNextPage"
   },
   className: "leaderboard-content",
   initialize: function(twitterUsername) {
@@ -21,6 +21,20 @@ module.exports = Backbone.View.extend({
       //TODO: implement the focus on the player
       //goToPageUsernamePage(this.username);
     }
+    var engine = new Bloodhound({
+      name: 'animals',
+      local: [{ val: 'dog' }, { val: 'pig' }, { val: 'moose' }],
+      remote: 'http://example.com/animals?q=%QUERY',
+      datumTokenizer: function(d) { 
+          return Bloodhound.tokenizers.whitespace(d.val); 
+      },
+      queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
+    var promise = engine.initialize();
+
+    promise
+    .done(function() { console.log('bloodhound success!'); })
+    .fail(function() { console.log('bloodhound err!'); });
   },
   render: function() {
     var self = this;
