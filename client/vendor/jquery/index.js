@@ -1,4 +1,4 @@
-require("./jquery-1.9.1.min");
+require("./jquery-1.9.1");
 require("./jquery-ui-1.8.19");
 require("./jquery-upload");
 require("./jquery-fineuploader");
