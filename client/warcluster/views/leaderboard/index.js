@@ -15,34 +15,33 @@ module.exports = Backbone.View.extend({
     // "click .next-page": "goToNextPage"
   },
   className: "leaderboard-content",
-  initialize: function(twitterUsername) {
-    if (twitterUsername) {
-      this.username =  twitterUsername || "username";
-      //TODO: implement the focus on the player
-      //goToPageUsernamePage(this.username);
-    }
-    var engine = new Bloodhound({
-      name: 'animals',
-      local: [{ val: 'dog' }, { val: 'pig' }, { val: 'moose' }],
-      remote: 'http://example.com/animals?q=%QUERY',
+  initialize: function() {
+    var searchEngine = new Bloodhound({
+      name: 'players',
+      remote: {
+        url: self.config.ajaxUrl + "/search/players/",
+        dataType: 'json'
+      },
       datumTokenizer: function(d) { 
           return Bloodhound.tokenizers.whitespace(d.val); 
       },
       queryTokenizer: Bloodhound.tokenizers.whitespace
     });
-    var promise = engine.initialize();
-
-    promise
-    .done(function() { console.log('bloodhound success!'); })
-    .fail(function() { console.log('bloodhound err!'); });
+    searchEngine.initialize();
   },
-  render: function() {
+  render: function(twitterUsername) {
     var self = this;
 
     this.currentPage = 1;
     this.cache = {};
     this.$el.html(this.template());
     this.leaderboardAjaxTimeout = -1;
+
+    if (twitterUsername) {
+      this.username =  twitterUsername || "username";
+      //TODO: implement the focus on the player
+      //goToPageUsernamePage(this.username);
+    }
     this.showIndividualLeaderboard();
 
     return this;
@@ -131,10 +130,10 @@ module.exports = Backbone.View.extend({
         $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
         $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
       } 
-      else if (this.cache[i].Username === data[i].Username && this.chache[i].Planets !== data[i].Planets) {
-        //TODO: Shake it dat ass 
-        $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
-      } 
+      // else if (this.cache[i].Username === data[i].Username && this.chache[i].Planets !== data[i].Planets) {
+      //   //TODO: Shake it dat ass 
+      //   $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+      // } 
       else {
         _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
         //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
@@ -175,10 +174,10 @@ module.exports = Backbone.View.extend({
         _.bind(this.implodeAnimation,_that.iter);
         this.implodeAnimation(_that.iter);
 
-        $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
-        $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
-        $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
-        $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+        $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Color.R*255)+","+parseInt(data[i].Color.G*255) +","+parseInt(data[i].Color.B*255)+")"});
+        $("tbody tr:nth-child(" + (i+1) + ") > .race-color").html(data[i].Name);
+        $("tbody tr:nth-child(" + (i+1) + ") > .players-number").html(data[i].Players);
+        $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
         
         _.bind(this.explodeAnimation,_that.iter);
         this.explodeAnimation(_that.iter);
@@ -192,8 +191,6 @@ module.exports = Backbone.View.extend({
   },
   //TODO: find a proper naming for the animation. Figure out a better UX animation
   implodeAnimation: function(element) {
-    debugger;
-    console.log(element);
     element.animate({deg: 60}, {
       duration: 200,
       step: function(now) {
@@ -204,7 +201,6 @@ module.exports = Backbone.View.extend({
     });
   },
   explodeAnimation: function(element) {
-    console.log(element);
     element.animate({deg: 0}, {
       duration: 300,
       step: function(now) {

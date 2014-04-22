@@ -22,7 +22,7 @@ module.exports = Backbone.View.extend({
     this.$el.html(this.template({twitter: this.twitter}));
     this.$el.append(statisticsRender());
     this.leaderboard = new LeaderboardView();
-    $(".leaderboard-panel").html("").addClass("left-panel").append(this.leaderboard.render().el);
+    $(".leaderboard-panel").html("").addClass("left-panel").append(this.leaderboard.render(this.context.playerData.Username).el);
 
     return this;
   },
