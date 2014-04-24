@@ -8,18 +8,16 @@ module.exports = Backbone.View.extend({
   events: {
     "click #individualBtn": "showIndividualLeaderboard",
     "click #teamBtn": "showTeamLeaderboard",
-    "click .race-color": "showTeamLeaderboard"
-    //TODO: implement the pagination this way?
-    // use goToPage
-    // "click .previous-page": "goToPreviousPage",
-    // "click .next-page": "goToNextPage"
+    "click .race-color": "showTeamLeaderboard",
+    "click .previous-page": "goToPreviousPage",
+    "click .next-page": "goToNextPage"
   },
   className: "leaderboard-content",
   initialize: function() {
     var searchEngine = new Bloodhound({
       name: 'players',
       remote: {
-        url: self.config.ajaxUrl + "/search/players/",
+        url: self.config.searchAjaxUrl + "/?players=",
         dataType: 'json'
       },
       datumTokenizer: function(d) { 
@@ -38,22 +36,21 @@ module.exports = Backbone.View.extend({
     this.leaderboardAjaxTimeout = -1;
 
     if (twitterUsername) {
-      this.username =  twitterUsername || "username";
+      this.username =  twitterUsername;
       //TODO: implement the focus on the player
-      //goToPageUsernamePage(this.username);
+      this.goToUsernamePage(this.username);
+    } else {
+      this.showIndividualLeaderboard();
     }
-    this.showIndividualLeaderboard();
 
     return this;
   },
-  showIndividualLeaderboard: function(){
+  showIndividualLeaderboard: function() {
     $("#team").remove();
     $("#teamBtn").parent().removeClass("active");
     $("#individualBtn").parent().addClass("active");
     if ($("#individual").length === 0){
-      //TODO: refactor the flow
-      //1. goToPage 
-      //2. then connectIndividualLeaderboard
+      this.currentPage = 1;
       this.connectIndividualLeaderboard();
       this.$el.append(individualRender());
     }
@@ -106,14 +103,12 @@ module.exports = Backbone.View.extend({
         404: function () {
           //TODO:
           //not enough players, maybe go to page 1?;
-          console.log("Page Not Found - 404");
-          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+          $("#individual").html("There're not enough players. Refresh? Page Not Found - 404");
         },
         400: function() {
           //TODO:
           //bad request, maybe go to page 1?;
-          console.log("Page Not Found - 400");
-          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+          $("#individual").html("Bad request. Page Not Found - 400");
         }
       },
       success: this.populateIndividual
@@ -132,7 +127,14 @@ module.exports = Backbone.View.extend({
       } 
       // else if (this.cache[i].Username === data[i].Username && this.chache[i].Planets !== data[i].Planets) {
       //   //TODO: Shake it dat ass 
-      //   $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+        // _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets");
+        // _.bind(this.implodeAnimation,_that.iter);
+        // this.implodeAnimation(_that.iter);
+
+        // $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+
+        // _.bind(this.explodeAnimation,_that.iter);
+        // this.explodeAnimation(_that.iter);
       // } 
       else {
         _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
@@ -166,7 +168,14 @@ module.exports = Backbone.View.extend({
       }
       else if (this.cache[i].Name === data[i].Name && (this.cache[i].Players !== data[i].Players || this.cache[i].Planets !== data[i].Planets)) {
         //TODO: Shake it dat ass 
-        $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+        // _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets-number");
+        // _.bind(this.implodeAnimation,_that.iter);
+        // this.implodeAnimation(_that.iter);
+
+        // $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
+
+        // _.bind(this.explodeAnimation,_that.iter);
+        // this.explodeAnimation(_that.iter);
       }
       else {
         _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
@@ -188,6 +197,39 @@ module.exports = Backbone.View.extend({
       _.bind(_that.pollTeams,_that);
       _that.pollTeams();
     }, 2500);
+  },
+  goToNextPage: function() {
+    this.currentPage += 1;
+    this.connectIndividualLeaderboard();
+  },
+  goToPreviousPage: function() {
+    this.currentPage = (this.currentPage<2)?this.currentPage:(this.currentPage-1);
+    this.connectIndividualLeaderboard();
+  },
+  goToUsernamePage: function(username) {
+    debugger;
+    $.ajax({
+      url: self.config.searchAjaxUrl + "/?player=" + username,
+      dataType: 'json',
+      context: this,
+      statusCode: {
+        404: function () {
+          //TODO:
+          //not enough players, maybe go to page 1?;
+          console.log("Page Not Found - 404");
+          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+        },
+        400: function() {
+          //TODO:
+          //bad request, maybe go to page 1?;
+          console.log("Page Not Found - 400");
+          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+        }
+      },
+      success: function(data) {
+        debugger;
+      }
+    });
   },
   //TODO: find a proper naming for the animation. Figure out a better UX animation
   implodeAnimation: function(element) {

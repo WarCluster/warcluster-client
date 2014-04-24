@@ -43,7 +43,9 @@ module.exports = Backbone.View.extend({
         return;
       }
     }
-    clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
+    if(this.leaderboard.leaderboardAjaxTimeout) {
+      clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
+    }
     TweenLite.to($(".landing-view"), 0.2, {
       css: {
         height: "120px",
