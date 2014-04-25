@@ -150,8 +150,8 @@ module.exports.prototype.gc = function(rect) {
   var forRemove = [];
   for (var i = 0;i < this.context.objects.length;i ++) {
     var object = this.context.objects[i];
-    if (object.position.x >= rect.x && object.position.x < rect.x + rect.width &&
-        object.position.y < rect.y && object.position.y >= rect.y - rect.height) {
+    if (object.position.x >= rect.left && object.position.x <= rect.left + rect.width &&
+        object.position.y <= rect.top && object.position.y >= rect.top - rect.height) {
       forRemove.push(object)
     }
   }
