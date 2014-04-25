@@ -49,6 +49,7 @@ module.exports = Backbone.View.extend({
     $("#individualBtn").parent().addClass("active");
     if ($("#individual").length === 0){
       this.currentPage = 1;
+      this.cache = {};
       this.connectIndividualLeaderboard();
       this.$el.append(individualRender());
     }
@@ -58,6 +59,7 @@ module.exports = Backbone.View.extend({
     $("#individualBtn").parent().removeClass("active");
     $("#teamBtn").parent().addClass("active");
     if ($("#team").length === 0) {
+      this.cache = {};
       this.connectTeamLeaderboard();
       this.$el.append(teamRender());
     }
@@ -189,25 +191,45 @@ module.exports = Backbone.View.extend({
   },
   populateTeams: function(data) {
     var _that = this;
-    for(var i=0;i<data.length;i++) {
-      if (jQuery.isEmptyObject(this.cache)) {
+    debugger;
+    if (jQuery.isEmptyObject(this.cache)) {
+      for(var i=0;i<data.length;i++) {
         $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Color.R*255)+","+parseInt(data[i].Color.G*255) +","+parseInt(data[i].Color.B*255)+")"});
         $("tbody tr:nth-child(" + (i+1) + ") > .race-color").html(data[i].Name);
         $("tbody tr:nth-child(" + (i+1) + ") > .players-number").html(data[i].Players);
-        $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
+        $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets); 
       }
-      else if (this.cache[i].Name === data[i].Name && (this.cache[i].Players !== data[i].Players || this.cache[i].Planets !== data[i].Planets)) {
-        //TODO: Shake it dat ass 
-        // _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets-number");
-        // _.bind(this.implodeAnimation,_that.iter);
-        // this.implodeAnimation(_that.iter);
+    } 
+    else {
+      for(var i=0;i<data.length;i++) {
+       if (this.cache[i].Name === data[i].Name) {
+        if (this.cache[i].Players !== data[i].Players) { 
+          _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .players-number");
 
-        // $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
+          _.bind(this.implodeAnimation,_that.iter);
+          this.implodeAnimation(_that.iter);
 
-        // _.bind(this.explodeAnimation,_that.iter);
-        // this.explodeAnimation(_that.iter);
-      }
-      else {
+          $("tbody tr:nth-child(" + (i+1) + ") > .players-number").html(data[i].Planets);
+
+
+          _.bind(this.explodeAnimation,_that.iter);
+          this.explodeAnimation(_that.iter);
+        } 
+        else if (this.cache[i].Planets !== data[i].Planets) {
+          _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets-number");
+
+          _.bind(this.implodeAnimation,_that.iter);
+          this.implodeAnimation(_that.iter);
+
+          $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
+
+
+          _.bind(this.explodeAnimation,_that.iter);
+          this.explodeAnimation(_that.iter);
+        }
+        
+       }
+       else if (this.cache[i].Name !== data[i].Name) {
         _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
         //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
         _.bind(this.implodeAnimation,_that.iter);
@@ -220,6 +242,7 @@ module.exports = Backbone.View.extend({
         
         _.bind(this.explodeAnimation,_that.iter);
         this.explodeAnimation(_that.iter);
+       }
       }
     }
     this.cache = data;
