@@ -36,9 +36,7 @@ module.exports = Backbone.View.extend({
     this.leaderboardAjaxTimeout = -1;
 
     if (twitterUsername) {
-      this.username =  twitterUsername;
-      //TODO: implement the focus on the player
-      this.goToUsernamePage(this.username);
+      this.goToUsernamePage(twitterUsername);
     } else {
       this.showIndividualLeaderboard();
     }
@@ -82,13 +80,13 @@ module.exports = Backbone.View.extend({
           //TODO:
           //not enough players, maybe go to page 1?;
           console.log("Page Not Found - 404");
-          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+          $("#team").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
         },
         400: function() {
           //TODO:
           //bad request, maybe go to page 1?;
           console.log("Page Not Found - 400");
-          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+          $("#team").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
         }
       },
       success: this.populateTeams
@@ -116,39 +114,71 @@ module.exports = Backbone.View.extend({
   },
   populateIndividual: function(data) {
     var _that = this;
+    var n, j = this.currentPage*10;
+    //create the position of the players based on the currentPage
+    for(n = 10; n > 0; n--, j--) {
+      $("tbody tr:nth-child("+ n +") > .position").html(j);
+    }
 
-    for(var i=0;i<=data.length-1;i++) {
-      //animate only when necessary
-      if (jQuery.isEmptyObject(this.cache)) {
-        $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
-        $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
-        $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
-        $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
-      } 
-      // else if (this.cache[i].Username === data[i].Username && this.chache[i].Planets !== data[i].Planets) {
-      //   //TODO: Shake it dat ass 
-        // _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets");
-        // _.bind(this.implodeAnimation,_that.iter);
-        // this.implodeAnimation(_that.iter);
+    if (jQuery.isEmptyObject(this.cache)) {
+      for(var i=0;i<=data.length-1;i++) {
+        //animate only when necessary
+          $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
+          $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
+          $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
+          $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+        }
+    } 
+    else {
+      for(var i=0;i<10;i++) {
+        if(i <= data.length-1) {
+          if(i <= this.cache.length-1) {
+            if(this.cache[i].Username === data[i].Username && this.cache[i].Planets !== data[i].Planets) {
+               _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets");
+              _.bind(this.implodeAnimation,_that.iter);
+              this.implodeAnimation(_that.iter);
 
-        // $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+              $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
 
-        // _.bind(this.explodeAnimation,_that.iter);
-        // this.explodeAnimation(_that.iter);
-      // } 
-      else {
-        _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
-        //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
-        _.bind(this.implodeAnimation,_that.iter);
-        this.implodeAnimation(_that.iter);
+              _.bind(this.explodeAnimation,_that.iter);
+              this.explodeAnimation(_that.iter);
+            } 
+            else if (this.cache[i].Username !== data[i].Username) {
+              _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
+              //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
+              _.bind(this.implodeAnimation,_that.iter);
+              this.implodeAnimation(_that.iter);
 
-        $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
-        $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
-        $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
-        $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
-        
-        _.bind(this.explodeAnimation,_that.iter);
-        this.explodeAnimation(_that.iter);
+              $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
+              $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
+              $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
+              $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+
+              _.bind(this.explodeAnimation,_that.iter);
+              this.explodeAnimation(_that.iter);
+            }
+          }
+          else {
+            _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
+            //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
+            _.bind(this.implodeAnimation,_that.iter);
+            this.implodeAnimation(_that.iter);
+
+            $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("<a href='https://twitter.com/"+data[i].Username+"' target='_blank'>@"+data[i].Username+"</a>");
+            $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Team.R*255)+","+parseInt(data[i].Team.G*255) +","+parseInt(data[i].Team.B*255)+")"});
+            $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html(data[i].HomePlanet);
+            $("tbody tr:nth-child(" + (i+1) + ") > .planets").html(data[i].Planets);
+
+            _.bind(this.explodeAnimation,_that.iter);
+            this.explodeAnimation(_that.iter);
+          }
+        } 
+        else if (i > data.length - 1) {
+          $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("");
+          $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb(255,255,255)"});
+          $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html("");
+          $("tbody tr:nth-child(" + (i+1) + ") > .planets").html("");
+        }
       }
     }
     this.cache = data;
@@ -207,27 +237,15 @@ module.exports = Backbone.View.extend({
     this.connectIndividualLeaderboard();
   },
   goToUsernamePage: function(username) {
-    debugger;
     $.ajax({
       url: self.config.searchAjaxUrl + "/?player=" + username,
       dataType: 'json',
       context: this,
-      statusCode: {
-        404: function () {
-          //TODO:
-          //not enough players, maybe go to page 1?;
-          console.log("Page Not Found - 404");
-          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
-        },
-        400: function() {
-          //TODO:
-          //bad request, maybe go to page 1?;
-          console.log("Page Not Found - 400");
-          $("#individual").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
-        }
-      },
       success: function(data) {
-        debugger;
+        this.currentPage = data[0].Page+1;//the indexation is not the same. that's why we need the "+1"
+        //issue here -> https://trello.com/c/n6czGaht/325-identical-indexation-for-the-leaderboard-results
+        this.connectIndividualLeaderboard();
+        this.$el.append(individualRender());
       }
     });
   },
