@@ -1,7 +1,7 @@
 var individualRender = jadeCompile(require("./render/individual.jade"));
 var teamRender = jadeCompile(require("./render/team.jade"));
 
-//TODO: need to refactor this whole view with the ajax shit O_O
+//TODO: need to refactor this whole view O_O There's a lot of copy-pasting, especially for the animations
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
@@ -191,7 +191,6 @@ module.exports = Backbone.View.extend({
   },
   populateTeams: function(data) {
     var _that = this;
-    debugger;
     if (jQuery.isEmptyObject(this.cache)) {
       for(var i=0;i<data.length;i++) {
         $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb("+ parseInt(data[i].Color.R*255)+","+parseInt(data[i].Color.G*255) +","+parseInt(data[i].Color.B*255)+")"});
