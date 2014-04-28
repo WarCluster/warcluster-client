@@ -1,3 +1,5 @@
+var Rect = require("x-math").Rect;
+
 module.exports = function(context){
   THREE.EventDispatcher.call(this);
 
@@ -28,10 +30,16 @@ module.exports.prototype.stop = function() {
 
 module.exports.prototype.managePlanetData = function(planets) {
   var updated = [];
-  
+  /*var sr = this.context.spaceViewController.getScreenRectangle();
+  var rect = new Rect(sr.x, sr.y, sr.width, sr.height);*/
+
   for (var id in planets) {
     var planet = this.context.objectsById[id];
     planets[id].id = id;
+    /*console.log("managePlanetData:", planets[id].Position.X, planets[id].Position.Y, rect, planets[id])
+    if (!(planets[id].Position.X >= rect.left && planets[id].Position.X <= rect.left + rect.width &&
+        planets[id].Position.Y <= rect.top && planets[id].Position.Y >= rect.top - rect.height))
+      console.log("@@@@@@@@@@@@@@@@@@ SHIT @@@@@@@@@@@@@@@@@@@@")*/
 
     if (!planet) {
       planet = this.context.planetsFactory.build(planets[id]);

@@ -10,11 +10,22 @@ module.exports = function(context, config){
 
 	var self = this;
 
-  console.log("1.#####.diff:", Rect.difference(new Rect(0, -3000, 5000, 3000), new Rect(0, -2000, 5000, 3000))[0])
-  console.log("2.#####.diff:", Rect.difference(new Rect(0, -2000, 5000, 3000), new Rect(0, -3000, 5000, 3000))[0])
+  this.gridWidth = 1000;
+  this.gridHeight = 1000;
+
+  /*console.log("1.#####.diff:", this.getGridPosition(0, 0), this.getGridPosition(0, -1000), this.getGridPosition(-1000, -1000), this.getGridPosition(-1000, 0))
+
+  console.log("1.#####.diff:", this.getGridPosition(1000, 1000), this.getGridPosition(1000, -1000), this.getGridPosition(-1000, -1000), this.getGridPosition(-1000, 1000))
+  console.log("1.#####.diff:", this.getGridPosition(0, 0), this.getGridPosition(1000, 0), this.getGridPosition(1000, 1000), this.getGridPosition(0, 1000))
+  console.log("1.#####.diff:", this.getGridPosition(0, 0), this.getGridPosition(-1000, 0), this.getGridPosition(-1000, -1000), this.getGridPosition(0, -1000))
+  console.log("1.#####.diff:", this.getGridPosition(0, 0), this.getGridPosition(-1999.99, 0), this.getGridPosition(-1999.99, -1999.99), this.getGridPosition(0, -1999.99))*/
+  //console.log("2.#####.diff:", Rect.difference(new Rect(0, 100, 100, 100), new Rect(0, 0, 100, 100))[0])
+
+  //console.log("1.#####.diff:", Rect.difference(new Rect(0, -3000, 5000, 3000), new Rect(0, -2000, 5000, 3000))[0])
+  //console.log("2.#####.diff:", Rect.difference(new Rect(0, -2000, 5000, 3000), new Rect(0, -3000, 5000, 3000))[0])
   
-  console.log("3.#####.diff:", Rect.difference(new Rect(0, 0, 100, 100), new Rect(0, 10, 100, 100)))
-  console.log("4.#####.diff:", Rect.difference(new Rect(0, 10, 100, 100), new Rect(0, 0, 100, 100)))
+  //console.log("3.#####.diff:", Rect.difference(new Rect(0, 0, 100, 100), new Rect(0, 10, 100, 100)))
+  //console.log("4.#####.diff:", Rect.difference(new Rect(0, 10, 100, 100), new Rect(0, 0, 100, 100)))
 
   this.context = context;
   this.config = config;
@@ -24,32 +35,27 @@ module.exports = function(context, config){
   this.xIndex;
   this.yIndex;
 
-  this.gridWidth = 1000;
-  this.gridHeight = 1000;
+  
 
   this.zoomer = new Zoomer(context, config.zoomer, this);
   this.zoomer.addEventListener("scopeOfView", function(e) {
     self.scroller.scaleIndex = e.zoom;
     self.dispatchEvent(e);
     self.info.updatePosition();
-    self.refreshIndexes();
+    self.refreshScreen();
   });
   this.zoomer.addEventListener("zoom", function(e) {
     self.scroller.scaleIndex = e.zoom;
     self.dispatchEvent(e);
     self.info.updatePosition();
+    self.refreshScreen();
   });
 
   this.scroller = new Scroller(context, config.scroller, this);
   this.scroller.addEventListener("scroll", function(e) {
     self.dispatchEvent(e);
     self.info.updatePosition();
-    self.refreshIndexes();
-  });
-  this.scroller.addEventListener("scopeOfView", function(e) {
-    self.dispatchEvent(e);
-    self.info.updatePosition();
-    self.refreshIndexes();
+    self.refreshScreen();
   });
 
   this.selection = new Selection(context, config.selection);
@@ -127,19 +133,9 @@ module.exports.prototype.activate = function(x, y) {
     this.scrollTo(x, y);
 
     var p = this.getGridPosition(this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y);
-    //this.xIndex = p.xIndex;
-    //this.yIndex = p.yIndex;
     console.log("#### ACTIVATE:", p.xIndex, p.yIndex)
-    var rect = this.getScreenRectangle(this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y);
-    this.context.commandsManager.scopeOfView({
-      x: rect.cx,
-      y: rect.cy
-    }, {
-      width: rect.width - 1,
-      height: rect.height - 1,
-    });
 
-    this.refreshIndexes();
+    this.refreshScreen();
 	}
 }
 
@@ -219,12 +215,19 @@ module.exports.prototype.setScrollPosition = function(x, y, z){
 }
 
 module.exports.prototype.getGridPosition = function(x, y) {
-  var xIndex = x / this.gridWidth || 1;
-  var yIndex = y / this.gridHeight || 1;
   return {
-    xIndex: xIndex > 0 ? Math.ceil(xIndex) : Math.floor(xIndex),
-    yIndex: yIndex > 0 ? Math.ceil(yIndex) : Math.floor(yIndex)
+    xIndex: this.roundCoordinate(x, this.gridWidth),
+    yIndex: this.roundCoordinate(y, this.gridHeight)
   }
+}
+
+module.exports.prototype.roundCoordinate = function(d, w) {
+  if (d > 0)
+    return parseInt(d / w) + 1;
+  else if (d < 0)
+    return parseInt(d / w);
+
+  return 1;
 }
 
 module.exports.prototype.getCellPosition = function(xIndex, yIndex, position) {
@@ -255,11 +258,15 @@ module.exports.prototype.getCellPosition = function(xIndex, yIndex, position) {
   };
 }
 
-module.exports.prototype.getScreenRectangle = function() {
+module.exports.prototype.getScreenRectangle = function(sc) {
   var gPosition = this.getGridPosition(this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y);
   var resolution = this.getResolution();
-  //resolution.width += this.gridWidth * 2;
-  //resolution.height += this.gridHeight * 2;
+  //console.log("1.getScreenRectangle:", sc, resolution.width, resolution.height)
+  if (!isNaN(sc)) {
+    resolution.width *= sc;
+    resolution.height *= sc;  
+  }
+  //console.log("2.getScreenRectangle:", resolution.width, resolution.height)
 
   var iw = Math.ceil((resolution.width / 2) / this.gridWidth);
   var ih = Math.ceil((resolution.height / 2) / this.gridHeight);
@@ -279,33 +286,8 @@ module.exports.prototype.getScreenRectangle = function() {
     y: tl.y
   }
 
-  console.log("1.getScreenRectangle", this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y, iw, ih, resolution, tl, Math.ceil(resolution.height / this.gridHeight))
-  console.log("2.getScreenRectangle", gPosition, data)
-
-  //resolution.width += this.gridWidth * 2;
-  //resolution.height += this.gridHeight * 2;
-  /*var x1 = x - resolution.width / 2;
-  var y1 = y + resolution.height / 2;
-
-  var x2 = x + resolution.width / 2;
-  var y2 = y - resolution.height / 2;
-  var gtl = this.getGridPosition(x1, y1);
-  var gbr = this.getGridPosition(x2, y2);
-
-  var tl = this.getCellPosition(gtl.xIndex, gtl.yIndex);
-  var br = this.getCellPosition(gbr.xIndex, gbr.yIndex, "br");
-  
-  var data = {
-    width: br.x - tl.x,
-    height: tl.y - br.y,
-    cx: tl.x + (br.x - tl.x) / 2,
-    cy: tl.y - (tl.y - br.y) / 2,
-    x: tl.x,
-    y: tl.y
-  }
-
-  console.log("1.getScreenRectangle", x, y, resolution, tl, br)
-  console.log("2.getScreenRectangle", x1, y1, x2, y2, gtl, gbr)*/
+  //console.log("1.getScreenRectangle", this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y, iw, ih, resolution, tl, Math.ceil(resolution.height / this.gridHeight))
+  //console.log("2.getScreenRectangle", gPosition, data)
 
   return data;
 }
@@ -318,211 +300,50 @@ module.exports.prototype.translateIndex = function(i, d) {
   return i + d;
 }
 
-module.exports.prototype.indexDistance = function(i1, i2) {
-  if (i1 == i2)
-    return 0;
-
-  var ii1 = i1;
-  var ii2 = i2;
-
-  i1 = Math.min(ii1, ii2);
-  i2 = Math.max(ii1, ii2);
-
-  if (i1 > 0 && i2 > 0)
-    return i2 - i1 - 1;
-  else if (i1 < 0 && i2 < 0)
-    return i2 - i1 - 1;
-  else if (i1 < 0 && i2 > 0)
-    return i2 - 1 + i1 + 1;
-  //else if (i1 > 0 && i2 < 0)
-  return i2 + 1 + i1 - 1;
-}
-
 module.exports.prototype.scopeOfView = function(rect) {
-  console.log("scopeOfView", rect.left, rect.top, rect.left + rect.width / 2, rect.top - rect.height / 2, rect.width, rect.height)
-  this.context.commandsManager.scopeOfView({
-    x: rect.left + rect.width / 2,
-    y: rect.top - rect.height / 2
-  }, {
-    width: rect.width,
-    height: rect.height,
-  });
+  //console.log("scopeOfView", rect.left, rect.top, rect.left + rect.width / 2, rect.top - rect.height / 2, rect.width, rect.height)
+  this.context.commandsManager.scopeOfView(rect.left + rect.width / 2, rect.top - rect.height / 2, rect.width, rect.height);
 }
 
-module.exports.prototype.refreshIndexes = function() {
-  
-  var resolution = this.getResolution(); 
-  //resolution.width += this.gridWidth * 2;
-  //resolution.height += this.gridHeight * 2;
+module.exports.prototype.refreshScreen = function() {
   var gPosition = this.getGridPosition(this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y);
-  console.log("------------------------ refreshIndexes --------------------------")
-  var iw = Math.floor(Math.ceil(resolution.width / this.gridWidth) / 2);
-  var ih = Math.floor(Math.ceil(resolution.height / this.gridHeight) / 2);
+  var sr = this.getScreenRectangle(1.1);
 
-  var gtl = {
-    xIndex: this.translateIndex(gPosition.xIndex, -iw),
-    yIndex: this.translateIndex(gPosition.yIndex, ih),
-  };
-  var gbr = {
-    xIndex: this.translateIndex(gPosition.xIndex, iw),
-    yIndex: this.translateIndex(gPosition.yIndex, -ih),
-  };
+  var positionChanged = gPosition.xIndex != this.xIndex || gPosition.yIndex != this.yIndex;
+  var sizeChanged = this.prevRect && (Math.abs(this.prevRect.width - sr.width) > 500 || Math.abs(this.prevRect.height - sr.height) > 500)
 
-  var changed = false;
-  var ix = this.indexDistance(gPosition.xIndex, this.xIndex);
-  var iy = this.indexDistance(gPosition.yIndex, this.yIndex);
+  if (positionChanged || sizeChanged) {
 
-  var ix2 = gPosition.xIndex;
-  var iy2 = gPosition.yIndex;
-
-  var ix3 = this.xIndex;
-  var iy3 = this.yIndex;
-
-  /*if (ix > 0)
-    ix --;
-  else if (ix < 0)
-    ix ++;
-
-  if (iy > 0)
-    iy --;
-  else if (iy < 0)
-    iy ++;*/
-
-  if (gPosition.xIndex != this.xIndex || gPosition.yIndex != this.yIndex) {
-    var sr = this.getScreenRectangle()
+    console.log("------------------------ refreshScreen --------------------------")
+    
     var rect = new Rect(sr.x, -sr.y, sr.width, sr.height);
 
-    console.log("1.diff:", rect)
     if (this.prevRect) {
-      if (!Rect.equals(this.prev, this.prevRect)) {
-        var rects1 = Rect.difference(rect, this.prevRect);
-        var rects2 = Rect.difference(this.prevRect, rect);
-        var addRect;
-        var removeRect;
-        console.log("2.diff:", rect, this.prevRect)
-        console.log("3.diff:", rects1, rects2)
-        
-        if (rects1.length == 1 && rects2.length == 1) {
-          addRect = rects1[0];
-          removeRect = rects2[0];
-          
-          console.log("5.diff:", addRect, removeRect)
-
-          /*if (gPosition.xIndex < this.xIndex) {
-            addRect = rects1[0];
-            removeRect = rects2[0];
-            
-            console.log("5.diff:", addRect, removeRect)
-          } else if (gPosition.xIndex > this.xIndex) {
-            addRect = rects1[0];
-            removeRect = rects2[0];
-            
-            console.log("6.diff:", addRect, removeRect)
-          }
-
-          if (gPosition.yIndex < this.yIndex) {
-            addRect = rects1[0];
-            removeRect = rects2[0];
-            console.log("6.diff:", addRect, removeRect)
-          } else if (gPosition.yIndex > this.yIndex) {
-            addRect = rects1[0];
-            removeRect = rects2[0];
-            console.log("7.diff:", addRect, removeRect)
-          }*/
-        } else if (rects1.length == 2 && rects2.length == 2) {
-          
-        } else {
-          console.log("---------------- SHIT ---------------------------------------------------------------")
-        }
-        
-        console.log("4.diff:", gPosition.xIndex, gPosition.yIndex, this.xIndex, this.yIndex)
-        
-
-        //addRect.top = -addRect.top;
-        //removeRect.top = -removeRect.top;
-
-        //console.log("8.diff:", addRect, removeRect)
-
-        for (var i = 0;i < rects2.length;i ++) {
-          rects2[i].top = -rects2[i].top;
-          this.context.spaceScene.gc(rects2[i]);
-        }
-
-        for (i = 0;i < rects1.length;i ++) {
-          rects1[i].top = -rects1[i].top;
-          this.scopeOfView(rects1[i]);
-        }
-
+      if (!Rect.equals(rect, this.prevRect)) {
+        this.refreshByRectangles(rect, this.prevRect);
         this.prevRect = rect;
       }
-    } else 
+    } else {
+      this.refreshByRectangles(rect, new Rect(0, 0, 0, 0));
       this.prevRect = rect;
-      
+    }
 
-    
+    this.xIndex = gPosition.xIndex;
+    this.yIndex = gPosition.yIndex;
   }
+}
 
-  this.xIndex = gPosition.xIndex;
-  this.yIndex = gPosition.yIndex;
+module.exports.prototype.refreshByRectangles = function(rect, prevRect){
+  var rects1 = Rect.difference(rect, prevRect);
+  var r = rect.clone()
+  r.top = -r.top;
 
-  /*if (gPosition.xIndex < this.xIndex) {
-    var addRect = this.getRect(gtl.xIndex - ix, gtl.yIndex, gtl.xIndex, gbr.yIndex);
-    var removeRect = this.getRect(this.translateIndex(gbr.xIndex, 1), gtl.yIndex, this.translateIndex(gbr.xIndex, 1 + ix), gbr.yIndex);
-    console.log("1X:ADD:", gtl.xIndex, addRect)
-    console.log("1X:REMOVE:", this.translateIndex(gbr.xIndex, 1), removeRect)
-
-    this.context.spaceScene.gc(removeRect);
-    this.scopeOfView(addRect);
-    changed = true;
-
-  } else if (gPosition.xIndex > this.xIndex) {
-    var addRect = this.getRect(gbr.xIndex, gtl.yIndex, this.translateIndex(gbr.xIndex, ix), gbr.yIndex);
-    var removeRect = this.getRect(this.translateIndex(gtl.xIndex, -1 - ix), gtl.yIndex, this.translateIndex(gtl.xIndex, -1), gbr.yIndex);
-    console.log("2X:ADD:", gbr.xIndex, addRect)
-    console.log("2X:REMOVE:", this.translateIndex(gtl.xIndex, -1), this.translateIndex(gtl.xIndex, -1 - ix), removeRect)
-
-    this.context.spaceScene.gc(removeRect);
-    this.scopeOfView(addRect);
-    changed = true;
-  }*/
-
-
-
-  /*if (gPosition.yIndex < this.yIndex) {
-    var addRect = this.getRect(gtl.xIndex, gbr.yIndex, gbr.xIndex, this.translateIndex(gbr.yIndex, -iy));
-    var removeRect = this.getRect(gtl.xIndex, this.translateIndex(gtl.yIndex, 1 + iy), gbr.xIndex, this.translateIndex(gtl.yIndex, 1));
-    console.log("1Y:ADD:", gbr.yIndex, this.translateIndex(gbr.yIndex, -1), addRect)
-    console.log("1Y:REMOVE:", this.translateIndex(gtl.yIndex, 1), this.translateIndex(gtl.yIndex, 1 + iy), removeRect)
-
-    this.context.spaceScene.gc(removeRect);
-    this.scopeOfView(addRect);
-    changed = true;
-
-  } else if (gPosition.yIndex > this.yIndex) {
-    var addRect = this.getRect(gtl.xIndex, this.translateIndex(gtl.yIndex, iy), gbr.xIndex, gtl.yIndex);
-    var removeRect = this.getRect(gtl.xIndex, this.translateIndex(gbr.yIndex, -1), gbr.xIndex, this.translateIndex(gbr.yIndex, -1 - iy));
-
-    console.log("2Y:ADD:", gtl.yIndex, this.translateIndex(gtl.yIndex, iy), addRect)
-    console.log("2Y:REMOVE:", this.translateIndex(gbr.yIndex, -1), this.translateIndex(gbr.yIndex, -1 - iy), removeRect)
-
-    this.context.spaceScene.gc(removeRect);
-    this.scopeOfView(addRect);
-    changed = true;
-  }*/
+  this.context.spaceScene.gc(r);
   
-  
-
-  if (changed) {
-    console.log("# INDEXES:", gPosition.xIndex, gPosition.yIndex, iw, ih, "|", ix, iy, "|", ix2, iy2, "|", ix2, ix3, iy2, iy3);
-    //console.log("# INDEXES:", iw, ih, this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y, resolution.width, resolution.height, resolution.width / 2, resolution.height / 2, gPosition.xIndex, gPosition.yIndex, gtl, gbr)
-    //console.log("# POSITIONS:", this.getCellPosition(xIndex, yIndex), this.getCellPosition(xIndex, yIndex, "tr"), this.getCellPosition(xIndex, yIndex, "br"), this.getCellPosition(xIndex, yIndex, "bl"))
-    //console.log("# RECT:", this.getScreenRectangle(this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y))
-    
-    //console.log("#", "("+(gPosition.xIndex - 1)+", "+(gPosition.yIndex - 1)+")", "("+gPosition.xIndex+", "+(gPosition.yIndex - 1)+")", "("+(gPosition.xIndex + 1)+", "+(gPosition.yIndex - 1)+")")
-    //console.log("#", "("+(gPosition.xIndex - 1)+", "+(gPosition.yIndex)+")", "("+gPosition.xIndex+", "+(gPosition.yIndex)+")", "("+(gPosition.xIndex + 1)+", "+(gPosition.yIndex)+")")
-    //console.log("#", "("+(gPosition.xIndex - 1)+", "+(gPosition.yIndex + 1)+")", "("+gPosition.xIndex+", "+(gPosition.yIndex + 1)+")", "("+(gPosition.xIndex + 1)+", "+(gPosition.yIndex + 1)+")")  
+  for (i = 0;i < rects1.length;i ++) {
+    //rects1[i].top = -rects1[i].top;
+    this.context.commandsManager.scopeOfView(rects1[i].left + rects1[i].width / 2, -rects1[i].top - rects1[i].height / 2, rects1[i].width, rects1[i].height);
   }
-  
 }
 
 module.exports.prototype.getRect = function(xIndex1, yIndex1, xIndex2, yIndex2){
@@ -573,55 +394,14 @@ module.exports.prototype.pressCtrlKey = function(){
 
 module.exports.prototype.releaseCtrlKey = function(){
   this.selection.releaseCtrlKey();
-
-  this.scroller.scroll(this.gridWidth, -this.gridHeight, false);
-  this.refreshIndexes();
-  console.log("-releaseCtrlKey-")
-  /*this.context.commandsManager.scopeOfView({
-    x: 0 + 500,
-    y: 1000 - 500
-  }, {
-    width: this.gridWidth,
-    height: this.gridHeight,
-  });
-
-  this.context.commandsManager.scopeOfView({
-    x: 0 + 500,
-    y: -500
-  }, {
-    width: this.gridWidth,
-    height: this.gridHeight,
-  });
-
-  this.context.commandsManager.scopeOfView({
-    x: -1000 + 500,
-    y: 1000
-  }, {
-    width: this.gridWidth,
-    height: this.gridHeight,
-  });
-
-  this.context.commandsManager.scopeOfView({
-    x: -1000 + 500,
-    y: -500
-  }, {
-    width: this.gridWidth,
-    height: this.gridHeight,
-  });*/
-
-
 }
 
 module.exports.prototype.pressShiftKey = function(){
   this.selection.pressShiftKey();
   this.zoomer.shiftKey = true;
-
-  this.scroller.scroll(this.gridWidth, this.gridHeight, false);
-  this.refreshIndexes();
 }
 
 module.exports.prototype.releaseShiftKey = function(){
   this.selection.releaseShiftKey();
   this.zoomer.shiftKey = false;
 }
-

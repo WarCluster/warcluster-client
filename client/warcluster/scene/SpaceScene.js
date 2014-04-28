@@ -74,7 +74,9 @@ module.exports.prototype.buildScene = function() {
   this.ctrlKey = false;
   this.spaceKey = false;
 
-  var onWindowResize = function() {
+  this.$body = $("body");
+
+  /*var onWindowResize = function() {
     var ww = $("body").width();
     var hh = $("body").height();
     self.camera.aspect = ww / hh;
@@ -83,18 +85,31 @@ module.exports.prototype.buildScene = function() {
     self.context.height = hh;
 
     self.renderer.setSize( ww, hh );
-  }
+    self.context.spaceViewController.refreshScreen();
+  }*/
 
   this.context.$content.append(this.renderer.domElement);
+  this.windowResize();
+  //window.addEventListener('resize', onWindowResize, false);
+}
 
-  onWindowResize();
-  window.addEventListener('resize', onWindowResize, false);
+module.exports.prototype.windowResize = function() {
+  var ww = this.$body.width();
+  var hh = this.$body.height();
+  this.camera.aspect = ww / hh;
+  this.camera.updateProjectionMatrix();
+  this.context.width = ww;
+  this.context.height = hh;
+
+  this.renderer.setSize( ww, hh );
 }
 
 module.exports.prototype.startRendering = function() {
   var self = this;
   var ct = (new Date()).getTime();
   var t = ct;
+
+  $(self.stats.domElement).append($('<div id="totalObjects" style="position: absolute; bottom: 0px; left: 3px; font-size: 10px;" />'));
 
   var render = function() {
     requestAnimationFrame(render);
@@ -109,6 +124,7 @@ module.exports.prototype.startRendering = function() {
 
     self.renderer.render(self.scene, self.camera);
     self.stats.update();
+    $(self.stats.domElement).find("#totalObjects").html(self.context.objects.length+" objects");
 
     if (self.ctrlKey && self.spaceKey)
       console.log("RenderTime:", (new Date()).getTime() - t, self.context.interactiveObjects.length);
@@ -129,6 +145,7 @@ module.exports.prototype.render = function(data) {
     if (!sun)
       sun = this.context.sunsFactory.build(data.Suns[s]);
   }
+
   this.context.planetsManager.managePlanetData(data.Planets);
 
   for (s in data.Missions) {
@@ -146,20 +163,25 @@ module.exports.prototype.render = function(data) {
 }
 
 module.exports.prototype.gc = function(rect) {
-  //console.log("-gc-", rect)
+  //console.log("1.-gc-", rect, this.context.objects.length)
   var forRemove = [];
   for (var i = 0;i < this.context.objects.length;i ++) {
     var object = this.context.objects[i];
-    if (object.position.x >= rect.left && object.position.x <= rect.left + rect.width &&
-        object.position.y <= rect.top && object.position.y >= rect.top - rect.height) {
+
+    //console.log("2.-gc-", (object.position.x >= rect.left && object.position.x <= rect.left + rect.width && object.position.y <= rect.top && object.position.y >= rect.top - rect.height), rect.left, rect.top, rect.left + rect.width, rect.top - rect.height, object.position.x, object.position.y, object.data)
+    if (!(object.position.x >= rect.left && object.position.x <= rect.left + rect.width &&
+        object.position.y <= rect.top && object.position.y >= rect.top - rect.height)) {
+      //console.log("2.-gc-", object.position);
       forRemove.push(object)
     }
   }
 
-  //console.log("DESTROY OBJECT:", forRemove.length)
-
+  console.log("1.-gc-DESTROY OBJECT:", forRemove.length, this.context.objects.length)
+  
   while (forRemove.length > 0) 
     this.destroyObject(forRemove.shift())
+
+  //console.log("2.-gc-DESTROY OBJECT:", this.context.objects.length)
 }
 
 module.exports.prototype.clear = function() {

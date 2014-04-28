@@ -19,10 +19,11 @@ module.exports.prototype.build = function(planetData) {
 }
 
 module.exports.prototype.destroy = function(planet) {
+	planet.deactivate();
+
 	this.context.container.remove(planet);
 	this.context.planetsHitObjects.splice(this.context.planetsHitObjects.indexOf(planet.hitObject), 1);
 	this.context.objects.splice(this.context.objects.indexOf(planet), 1);
-
 	delete this.context.objectsById[planet.data.id];
 
 	this.cache.push(planet);

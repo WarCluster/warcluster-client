@@ -12,6 +12,7 @@ module.exports = function(context, config, controller){
   this.mousePosition = { x: 0, y: 0};
   this.controller = controller;
   this.shiftKey = false;
+  this.zoomIndex = 1;
 
   $(window).mousewheel(function(e){
     if (self.shiftKey)
@@ -32,6 +33,8 @@ module.exports.prototype.prepare = function() {
 
   this.context.container.add(this.hitPlane);
   this.context.container.add(this.tmpObj);
+
+  this.zoomIndex = this.getZoomIndex();
 }
 
 module.exports.prototype.zoomIn = function() {
@@ -78,13 +81,20 @@ module.exports.prototype.animateIt = function() {
     onStart: function() {
       self.dispatchEvent({
         type: "zoom", 
-        zoom: self.getZoomIndex()
+        zoom: self.zoomIndex
+      });
+    },
+    onUpdate: function() {
+      self.zoomIndex = self.getZoomIndex();
+      self.dispatchEvent({
+        type: "zoom", 
+        zoom: self.zoomIndex
       });
     },
     onComplete: function(){        
       self.dispatchEvent({
-        type: "scopeOfView", 
-        zoom: self.getZoomIndex()
+        type: "zoom", 
+        zoom: self.zoomIndex
       });
     }
   });

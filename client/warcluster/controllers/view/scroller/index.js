@@ -56,7 +56,7 @@ module.exports.prototype.scrollTo = function(x, y, animated){
   var self = this;
 
   if (animated)
-    TweenLite.to(this.context.spaceScene.camera.position, 0.00000005, {
+    TweenLite.to(this.context.spaceScene.camera.position, 0.6, {
       x: this.controller.scrollPosition.x, 
       y: this.controller.scrollPosition.y,
       ease: Cubic.easeOut,
@@ -66,17 +66,17 @@ module.exports.prototype.scrollTo = function(x, y, animated){
         });
       },
       onComplete: function(){
-        /*self.dispatchEvent({
-          type: "scopeOfView"
-        });  */          
+        self.dispatchEvent({
+          type: "scroll"
+        });        
       }
     });
   else {
     this.context.camera.position.x = this.controller.scrollPosition.x;
     this.context.camera.position.y = this.controller.scrollPosition.y;
 
-    /*this.dispatchEvent({
-      type: "scopeOfView"
-    }); */
+    self.dispatchEvent({
+      type: "scroll"
+    });
   }
 }

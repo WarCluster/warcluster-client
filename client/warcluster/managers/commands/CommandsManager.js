@@ -45,7 +45,7 @@ module.exports.prototype.prepare = function(username, twitterId) {
 module.exports.prototype.parseMessage = function(command) {
   try {
     var data = JSON.parse(command);
-    console.log("###.parseMessage:", data);
+    //console.log("###.parseMessage:", data);
   } catch(err) {
     console.log("###.InvalidData:", command);
     return false;
@@ -88,13 +88,13 @@ module.exports.prototype.parseMessage = function(command) {
   }
 }
 
-module.exports.prototype.scopeOfView = function(position, resolution) {
-  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
-  var w = resolution.width || 1920;
-  var h = resolution.height || 1080;
-  //w *= 0.5;
-  //h *= 0.5;
-  var data = {"Command": "scope_of_view", "Position": position, "Resolution": [w, h]}
+module.exports.prototype.scopeOfView = function(cx, cy, width, height) {
+  width = width || 1920;
+  height = height || 1080;
+
+  //console.log("scopeOfView", position, resolution)
+
+  var data = {"Command": "scope_of_view", "Position": {x: cx, y: cy}, "Resolution": [width, height]}
   //console.log("scopeOfView", data)
   this.sockjs.send(JSON.stringify(data));
 }

@@ -106,7 +106,7 @@ module.exports = Backbone.View.extend({
     });
     this.context.spaceScene.prepare();
 
-    this.spaceViewController = new SpaceViewController(this.context, {
+    this.context.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
         zoom: 16000,
         maxZoom: 60000000,
@@ -121,29 +121,29 @@ module.exports = Backbone.View.extend({
       }
     });
 
-    this.spaceViewController.addEventListener("attackPlanet", function(e) {
+    this.context.spaceViewController.addEventListener("attackPlanet", function(e) {
       // console.log("-SEND ATTACK MISSION-");
       for (var i = 0;i < e.attackSourcesIds.length;i ++)
-        self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.context.missionsMenu.getCurrentType());
+        self.context.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.context.missionsMenu.getCurrentType());
     });
 
-    this.spaceViewController.addEventListener("supplyPlanet", function(e) {
+    this.context.spaceViewController.addEventListener("supplyPlanet", function(e) {
       // console.log("-SEND SUPPORT MISSION-");
       for (var i = 0;i < e.supportSourcesIds.length;i ++)
-        self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
+        self.context.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
     });
-    this.spaceViewController.addEventListener("spyPlanet", function(e) {
+    this.context.spaceViewController.addEventListener("spyPlanet", function(e) {
       for (var i = 0; i < e.spySourcesIds.length; i++) {
-        self.commandsManager.sendMission("Spy", e.spySourcesIds[i], e.planetToSpyId, self.context.missionsMenu.getCurrentType())
+        self.context.commandsManager.sendMission("Spy", e.spySourcesIds[i], e.planetToSpyId, self.context.missionsMenu.getCurrentType())
       };
     });
 
-    this.spaceViewController.addEventListener("selectPlanet", function(e) {
+    this.context.spaceViewController.addEventListener("selectPlanet", function(e) {
         self.planetsSelection.selectPlanet(e.planet.data);
         self.context.missionsMenu.showMenu();
     });
 
-    this.spaceViewController.addEventListener("selectionChanged", function(e) {
+    this.context.spaceViewController.addEventListener("selectionChanged", function(e) {
       self.planetsSelection.selectionChanged(e);
       if (self.planetsSelection.hasPlanets())
         self.context.missionsMenu.showMenu();
@@ -151,54 +151,46 @@ module.exports = Backbone.View.extend({
         self.context.missionsMenu.hideMenu();
     });
 
-    this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
+    this.context.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
         self.planetsSelection.deselectAllPlanets();
         self.context.missionsMenu.hideMenu();    
     });
 
-    this.spaceViewController.addEventListener("scopeOfView", function(e) {
-      //TODO: https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view-to-not-spam
-      /*self.commandsManager.scopeOfView({
-        x: Math.ceil(self.context.spaceViewController.scrollPosition.x),
-        y: Math.ceil(self.context.spaceViewController.scrollPosition.y)
-      }, self.context.spaceViewController.getResolution());*/
-    });
+
+    this.context.commandsManager = new CommandsManager(config.socketUrl, this.context);
     
-    this.context.spaceViewController = this.spaceViewController;
-
-
-    this.commandsManager = new CommandsManager(config.socketUrl, this.context);
-    this.context.commandsManager = this.commandsManager;
-    this.commandsManager.loginFn = function(data) {
+    this.context.commandsManager.loginFn = function(data) {
       _.extend(self.context.playerData, data);
      
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.ClusterTeam).el);
       console.log("-loginFn-", self.context.playerData);
-      self.spaceViewController.activate(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
-      //self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
-      
-      self.toggleLandingStatisticsView();
+      self.context.spaceViewController.activate(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
+      //self.toggleLandingStatisticsView();
 
-      this.context.KeyboardManager = new KeyboardManager(self.context);
+      self.context.KeyboardManager = new KeyboardManager(self.context);
       //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
     }
 
-    this.commandsManager.renderViewFn = function(data) {
-      /*self.context.spaceScene.gc({
-        x: Math.ceil(self.context.spaceViewController.scrollPosition.x),
-        y: Math.ceil(self.context.spaceViewController.scrollPosition.y)
-      }, self.context.spaceViewController.getResolution());*/
+    this.context.commandsManager.renderViewFn = function(data) {
       self.context.spaceScene.render(data);
     }
 
-    this.commandsManager.requestSetupParameters = function() {
+    this.context.commandsManager.requestSetupParameters = function() {
       self.toggleLandingRaceView();
     }
-    this.commandsManager.toggleTutorial = function() {
+    this.context.commandsManager.toggleTutorial = function() {
       self.tutorialMenu.toggleTutorial();
     }
 
+    window.addEventListener('resize', function() {
+      self.onWindowResize();
+    }, false);
+
     return this;
+  },
+  onWindowResize: function() {
+    this.context.spaceScene.windowResize();
+    this.context.spaceViewController.refreshScreen();
   },
   toggleLandingRaceView: function() {
     this.landingView = new LandingView(this.context);
@@ -213,9 +205,9 @@ module.exports = Backbone.View.extend({
     } 
   },
   connect: function() {
-    this.commandsManager.prepare(
+    this.context.commandsManager.prepare(
       this.context.playerData.twitter.screen_name, 
-      String(this.context.playerData.twitter.id)
+      String(this.context.playerData.twitter.id)  
     );
   }
 })
