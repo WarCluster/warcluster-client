@@ -28,9 +28,9 @@ module.exports = Backbone.View.extend({
     if (twitterUsername) {
       this.twitterUsername = twitterUsername;
       this.goToUsernamePage(twitterUsername);
-    } else {
-      this.showIndividualLeaderboard();
-    }
+    } 
+    this.showIndividualLeaderboard();
+    
 
     // $("#search-field").on("autocompleteselect", this.goToUsernamePage);
 
@@ -51,6 +51,7 @@ module.exports = Backbone.View.extend({
           }
         });
       },
+      autoFocus: true,
       minLength: 3,
       //this is needed in order to get rid of the nasty message
       messages: {
@@ -71,8 +72,8 @@ module.exports = Backbone.View.extend({
     if ($("#individual").length === 0){
       this.currentPage = 1;
       this.cache = {};
-      this.connectIndividualLeaderboard();
       this.$el.append(individualRender());
+      this.connectIndividualLeaderboard();
     }
   },
   showTeamLeaderboard: function(){
@@ -285,10 +286,9 @@ module.exports = Backbone.View.extend({
       dataType: 'json',
       context: this,
       success: function(data) {
-        this.currentPage = data[0].Page;//the indexation is not the same. that's why we need the "+1"
+        this.currentPage = data[0].Page+1;//the indexation is not the same. that's why we need the "+1"
         //issue here -> https://trello.com/c/n6czGaht/325-identical-indexation-for-the-leaderboard-results
-        this.connectIndividualLeaderboard();
-        // this.$el.append(individualRender());
+        this.pollIndividual(this.currentPage);
       }
     });
   },

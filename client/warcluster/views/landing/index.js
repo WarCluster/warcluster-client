@@ -43,7 +43,8 @@ module.exports = Backbone.View.extend({
         return;
       }
     }
-    if(this.leaderboard.leaderboardAjaxTimeout) {
+    debugger;
+    if(this.leaderboard) {
       clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
     }
     TweenLite.to($(".landing-view"), 0.2, {
