@@ -1,7 +1,7 @@
 var individualRender = jadeCompile(require("./render/individual.jade"));
 var teamRender = jadeCompile(require("./render/team.jade"));
 
-//TODO: need to refactor this whole view O_O There's a lot of copy-pasting, especially for the animations
+//TODO: need to refactor this whole view O_O There's a lot of copy-pasting, especially for the animations 
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
@@ -15,7 +15,6 @@ module.exports = Backbone.View.extend({
   },
   className: "leaderboard-content",
   initialize: function() {
-
   },
   render: function(twitterUsername) {
     var self = this;
@@ -31,9 +30,6 @@ module.exports = Backbone.View.extend({
     } 
     this.showIndividualLeaderboard();
     
-
-    // $("#search-field").on("autocompleteselect", this.goToUsernamePage);
-
     return this;
   },
   searchPlayer: function (e) {
