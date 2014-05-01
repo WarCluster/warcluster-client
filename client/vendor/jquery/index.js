@@ -1,5 +1,5 @@
 require("./jquery-1.9.1");
-require("./jquery-ui-1.8.19");
+require("./jquery-ui-1.10.4");
 require("./jquery-upload");
 require("./jquery-fineuploader");
 require("./jquery-ui-timepicker-addon");

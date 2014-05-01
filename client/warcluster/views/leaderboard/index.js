@@ -10,38 +10,59 @@ module.exports = Backbone.View.extend({
     "click #teamBtn": "showTeamLeaderboard",
     "click .race-color": "showTeamLeaderboard",
     "click .previous-page": "goToPreviousPage",
-    "click .next-page": "goToNextPage"
+    "click .next-page": "goToNextPage",
+    "keypress #search-field": "searchPlayer"
   },
   className: "leaderboard-content",
   initialize: function() {
-    var searchEngine = new Bloodhound({
-      name: 'players',
-      remote: {
-        url: self.config.searchAjaxUrl + "/?players=",
-        dataType: 'json'
-      },
-      datumTokenizer: function(d) { 
-          return Bloodhound.tokenizers.whitespace(d.val); 
-      },
-      queryTokenizer: Bloodhound.tokenizers.whitespace
-    });
-    searchEngine.initialize();
+
   },
   render: function(twitterUsername) {
     var self = this;
 
-    this.currentPage = 1;
+    this.currentPage = 0;
     this.cache = {};
     this.$el.html(this.template());
     this.leaderboardAjaxTimeout = -1;
 
     if (twitterUsername) {
+      this.twitterUsername = twitterUsername;
       this.goToUsernamePage(twitterUsername);
     } else {
       this.showIndividualLeaderboard();
     }
 
+    // $("#search-field").on("autocompleteselect", this.goToUsernamePage);
+
     return this;
+  },
+  searchPlayer: function (e) {
+    $("#search-field").autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: self.config.searchAjaxUrl + "/?player=" + request.term,
+          dataType: "json",
+          success: function(data) {
+            response( $.map(data, function(item){
+              return {
+                label: item.Username
+              }
+            }));
+          }
+        });
+      },
+      minLength: 3,
+      //this is needed in order to get rid of the nasty message
+      messages: {
+        noResults: '',
+        results: function() {
+          return '';
+        }
+      },
+      select: _.bind(function (event, ui) {
+        this.goToUsernamePage(ui.item.label);
+      }, this)
+    });
   },
   showIndividualLeaderboard: function() {
     $("#team").remove();
@@ -264,10 +285,10 @@ module.exports = Backbone.View.extend({
       dataType: 'json',
       context: this,
       success: function(data) {
-        this.currentPage = data[0].Page+1;//the indexation is not the same. that's why we need the "+1"
+        this.currentPage = data[0].Page;//the indexation is not the same. that's why we need the "+1"
         //issue here -> https://trello.com/c/n6czGaht/325-identical-indexation-for-the-leaderboard-results
         this.connectIndividualLeaderboard();
-        this.$el.append(individualRender());
+        // this.$el.append(individualRender());
       }
     });
   },
