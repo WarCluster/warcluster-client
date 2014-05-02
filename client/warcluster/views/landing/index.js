@@ -43,7 +43,6 @@ module.exports = Backbone.View.extend({
         return;
       }
     }
-    debugger;
     if(this.leaderboard) {
       clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
     }

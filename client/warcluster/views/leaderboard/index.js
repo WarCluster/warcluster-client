@@ -25,7 +25,6 @@ module.exports = Backbone.View.extend({
     this.leaderboardAjaxTimeout = -1;
 
     if (twitterUsername) {
-      this.twitterUsername = twitterUsername;
       this.goToUsernamePage(twitterUsername);
     } 
     this.showIndividualLeaderboard();
