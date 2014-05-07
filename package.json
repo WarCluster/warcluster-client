@@ -4,7 +4,7 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "organic": "0.0.10",
+    "organic": "0.1.1",
     "organic-webcell": "0.2.7",
     "organic-cells": "0.0.15",
     "express": "2.5.10",
@@ -12,7 +12,9 @@
     "underscore": "latest",
     "jquery-browserify": "*",
     "glob": "latest",
-    "async": "latest"
+    "async": "latest",
+    "less": "1.7.0",
+    "organic-bundlestyle": "outbounder/organic-bundlestyle"
   },
   "devDependencies": {
     "shelljs" : "*"

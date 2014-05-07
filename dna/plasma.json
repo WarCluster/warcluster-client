@@ -8,7 +8,7 @@
     }]
   },
   "BundleStyle": {
-    "source": "node_modules/organic-webcell/plasma/BundleStyle",
+    "source": "node_modules/organic-bundlestyle",
     "useCache": true
   },
   "TwitterOAuth": {
