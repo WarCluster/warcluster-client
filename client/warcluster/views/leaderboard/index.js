@@ -19,7 +19,7 @@ module.exports = Backbone.View.extend({
   render: function(twitterUsername) {
     var self = this;
 
-    this.currentPage = 0;
+    this.currentPage = 1;
     this.cache = {};
     this.$el.html(this.template());
     this.leaderboardAjaxTimeout = -1;
@@ -99,13 +99,13 @@ module.exports = Backbone.View.extend({
           //TODO:
           //not enough players, maybe go to page 1?;
           console.log("Page Not Found - 404");
-          $("#team").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+          alert("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
         },
         400: function() {
           //TODO:
           //bad request, maybe go to page 1?;
           console.log("Page Not Found - 400");
-          $("#team").html("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
+          alert("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
         }
       },
       success: this.populateTeams
@@ -120,12 +120,12 @@ module.exports = Backbone.View.extend({
         404: function () {
           //TODO:
           //not enough players, maybe go to page 1?;
-          $("#individual").html("There're not enough players. Refresh? Page Not Found - 404");
+          alert("There're not enough players. Page Not Found - 404");
         },
         400: function() {
           //TODO:
           //bad request, maybe go to page 1?;
-          $("#individual").html("Bad request. Page Not Found - 400");
+          alert("Bad request. Page Not Found - 400");
         }
       },
       success: this.populateIndividual
@@ -281,8 +281,7 @@ module.exports = Backbone.View.extend({
       dataType: 'json',
       context: this,
       success: function(data) {
-        this.currentPage = data[0].Page+1;//the indexation is not the same. that's why we need the "+1"
-        //issue here -> https://trello.com/c/n6czGaht/325-identical-indexation-for-the-leaderboard-results
+        this.currentPage = data[0].Page;
         this.pollIndividual(this.currentPage);
       }
     });
