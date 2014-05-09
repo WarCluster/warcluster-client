@@ -97,6 +97,7 @@
   width: 35%;
   height: 100%;
   float: right;
+  padding-left: 10px;
   ul {
     span {
       margin-right: 10px;
@@ -416,8 +417,13 @@ html, body {
 
 @-webkit-keyframes greenPulse {
   from { background-color: #CC4154; -webkit-box-shadow: 0 0 9px #333; }
-  50% { background-color: #F24960; -webkit-box-shadow: 0 0 18px #F24960; }
+  50% { background-color: #F24960; -webkit-box-shadow: 0 0 50px #F24960; }
   to { background-color: #CC4154; -webkit-box-shadow: 0 0 9px #333; }
+}
+@-moz-keyframes greenPulse {
+  0% { background-color: #CC4154; box-shadow: 0 0 9px #333; }
+  50% { background-color: #F24960; box-shadow: 0 0 50px #F24960; }
+  100% { background-color: #CC4154; box-shadow: 0 0 9px #333; }
 }
 
 .selection-rect {
