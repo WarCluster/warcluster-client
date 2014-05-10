@@ -199,7 +199,7 @@ module.exports = Backbone.View.extend({
     var _that = this;
     if (jQuery.isEmptyObject(this.cache)) {
       for(var i=0;i<data.length;i++) {
-        this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data);
+        this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
       }
     } 
     else {
@@ -304,9 +304,9 @@ module.exports = Backbone.View.extend({
     }
   },
   _setTeamData: function(element, data) {
-    element.find(".twitter-username").html("<a href='https://twitter.com/"+data.Username+"' target='_blank'>@"+data.Username+"</a>");
-    element.find(".race-color").css({"background": "rgb("+ parseInt(data.Team.R*255)+","+parseInt(data.Team.G*255) +","+parseInt(data.Team.B*255)+")"});
-    element.find(".home-planet").html(data.HomePlanet);
-    element.find(".planets").html(data.Planets);
+    element.find(".race-color").css({"background": "rgb("+ parseInt(data.Color.R*255)+","+parseInt(data.Color.G*255) +","+parseInt(data.Color.B*255)+")"});
+    element.find(".race-color").html(data.Name);
+    element.find(".players-number").html(data.Players);
+    element.find(".planets-number").html(data.Planets);
   }
 })
