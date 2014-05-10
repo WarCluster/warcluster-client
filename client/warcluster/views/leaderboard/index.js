@@ -20,7 +20,7 @@ module.exports = Backbone.View.extend({
     var self = this;
 
     this.currentPage = -1;
-    this.cache = {};
+    this.leaderboardDataCache = {};
     this.$el.html(this.template());
     this.leaderboardAjaxTimeout = -1;
 
@@ -66,7 +66,7 @@ module.exports = Backbone.View.extend({
     $("#individualBtn").parent().addClass("active");
     if ($("#individual").length === 0){
       this.currentPage = 1;
-      this.cache = {};
+      this.leaderboardDataCache = {};
       this.$el.append(individualRender());
       this._connectIndividualLeaderboard();
     }
@@ -77,7 +77,7 @@ module.exports = Backbone.View.extend({
     $("#individualBtn").parent().removeClass("active");
     $("#teamBtn").parent().addClass("active");
     if ($("#team").length === 0) {
-      this.cache = {};
+      this.leaderboardDataCache = {};
       this.connectTeamLeaderboard();
       this.$el.append(teamRender());
     }
@@ -142,7 +142,7 @@ module.exports = Backbone.View.extend({
       $("tbody tr:nth-child("+ n +") > .position").html(j);
     }
 
-    if (jQuery.isEmptyObject(this.cache)) {
+    if (jQuery.isEmptyObject(this.leaderboardDataCache)) {
       for(var i = 0; i <= dataLen-1; i++) {
         //animate only when necessary
         this._setPlayerData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
@@ -151,8 +151,8 @@ module.exports = Backbone.View.extend({
     else {
       for(var i = 0; i < 10; i++) {
         if(i <= dataLen-1) {
-          if(i <= this.cache.length-1) {
-            if(this.cache[i].Username === data[i].Username && this.cache[i].Planets !== data[i].Planets) {
+          if(i <= this.leaderboardDataCache.length-1) {
+            if(this.leaderboardDataCache[i].Username === data[i].Username && this.leaderboardDataCache[i].Planets !== data[i].Planets) {
               var $current_element = $("tbody tr:nth-child(" + (i+1) + ") > .planets");
               _.bind(this._implodeAnimation, $current_element);
               this._implodeAnimation($current_element);
@@ -162,7 +162,7 @@ module.exports = Backbone.View.extend({
               _.bind(this._explodeAnimation, $current_element);
               this._explodeAnimation($current_element);
             } 
-            else if (this.cache[i].Username !== data[i].Username) {
+            else if (this.leaderboardDataCache[i].Username !== data[i].Username && this.leaderboardDataCache[i].Username) {
               var $current_element = $("tbody tr:nth-child(" + (i+1) + ")");
               //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
               _.bind(this._implodeAnimation, $current_element);
@@ -175,15 +175,7 @@ module.exports = Backbone.View.extend({
             }
           }
           else {
-            var $current_element = $("tbody tr:nth-child(" + (i+1) + ")");
-            //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
-            _.bind(this._implodeAnimation,$current_element);
-            this._implodeAnimation($current_element);
-
-            this._setPlayerData($current_element, data[i]);
-
-            _.bind(this._explodeAnimation,$current_element);
-            this._explodeAnimation($current_element);
+            this._setPlayerData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
           }
         } 
         else if (i > dataLen - 1) {
@@ -191,7 +183,7 @@ module.exports = Backbone.View.extend({
         }
       }
     }
-    this.cache = data;
+    this.leaderboardDataCache = data;
     this.leaderboardAjaxTimeout = setTimeout(function() {
       _.bind(_that._pollIndividual,_that);
       _that._pollIndividual(_that.currentPage);
@@ -200,54 +192,55 @@ module.exports = Backbone.View.extend({
   _populateTeams: function(data) {
     debugger;
     var _that = this;
-    if (jQuery.isEmptyObject(this.cache)) {
+
+    if (jQuery.isEmptyObject(this.leaderboardDataCache)) {
       for(var i=0; i < data.length; i++) {
         this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
       }
     } 
     else {
-      for(var i=0; i<data.length; i++) {
-       if (this.cache[i].Name === data[i].Name) {
-        if (this.cache[i].Players !== data[i].Players) { 
-          _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .players-number");
+      for(var i=0; i < data.length; i++) {
+        if (this.leaderboardDataCache[i].Name === data[i].Name) {
+          if (this.leaderboardDataCache[i].Players !== data[i].Players) { 
+            _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .players-number");
 
+            _.bind(this._implodeAnimation,_that.iter);
+            this._implodeAnimation(_that.iter);
+
+            $("tbody tr:nth-child(" + (i+1) + ") > .players-number").html(data[i].Players);
+
+
+            _.bind(this._explodeAnimation,_that.iter);
+            this._explodeAnimation(_that.iter);
+          } 
+          else if (this.leaderboardDataCache[i].Planets !== data[i].Planets) {
+            _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets-number");
+
+            _.bind(this._implodeAnimation,_that.iter);
+            this._implodeAnimation(_that.iter);
+
+            $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
+
+
+            _.bind(this._explodeAnimation,_that.iter);
+            this._explodeAnimation(_that.iter);
+          }
+          
+        }
+        else if (this.leaderboardDataCache[i].Name !== data[i].Name && data[i].Name && this.leaderboardDataCache[i].Name) {
+          _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
+          //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
           _.bind(this._implodeAnimation,_that.iter);
           this._implodeAnimation(_that.iter);
 
-          $("tbody tr:nth-child(" + (i+1) + ") > .players-number").html(data[i].Players);
-
-
-          _.bind(this._explodeAnimation,_that.iter);
-          this._explodeAnimation(_that.iter);
-        } 
-        else if (this.cache[i].Planets !== data[i].Planets) {
-          _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets-number");
-
-          _.bind(this._implodeAnimation,_that.iter);
-          this._implodeAnimation(_that.iter);
-
-          $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
-
-
+          this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
+          
           _.bind(this._explodeAnimation,_that.iter);
           this._explodeAnimation(_that.iter);
         }
-        
-       }
-       else if (this.cache[i].Name !== data[i].Name) {
-        _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
-        //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
-        _.bind(this._implodeAnimation,_that.iter);
-        this._implodeAnimation(_that.iter);
-
-        this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
-        
-        _.bind(this._explodeAnimation,_that.iter);
-        this._explodeAnimation(_that.iter);
-       }
       }
     }
-    this.cache = data;
+    this.leaderboardDataCache = data;
     this.leaderboardAjaxTimeout = setTimeout(function() {
       _.bind(_that._pollTeams,_that);
       _that._pollTeams();
@@ -274,6 +267,7 @@ module.exports = Backbone.View.extend({
   },
   //TODO: find a proper naming for the animation. Figure out a better UX animation
   _implodeAnimation: function(element) {
+    debugger;
     element.animate({deg: 60}, {
       duration: 200,
       step: function(now) {
@@ -307,8 +301,8 @@ module.exports = Backbone.View.extend({
     }
   },
   _setTeamData: function(element, data) {
-    element.find(".race-color").css({"background": "rgb("+ parseInt(data.Color.R*255)+","+parseInt(data.Color.G*255) +","+parseInt(data.Color.B*255)+")"});
-    element.find(".race-color").html(data.Name);
+    element.find(".team-race-color").css({"background": "rgb("+ parseInt(data.Color.R*255)+","+parseInt(data.Color.G*255) +","+parseInt(data.Color.B*255)+")"});
+    element.find(".team-race-color").html(data.Name);
     element.find(".players-number").html(data.Players);
     element.find(".planets-number").html(data.Planets);
   }
