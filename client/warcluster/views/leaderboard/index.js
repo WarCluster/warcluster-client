@@ -72,7 +72,6 @@ module.exports = Backbone.View.extend({
     }
   },
   showTeamLeaderboard: function(){
-    debugger;
     $("#individual").remove();
     $("#individualBtn").parent().removeClass("active");
     $("#teamBtn").parent().addClass("active");
@@ -190,7 +189,6 @@ module.exports = Backbone.View.extend({
     }, 2500);
   },
   _populateTeams: function(data) {
-    debugger;
     var _that = this;
 
     if (jQuery.isEmptyObject(this.leaderboardDataCache)) {
@@ -267,7 +265,6 @@ module.exports = Backbone.View.extend({
   },
   //TODO: find a proper naming for the animation. Figure out a better UX animation
   _implodeAnimation: function(element) {
-    debugger;
     element.animate({deg: 60}, {
       duration: 200,
       step: function(now) {
