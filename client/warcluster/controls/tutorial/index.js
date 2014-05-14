@@ -12,6 +12,7 @@ module.exports = Backbone.View.extend({
     return this;
   },
   toggleTutorial: function() {
+    debugger;
     if (this.expanded()) {
       $(".tutorial-content").removeClass("hide");
       TweenLite.to($(".tutorial-image"), 0.2, {

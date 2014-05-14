@@ -1,6 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 
 @import "../style/less/font-awesome/font-awesome.less";
+@import "../style/less/warclusterfont.less";
 @import "../style/less/bootstrap/bootstrap.less";
 @import "../style/less/social.less";
 @import "../style/jquery/jquery-ui.less";
@@ -206,29 +207,31 @@
   .toggle-btn {
     height: 50px;
     width: 50px;
+    text-align: center;
+    line-height: 50px;
     background-image: url("/images/ui/tutorial_btn.png");
     background-repeat: no-repeat;
     position: absolute;
     bottom: 0px;
     right: 0px;
     z-index: 3002;
+    &:hover {
+      line-height: 55px;
+      font-size: 30px;
+    }
   }
   .tutorial-content {
     width: 100%;
     height: 100%;
-    .tutorial-btn {
+    .tutorial-image {
       position: absolute;
       z-index: 3001;
-      text-align: center;
-      line-height: 50px;
+      margin: auto;
       right: 0;
       bottom: 0;
       background-image: url('/images/tutorial.png');
       &:hover {
         font-size: 30px;
-      }
-      &:active {
-        color: #0597ff;
       }
     }
   }
