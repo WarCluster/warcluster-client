@@ -11,12 +11,22 @@
   make it responsive :D
 */
 #individual {
+  border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  -moz-border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  border-style: solid;
+  border-width: 12px 16px 16px 12px;
   .race-color {
     cursor: pointer;
   }
+}
+#team {
   border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  -moz-border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
   border-width: 12px 16px 16px 12px;
-  background-color:#150a06; 
+  border-style: solid;
+  .race-color {
+    cursor: pointer;
+  }
 }
 .white {
   color: #fff;
@@ -53,6 +63,12 @@
     cursor: pointer;
   }
   .race {
+    width: 40%;
+    height: 80px;
+    margin-top: 15px;
+    background-size: 100% 100%;
+    background-image: url("/images/ui/race-background.png");
+    cursor: pointer;
     .race-description {
       padding: 10px 10px 10px 0px;
       position: relative;
@@ -64,7 +80,6 @@
         margin-left: 6px;
       }
     }
-    cursor: pointer;
     .race-color {
       width: 80px;
     }
@@ -80,11 +95,6 @@
     &:hover > .race-color > img {
       padding-top: 5px;
     }
-    width: 40%;
-    height: 80px;
-    margin-top: 15px;
-    background-size: 100% 100%;
-    background-image: url("/images/ui/race-background.png");
   }
 }
 .start-game {
@@ -96,25 +106,21 @@
   .animation-iteration-count(infinite);
 }
 .landing-content {
-  text-align: right;
+  margin-top: 50px;
+  text-align: left;
   width: 25%;
   height: 100%;
   float: right;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
   p {
     clear: both;
   }
   ul {
-    span {
-      margin-right: 10px;
-    }
     margin: 10px -15px 0px 20px;
     height: 40px;
-  }
-  .social {
-    li {
-      float: right;
+    span {
+      margin-right: 10px;
     }
   }
 }
@@ -127,7 +133,7 @@
   top: 0px;
   height: 100%;
   width: 100%;
-  background-color: #222222;
+  background-color: #150a06;
 }
 .left-panel {
   top: 0px;
@@ -140,17 +146,19 @@
 .leaderboard-content {
   position: absolute;
   color: black;
-  background-color: #fff;
+  background-color: #150a06; 
   width: 100%;
   height: 100%;
   .race-color {
     color: #000;
     text-align: left;
   }
-  .leaderboard-container {
-    height: 100%;
-    margin-top: -21px;
-    background-color:#150a06; 
+  .navbar {
+    background-color: #150a06;
+    border-style: none;
+    .active {
+      color: #fff;
+    }
   }
 }
 .leaderboardPage {
@@ -185,6 +193,7 @@
   height: 50px;
   width: 50px;
   &:hover {
+    line-height: 55px;
     font-size: 30px;
   }
   &:active {
@@ -258,6 +267,7 @@ html, body {
   right: 0px;
   top: 80px;
   border-image: url("/images/ui/twitterStream/twitter-stream-timeline-border.png") 11 0 11 11 round;
+  -moz-border-image: url("/images/ui/twitterStream/twitter-stream-timeline-border.png") 11 0 11 11 round;
   border-width: 11px 0px 11px 11px;
   .twitter-stream-toggle-btn {
     span {
