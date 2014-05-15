@@ -16,8 +16,8 @@ module.exports.prototype.prepare = function() {
 
   this.stats = new Stats();
   this.stats.domElement.style.position = 'absolute';
-  this.stats.domElement.style.top = '20px';
-  this.stats.domElement.style.right = '50px';
+  this.stats.domElement.style.bottom = '0px';
+  this.stats.domElement.style.right = '100px';
   this.context.$content.append(this.stats.domElement);
 
   for (var i = 0;i < resources.textures.length;i ++)
