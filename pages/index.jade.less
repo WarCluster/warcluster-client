@@ -102,7 +102,7 @@
   position: absolute;
   bottom: 10px;
   right: 15px;
-  .animation-name(greenPulse);
+  .animation-name(pinkPulse);
   .animation-duration(2s);
   .animation-iteration-count(infinite);
 }
@@ -170,10 +170,54 @@
   width: 100%;
   height: 100%;
 }
-.customPop {
-  background-color: #222;
-  .popover-content {
-    color: #fff;
+.planet-info-popover {
+  position: absolute;
+  color: #fff;
+  background-image: url("/images/ui/planet_info.png");
+  width: 321px;
+  height: 177px;
+  .planet-category {
+    position: absolute;
+    bottom: 7px;
+    #category {
+      display:block;
+    }
+  }
+  .planet-production {
+    bottom: 68px;
+    position: absolute;
+  }
+  .close-btn {
+    color: #0496ff;
+    position: absolute;
+    right: 40px;
+    top: 20px;
+    &:hover {
+      color: #fff;
+    }
+  }
+  .mission-buttons {
+    position: absolute;
+    bottom: -50px;
+    left: 44px;
+    width: 100%;
+  }
+  .player-info {
+    .player-name {
+      position: absolute;
+      color: #fff;
+      right: 10px;
+      top: 63px;
+      text-decoration: underline;
+      &:hover {
+        color: #0496ff;
+      }
+    }
+    .player-avatar {
+      position: absolute;
+      bottom: 14px;
+      right: 9px;
+    }
   }
 }
 
@@ -459,12 +503,12 @@ html, body {
 }
 /* End of logo specific stylesheets*/
 
-@-webkit-keyframes greenPulse {
+@-webkit-keyframes pinkPulse {
   from { background-color: #CC4154; -webkit-box-shadow: 0 0 9px #333; }
   50% { background-color: #F24960; -webkit-box-shadow: 0 0 50px #F24960; }
   to { background-color: #CC4154; -webkit-box-shadow: 0 0 9px #333; }
 }
-@-moz-keyframes greenPulse {
+@-moz-keyframes pinkPulse {
   0% { background-color: #CC4154; box-shadow: 0 0 9px #333; }
   50% { background-color: #F24960; box-shadow: 0 0 50px #F24960; }
   100% { background-color: #CC4154; box-shadow: 0 0 9px #333; }
@@ -482,6 +526,12 @@ html, body {
 }
 
 .missions-menu {
+  background-image:url('/images/missions-menu.png');
+  width: 405px;
+  height: 141px;
+  position: absolute;
+  top: -141px;
+  left: 0px;
   li {
     width: 60px;
     height: 60px;
@@ -492,12 +542,6 @@ html, body {
     left: 17px;
     bottom: -3px;
   }
-  background-image:url('/images/missions-menu.png');
-  width: 405px;
-  height: 141px;
-  position: absolute;
-  top: -141px;
-  left: 0px;
 }
 
 .missions-menu-selection {
@@ -555,17 +599,17 @@ html, body {
 }
 
 .collapsed-list {
+  background-image: url("/images/ui/selection/planet-info-top.png");
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  width: 250px;
   a {
     color: rgb(245, 237, 237);
   }
   a:hover {
     color: #3A3A2A;
   }
-  background-image: url("/images/ui/selection/planet-info-top.png");
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-right: 10px;
-  width: 250px;
   .icon-expand-selection {
     padding-right: 20px;
   }

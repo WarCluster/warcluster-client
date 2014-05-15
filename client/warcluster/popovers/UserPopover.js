@@ -1,6 +1,6 @@
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./UserPopover.jade")),
-  className: "popover right show customPop",
+  className: "planet-info-popover",
   events: {
     "click .close-btn": "removePopover",
     "click .attack":    "attack",
@@ -17,11 +17,13 @@ module.exports = Backbone.View.extend({
     var twitterAvatar = screenName ? "https://twitter.com/api/users/profile_image/"+screenName+"?size=bigger" : "/images/default_avatar.jpg";
     var owner = screenName ? "@" + screenName : "Neutral Planet"; 
     var production = this.planetData && this.planetData.Size ? this.planetData.Size : 0;
+    var ceilProduction = Math.ceil(production/3);
+    var productionPerMinute = (ceilProduction > 3) ? 3 : ceilProduction;
 
     this.$el.html(this.template({
      playerName:        owner,
      twitterAvatar:     twitterAvatar,
-     planetProduction:  Math.round(production/3),
+     planetProduction:  productionPerMinute,
      planetLink:        planetName,
      planetCategory:    planetCategory
     }));
@@ -40,8 +42,8 @@ module.exports = Backbone.View.extend({
     this.move(l, t);
   },
   move: function(l, t) {
-    t -= this.$el.height()/2 + 2;
-    this.$el.css({ top: t, left: l + 5});
+    t -= this.$el.height()/2 + 30;
+    this.$el.css({ top: t, left: l - 184});
   },
   removePopover: function(e) {
     e.preventDefault();

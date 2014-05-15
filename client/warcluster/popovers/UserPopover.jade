@@ -1,21 +1,16 @@
-.arrow
-h5.popover-title
-  a.player-name(href='http://www.twitter.com/'+playerName, target='_blank')  !{playerName}
-  button.close-btn.pull-right
-    span.glyphicon.glyphicon-remove
+button.close-btn
+  span.glyphicon.glyphicon-remove
 .popover-content
-  .row-fluid
-    .thumbnails.col-sm-4
+  .player-info 
+    a.player-name(href='http://www.twitter.com/'+playerName, target='_blank')  !{playerName}
     img.player-avatar(src="#{twitterAvatar}")
-    .meta-information.col-sm-8
-      p.float-right(style='white-space:pre;')
-        span.planet-production !{planetProduction} 
-        span  pilots/minute
-      .pull-right
-        .attack.btn.btn-default Attack
-        .spy.btn.btn-default Spy
-        .supply.btn.btn-default Supply
-    .pull-right.col-sm-12
-      i.fa.fa-globe
-      !{planetCategory}
-      span !{planetLink}
+  .planet-production
+    span !{planetProduction} 
+    span  pilots/minute
+  .planet-category
+    span#category !{planetCategory}
+    span.planet-link !{planetLink}
+  .mission-buttons
+    .attack.btn.btn-default Attack
+    .spy.btn.btn-default Spy
+    .supply.btn.btn-default Supply
