@@ -174,23 +174,23 @@
   position: absolute;
   color: #fff;
   background-image: url("/images/ui/planet_info.png");
-  width: 321px;
-  height: 177px;
+  width: 323px;
+  height: 172px;
   .planet-category {
     position: absolute;
-    bottom: 7px;
+    bottom: 19px;
     #category {
       display:block;
     }
   }
   .planet-production {
-    bottom: 68px;
+    bottom: 78px;
     position: absolute;
   }
   .close-btn {
     color: #0496ff;
     position: absolute;
-    right: 40px;
+    right: 34px;
     top: 20px;
     &:hover {
       color: #fff;
@@ -200,7 +200,6 @@
     position: absolute;
     bottom: -50px;
     left: 44px;
-    width: 100%;
   }
   .player-info {
     .player-name {
@@ -215,8 +214,8 @@
     }
     .player-avatar {
       position: absolute;
-      bottom: 14px;
-      right: 9px;
+      bottom: 10px;
+      right: 2px;
     }
   }
 }
@@ -545,23 +544,27 @@ html, body {
 }
 
 .missions-menu-selection {
-  background-image:url('/images/mission-selection.png');
+  background-image:url('/images/ui/mission-selection.png');
   width: 60px;
   height: 60px;
 }
 
 .planets-selection {
   cursor: pointer;
+  position: absolute;
+  width: 250px;
+  top: 200px;
+  left: -250px;
+  border-image: url("/images/ui/planets_selection.png") 42 9 9 9 repeat;//42px 9px 9px 9px
+  -moz-border-image: url("/images/ui/planets_selection.png") 42 9 9 9 repeat;
+  border-width: 42px 9px 9px 9px;
+  border-style: solid;
   img {
     margin-left: 15px;
     margin-right: 15px;
     width: 30px;
     height: 30px;
   }
-  position: absolute;
-  width: 250px;
-  top: 200px;
-  left: -250px;
 }
 
 .expanded-list-container {
@@ -574,7 +577,7 @@ html, body {
     padding-bottom: 5px;
   }
   .expanded-list-end {
-    background-image: url("/images/ui/selection/planet-info-bottom.png");
+    /*background-image: url("/images/ui/selection/planet-info-bottom.png");*/
     width: 250px;
     height: 10px;
   }
@@ -582,13 +585,13 @@ html, body {
 
 
 .selection-planet-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
   &:hover {
     background: rgba(255, 255, 255, 0.1);
     border-right-color: #f26a21;
     border-right-style: solid;
   };
-  padding-top: 5px;
-  padding-bottom: 5px;
   .deselect-icon {
     padding-right: 6px;
     padding-top: 6px;
@@ -599,10 +602,11 @@ html, body {
 }
 
 .collapsed-list {
-  background-image: url("/images/ui/selection/planet-info-top.png");
+  position: absolute;
+  margin-top: -40px;
   padding-top: 5px;
   padding-bottom: 5px;
-  padding-right: 10px;
+  padding-right: 15px;
   width: 250px;
   a {
     color: rgb(245, 237, 237);
