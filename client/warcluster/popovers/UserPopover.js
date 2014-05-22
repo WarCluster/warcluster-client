@@ -42,9 +42,7 @@ module.exports = Backbone.View.extend({
     this.move(l, t);
   },
   move: function(l, t) {
-    debugger;
-    t -= this.$el.height()/2;
-    this.$el.css({ top: t, left: l});
+    this.$el.css({ top: t-120, left: l-161.5});
   },
   removePopover: function(e) {
     e.preventDefault();
