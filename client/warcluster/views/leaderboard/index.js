@@ -194,7 +194,7 @@ module.exports = Backbone.View.extend({
         } 
         else if (i > data.length - 1) {
           $("tbody tr:nth-child(" + (i+1) + ") > .twitter-username").html("");
-          $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb(255,255,255)"});
+          $("tbody tr:nth-child(" + (i+1) + ") > .race-color").css({"background": "rgb(34,34,34)"});
           $("tbody tr:nth-child(" + (i+1) + ") > .home-planet").html("");
           $("tbody tr:nth-child(" + (i+1) + ") > .planets").html("");
         }
