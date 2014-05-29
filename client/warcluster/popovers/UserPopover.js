@@ -14,7 +14,7 @@ module.exports = Backbone.View.extend({
     var planetCategory = this.planetData.IsHome ? "Home Planet: " : "Planet Name: ";
     var screenName = this.planetData && this.planetData.Owner ? this.planetData.Owner.split("player.").join("") : null;
     var planetName = this.planetData.Name;
-    var twitterAvatar = screenName ? "https://twitter.com/api/users/profile_image/"+screenName+"?size=bigger" : "/images/default_avatar.jpg";
+    var twitterAvatar = screenName ? "https://twitter.com/api/users/profile_image/"+screenName+"?size=bigger" : "/images/default_avatar.png";
     var owner = screenName ? "@" + screenName : "Neutral Planet"; 
     var production = this.planetData && this.planetData.Size ? this.planetData.Size : 0;
     var ceilProduction = Math.ceil(production/3);
