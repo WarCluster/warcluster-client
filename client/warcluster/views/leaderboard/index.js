@@ -26,8 +26,10 @@ module.exports = Backbone.View.extend({
 
     if (twitterUsername) {
       this.goToUsernamePage(twitterUsername);
-    } 
-    this.showIndividualLeaderboard();
+      this.$el.append(individualRender());
+    } else {
+      this.showIndividualLeaderboard();
+    }
     
     return this;
   },

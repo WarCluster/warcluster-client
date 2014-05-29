@@ -45,6 +45,7 @@ module.exports = Backbone.View.extend({
     }
     if(this.leaderboard) {
       clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
+      delete this.leaderboard.leaderboardAjaxTimeout;
     }
     TweenLite.to($(".landing-view"), 0.2, {
       css: {
