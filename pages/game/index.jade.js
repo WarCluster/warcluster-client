@@ -29,6 +29,9 @@ $(document).ready(function() {
 
   router = new AppRouter();
   Backbone.history.start({trigger: true});
+  //try to fix https://trello.com/c/Fxe0XPV2/333-upon-refresh-the-screen-is-black 
+  router.navigate("battle-field", {trigger: true});
+  //unfortunately I cannot reproduce it so I don't know if this is a fix :D
 });
 
 
