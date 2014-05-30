@@ -4,6 +4,6 @@
     "log": true
   },
   "TwitterOAuth": {
-    "callbackFullUrl": "http://kiril.eu:7001/game/#battle-field"
+    "callbackFullUrl": "http://staging.warcluster.com/game/#battle-field"
   }
 }
