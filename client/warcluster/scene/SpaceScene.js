@@ -82,6 +82,8 @@ module.exports.prototype.buildScene = function() {
     self.context.height = hh;
 
     self.renderer.setSize( ww, hh );
+    //update the position according: https://trello.com/c/dq7etSvq/314-fix-the-userpopover-positioning-when-resizing
+    self.context.spaceViewController.info.updatePosition();
   }
 
   this.context.$content.append(this.renderer.domElement);
