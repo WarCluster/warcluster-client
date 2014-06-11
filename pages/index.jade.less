@@ -35,23 +35,32 @@
 .pick-race-panel {
   width: 65%;
   height: 100%;
-  text-align: right;
   float: right;
+  padding-top: 25px;
   .sun-menu-container {
     border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     border-width: 12px 16px 16px 12px;
-    height: 50%;
+    /*margin-top: 25px;*/
+    height: 100%;
+    .choices-list {
+      position: absolute;
+      text-align: left;
+      cursor: pointer;
+    }
   }
   .race-menu-container {
     background-color: #150a06;
     border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     border-width: 12px 16px 16px 12px;
-    height: 50%;
-    max-width: 1100px;
-    max-height: 760px;
-    margin: 15px auto;
+    /*margin-top: 25px;*/
+    height: 100%;
+    .choices-list {
+      position: absolute;
+      text-align: left;
+      cursor: pointer;
+    }
   }
   .races {
     display: block;
@@ -60,10 +69,16 @@
     margin-top: 20px;
   }
   .selected {
-    border-left: 5px outset #f26a21;
+    border-left: 5px outset #0597ff;
+    padding-left: 10px;
   }
-  .sun {
-    cursor: pointer;
+  .sun-type {
+    background-image: url("/images/suns/sun0.png");
+    width:309px;
+    height: 302px;
+    margin: 0 auto;
+    top: 130px;
+    position: relative;
   }
   .race {
     width: 40%;
@@ -97,6 +112,21 @@
     }
     &:hover > .race-color > img {
       padding-top: 5px;
+    }
+  }
+  .info {
+    margin-top: -25px;
+    border-left: 2px solid #0597ff;
+    border-right: 2px solid #0597ff;
+    background-color: #150a06;
+    color: #0597ff;
+    max-width: 430px;
+    padding-left: 10px;
+    text-align: left;
+  }
+  .choice {
+    &:hover {
+      color: #0597ff;
     }
   }
 }
@@ -320,16 +350,16 @@ html, body {
   -moz-border-image: url("/images/ui/twitterStream/twitter-stream-timeline-border.png") 11 0 11 11 round;
   border-width: 11px 0px 11px 11px;
   .twitter-stream-toggle-btn {
-    span {
-      margin-left: 7px;
-      margin-top: 5px;
-    }
     background-image: url("/images/ui/twitterStream/twitter-stream-timeline-hide-button.png");
     width: 45px;
     height: 24px;
     left: -40px;
     top: -11px;
     position: inherit;
+    span {
+      margin-left: 7px;
+      margin-top: 5px;
+    }
     &:hover {
       color: #888;
     }

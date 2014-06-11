@@ -1,50 +1,32 @@
 .loginBtn.text-center
   a.btn.login.start-game Start Game
-.pick-race-panel.row
-  .race-menu-container.col-sm-12
-    .row.races
-      .race.race-red(data-id="0").ease-all.col-sm-6.row
-        .race-color.col-sm-2
-          img(src="/images/planets/planet17.png")
-        .race-description.col-sm-10
-          | InitLab
-          p The first bulgarian hackerspace based in Sofia!
-      .race.race-green(data-id="1").ease-all.col-sm-6.row
-        .race-color.col-sm-2
-          img(src="/images/planets/planet12.png")
-        .race-description.col-sm-10
-          | VarnaLab
-          p The second bulgarian hackerspace. Will it stand against the pressure?
-      .race.race-orange(data-id="2").ease-all
-        .race-color.col-sm-4
-          img(src="/images/planets/planet13.png")
-        .race-description.col-sm-8
-          | Hackafe
-          p The hackerspace from Plovdiv, conquering the galaxy maina by maina!
-      .race.race-pink(data-id="3").ease-all
-        .race-color.col-sm-4
-          img(src="/images/planets/planet14.png")
-        .race-description.col-sm-8
-          | BurgasLab
-          p The fourth bulgarian hackerspace in the south coast of Black Sea \/
-      .race.race-yellow(data-id="4").ease-all
-        .race-color.col-sm-4
-          img(src="/images/planets/planet15.png")
-        .race-description.col-sm-8
-          .badge Locked
-          i.fa.fa-lock
-          p Stay tuned for more!
-      .race.race-blue(data-id="5").ease-all
-        .race-color.col-sm-4
-          img(src="/images/planets/planet16.png")
-        .race-description.col-sm-8
-          .badge Locked
-          i.fa.fa-lock
-          p Stay tuned for more!
-  .sun-menu-container.col-sm-12
-    h4.pull-left Pick the type of sun for your home solar system!
-    .row.suns
-      .sun(data-id="0").col-sm-6
-        img(src="/images/suns/sun0.png");
-      .sun(data-id="1").col-sm-6
-        img(src="/images/suns/sun1.png");
+.pick-race-panel.left-panel
+  .race-menu-container.container.col-sm-6
+    h3.info Pick the race you want to play with!
+    .choices-list
+      .choice.race-choice.ease-all
+        p InitLab
+      .choice.race-choice.ease-all
+        p VarnaLab
+      .choice.race-choice.ease-all  
+        p Hackafe
+      .choice.race-choice.ease-all
+        p BurgasLab
+      .choice.race-choice.ease-all
+        p MegaDev
+      .badge Locked race*
+        i.fa.fa-lock
+      p * Subscribe to our newsletter for news
+
+  .sun-menu-container.container.col-sm-6
+    h3.info Customize your starting solar system!
+    .planets-container
+
+    .choices-list
+      .choice.sun-choice.ease-all(data-id=0)
+        p Alpha Centauri
+      .choice.sun-choice.ease-all(data-id=1)
+        p Kopernik
+      p Upload your own     
+        i.fa.fa-lock
+    .sun-type

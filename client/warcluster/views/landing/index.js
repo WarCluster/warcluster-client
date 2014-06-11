@@ -6,17 +6,16 @@ module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
     "click .start-game": "startGame",
-    "click .race": "selectRace",
-    "click .sun": "selectSun"
-    // "click .toggle-leaderboard-btn": "showLeaderboard"
+    "click .race-choice": "selectRace",
+    "click .sun-choice": "selectSun"
   },
   className: "landing-view container text-center",
   initialize: function(context) {
     this.context = context;
     this.twitter = context.playerData.twitter;
 
-    this.selectedRace = -1;
-    this.selectedSun = -1;
+    this.selectedRace = 1;
+    this.selectedSun = 1;
   },
   renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
@@ -29,19 +28,17 @@ module.exports = Backbone.View.extend({
   renderRacePick: function() {
     this.$el.html(this.template({twitter: this.twitter}));
     this.$el.append(pickRaceRender());
-    $(".pick-race-panel").addClass("left-panel");
+    $(".race-choice:nth-of-type(1) ").addClass("selected");
+    $(".sun-choice:nth-of-type(1) ").addClass("selected");
 
     return this;
   },
   startGame: function() {
     if ($(".start-game").html() === "Start Game") {
-      if ((this.selectedRace > -1 && this.selectedRace < 6) && (this.selectedSun > -1 && this.selectedSun < 2)) {
+      if (confirm("Are you sure you want to start this way?") === true) {
         this.context.commandsManager.setupParameters(this.selectedRace, this.selectedSun);
         this.context.commandsManager.toggleTutorial();
-      } else {
-        alert("You must pick both your race and your sun in order to continue");
-        return;
-      }
+      } 
     }
     if(this.leaderboard) {
       clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
@@ -63,16 +60,15 @@ module.exports = Backbone.View.extend({
     // router.navigate("battle-field", true)
   },
   selectRace: function(e) {
-    if ($(e.currentTarget).attr("data-id") > 3) return; //they're locked
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
-    $(e.currentTarget).find(".race-color").addClass("selected");
+    $(e.currentTarget).addClass("selected");
     this.selectedRace = parseInt($(e.currentTarget).attr("data-id"));
-    // $(e.currentTarget).find(".race-color").css({"border-bottom": "5px outset #f26a21"});  }
   },
   selectSun: function(e) {
-    if ($(e.currentTarget).attr("data-id") > 1) return; //they're locked
+    var sunPNGNumber = $(e.currentTarget).attr("data-id");
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
-    $(e.currentTarget).find("img").addClass("selected");
+    $(e.currentTarget).addClass("selected");
+    $(".sun-type").css({"background-image": "url('/images/suns/sun" + sunPNGNumber +".png')"})
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
   }
 })
