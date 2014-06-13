@@ -106,7 +106,6 @@ module.exports = Backbone.View.extend({
     this.$(".selected-planets").html(this.selectedPlanets.length);
   },
   moveCameraToPlanet: function(e) {
-    debugger;
     this.trigger("scrollToPlanet", $(e.currentTarget).attr("data-id"));
   },
   getPlanetIndex: function(data) {

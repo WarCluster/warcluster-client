@@ -82,6 +82,9 @@ module.exports.prototype.parseMessage = function(command) {
           humane.error("You're attacking with less than one pilot", {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
         }
       break;
+      case "server_params":
+        this.context.Teams = data.Teams;
+      break;
       default:
         console.log(data);
     }

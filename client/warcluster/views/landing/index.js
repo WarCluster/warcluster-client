@@ -16,6 +16,13 @@ module.exports = Backbone.View.extend({
 
     this.selectedRace = 1;
     this.selectedSun = 1;
+
+    this.teams = this.context.Teams;
+    for(name in this.teams) {
+      this.teams[name].R = this.teams[name].R * 255;
+      this.teams[name].G = this.teams[name].G * 255;
+      this.teams[name].B = this.teams[name].B * 255;
+    }
   },
   renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
@@ -27,7 +34,14 @@ module.exports = Backbone.View.extend({
   },
   renderRacePick: function() {
     this.$el.html(this.template({twitter: this.twitter}));
-    this.$el.append(pickRaceRender());
+    this.$el.append(pickRaceRender({
+      raceOne: Object.keys(this.teams)[0],
+      raceTwo: Object.keys(this.teams)[1],
+      raceThree: Object.keys(this.teams)[2],
+      raceFour: Object.keys(this.teams)[3],
+      raceFive: Object.keys(this.teams)[4],
+      raceSix: Object.keys(this.teams)[5]
+    }));
     $(".race-choice:nth-of-type(1) ").addClass("selected");
     $(".sun-choice:nth-of-type(1) ").addClass("selected");
 
@@ -63,6 +77,17 @@ module.exports = Backbone.View.extend({
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).addClass("selected");
     this.selectedRace = parseInt($(e.currentTarget).attr("data-id"));
+    var selectedRaceName = $(e.currentTarget).text();
+
+    //TODO: remove the try-catch once you understand 
+    //why when selecting "Hackafe", selectedRaceName = " Hackafe" (notice the whitespace infront)
+    try {
+      $(".overlay").css({"background-color":"rgba(" + Math.ceil(this.teams[selectedRaceName].R) + "," + Math.ceil(this.teams[selectedRaceName].G) + "," + Math.ceil(this.teams[selectedRaceName].B) + "," + "0.6)"})
+    } catch(e) {
+      console.log(e);
+      selectedRaceName = "Hackafe";
+      $(".overlay").css({"background-color":"rgba(" + Math.ceil(this.teams[selectedRaceName].R) + "," + Math.ceil(this.teams[selectedRaceName].G) + "," + Math.ceil(this.teams[selectedRaceName].B) + "," + "0.6)"})
+    }
   },
   selectSun: function(e) {
     var sunPNGNumber = $(e.currentTarget).attr("data-id");
