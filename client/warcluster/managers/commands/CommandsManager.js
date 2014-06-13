@@ -83,7 +83,12 @@ module.exports.prototype.parseMessage = function(command) {
         }
       break;
       case "server_params":
-        this.context.Teams = data.Teams;
+        _.extend(this.context.Teams, data.Teams);
+        for(name in this.context.Teams) {
+          this.context.Teams[name].R = this.context.Teams[name].R * 255;
+          this.context.Teams[name].G = this.context.Teams[name].G * 255;
+          this.context.Teams[name].B = this.context.Teams[name].B * 255;
+        }
       break;
       default:
         console.log(data);
