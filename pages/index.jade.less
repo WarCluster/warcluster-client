@@ -29,9 +29,6 @@
     cursor: pointer;
   }
 }
-.white {
-  color: #fff;
-}
 .pick-race-panel {
   width: 65%;
   height: 100%;
@@ -99,12 +96,23 @@
     border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     border-width: 12px 16px 16px 12px;
-    /*margin-top: 25px;*/
     height: 100%;
     .choices-list {
-      position: absolute;
       text-align: left;
       cursor: pointer;
+    }
+    .race-portrait {
+      height: 50%;
+      background-image: url("/images/races/Hackafe.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+    a {
+      color: #FFF;
+      text-decoration: underline;
+      &:hover {
+        color: #0597ff;
+      }
     }
   }
   .races {
@@ -721,4 +729,7 @@ html, body {
 
 .text-center {
   text-align: center;
+}
+.white {
+  color: #fff;
 }

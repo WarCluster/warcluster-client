@@ -16,6 +16,7 @@ module.exports = Backbone.View.extend({
 
     this.selectedRace = 1;
     this.selectedSun = 1;
+    this.selectedRaceName = Object.keys(this.context.Teams)[0];
 
   },
   renderStatistics: function() {
@@ -43,10 +44,12 @@ module.exports = Backbone.View.extend({
   },
   startGame: function() {
     if ($(".start-game").html() === "Start Game") {
-      if (confirm("Are you sure you want to start this way?") === true) {
+      if (confirm("Are you sure you want to start with " + this.selectedRaceName + "? You cannot change your race until the end of the round") === true) {
         this.context.commandsManager.setupParameters(this.selectedRace, this.selectedSun);
         this.context.commandsManager.toggleTutorial();
-      } 
+      } else {
+        return;
+      }
     }
     if(this.leaderboard) {
       clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
@@ -71,17 +74,12 @@ module.exports = Backbone.View.extend({
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).addClass("selected");
     this.selectedRace = parseInt($(e.currentTarget).attr("data-id"));
-    var selectedRaceName = $(e.currentTarget).text();
-
-    //TODO: remove the try-catch once you understand 
-    //why when selecting "Hackafe", selectedRaceName = " Hackafe" (notice the whitespace infront)
-    try {
-      $(".overlay").css({"background-color":"rgba(" + this.context.Teams[selectedRaceName].R + "," + this.context.Teams[selectedRaceName].G + "," + this.context.Teams[selectedRaceName].B + "," + "0.6)"})
-    } catch(e) {
-      console.log(e);
-      selectedRaceName = "Hackafe";
-      $(".overlay").css({"background-color":"rgba(" + this.context.Teams[selectedRaceName].R + "," + this.context.Teams[selectedRaceName].G + "," + this.context.Teams[selectedRaceName].B + "," + "0.6)"})
-    }
+    ////TODO: remove the replace(" ", "") once you understand 
+    //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
+    //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
+    this.selectedRaceName = $(e.currentTarget).text().replace(" ", "");
+    $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + "," + "0.6)"})
+    $(".race-portrait").css({"background-image": "url('/images/races/" + this.selectedRaceName +".png')"})
   },
   selectSun: function(e) {
     var sunPNGNumber = $(e.currentTarget).attr("data-id");
