@@ -76,11 +76,11 @@ module.exports = Backbone.View.extend({
     //TODO: remove the try-catch once you understand 
     //why when selecting "Hackafe", selectedRaceName = " Hackafe" (notice the whitespace infront)
     try {
-      $(".overlay").css({"background-color":"rgba(" + Math.ceil(this.context.Teams[selectedRaceName].R) + "," + Math.ceil(this.context.Teams[selectedRaceName].G) + "," + Math.ceil(this.context.Teams[selectedRaceName].B) + "," + "0.6)"})
+      $(".overlay").css({"background-color":"rgba(" + this.context.Teams[selectedRaceName].R + "," + this.context.Teams[selectedRaceName].G + "," + this.context.Teams[selectedRaceName].B + "," + "0.6)"})
     } catch(e) {
       console.log(e);
       selectedRaceName = "Hackafe";
-      $(".overlay").css({"background-color":"rgba(" + Math.ceil(this.context.Teams[selectedRaceName].R) + "," + Math.ceil(this.context.Teams[selectedRaceName].G) + "," + Math.ceil(this.context.Teams[selectedRaceName].B) + "," + "0.6)"})
+      $(".overlay").css({"background-color":"rgba(" + this.context.Teams[selectedRaceName].R + "," + this.context.Teams[selectedRaceName].G + "," + this.context.Teams[selectedRaceName].B + "," + "0.6)"})
     }
   },
   selectSun: function(e) {
