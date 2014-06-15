@@ -74,10 +74,10 @@ module.exports = Backbone.View.extend({
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).addClass("selected");
     this.selectedRace = parseInt($(e.currentTarget).attr("data-id"));
-    ////TODO: remove the replace(" ", "") once you understand 
+    ////TODO: remove the trim() once you understand 
     //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
     //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
-    this.selectedRaceName = $(e.currentTarget).text().replace(" ", "");
+    this.selectedRaceName = $.trim(e.currentTarget.textContent);
     $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + "," + "0.6)"})
     $(".race-portrait").css({"background-image": "url('/images/races/" + this.selectedRaceName +".png')"})
   },
