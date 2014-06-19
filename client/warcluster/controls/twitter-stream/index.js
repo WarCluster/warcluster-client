@@ -17,16 +17,16 @@ module.exports = Backbone.View.extend({
   render: function(race) {
     this.$el.html(this.template());
     switch (race) {
-      case "InitLab":
+      case 0:
         this.$el.append(RedRaceTwitterStreamRender());
         break;
-      case "VarnaLab":
+      case 1:
         this.$el.append(OrangeRaceTwitterStreamRender());
         break;
-      case "Hackafe":
+      case 2:
         this.$el.append(YellowRaceTwitterStreamRender());
         break;
-      case "BurgasLab":
+      case 3:
         this.$el.append(GreenRaceTwitterStreamRender());
         break;
     }

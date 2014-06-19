@@ -3,14 +3,14 @@
 .pick-race-panel.left-panel
   .race-menu-container.container.col-sm-6
     h3.info Pick the race you want to play with!
-    .cl-effect-10.btn-group
-      a.race-choice(href='#', data-hover='#{raceOne}')
+    .cl-effect-10
+      a.race-choice(href='#', data-hover='#{raceOne}', data-id="0")
           span !{raceOne}
-      a.race-choice(href='#', data-hover='#{raceTwo}')
+      a.race-choice(href='#', data-hover='#{raceTwo}', data-id="1")
         span !{raceTwo}
-      a.race-choice(href='#', data-hover='#{raceThree}')
+      a.race-choice(href='#', data-hover='#{raceThree}', data-id="2")
         span !{raceThree}
-      a.race-choice(href='#', data-hover='#{raceFour}')
+      a.race-choice(href='#', data-hover='#{raceFour}', data-id="3")
         span !{raceFour}
     .badge Locked race*
       i.fa.fa-lock
@@ -30,11 +30,11 @@
       .overlay-left.overlay
       img.planet.planet-right(src="/images/planets/planet5.png")
       .overlay-right.overlay
-    .choices-list
-      .choice.sun-choice.ease-all(data-id=0)
-        p Sun Type: Alpha Centauri
-      .choice.sun-choice.ease-all(data-id=1)
-        p Sun Type: Kopernik
+    .cl-effect-10
+      a.sun-choice(href='#', data-hover='Kopernik')
+        span Kopernik
+      a.sun-choice(href='#', data-hover='Alpha Centauri')
+        span Alpha Centauri
       p Upload your own     
         i.fa.fa-lock
     .sun-type

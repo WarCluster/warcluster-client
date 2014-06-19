@@ -56,10 +56,11 @@ module.exports.prototype.parseMessage = function(command) {
     switch (data.Command) {
       case "login_success":
         var pd = new PlayerData();
+
         pd.Username = this.username;
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
-        pd.Race = data.Race;
+        pd.Race = data.RaceID;
         pd.HomePlanet = data.HomePlanet;
         pd.JustRegistered = data.JustRegistered;
 
@@ -84,7 +85,6 @@ module.exports.prototype.parseMessage = function(command) {
       break;
       case "server_params":
         _.extend(this.context.Teams, data.Teams);
-        debugger;
         for(name in this.context.Teams) {
           this.context.Teams[name].R = Math.ceil(this.context.Teams[name].R * 255);
           this.context.Teams[name].G = Math.ceil(this.context.Teams[name].G * 255);
@@ -115,10 +115,10 @@ module.exports.prototype.sendMission = function(type, source, target, ships) {
   }));
 }
 
-module.exports.prototype.setupParameters = function(team, sun) {
+module.exports.prototype.setupParameters = function(race, sun) {
   this.sockjs.send(JSON.stringify({
     "Command": "setup_parameters",
-    "Race": team,
+    "Race": race,
     "SunTextureId": sun
   }))
 }
