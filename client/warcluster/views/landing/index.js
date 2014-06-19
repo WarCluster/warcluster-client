@@ -91,7 +91,6 @@ module.exports = Backbone.View.extend({
     $(".race-hashtag-color").html("<a href='http://twitter.com/#WarCluster" + this.selectedRaceName + "' target='_blank'>#WarCluster" + this.selectedRaceName + "</a>");
     $(".race-hashtag-color a").css({"color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B +", 1) !important"});
     $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + ", 0.6)"})
-    // $(".race-portrait").css({"background-image": "url('/images/races/" + this.selectedRaceName +".png')"})
-    $(".race-portrait").attr('src', "url('/images/races/" + this.selectedRaceName + "'.png)");
+    $(".race-portrait img").attr('src', "/images/races/" + this.selectedRaceName + ".png");
   }
 })
