@@ -172,7 +172,7 @@ module.exports = Backbone.View.extend({
     this.commandsManager.loginFn = function(data) {
       _.extend(self.context.playerData, data);
 
-      $(".ui-container").append(self.twitterStream.render(self.context.playerData.Fraction.Name).el);
+      $(".ui-container").append(self.twitterStream.render(self.context.playerData.Race).el);
       console.log("-loginFn-", self.context.playerData);
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);

@@ -59,7 +59,7 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Username = this.username;
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
-        pd.Fraction = data.Fraction;
+        pd.Race = data.Race;
         pd.HomePlanet = data.HomePlanet;
         pd.JustRegistered = data.JustRegistered;
 
@@ -84,6 +84,7 @@ module.exports.prototype.parseMessage = function(command) {
       break;
       case "server_params":
         _.extend(this.context.Teams, data.Teams);
+        debugger;
         for(name in this.context.Teams) {
           this.context.Teams[name].R = Math.ceil(this.context.Teams[name].R * 255);
           this.context.Teams[name].G = Math.ceil(this.context.Teams[name].G * 255);
@@ -117,7 +118,7 @@ module.exports.prototype.sendMission = function(type, source, target, ships) {
 module.exports.prototype.setupParameters = function(team, sun) {
   this.sockjs.send(JSON.stringify({
     "Command": "setup_parameters",
-    "Fraction": team,
+    "Race": team,
     "SunTextureId": sun
   }))
 }

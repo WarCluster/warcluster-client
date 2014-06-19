@@ -14,9 +14,9 @@ module.exports = Backbone.View.extend({
   className: "twitter-stream",
   initialize: function() {    
   },
-  render: function(fraction) {
+  render: function(race) {
     this.$el.html(this.template());
-    switch (fraction) {
+    switch (race) {
       case "InitLab":
         this.$el.append(RedRaceTwitterStreamRender());
         break;
