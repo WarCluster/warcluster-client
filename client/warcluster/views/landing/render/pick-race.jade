@@ -3,7 +3,7 @@
 .pick-race-panel.left-panel
   .race-menu-container.container.col-sm-6
     h3.info Pick the race you want to play with!
-    .cl-effect-10
+    .btn-group-cl-effect
       a.race-choice(href='#', data-hover='#{raceOne}', data-id="0")
           span !{raceOne}
       a.race-choice(href='#', data-hover='#{raceTwo}', data-id="1")
@@ -18,7 +18,11 @@
       | Subscribe to our 
       a(href='http://eepurl.com/MvxdX', target="_blank") newsletter
       |  for news about the upcoming race!
+    p 
+      | Your color & communications #hashtag will be: 
+      span.race-hashtag-color 
     .race-portrait
+      img.race-image(src="/images/races/Hackafe.png")
   .sun-menu-container.container.col-sm-6
     h3.info Customize your starting solar system!
     .planets-container
@@ -30,10 +34,10 @@
       .overlay-left.overlay
       img.planet.planet-right(src="/images/planets/planet5.png")
       .overlay-right.overlay
-    .cl-effect-10
-      a.sun-choice(href='#', data-hover='Kopernik')
+    .btn-group-cl-effect
+      a.sun-choice(href='#', data-hover='Kopernik', data-id="0")
         span Kopernik
-      a.sun-choice(href='#', data-hover='Alpha Centauri')
+      a.sun-choice(href='#', data-hover='Alpha Centauri', data-id="1")
         span Alpha Centauri
       p Upload your own     
         i.fa.fa-lock

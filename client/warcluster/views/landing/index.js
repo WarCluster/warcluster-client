@@ -17,7 +17,6 @@ module.exports = Backbone.View.extend({
     this.selectedRace = 1;
     this.selectedSun = 1;
     this.selectedRaceName = Object.keys(this.context.Teams)[0];
-
   },
   renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
@@ -39,6 +38,7 @@ module.exports = Backbone.View.extend({
     }));
     $(".race-choice:nth-of-type(1) ").addClass("selected");
     $(".sun-choice:nth-of-type(1) ").addClass("selected");
+    this._switchRace($(".btn-group-cl-effect a:first()"));
 
     return this;
   },
@@ -73,13 +73,7 @@ module.exports = Backbone.View.extend({
   selectRace: function(e) {
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).addClass("selected");
-    this.selectedRace = parseInt($(e.currentTarget).attr("data-id"));
-    ////TODO: remove the trim() once you understand 
-    //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
-    //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
-    this.selectedRaceName = $.trim(e.currentTarget.textContent);
-    $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + "," + "0.6)"})
-    $(".race-portrait").css({"background-image": "url('/images/races/" + this.selectedRaceName +".png')"})
+    this._switchRace($(e.currentTarget));
   },
   selectSun: function(e) {
     var sunPNGNumber = $(e.currentTarget).attr("data-id");
@@ -87,5 +81,17 @@ module.exports = Backbone.View.extend({
     $(e.currentTarget).addClass("selected");
     $(".sun-type").css({"background-image": "url('/images/suns/sun" + sunPNGNumber +".png')"})
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
+  },
+  _switchRace: function($selectedRace) {
+    this.selectedRace = parseInt($($selectedRace).attr("data-id"));
+    ////TODO: remove the trim() once you understand 
+    //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
+    //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
+    this.selectedRaceName = $.trim($selectedRace.text());
+    $(".race-hashtag-color").html("<a href='http://twitter.com/#WarCluster" + this.selectedRaceName + "' target='_blank'>#WarCluster" + this.selectedRaceName + "</a>");
+    $(".race-hashtag-color a").css({"color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B +", 1) !important"});
+    $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + ", 0.6)"})
+    // $(".race-portrait").css({"background-image": "url('/images/races/" + this.selectedRaceName +".png')"})
+    $(".race-portrait").attr('src', "url('/images/races/" + this.selectedRaceName + "'.png)");
   }
 })
