@@ -3,23 +3,23 @@
 .pick-race-panel.left-panel
   .race-menu-container.container.col-sm-6
     h3.info Pick the race you want to play with!
-    .choices-list
-      .choice.race-choice.ease-all
-        p !{raceOne}
-      .choice.race-choice.ease-all
-        p !{raceTwo}
-      .choice.race-choice.ease-all  
-        p !{raceThree}
-      .choice.race-choice.ease-all
-        p !{raceFour}
-      .choice.race-choice.ease-all
-        p !{raceFive}
-      .badge Locked race*
-        i.fa.fa-lock
-      p
-        | Subscribe to our 
-        a(href='http://eepurl.com/MvxdX', target="_blank") newsletter
-        |  for news about the upcoming race!
+    .cl-effect-10.btn-group
+      a.race-choice(href='#', data-hover='#{raceOne}')
+          span !{raceOne}
+      a.race-choice(href='#', data-hover='#{raceTwo}')
+        span !{raceTwo}
+      a.race-choice(href='#', data-hover='#{raceThree}')
+        span !{raceThree}
+      a.race-choice(href='#', data-hover='#{raceFour}')
+        span !{raceFour}
+      a.race-choice(href='#', data-hover='#{raceFive}')
+        span !{raceFive}
+    .badge Locked race*
+      i.fa.fa-lock
+    p
+      | Subscribe to our 
+      a(href='http://eepurl.com/MvxdX', target="_blank") newsletter
+      |  for news about the upcoming race!
     .race-portrait
   .sun-menu-container.container.col-sm-6
     h3.info Customize your starting solar system!

@@ -78,6 +78,7 @@ module.exports = Backbone.View.extend({
     //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
     //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
     this.selectedRaceName = $.trim(e.currentTarget.textContent);
+    // $(e.currentTarget).css({"border-style":"solid"});
     $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + "," + "0.6)"})
     $(".race-portrait").css({"background-image": "url('/images/races/" + this.selectedRaceName +".png')"})
   },
