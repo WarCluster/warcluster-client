@@ -47,6 +47,7 @@ module.exports = Backbone.View.extend({
       if (confirm("Are you sure you want to start with " + this.selectedRaceName + "? You cannot change your race until the end of the round") === true) {
         this.context.commandsManager.setupParameters(this.selectedRace, this.selectedSun);
         this.context.commandsManager.toggleTutorial();
+        this.context.playerData.JustRegistered = true;
       } else {
         return;
       }

@@ -62,7 +62,6 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Position = data.Position;
         pd.Race = data.RaceID;
         pd.HomePlanet = data.HomePlanet;
-        pd.JustRegistered = data.JustRegistered;
 
         this.loginFn(pd);
       break;

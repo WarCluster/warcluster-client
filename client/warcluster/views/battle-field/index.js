@@ -176,8 +176,10 @@ module.exports = Backbone.View.extend({
       console.log("-loginFn-", self.context.playerData);
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
-      
-      self.toggleLandingStatisticsView();
+
+      if (!self.context.playerData.JustRegistered) {
+        self.toggleLandingStatisticsView();
+      }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
       //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});

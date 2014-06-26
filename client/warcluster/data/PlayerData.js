@@ -4,5 +4,5 @@ module.exports = function(){
   this.Position = null;
   this.Race = null;
   this.HomePlanet = null;
-  this.JustRegistered = null;
+  this.JustRegistered = false;
 }
