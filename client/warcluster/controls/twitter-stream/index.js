@@ -14,19 +14,19 @@ module.exports = Backbone.View.extend({
   className: "twitter-stream",
   initialize: function() {    
   },
-  render: function(fraction) {
+  render: function(race) {
     this.$el.html(this.template());
-    switch (fraction) {
-      case "InitLab":
+    switch (race) {
+      case 0:
         this.$el.append(RedRaceTwitterStreamRender());
         break;
-      case "VarnaLab":
+      case 1:
         this.$el.append(OrangeRaceTwitterStreamRender());
         break;
-      case "Hackafe":
+      case 2:
         this.$el.append(YellowRaceTwitterStreamRender());
         break;
-      case "BurgasLab":
+      case 3:
         this.$el.append(GreenRaceTwitterStreamRender());
         break;
     }

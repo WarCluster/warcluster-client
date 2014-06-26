@@ -7,13 +7,13 @@ $(document).ready(function() {
   UserVoice = window.UserVoice || [];
   UserVoice.push(['showTab', 'classic_widget', {
     mode: 'full',
-    primary_color: '#f69666',
-    link_color: '#f1485e',
+    primary_color: '#0496ff',
+    link_color: '#0496ff',
     default_mode: 'feedback',
     forum_id: 214551,
     tab_label: 'Feedback & Support',
-    tab_color: '#a9466f',
-    tab_position: 'bottom-left',
+    tab_color: '#0496ff',
+    tab_position: 'top-right',
     tab_inverted: false
   }]);
   // end of UserVoice widget

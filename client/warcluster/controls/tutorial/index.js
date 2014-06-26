@@ -17,6 +17,8 @@ module.exports = Backbone.View.extend({
       TweenLite.to($(".tutorial-image"), 0.2, {
         css:  { width: "882px",
                 height: "574px",
+                top: "0",
+                left: "0"
                 },
         ease: Cubic.easeOut,
         onComplete: function() {
@@ -26,6 +28,8 @@ module.exports = Backbone.View.extend({
       TweenLite.to($(".tutorial-image"), 0.3, {
         css:  { width: "50px",
                 height: "50px",
+                top: "",
+                left: ""
                 },
         ease: Cubic.easeOut,
         onComplete: function() {

@@ -6,17 +6,17 @@ module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
     "click .start-game": "startGame",
-    "click .race": "selectRace",
-    "click .sun": "selectSun"
-    // "click .toggle-leaderboard-btn": "showLeaderboard"
+    "click .race-choice": "selectRace",
+    "click .sun-choice": "selectSun"
   },
   className: "landing-view container text-center",
   initialize: function(context) {
     this.context = context;
     this.twitter = context.playerData.twitter;
 
-    this.selectedRace = -1;
-    this.selectedSun = -1;
+    this.selectedRace = 1;
+    this.selectedSun = 1;
+    this.selectedRaceName = Object.keys(this.context.Teams)[0];
   },
   renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
@@ -28,23 +28,32 @@ module.exports = Backbone.View.extend({
   },
   renderRacePick: function() {
     this.$el.html(this.template({twitter: this.twitter}));
-    this.$el.append(pickRaceRender());
-    $(".pick-race-panel").addClass("left-panel");
+    this.$el.append(pickRaceRender({
+      raceOne: Object.keys(this.context.Teams)[0],
+      raceTwo: Object.keys(this.context.Teams)[1],
+      raceThree: Object.keys(this.context.Teams)[2],
+      raceFour: Object.keys(this.context.Teams)[3],
+      raceFive: Object.keys(this.context.Teams)[4],
+      raceSix: Object.keys(this.context.Teams)[5]
+    }));
+    $(".race-choice:nth-of-type(1) ").addClass("selected");
+    $(".sun-choice:nth-of-type(1) ").addClass("selected");
+    this._switchRace($(".btn-group-cl-effect a:first()"));
 
     return this;
   },
   startGame: function() {
     if ($(".start-game").html() === "Start Game") {
-      if ((this.selectedRace > -1 && this.selectedRace < 6) && (this.selectedSun > -1 && this.selectedSun < 2)) {
+      if (confirm("Are you sure you want to start with " + this.selectedRaceName + "? You cannot change your race until the end of the round") === true) {
         this.context.commandsManager.setupParameters(this.selectedRace, this.selectedSun);
         this.context.commandsManager.toggleTutorial();
       } else {
-        alert("You must pick both your race and your sun in order to continue");
         return;
       }
     }
     if(this.leaderboard) {
       clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
+      delete this.leaderboard.leaderboardAjaxTimeout;
     }
     TweenLite.to($(".landing-view"), 0.2, {
       css: {
@@ -62,16 +71,26 @@ module.exports = Backbone.View.extend({
     // router.navigate("battle-field", true)
   },
   selectRace: function(e) {
-    if ($(e.currentTarget).attr("data-id") > 3) return; //they're locked
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
-    $(e.currentTarget).find(".race-color").addClass("selected");
-    this.selectedRace = parseInt($(e.currentTarget).attr("data-id"));
-    // $(e.currentTarget).find(".race-color").css({"border-bottom": "5px outset #f26a21"});  }
+    $(e.currentTarget).addClass("selected");
+    this._switchRace($(e.currentTarget));
   },
   selectSun: function(e) {
-    if ($(e.currentTarget).attr("data-id") > 1) return; //they're locked
+    var sunPNGNumber = $(e.currentTarget).attr("data-id");
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
-    $(e.currentTarget).find("img").addClass("selected");
+    $(e.currentTarget).addClass("selected");
+    $(".sun-type").css({"background-image": "url('/images/suns/sun" + sunPNGNumber +".png')"})
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
+  },
+  _switchRace: function($selectedRace) {
+    this.selectedRace = parseInt($($selectedRace).attr("data-id"));
+    ////TODO: remove the trim() once you understand 
+    //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
+    //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
+    this.selectedRaceName = $.trim($selectedRace.text());
+    $(".race-hashtag-color").html("<a href='http://twitter.com/#WarCluster" + this.selectedRaceName + "' target='_blank'>#WarCluster" + this.selectedRaceName + "</a>");
+    $(".race-hashtag-color a").css({"color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B +", 1) !important"});
+    $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + ", 0.6)"})
+    $(".race-portrait img").attr('src', "/images/races/" + this.selectedRaceName + ".png");
   }
 })

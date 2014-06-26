@@ -1,6 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 
 @import "../style/less/font-awesome/font-awesome.less";
+@import "../style/less/warclusterfont.less";
 @import "../style/less/bootstrap/bootstrap.less";
 @import "../style/less/social.less";
 @import "../style/jquery/jquery-ui.less";
@@ -11,6 +12,19 @@
   make it responsive :D
 */
 #individual {
+  border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  -moz-border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  border-style: solid;
+  border-width: 12px 16px 16px 12px;
+  .race-color {
+    cursor: pointer;
+  }
+}
+#team {
+  border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  -moz-border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  border-width: 12px 16px 16px 12px;
+  border-style: solid;
   .race-color {
     cursor: pointer;
   }
@@ -18,21 +32,81 @@
 .pick-race-panel {
   width: 65%;
   height: 100%;
-  text-align: right;
   float: right;
+  padding-top: 25px;
   .sun-menu-container {
-    padding-left: 10px;
-    height: 50%;
+    border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
+    -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
+    border-width: 12px 16px 16px 12px;
+    /*margin-top: 25px;*/
+    height: 100%;
+    .choices-list {
+      position: absolute;
+      text-align: left;
+      cursor: pointer;
+    }
+    .planet {
+     /* background-image: url('/images/planets/planet0.png');*/
+      width: 43px;
+      height: 43px;
+      position: absolute;
+    }
+    .planet-left {
+      left: 10%;
+      top: 50%;
+    }
+    .planet-right {
+      right: 5%;
+      top: 50%;
+    }
+    .planet-top {
+      top: 10%;
+      right: 35px;
+    }
+    .planet-bottom {
+      bottom: 10%;
+      left: 35%;
+    }
+    .overlay-top {
+      top: 10%;
+      right: 35px;
+    }
+    .overlay-bottom {
+      bottom: 10%;
+      left: 35%;
+    }
+    .overlay-left {
+      left: 10%;
+      top: 50%;
+    }
+    .overlay-right {
+      right: 5%;
+      top: 50%;
+    }
+    .overlay {
+      position: absolute;
+      background-color: rgba(5,151,255,0.5);
+      width: 43px;
+      height: 43px;
+      border-radius: 43px;
+    }
   }
   .race-menu-container {
-    background-image: url("/images/ui/race-panel-background.png");
-    height: 50%;
-    width: 90%;
-    background-repeat: no-repeat;
-    background-size: contain;
-    max-width: 1100px;
-    max-height: 760px;
-    margin: 15px auto;
+    background-color: #150a06;
+    border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
+    -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
+    border-width: 12px 16px 16px 12px;
+    height: 100%;
+    .race-portrait {
+      height: 50%;
+      .race-image {
+        height: 100%;
+      }
+    }
+    a {
+      color: #FFF;
+      text-decoration: underline;
+    }
   }
   .races {
     display: block;
@@ -41,12 +115,23 @@
     margin-top: 20px;
   }
   .selected {
-    border-left: 5px outset #f26a21;
+    border-style: solid;
   }
-  .sun {
-    cursor: pointer;
+  .sun-type {
+    background-image: url("/images/suns/sun0.png");
+    width: 309px;
+    height: 302px;
+    margin: 0 auto;
+    top: 25%;
+    position: relative;
   }
   .race {
+    width: 40%;
+    height: 80px;
+    margin-top: 15px;
+    background-size: 100% 100%;
+    background-image: url("/images/ui/race-background.png");
+    cursor: pointer;
     .race-description {
       padding: 10px 10px 10px 0px;
       position: relative;
@@ -58,7 +143,6 @@
         margin-left: 6px;
       }
     }
-    cursor: pointer;
     .race-color {
       width: 80px;
     }
@@ -74,36 +158,113 @@
     &:hover > .race-color > img {
       padding-top: 5px;
     }
-    width: 40%;
-    height: 80px;
-    margin-top: 15px;
-    background-size: 100% 100%;
-    background-image: url("/images/ui/race-background.png");
+  }
+  .info {
+    margin-top: -25px;
+    border-left: 2px solid #0597ff;
+    border-right: 2px solid #0597ff;
+    background-color: #150a06;
+    color: #0597ff;
+    max-width: 430px;
+    padding-left: 10px;
+    text-align: left;
+  }
+  .choice {
+    &:hover {
+      color: #0597ff;
+    }
+  }
+  /* Effect 10: reveal, push out */
+  .btn-group-cl-effect a {
+    position: relative;
+    display: inline-block;
+    margin: 15px 25px;
+    width: 147px;
+    outline: none;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3);
+    font-size: 1.35em;
+  }
+  .btn-group-cl-effect  {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-group-cl-effect a {
+    overflow: hidden;
+    margin: 0 15px;
+  }
+
+  .btn-group-cl-effect a span {
+    display: block;
+    padding: 10px 20px;
+    background: rgba(18, 62, 94, 1);
+    -webkit-transition: -webkit-transform 0.3s;
+    -moz-transition: -moz-transform 0.3s;
+    transition: transform 0.3s;
+  }
+
+  .btn-group-cl-effect a::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    padding: 10px 20px;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    color: #0597ff;
+    content: attr(data-hover);
+    -webkit-transition: -webkit-transform 0.3s;
+    -moz-transition: -moz-transform 0.3s;
+    transition: transform 0.3s;
+    -webkit-transform: translateX(-25%);
+  }
+
+  .btn-group-cl-effect a:hover span,
+  .btn-group-cl-effect a:focus span {
+    -webkit-transform: translateX(100%);
+    -moz-transform: translateX(100%);
+    transform: translateX(100%);
+  }
+
+  .btn-group-cl-effect a:hover::before,
+  .btn-group-cl-effect a:focus::before {
+    -webkit-transform: translateX(0%);
+    -moz-transform: translateX(0%);
+    transform: translateX(0%);
   }
 }
 .start-game {
   position: absolute;
   bottom: 10px;
   right: 15px;
-  .animation-name(greenPulse);
+  .animation-name(pinkPulse);
   .animation-duration(2s);
   .animation-iteration-count(infinite);
 }
 .landing-content {
-  text-align: right;
-  width: 35%;
+  margin-top: 50px;
+  text-align: left;
+  width: 25%;
   height: 100%;
   float: right;
+  padding-left: 20px;
+  padding-right: 20px;
+  p {
+    clear: both;
+  }
   ul {
-    span {
-      margin-right: 10px;
-    }
     margin: 10px -15px 0px 20px;
     height: 40px;
-  }
-  .social {
-    li {
-      float: right;
+    span {
+      margin-right: 10px;
     }
   }
 }
@@ -116,7 +277,7 @@
   top: 0px;
   height: 100%;
   width: 100%;
-  background-color: #222222;
+  background-color: #150a06;
 }
 .left-panel {
   top: 0px;
@@ -124,17 +285,26 @@
   /*margin-top: 50px;*/
   height: 100%;
   position: absolute;
-  width: 65%;
+  width: 75%;
 }
 .leaderboard-content {
   position: absolute;
-  color: black;
-  background-color: #fff;
+  background-color: #150a06; 
   width: 100%;
   height: 100%;
   .race-color {
-      color: #000;
-      text-align: left;
+    color: #000;
+    text-align: left;
+  }
+  .navbar {
+    background-color: #150a06;
+    border-style: none;
+    .active {
+      color: #fff;
+    }
+  }
+  table a {
+    color: white;
   }
 }
 .leaderboardPage {
@@ -143,10 +313,53 @@
   width: 100%;
   height: 100%;
 }
-.customPop {
-  background-color: #222;
-  .popover-content {
-    color: #fff;
+.planet-info-popover {
+  position: absolute;
+  color: #fff;
+  background-image: url("/images/ui/planet_info.png");
+  width: 323px;
+  height: 172px;
+  .planet-category {
+    position: absolute;
+    bottom: 19px;
+    #category {
+      display:block;
+    }
+  }
+  .planet-production {
+    bottom: 78px;
+    position: absolute;
+  }
+  .close-btn {
+    color: #0496ff;
+    position: absolute;
+    right: 34px;
+    top: 20px;
+    &:hover {
+      color: #fff;
+    }
+  }
+  .mission-buttons {
+    position: absolute;
+    bottom: -38px;
+    left: 55px;
+  }
+  .player-info {
+    .player-name {
+      position: absolute;
+      color: #fff;
+      right: 10px;
+      top: 63px;
+      text-decoration: underline;
+      &:hover {
+        color: #0496ff;
+      }
+    }
+    .player-avatar {
+      position: absolute;
+      bottom: 10px;
+      right: 2px;
+    }
   }
 }
 
@@ -161,31 +374,51 @@
 
 .toggle-landing-btn {
   position: absolute;
+  text-align: center;
+  line-height: 50px;
+  background-image: url("/images/ui/leaderboard_btn.png");
   bottom: 0px;
+  right: 50px;
+  height: 50px;
+  width: 50px;
   &:hover {
-    padding: 15px 25px;
-    font-size: 1.8em;
+    line-height: 55px;
+    font-size: 30px;
   }
-  right: 100px;
+  &:active {
+    color: #0597ff;
+  }
 }
 .tutorial-menu {
   .toggle-btn {
-    height: 84px;
-    width: 84px;
-    background-image: url("/images/ui/tutorial-button-normal.png");
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    line-height: 50px;
+    background-image: url("/images/ui/tutorial_btn.png");
     background-repeat: no-repeat;
     position: absolute;
     bottom: 0px;
     right: 0px;
     z-index: 3002;
+    &:hover {
+      line-height: 55px;
+      font-size: 30px;
+    }
   }
   .tutorial-content {
-    z-index: 3001;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+    width: 100%;
+    height: 100%;
     .tutorial-image {
+      position: absolute;
+      z-index: 3001;
+      margin: auto;
+      right: 0;
+      bottom: 0;
       background-image: url('/images/tutorial.png');
+      &:hover {
+        font-size: 30px;
+      }
     }
   }
 }
@@ -224,19 +457,20 @@ html, body {
   height: 520px;
   right: 0px;
   top: 80px;
-  border-image: url("/images/ui/twitter-stream-timeline-border.png") 11 0 11 11 round;
+  border-image: url("/images/ui/twitterStream/twitter-stream-timeline-border.png") 11 0 11 11 round;
+  -moz-border-image: url("/images/ui/twitterStream/twitter-stream-timeline-border.png") 11 0 11 11 round;
   border-width: 11px 0px 11px 11px;
   .twitter-stream-toggle-btn {
-    span {
-      margin-left: 7px;
-      margin-top: 5px;
-    }
-    background-image: url("/images/ui/twitter-stream-timeline-hide-button.png");
+    background-image: url("/images/ui/twitterStream/twitter-stream-timeline-hide-button.png");
     width: 45px;
     height: 24px;
     left: -40px;
     top: -11px;
     position: inherit;
+    span {
+      margin-left: 7px;
+      margin-top: 5px;
+    }
     &:hover {
       color: #888;
     }
@@ -260,6 +494,24 @@ html, body {
 .additional {
   text-align: center;
   width: 330px;
+}
+.blog-link {
+  position: absolute;
+  bottom: 3%;
+  left: 3%;
+  a {
+    color: #FFF;
+    text-decoration: underline;
+  }
+}
+.newsletter-link {
+  position: absolute;
+  bottom: 3%;
+  right: 3%;
+  a {
+    color: #FFF;
+    text-decoration: underline;
+  }
 }
 
 .label {
@@ -411,10 +663,15 @@ html, body {
 }
 /* End of logo specific stylesheets*/
 
-@-webkit-keyframes greenPulse {
+@-webkit-keyframes pinkPulse {
   from { background-color: #CC4154; -webkit-box-shadow: 0 0 9px #333; }
-  50% { background-color: #F24960; -webkit-box-shadow: 0 0 18px #F24960; }
+  50% { background-color: #F24960; -webkit-box-shadow: 0 0 50px #F24960; }
   to { background-color: #CC4154; -webkit-box-shadow: 0 0 9px #333; }
+}
+@-moz-keyframes pinkPulse {
+  0% { background-color: #CC4154; box-shadow: 0 0 9px #333; }
+  50% { background-color: #F24960; box-shadow: 0 0 50px #F24960; }
+  100% { background-color: #CC4154; box-shadow: 0 0 9px #333; }
 }
 
 .selection-rect {
@@ -429,6 +686,12 @@ html, body {
 }
 
 .missions-menu {
+  background-image:url('/images/missions-menu.png');
+  width: 405px;
+  height: 141px;
+  position: absolute;
+  top: -141px;
+  left: 0px;
   li {
     width: 60px;
     height: 60px;
@@ -439,32 +702,30 @@ html, body {
     left: 17px;
     bottom: -3px;
   }
-  background-image:url('/images/missions-menu.png');
-  width: 405px;
-  height: 141px;
-  position: absolute;
-  top: -141px;
-  left: 0px;
 }
 
 .missions-menu-selection {
-  background-image:url('/images/mission-selection.png');
+  background-image:url('/images/ui/mission-selection.png');
   width: 60px;
   height: 60px;
 }
 
 .planets-selection {
   cursor: pointer;
+  position: absolute;
+  width: 250px;
+  top: 200px;
+  left: -250px;
+  border-image: url("/images/ui/planets_selection.png") 42 9 9 9 repeat;//42px 9px 9px 9px
+  -moz-border-image: url("/images/ui/planets_selection.png") 42 9 9 9 repeat;
+  border-width: 42px 9px 9px 9px;
+  border-style: solid;
   img {
     margin-left: 15px;
     margin-right: 15px;
     width: 30px;
     height: 30px;
   }
-  position: absolute;
-  width: 250px;
-  top: 200px;
-  left: -250px;
 }
 
 .expanded-list-container {
@@ -477,7 +738,7 @@ html, body {
     padding-bottom: 5px;
   }
   .expanded-list-end {
-    background-image: url("/images/ui/planet-info-bottom.png");
+    /*background-image: url("/images/ui/selection/planet-info-bottom.png");*/
     width: 250px;
     height: 10px;
   }
@@ -493,8 +754,7 @@ html, body {
     border-right-style: solid;
   };
   .deselect-icon {
-    padding-right: 6px;
-    padding-top: 6px;
+    padding: 7px;
   }
   .planet-link {
     cursor: pointer;
@@ -502,17 +762,18 @@ html, body {
 }
 
 .collapsed-list {
+  position: absolute;
+  margin-top: -40px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 15px;
+  width: 250px;
   a {
     color: rgb(245, 237, 237);
   }
   a:hover {
     color: #3A3A2A;
   }
-  background-image: url("/images/ui/planet-info-top.png");
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-right: 10px;
-  width: 250px;
   .icon-expand-selection {
     padding-right: 20px;
   }
@@ -527,3 +788,7 @@ html, body {
 .text-center {
   text-align: center;
 }
+.white {
+  color: #fff;
+}
+

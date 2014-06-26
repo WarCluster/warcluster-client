@@ -56,10 +56,11 @@ module.exports.prototype.parseMessage = function(command) {
     switch (data.Command) {
       case "login_success":
         var pd = new PlayerData();
+
         pd.Username = this.username;
         pd.TwitterID = this.twitterId;
         pd.Position = data.Position;
-        pd.Fraction = data.Fraction;
+        pd.Race = data.RaceID;
         pd.HomePlanet = data.HomePlanet;
         pd.JustRegistered = data.JustRegistered;
 
@@ -80,6 +81,14 @@ module.exports.prototype.parseMessage = function(command) {
       case "send_mission_failed":
         if (!humane._animating) {
           humane.error("You're attacking with less than one pilot", {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
+        }
+      break;
+      case "server_params":
+        _.extend(this.context.Teams, data.Teams);
+        for(name in this.context.Teams) {
+          this.context.Teams[name].R = Math.ceil(this.context.Teams[name].R * 255);
+          this.context.Teams[name].G = Math.ceil(this.context.Teams[name].G * 255);
+          this.context.Teams[name].B = Math.ceil(this.context.Teams[name].B * 255);
         }
       break;
       default:
@@ -106,10 +115,10 @@ module.exports.prototype.sendMission = function(type, source, target, ships) {
   }));
 }
 
-module.exports.prototype.setupParameters = function(team, sun) {
+module.exports.prototype.setupParameters = function(race, sun) {
   this.sockjs.send(JSON.stringify({
     "Command": "setup_parameters",
-    "Fraction": team,
+    "Race": race,
     "SunTextureId": sun
   }))
 }

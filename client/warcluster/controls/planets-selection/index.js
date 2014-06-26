@@ -74,6 +74,7 @@ module.exports = Backbone.View.extend({
     this.hide();
   },
   executeDeselectPlanet: function(e) {
+    e.stopImmediatePropagation();
     this.trigger("deselectPlanet", $(e.currentTarget).attr("data-id"));
   },
   togglePlanets: function() {

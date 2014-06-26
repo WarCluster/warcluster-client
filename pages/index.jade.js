@@ -14,7 +14,7 @@ $(document).ready(function() {
     $('.login').click( function() {
       var key = prompt("The alpha server is closed! You can go to http://signup.warcluster.com if you want to know when we open our doors ;P Thanks",
         "closed alpha password");
-        if (key === "hackerspace") {
+        if (key === "panda") {
           $(".login").attr("href", "/twitter/connect");
         } else {
           $(".login").attr("href", "#");

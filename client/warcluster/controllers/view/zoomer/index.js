@@ -75,7 +75,7 @@ module.exports.prototype.animateIt = function() {
     y: this.controller.scrollPosition.y,
     z: this.controller.scrollPosition.z,
     ease: Cubic.easeOut,
-    onStart: function() {
+    onUpdate: function() {
       self.dispatchEvent({
         type: "zoom", 
         zoom: self.getZoomIndex()
