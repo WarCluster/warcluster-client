@@ -119,6 +119,20 @@ module.exports.prototype.startRendering = function() {
 }
 
 module.exports.prototype.render = function(data) {
+  var w = data.CanvasPoints.BottomRight.X - data.CanvasPoints.TopLeft.X;
+  var h = data.CanvasPoints.TopLeft.Y - data.CanvasPoints.BottomRight.Y;
+  var r = {
+    left: data.CanvasPoints.TopLeft.X,
+    top: data.CanvasPoints.TopLeft.Y,
+    width: w,
+    height: h
+  };
+
+  //console.log("render:", r)
+  var rect = this.context.spaceViewController.getScreenRectangle();
+
+  this.gc(rect)
+
   //this.clear();
   for (s in data.Suns) {
     data.Suns[s].id = s;
@@ -146,6 +160,28 @@ module.exports.prototype.render = function(data) {
     this.afterRenderFn();
 }
 
+module.exports.prototype.gc = function(rect) {
+  console.log("1.-gc-", rect, this.context.objects.length)
+  var forRemove = [];
+  for (var i = 0;i < this.context.objects.length;i ++) {
+    var object = this.context.objects[i];
+
+    //console.log("2.-gc-", (object.position.x >= rect.left && object.position.x <= rect.left + rect.width && object.position.y <= rect.top && object.position.y >= rect.top - rect.height), rect.left, rect.top, rect.left + rect.width, rect.top - rect.height, object.position.x, object.position.y, object.data)
+    if (!(object.position.x >= rect.x && object.position.x <= rect.x + rect.width &&
+        object.position.y <= rect.y && object.position.y >= rect.y - rect.height)) {
+      console.log("2.-gc-", object.position.x, object.position.y, object.position.x >= rect.x, object.position.x < rect.x + rect.width, object.position.y <= rect.y, object.position.y > rect.y - rect.height);
+      forRemove.push(object)
+    }
+  }
+
+  console.log("1.-gc-DESTROY OBJECT:", forRemove.length, this.context.objects.length)
+  
+  while (forRemove.length > 0) 
+    this.destroyObject(forRemove.shift())
+
+  //console.log("2.-gc-DESTROY OBJECT:", this.context.objects.length)
+}
+
 module.exports.prototype.clear = function() {
   var obj;
   this.context.objects = [];
@@ -160,16 +196,21 @@ module.exports.prototype.clear = function() {
       this.context.planetsFactory.destroy(obj);
   }
 }
+
 module.exports.prototype.destroyObjectByIndex = function(index) {
-  var obj = this.context.objects[index];
+  this.destroyObject(this.context.objects[index])
+}
+
+module.exports.prototype.destroyObject = function(obj) {
   if (obj instanceof Sun) {
+    //console.log("1.-destroyObject-", obj.data)
     this.context.sunsFactory.destroy(obj);
-  }
-  else if (obj instanceof Planet) {
+  } else if (obj instanceof Planet) {
+    //console.log("2.-destroyObject-", obj.data)
     this.context.planetsFactory.destroy(obj);
-  }
-  else {
-    this.context.shipsFactory.destroy(obj);
+  } else if (obj instanceof Mission) {
+    //console.log("3.-destroyObject-", obj.data)
+    this.context.missionsFactory.destroy(obj);
   }
 }
 

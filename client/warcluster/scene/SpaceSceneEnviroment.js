@@ -95,6 +95,14 @@ module.exports = function(context){
 
   backgrounds[3].position.x = 1366 * sc / 2;
   backgrounds[3].position.y = -768 * sc / 2;
+
+  var xGrid = 50;
+  var yGrid = 50;
+
+  var mat2 = new THREE.MeshBasicMaterial( { color: 0x534D00 , wireframe: true } );
+  var mesh =  new THREE.Mesh(new THREE.PlaneGeometry(5000 * xGrid, 5000 * yGrid, xGrid, yGrid), mat2);
+
+  this.add(mesh);
 }
 
 module.exports.prototype = new THREE.Object3D();
