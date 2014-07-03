@@ -12,9 +12,25 @@
   make it responsive :D
 */
 @media all and (max-width: 1098px) and (min-width: 768px) {
-  .race-menu-container {
-    background-color: #fff;
+  .race-portrait .race-image {
+    height: 60%;
   }
+  .sun-menu-container .sun-type {
+    top:15%;
+  }
+}
+
+.race-image {
+  height: 100%;
+}
+
+.sun-type {
+    background-image: url("/images/suns/sun0.png");
+    width: 309px;
+    height: 302px;
+    margin: 0 auto;
+    top: 25%;
+    position: relative;
 }
 
 #individual {
@@ -106,9 +122,6 @@
     height: 100%;
     .race-portrait {
       height: 50%;
-      .race-image {
-        height: 100%;
-      }
     }
     a {
       color: #FFF;
@@ -123,14 +136,6 @@
   }
   .selected {
     border-style: solid;
-  }
-  .sun-type {
-    background-image: url("/images/suns/sun0.png");
-    width: 309px;
-    height: 302px;
-    margin: 0 auto;
-    top: 25%;
-    position: relative;
   }
   .race {
     width: 40%;

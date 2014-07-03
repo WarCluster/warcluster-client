@@ -7,7 +7,9 @@ module.exports = Backbone.View.extend({
   events: {
     "click .start-game": "startGame",
     "click .race-choice": "selectRace",
-    "click .sun-choice": "selectSun"
+    "click .sun-choice": "selectSun",
+    "touchend .race-choice": "selectRace",
+    "touchend .sun-choice": "selectSun"
   },
   className: "landing-view container text-center",
   initialize: function(context) {
