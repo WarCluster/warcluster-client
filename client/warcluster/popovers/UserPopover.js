@@ -5,7 +5,11 @@ module.exports = Backbone.View.extend({
     "click .close-btn": "removePopover",
     "click .attack":    "attack",
     "click .spy":       "spy",
-    "click .supply":    "supply"
+    "click .supply":    "supply",
+    "touchstart .close-btn": "removePopover",
+    "touchstart .attack":    "attack",
+    "touchstart .spy":       "spy",
+    "touchstart .supply":    "supply"
   },
   initialize: function() {
     this.planetData = null;

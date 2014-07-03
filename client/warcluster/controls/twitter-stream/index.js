@@ -9,7 +9,8 @@ var GreenRaceTwitterStreamRender =  jadeCompile(require("./render/green-stream.j
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
-    "click .twitter-stream-toggle-btn": "toggleTwitterStream"
+    "click .twitter-stream-toggle-btn": "toggleTwitterStream",
+    "touchstart. twitter-stream-toggle-btn": "toggleTwitterStream"
   },
   className: "twitter-stream",
   initialize: function() {    

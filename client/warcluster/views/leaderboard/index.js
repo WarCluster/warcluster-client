@@ -11,6 +11,11 @@ module.exports = Backbone.View.extend({
     "click .race-color": "showTeamLeaderboard",
     "click .previous-page": "goToPreviousPage",
     "click .next-page": "goToNextPage",
+    "touchstart #individualBtn": "showIndividualLeaderboard",
+    "touchstart #teamBtn": "showTeamLeaderboard",
+    "touchstart .race-color": "showTeamLeaderboard",
+    "touchstart .previous-page": "goToPreviousPage",
+    "touchstart .next-page": "goToNextPage",
     "keypress #search-field": "searchPlayer"
   },
   className: "leaderboard-content",

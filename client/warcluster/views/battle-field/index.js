@@ -23,7 +23,8 @@ var LandingView = require("../landing");
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: { 
-    "click .toggle-landing-btn": "toggleLandingStatisticsView"
+    "click .toggle-landing-btn": "toggleLandingStatisticsView",
+    "touchstart .toggle-landing-btn": "toggleLandingStatisticsView"
   },
   className: "game-container",
   initialize: function(options) {

@@ -1,7 +1,8 @@
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
-    "click .unit": "onSwitchType"
+    "click .unit": "onSwitchType",
+    "touchstart .unit": "onSwitchType"
   },
   className: "missions-menu",
   initialize: function(options) {
