@@ -17,20 +17,96 @@
   }
   .sun-menu-container .sun-type {
     top: 15%;
+    width: 80%;
+  }
+}
+@media all and (max-width: 767px) {
+  .pick-race-panel .sci-fi-container {
+    height: 50%;
+    overflow: auto;
+  }
+  .pick-race-panel .sci-fi-container .info {
+    margin-top: 0px;
   }
 }
 
+.race-menu-container {
+  .race-portrait {
+    height: 50%;
+  }
+  a {
+    color: #FFF;
+    text-decoration: underline;
+  }
+}
 .race-image {
   height: 100%;
 }
 
 .sun-type {
-    background-image: url("/images/suns/sun0.png");
-    width: 309px;
-    height: 302px;
     margin: 0 auto;
     top: 25%;
     position: relative;
+}
+.sci-fi-container {
+  background-color: #150a06;
+  border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
+  -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
+  border-width: 12px 16px 16px 12px;
+  -moz-border-width: 12px 16px 16px 12px;
+  height: 100%;
+}
+.sun-menu-container {
+  .choices-list {
+    position: absolute;
+    text-align: left;
+    cursor: pointer;
+  }
+  .planet {
+   /* background-image: url('/images/planets/planet0.png');*/
+    width: 43px;
+    height: 43px;
+    position: absolute;
+  }
+  .planet-left {
+    left: 10%;
+    top: 50%;
+  }
+  .planet-right {
+    right: 5%;
+    top: 50%;
+  }
+  .planet-top {
+    top: 10%;
+    right: 35px;
+  }
+  .planet-bottom {
+    bottom: 10%;
+    left: 35%;
+  }
+  .overlay-top {
+    top: 10%;
+    right: 35px;
+  }
+  .overlay-bottom {
+    bottom: 10%;
+    left: 35%;
+  }
+  .overlay-left {
+    left: 10%;
+    top: 50%;
+  }
+  .overlay-right {
+    right: 5%;
+    top: 50%;
+  }
+  .overlay {
+    position: absolute;
+    background-color: rgba(5,151,255,0.5);
+    width: 43px;
+    height: 43px;
+    border-radius: 43px;
+  }
 }
 
 #individual {
@@ -56,78 +132,6 @@
   height: 100%;
   float: right;
   padding-top: 25px;
-  .sun-menu-container {
-    border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
-    -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
-    border-width: 12px 16px 16px 12px;
-    /*margin-top: 25px;*/
-    height: 100%;
-    .choices-list {
-      position: absolute;
-      text-align: left;
-      cursor: pointer;
-    }
-    .planet {
-     /* background-image: url('/images/planets/planet0.png');*/
-      width: 43px;
-      height: 43px;
-      position: absolute;
-    }
-    .planet-left {
-      left: 10%;
-      top: 50%;
-    }
-    .planet-right {
-      right: 5%;
-      top: 50%;
-    }
-    .planet-top {
-      top: 10%;
-      right: 35px;
-    }
-    .planet-bottom {
-      bottom: 10%;
-      left: 35%;
-    }
-    .overlay-top {
-      top: 10%;
-      right: 35px;
-    }
-    .overlay-bottom {
-      bottom: 10%;
-      left: 35%;
-    }
-    .overlay-left {
-      left: 10%;
-      top: 50%;
-    }
-    .overlay-right {
-      right: 5%;
-      top: 50%;
-    }
-    .overlay {
-      position: absolute;
-      background-color: rgba(5,151,255,0.5);
-      width: 43px;
-      height: 43px;
-      border-radius: 43px;
-    }
-  }
-  .race-menu-container {
-    background-color: #150a06;
-    border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
-    -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
-    border-width: 12px 16px 16px 12px;
-    -moz-border-width: 12px 16px 16px 12px;
-    height: 100%;
-    .race-portrait {
-      height: 50%;
-    }
-    a {
-      color: #FFF;
-      text-decoration: underline;
-    }
-  }
   .races {
     display: block;
     position: relative;
