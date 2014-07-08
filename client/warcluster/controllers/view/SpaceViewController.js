@@ -15,6 +15,8 @@ module.exports = function(context, config){
   this.gridWidth = 5000;
   this.gridHeight = 5000;
 
+  this.cell = {xIndex: null, yIndex: null};
+
   this.zoomer = new Zoomer(context, config.zoomer, this);
   this.zoomer.addEventListener("scopeOfView", function(e) {
     self.scroller.scaleIndex = e.zoom;
@@ -31,6 +33,7 @@ module.exports = function(context, config){
   this.scroller.addEventListener("scroll", function(e) {
     self.dispatchEvent(e);
     self.info.updatePosition();
+    self.checkPosition();
   });
   this.scroller.addEventListener("scopeOfView", function(e) {
     self.dispatchEvent(e);
@@ -113,6 +116,21 @@ module.exports.prototype.deactivate = function() {
 		this.active = false;
 		window.removeEventListener("mousedown", this.onMouseDown);
 	}
+}
+
+module.exports.prototype.checkPosition = function() {
+  var cell = this.getGridPosition(this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y)
+  if (this.cell.xIndex != cell.xIndex || this.cell.yIndex != cell.yIndex) {
+    console.log("------ checkPosition -------")
+    this.cell.xIndex = cell.xIndex;
+    this.cell.yIndex = cell.yIndex;
+
+    var position = {
+      x: Math.ceil(this.context.spaceScene.camera.position.x),
+      y: Math.ceil(this.context.spaceScene.camera.position.y)
+    };
+    this.context.commandsManager.scopeOfView(position, this.getResolution());
+  }
 }
 
 module.exports.prototype.scrollTo = function (x, y, animated) {

@@ -128,12 +128,11 @@ module.exports.prototype.render = function(data) {
     height: h
   };
 
-  //console.log("render:", r)
+  
   var rect = this.context.spaceViewController.getScreenRectangle();
 
   this.gc(rect)
 
-  //this.clear();
   for (s in data.Suns) {
     data.Suns[s].id = s;
     if (!data.Suns[s].Position) {
@@ -158,6 +157,8 @@ module.exports.prototype.render = function(data) {
 
   if (this.afterRenderFn != null)
     this.afterRenderFn();
+
+  console.log("### render:", this.context.objects.length)
 }
 
 module.exports.prototype.gc = function(rect) {
@@ -169,7 +170,7 @@ module.exports.prototype.gc = function(rect) {
     //console.log("2.-gc-", (object.position.x >= rect.left && object.position.x <= rect.left + rect.width && object.position.y <= rect.top && object.position.y >= rect.top - rect.height), rect.left, rect.top, rect.left + rect.width, rect.top - rect.height, object.position.x, object.position.y, object.data)
     if (!(object.position.x >= rect.x && object.position.x <= rect.x + rect.width &&
         object.position.y <= rect.y && object.position.y >= rect.y - rect.height)) {
-      console.log("2.-gc-", object.position.x, object.position.y, object.position.x >= rect.x, object.position.x < rect.x + rect.width, object.position.y <= rect.y, object.position.y > rect.y - rect.height);
+      console.log("2.-gc-", object.data.id, object.position.x, object.position.y, object.position.x >= rect.x, object.position.x < rect.x + rect.width, object.position.y <= rect.y, object.position.y > rect.y - rect.height);
       forRemove.push(object)
     }
   }
@@ -179,7 +180,7 @@ module.exports.prototype.gc = function(rect) {
   while (forRemove.length > 0) 
     this.destroyObject(forRemove.shift())
 
-  //console.log("2.-gc-DESTROY OBJECT:", this.context.objects.length)
+  
 }
 
 module.exports.prototype.clear = function() {

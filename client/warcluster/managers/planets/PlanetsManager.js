@@ -28,19 +28,34 @@ module.exports.prototype.stop = function() {
 
 module.exports.prototype.managePlanetData = function(planets) {
   var updated = [];
-  
+  var num = 0;
+  var newp = 0;
+  var objs1 = 0;
+  var objs2 = 0;
+
+  for (var id in this.context.objectsById)
+    objs1 ++;
+
   for (var id in planets) {
+    num ++;
     var planet = this.context.objectsById[id];
     planets[id].id = id;
 
+
+
     if (!planet) {
+      newp ++;
       planet = this.context.planetsFactory.build(planets[id]);
     } else {
+      
       planet.population.visible = (planets[id].ShipCount !== -1);
       var updatePopulation = (planets[id].ShipCount !== -1); //|| planet.data.ShipCount !== planets[id].ShipCount); //&& (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
       var updateOwner = planet.data.Owner !== planets[id].Owner;
       var updateColor = planet.data.Color !== planets[id].Color;
       var currentOwner = planet.data.Owner;
+
+      if (planet.data.id != planets[id].id)
+        console.log("************************************************************ AAAAAAAAAAAAAAAAAAAAAAA **********************************************************")
 
       _.extend(planet.data, planets[id]);
 
@@ -66,6 +81,11 @@ module.exports.prototype.managePlanetData = function(planets) {
       type: "selectionDataUpdated", 
       updated: updated
     });  
+
+  for (var id in this.context.objectsById)
+    objs2 ++;
+
+  console.log("--------------> managePlanetData:", num, newp, objs1, objs2, this.context.objects.length, this.context.planetsHitObjects.length, this.context.objectsById)
 }
 
 module.exports.prototype.managePopulation = function() {
