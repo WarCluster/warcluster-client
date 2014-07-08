@@ -1,6 +1,7 @@
 var SpaceSceneEnviroment = require("./SpaceSceneEnviroment");
 var Sun = require("../space/suns/Sun");
 var Planet = require("../space/planets/Planet");
+var Mission = require("../space/missions/Mission");
 
 var resources = require("../../config/resources.js");
 
@@ -119,19 +120,7 @@ module.exports.prototype.startRendering = function() {
 }
 
 module.exports.prototype.render = function(data) {
-  var w = data.CanvasPoints.BottomRight.X - data.CanvasPoints.TopLeft.X;
-  var h = data.CanvasPoints.TopLeft.Y - data.CanvasPoints.BottomRight.Y;
-  var r = {
-    left: data.CanvasPoints.TopLeft.X,
-    top: data.CanvasPoints.TopLeft.Y,
-    width: w,
-    height: h
-  };
-
-  
-  var rect = this.context.spaceViewController.getScreenRectangle();
-
-  this.gc(rect)
+  this.gc();
 
   for (s in data.Suns) {
     data.Suns[s].id = s;
@@ -158,29 +147,25 @@ module.exports.prototype.render = function(data) {
   if (this.afterRenderFn != null)
     this.afterRenderFn();
 
-  console.log("### render:", this.context.objects.length)
+  //console.log("### render:", this.context.objects.length)
 }
 
-module.exports.prototype.gc = function(rect) {
-  console.log("1.-gc-", rect, this.context.objects.length)
+module.exports.prototype.gc = function() {
+  var rect = this.context.spaceViewController.screenRect;
+  //console.log("1.-gc-", rect, this.context.objects.length)
   var forRemove = [];
   for (var i = 0;i < this.context.objects.length;i ++) {
     var object = this.context.objects[i];
 
-    //console.log("2.-gc-", (object.position.x >= rect.left && object.position.x <= rect.left + rect.width && object.position.y <= rect.top && object.position.y >= rect.top - rect.height), rect.left, rect.top, rect.left + rect.width, rect.top - rect.height, object.position.x, object.position.y, object.data)
     if (!(object.position.x >= rect.x && object.position.x <= rect.x + rect.width &&
-        object.position.y <= rect.y && object.position.y >= rect.y - rect.height)) {
-      console.log("2.-gc-", object.data.id, object.position.x, object.position.y, object.position.x >= rect.x, object.position.x < rect.x + rect.width, object.position.y <= rect.y, object.position.y > rect.y - rect.height);
+        object.position.y <= rect.y && object.position.y >= rect.y - rect.height))
       forRemove.push(object)
-    }
   }
 
-  console.log("1.-gc-DESTROY OBJECT:", forRemove.length, this.context.objects.length)
+  //console.log("1.-gc-DESTROY OBJECT:", forRemove.length, this.context.objects.length)
   
   while (forRemove.length > 0) 
     this.destroyObject(forRemove.shift())
-
-  
 }
 
 module.exports.prototype.clear = function() {

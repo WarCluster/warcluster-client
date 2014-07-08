@@ -16,6 +16,18 @@ module.exports = function(context, config){
   this.gridHeight = 5000;
 
   this.cell = {xIndex: null, yIndex: null};
+  this.tlPosition = {xIndex: null, yIndex: null};
+  this.brPosition = {xIndex: null, yIndex: null};
+  this.screenRect = {
+    width: 0,
+    height: 0,
+    cx: 0,
+    cy: 0,
+    x: 0,
+    y: 0
+  }
+
+  this.resolution = { width: 0, height: 0 }
 
   this.zoomer = new Zoomer(context, config.zoomer, this);
   this.zoomer.addEventListener("scopeOfView", function(e) {
@@ -27,6 +39,7 @@ module.exports = function(context, config){
     self.scroller.scaleIndex = e.zoom;
     self.dispatchEvent(e);
     self.info.updatePosition();
+    self.checkPosition();
   });
 
   this.scroller = new Scroller(context, config.scroller, this);
@@ -107,6 +120,14 @@ module.exports.prototype.activate = function() {
 		this.active = true;
     this.scroller.scaleIndex = this.zoomer.getZoomIndex();
     this.zoomer.prepare();
+
+    this.updateResolution();
+
+    this.tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (this.resolution.width / 2), this.context.spaceScene.camera.position.y + (this.resolution.height / 2));
+    this.brPosition = this.getGridPosition(this.context.spaceScene.camera.position.x + (this.resolution.width / 2), this.context.spaceScene.camera.position.y - (this.resolution.height / 2));
+
+    this.updateScreenRect();
+
 		window.addEventListener("mousedown", this.onMouseDown);
 	}
 }
@@ -119,17 +140,27 @@ module.exports.prototype.deactivate = function() {
 }
 
 module.exports.prototype.checkPosition = function() {
-  var cell = this.getGridPosition(this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y)
-  if (this.cell.xIndex != cell.xIndex || this.cell.yIndex != cell.yIndex) {
-    console.log("------ checkPosition -------")
-    this.cell.xIndex = cell.xIndex;
-    this.cell.yIndex = cell.yIndex;
+  this.updateResolution();
+
+  var tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (this.resolution.width / 2), this.context.spaceScene.camera.position.y + (this.resolution.height / 2));
+  var brPosition = this.getGridPosition(this.context.spaceScene.camera.position.x + (this.resolution.width / 2), this.context.spaceScene.camera.position.y - (this.resolution.height / 2));
+
+  if (this.tlPosition.xIndex != tlPosition.xIndex || this.tlPosition.yIndex != tlPosition.yIndex || 
+      this.brPosition.xIndex != brPosition.xIndex || this.brPosition.yIndex != brPosition.yIndex) {
+
+    this.tlPosition = tlPosition;
+    this.brPosition = brPosition;
+    
+    this.updateScreenRect();
+
+    //console.log("1.########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
 
     var position = {
       x: Math.ceil(this.context.spaceScene.camera.position.x),
       y: Math.ceil(this.context.spaceScene.camera.position.y)
     };
-    this.context.commandsManager.scopeOfView(position, this.getResolution());
+
+    this.context.commandsManager.scopeOfView(position, this.resolution);
   }
 }
 
@@ -137,12 +168,28 @@ module.exports.prototype.scrollTo = function (x, y, animated) {
   this.scroller.scrollTo(x, y, animated);
 }
 
-module.exports.prototype.getResolution = function() {
-  var data = {
-    width: Math.ceil(this.context.width*this.scroller.scaleIndex), 
-    height: Math.ceil(this.context.height*this.scroller.scaleIndex) 
-  }
-  return data
+module.exports.prototype.updateResolution = function() {
+  this.resolution.width = Math.ceil(this.context.width*this.scroller.scaleIndex);
+  this.resolution.height = Math.ceil(this.context.height*this.scroller.scaleIndex);
+}
+
+module.exports.prototype.updateScreenRect = function() {
+  var tl = this.getCellPosition(this.tlPosition.xIndex, this.tlPosition.yIndex);
+  var br = this.getCellPosition(this.brPosition.xIndex, this.brPosition.yIndex, "br");
+
+  var width = Math.abs(br.x - tl.x);
+  var height = Math.abs(tl.y - br.y);
+
+  this.screenRect.width = width;
+  this.screenRect.height = height;
+  this.screenRect.cx = tl.x + (width / 2);
+  this.screenRect.cy = tl.y - (height / 2);
+  this.screenRect.x = tl.x;
+  this.screenRect.y = tl.y;
+
+  //console.log("### updateScreenRect", this.screenRect)
+
+  return this.screenRect;
 }
 
 module.exports.prototype.getCellPosition = function(xIndex, yIndex, position) {
@@ -173,44 +220,7 @@ module.exports.prototype.getCellPosition = function(xIndex, yIndex, position) {
   };
 }
 
-module.exports.prototype.getScreenRectangle = function(sc) {
-  var resolution = this.getResolution();
-  var gPosition = this.getGridPosition(this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y);
-  var tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (resolution.width / 2), this.context.spaceScene.camera.position.y + (resolution.height / 2));
-  var brPosition = this.getGridPosition(this.context.spaceScene.camera.position.x + (resolution.width / 2), this.context.spaceScene.camera.position.y - (resolution.height / 2));
-  
-  //console.log("1.getScreenRectangle:", sc, resolution.width, resolution.height)
-  if (!isNaN(sc)) {
-    resolution.width *= sc;
-    resolution.height *= sc;  
-  }
-  //console.log("2.getScreenRectangle:", resolution.width, resolution.height)
 
-  var rect = this.getRect(tlPosition.xIndex, tlPosition.yIndex, brPosition.xIndex, brPosition.yIndex);
-
-  var iw = Math.ceil(resolution.width / this.gridWidth);
-  var ih = Math.ceil(resolution.height / this.gridHeight);
-
-  var width = iw * this.gridWidth;
-  var height = ih * this.gridHeight;
-
-  var tl = this.getCellPosition(this.translateIndex(gPosition.xIndex, - iw), this.translateIndex(gPosition.yIndex, ih));
-
-
-  var data = {
-    width: width,
-    height: height,
-    cx: tl.x + (width / 2),
-    cy: tl.y - (height / 2),
-    x: tl.x,
-    y: tl.y
-  }
-
-  //console.log("1.getScreenRectangle", this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y, iw, ih, resolution, tl, Math.ceil(resolution.height / this.gridHeight))
-  console.log("2.getScreenRectangle", resolution.width, resolution.height, tlPosition, brPosition, this.context.spaceScene.camera.position.x, this.context.spaceScene.camera.position.y, this.context.spaceScene.camera.position.x - (resolution.width / 2), this.context.spaceScene.camera.position.y + (resolution.height / 2), iw, ih, rect)
-
-  return rect; //data;
-}
 
 module.exports.prototype.getGridPosition = function(x, y) {
   return {
@@ -236,10 +246,10 @@ module.exports.prototype.translateIndex = function(i, d) {
   return i + d;
 }
 
-module.exports.prototype.getRect = function(xIndex1, yIndex1, xIndex2, yIndex2){
+/*module.exports.prototype.getRect = function(xIndex1, yIndex1, xIndex2, yIndex2){
   var tl = this.getCellPosition(xIndex1, yIndex1);
   var br = this.getCellPosition(xIndex2, yIndex2, "br");
-  console.log("######## getRect:", tl, br)
+  //console.log("######## getRect:", tl, br)
   return {
     width: Math.abs(br.x - tl.x),
     height: Math.abs(tl.y - br.y),
@@ -248,7 +258,7 @@ module.exports.prototype.getRect = function(xIndex1, yIndex1, xIndex2, yIndex2){
     x: tl.x,
     y: tl.y
   }
-}
+}*/
 
 module.exports.prototype.addScrollPosition = function(dx, dy, dz){
   return this.setScrollPosition(this.scrollPosition.x + dx, this.scrollPosition.y + dy, this.scrollPosition.z + dz)

@@ -34,7 +34,7 @@ module.exports = Backbone.View.extend({
   }, 
   render: function() {
     this.$el.html(this.template());
-
+    
     var self = this;
 
     this.context.$content = $(".content");
@@ -155,14 +155,14 @@ module.exports = Backbone.View.extend({
         self.context.missionsMenu.hideMenu();    
     });
 
-    this.spaceViewController.addEventListener("scopeOfView", function(e) {
+    /*this.spaceViewController.addEventListener("scopeOfView", function(e) {
       //TODO: https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view-to-not-spam
       var position = {
         x: Math.ceil(self.context.spaceViewController.scrollPosition.x),
         y: Math.ceil(self.context.spaceViewController.scrollPosition.y)
       };
       self.commandsManager.scopeOfView(position, self.context.spaceViewController.getResolution());
-    });
+    });*/
     
     this.context.spaceViewController = this.spaceViewController;
 

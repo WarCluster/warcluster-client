@@ -64,19 +64,19 @@ module.exports.prototype.scrollTo = function(x, y, animated){
         self.dispatchEvent({
           type: "scroll"
         });
-      },
+      }/*,
       onComplete: function(){
         self.dispatchEvent({
-          type: "scopeOfView"
+          type: "scroll"
         });            
-      }
+      }*/
     });
   else {
     this.context.camera.position.x = this.controller.scrollPosition.x;
     this.context.camera.position.y = this.controller.scrollPosition.y;
 
     this.dispatchEvent({
-      type: "scopeOfView"
+      type: "scroll"
     }); 
   }
 }

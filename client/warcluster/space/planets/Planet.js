@@ -27,18 +27,16 @@ module.exports.prototype.prepare = function(data) {
   var pz = Math.random() * (-50);
   var bmd1 = this.context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
   
-  
-  var color = new THREE.Color().setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
-
   if (!this.planet) {
+    var color = new THREE.Color().setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
     this.planet =  new THREE.Mesh(new THREE.SphereGeometry(1, 12, 12), new THREE.MeshLambertMaterial({map: null, color: color, ambient: color}));
     this.add(this.planet);  
 
     this.hitObject = this.planet;
-  }
-  console.log("####################:", "/images/planets/planet"+this.data.Texture+".png", this.data.Color.R, this.data.Color.G, this.data.Color.B)
+  } else
+    this.planet.material.color.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
+
   this.planet.material.map = bmd1;
-  this.planet.material.color.set(color);
   this.planet.scale.set(this.data.width / 2, this.data.width / 2, this.data.width / 2);
 
   if (!this.selection) {
@@ -103,7 +101,6 @@ module.exports.prototype.prepare = function(data) {
     this.ownerMaterial = new THREE.MeshBasicMaterial({ map: this.ownerTexture, transparent: true});
     this.owner = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.ownerMaterial);
     this.owner.scale.set(ww, hh, 1.0);
-    this.owner.position.set(0,this.data.height * (-0.78),0);
 
     if (this.data.Owner) 
       this.ownerMaterial.map.needsUpdate = true;
@@ -113,6 +110,8 @@ module.exports.prototype.prepare = function(data) {
     this.add(this.owner);
   } else 
     this.updateOwnerInfo();
+
+  this.owner.position.set(0,this.data.height * (-0.78),0);
 }
 
 module.exports.prototype.select = function() {

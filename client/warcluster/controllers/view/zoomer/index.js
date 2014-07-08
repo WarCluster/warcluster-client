@@ -80,13 +80,13 @@ module.exports.prototype.animateIt = function() {
         type: "zoom", 
         zoom: self.getZoomIndex()
       });
-    },
+    }/*,
     onComplete: function(){        
       self.dispatchEvent({
-        type: "scopeOfView", 
+        type: "zoom", 
         zoom: self.getZoomIndex()
       });
-    }
+    }*/
   });
 }
 
