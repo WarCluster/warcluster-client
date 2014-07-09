@@ -109,8 +109,8 @@ module.exports = Backbone.View.extend({
     this.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
         maxZoom: 60000000,
-        minZoom: 6000,
-        zoomStep: 2000
+        minZoom: 4000,
+        zoomStep: 1500
       },
       scroller: {
         xMin: -5000000,
@@ -175,6 +175,7 @@ module.exports = Backbone.View.extend({
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.Race).el);
       console.log("-loginFn-", self.context.playerData);
       self.spaceViewController.activate();
+      self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       
       self.toggleLandingStatisticsView();

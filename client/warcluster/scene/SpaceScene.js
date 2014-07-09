@@ -42,8 +42,8 @@ module.exports.prototype.buildScene = function() {
 
   console.log(ww, hh);
 
-  this.camera = new THREE.PerspectiveCamera(15, ww / hh, 0.1, 100000000);
-  this.camera.position.z = 6000;
+  this.camera = new THREE.PerspectiveCamera(25, ww / hh, 0.1, 100000000);
+  this.camera.position.z = 200;
 
   THREE.Object3D._threexDomEvent.camera(this.camera);
 
@@ -54,7 +54,9 @@ module.exports.prototype.buildScene = function() {
 
   this.renderer = new THREE.WebGLRenderer( { antialias: true} );
   this.renderer.setSize(ww, hh);
-  //this.renderer.sortObjects = false
+  //this.renderer.shadowMapEnabled = true;
+  //this.renderer.shadowMapSoft = true;
+  this.renderer.sortObjects = false
   //this.renderer.autoClear = false;
 
   this.container = new THREE.Object3D();

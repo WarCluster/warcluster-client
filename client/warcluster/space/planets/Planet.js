@@ -27,17 +27,55 @@ module.exports.prototype.prepare = function(data) {
   var pz = Math.random() * (-50);
   var bmd1 = this.context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
   
+
   if (!this.planet) {
-    var color = new THREE.Color().setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
-    this.planet =  new THREE.Mesh(new THREE.SphereGeometry(1, 12, 12), new THREE.MeshLambertMaterial({map: null, color: color, ambient: color}));
+    var colors = [0x0cff00, 0xff0000, 0x005aff, 0xf6ff00];
+    var color = this.data.Owner ? new THREE.Color().setHex(colors[parseInt(colors.length*Math.random())]) : 0x999999;
+    this.planet =  new THREE.Mesh(new THREE.SphereGeometry(1, 12, 12), new THREE.MeshPhongMaterial({bumpScale: 10,shininess: 5, map: bmd1, bumpMap: bmd1, specularMap: bmd1, color: 0xFFFFFF, ambient: color, specular: 0xffffff, emissive: 0x000000,}));
     this.add(this.planet);  
 
     this.hitObject = this.planet;
+
+    var geometry  = new THREE.SphereGeometry(1, 32, 32)
+    var material  = THREEx.createAtmosphereMaterial()
+    material.side = THREE.BackSide
+    material.uniforms.glowColor.value.set(0xffffff)
+    material.uniforms.coeficient.value  = 0.5
+    material.uniforms.power.value   = 4.0
+    //this.glow  = new THREE.Mesh(geometry, material );
+    //this.glow.scale.multiplyScalar(1.15);
+    //this.add( this.glow );
+
+
+    //var color = new THREE.Color().setRGB(Math.random(), Math.random(), Math.random());
+    var spriteMaterial = new THREE.SpriteMaterial( 
+    { 
+      map: new THREE.ImageUtils.loadTexture( '/images/glow2.png' ), 
+      useScreenCoordinates: false, alignment: THREE.SpriteAlignment.center,
+      color: color, transparent: false, blending: THREE.AdditiveBlending,
+      side:THREE.BackSide, depthWrite: false, depthTest: false
+    });
+    spriteMaterial.opacity = 0.3;
+
+    this.glow2 = new THREE.Sprite( spriteMaterial );
+    
+    //this.glow2.position.z = 400;
+    this.glow2.rotation.z = Math.random() * 3.14;
+    this.add(this.glow2);
+
+
+    this.glow2.rotation = Math.random() * 314;
   } else
     this.planet.material.color.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
 
   this.planet.material.map = bmd1;
+  this.planet.material.bumpMap = bmd1;
   this.planet.scale.set(this.data.width / 2, this.data.width / 2, this.data.width / 2);
+
+  this.glow2.scale.set(this.data.width * 3, this.data.width * 3, this.data.width * 3);
+
+  /*this.glow.scale.set(this.data.width / 2, this.data.width / 2, this.data.width / 2);
+  this.glow.scale.multiplyScalar(1.15);*/
 
   if (!this.selection) {
     var selectionGlow = this.context.resourcesLoader.get("/images/planets/planet_selection_glow.png");
