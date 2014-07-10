@@ -95,6 +95,17 @@ module.exports = function(context){
 
   backgrounds[3].position.x = 1366 * sc / 2;
   backgrounds[3].position.y = -768 * sc / 2;
+
+  var xGrid = 50;
+  var yGrid = 50;
+
+  this.grid =  new THREE.Mesh(new THREE.PlaneGeometry(5000 * xGrid, 5000 * yGrid, xGrid, yGrid), new THREE.MeshBasicMaterial( { color: 0x534D00 , wireframe: true } ));
+  this.grid.visible = false;
+
+  this.add(this.grid);
 }
 
 module.exports.prototype = new THREE.Object3D();
+module.exports.prototype.toggleGrid = function() {
+  this.grid.visible = !this.grid.visible;
+}

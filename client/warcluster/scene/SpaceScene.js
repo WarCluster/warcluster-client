@@ -1,6 +1,7 @@
 var SpaceSceneEnviroment = require("./SpaceSceneEnviroment");
 var Sun = require("../space/suns/Sun");
 var Planet = require("../space/planets/Planet");
+var Mission = require("../space/missions/Mission");
 
 var resources = require("../../config/resources.js");
 
@@ -119,7 +120,8 @@ module.exports.prototype.startRendering = function() {
 }
 
 module.exports.prototype.render = function(data) {
-  //this.clear();
+  this.gc();
+
   for (s in data.Suns) {
     data.Suns[s].id = s;
     if (!data.Suns[s].Position) {
@@ -144,6 +146,26 @@ module.exports.prototype.render = function(data) {
 
   if (this.afterRenderFn != null)
     this.afterRenderFn();
+
+  //console.log("### render:", this.context.objects.length)
+}
+
+module.exports.prototype.gc = function() {
+  var rect = this.context.spaceViewController.screenRect;
+  //console.log("1.-gc-", rect, this.context.objects.length)
+  var forRemove = [];
+  for (var i = 0;i < this.context.objects.length;i ++) {
+    var object = this.context.objects[i];
+
+    if (!(object.position.x >= rect.x && object.position.x <= rect.x + rect.width &&
+        object.position.y <= rect.y && object.position.y >= rect.y - rect.height))
+      forRemove.push(object)
+  }
+
+  //console.log("1.-gc-DESTROY OBJECT:", forRemove.length, this.context.objects.length)
+  
+  while (forRemove.length > 0) 
+    this.destroyObject(forRemove.shift())
 }
 
 module.exports.prototype.clear = function() {
@@ -160,16 +182,21 @@ module.exports.prototype.clear = function() {
       this.context.planetsFactory.destroy(obj);
   }
 }
+
 module.exports.prototype.destroyObjectByIndex = function(index) {
-  var obj = this.context.objects[index];
+  this.destroyObject(this.context.objects[index])
+}
+
+module.exports.prototype.destroyObject = function(obj) {
   if (obj instanceof Sun) {
+    //console.log("1.-destroyObject-", obj.data)
     this.context.sunsFactory.destroy(obj);
-  }
-  else if (obj instanceof Planet) {
+  } else if (obj instanceof Planet) {
+    //console.log("2.-destroyObject-", obj.data)
     this.context.planetsFactory.destroy(obj);
-  }
-  else {
-    this.context.shipsFactory.destroy(obj);
+  } else if (obj instanceof Mission) {
+    //console.log("3.-destroyObject-", obj.data)
+    this.context.missionsFactory.destroy(obj);
   }
 }
 

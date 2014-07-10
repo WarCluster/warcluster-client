@@ -45,7 +45,7 @@ module.exports.prototype.prepare = function(username, twitterId) {
 module.exports.prototype.parseMessage = function(command) {
   try {
     var data = JSON.parse(command);
-    console.log("###.parseMessage:", data);
+    //console.log("###.parseMessage:", data);
   } catch(err) {
     console.log("###.InvalidData:", command);
     return false;
@@ -84,6 +84,13 @@ module.exports.prototype.parseMessage = function(command) {
         }
       break;
       case "server_params":
+
+        this.context.serverParams = {
+          HomeSPM: data.HomeSPM,
+          PlanetsSPM: data.PlanetsSPM,
+          Teams: data.Teams
+        }
+
         _.extend(this.context.Teams, data.Teams);
         for(name in this.context.Teams) {
           this.context.Teams[name].R = Math.ceil(this.context.Teams[name].R * 255);

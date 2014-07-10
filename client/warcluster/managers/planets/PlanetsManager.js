@@ -28,15 +28,22 @@ module.exports.prototype.stop = function() {
 
 module.exports.prototype.managePlanetData = function(planets) {
   var updated = [];
-  
+
   for (var id in planets) {
     var planet = this.context.objectsById[id];
-    planets[id].id = id;
+    planets[id].id = id; 
+
+
+
+
+
+  
 
     if (!planet) {
       planet = this.context.planetsFactory.build(planets[id]);
     } else {
       planet.population.visible = (planets[id].ShipCount !== -1);
+
       var updatePopulation = (planets[id].ShipCount !== -1); //|| planet.data.ShipCount !== planets[id].ShipCount); //&& (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
       var updateOwner = planet.data.Owner !== planets[id].Owner;
       var updateColor = planet.data.Color !== planets[id].Color;
@@ -66,11 +73,13 @@ module.exports.prototype.managePlanetData = function(planets) {
       type: "selectionDataUpdated", 
       updated: updated
     });  
+
+  //console.log("--------------> managePlanetData:", num, newp, objs1, objs2, this.context.objects.length, this.context.planetsHitObjects.length, this.context.objectsById)
 }
 
 module.exports.prototype.managePopulation = function() {
   var t = (new Date()).getTime();
-  var time = t - this.t;
+  var time = (t - this.t)  / 60000;
   var updated = [];
   var planetData = null;
   var shipCount = 0;
@@ -80,6 +89,7 @@ module.exports.prototype.managePopulation = function() {
   
   for(var i = 0;i < this.context.planets.length;i ++) {
     if (this.context.planets[i].data.ShipCount === -1) continue;
+
     planetData = this.context.planets[i].data;
     shipCount = planetData.ShipCount;
     planetData.ShipCount += time * this.getBuildIndex(planetData);  
@@ -112,14 +122,10 @@ module.exports.prototype.managePopulation = function() {
 module.exports.prototype.getBuildIndex = function (planetData) {
   if(planetData.Owner === "")
     return 0;
+  else if (planetData.IsHome <= 2)
+    return this.context.serverParams.HomeSPM;
   else if (planetData.Size <= 2)
-    return this.buildIndexes[0];
-  else if ((planetData.Size > 2) &&  (planetData.Size <= 5))
-    return this.buildIndexes[1];
-  else if ((planetData.Size > 5) &&  (planetData.Size <= 8))
-    return this.buildIndexes[2];
-  else if ((planetData.Size > 8) &&  (planetData.Size <= 10))
-    return this.buildIndexes[3];
+    return this.context.serverParams.PlanetsSPM[planetData.Size];
 
   return 0;
 }
