@@ -292,7 +292,7 @@ module.exports = Backbone.View.extend({
       element.find(".planets").html(data.Planets);
     } else {
       element.find(".twitter-username").html("");
-      element.find(".race-color").css({"background": "rgb(255,255,255)"});
+      element.find(".race-color").css({"background": "rgb(33,33,33)"});
       element.find(".home-planet").html("");
       element.find(".planets").html("");
     }
