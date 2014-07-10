@@ -43,9 +43,6 @@ module.exports = Backbone.View.extend({
     this.tutorialMenu = new Tutorial({context: this.context});
     $(".ui-container").append(this.tutorialMenu.render().el);
 
-    // this.landingView = new LandingView({context: this.context});
-    // $(".ui-container").append(this.landingView.render().el);
-
     this.context.missionsMenu = new MissionsMenu({context: this.context});
 
     this.context.planetsSelection = this.planetsSelection;
@@ -110,7 +107,8 @@ module.exports = Backbone.View.extend({
       zoomer: {
         maxZoom: 60000000,
         minZoom: 4000,
-        zoomStep: 1500
+        zoomStep: 1500,
+        zoom: 4000
       },
       scroller: {
         xMin: -5000000,

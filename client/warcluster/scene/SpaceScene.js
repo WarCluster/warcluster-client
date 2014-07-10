@@ -85,7 +85,10 @@ module.exports.prototype.buildScene = function() {
     self.context.height = hh;
 
     self.renderer.setSize( ww, hh );
-    //update the position according: https://trello.com/c/dq7etSvq/314-fix-the-userpopover-positioning-when-resizing
+    
+    if (self.context.commandsManager.connected)
+      self.context.spaceViewController.checkPosition();
+
     self.context.spaceViewController.info.updatePosition();
   }
 
@@ -99,7 +102,7 @@ module.exports.prototype.startRendering = function() {
   var self = this;
   var ct = (new Date()).getTime();
   var t = ct;
-
+  var tMax = 0;
   var render = function() {
     requestAnimationFrame(render);
 
@@ -110,18 +113,24 @@ module.exports.prototype.startRendering = function() {
 
     for(var i = 0;i < self.context.interactiveObjects.length;i ++)
       self.context.interactiveObjects[i].tick();
+    tMax = Math.max(tMax, (new Date()).getTime() - t)
+    //console.log("1.RenderTime:", (new Date()).getTime() - t, tMax, self.context.interactiveObjects.length);
+
+    t = (new Date()).getTime();
 
     self.renderer.render(self.scene, self.camera);
     self.stats.update();
 
-    if (self.ctrlKey && self.spaceKey)
-      console.log("RenderTime:", (new Date()).getTime() - t, self.context.interactiveObjects.length);
+    tMax = Math.max(tMax, (new Date()).getTime() - t)
+    //if (self.ctrlKey && self.spaceKey)
+      //console.log("2.RenderTime:", /*(new Date()).getTime() - t, tMax, */self.context.interactiveObjects.length, self.context.objects.length, self.context.planets.length);
   }
 
   render();
 }
 
 module.exports.prototype.render = function(data) {
+  var t = new Date().getTime();
   this.gc();
 
   for (s in data.Suns) {
@@ -149,7 +158,7 @@ module.exports.prototype.render = function(data) {
   if (this.afterRenderFn != null)
     this.afterRenderFn();
 
-  //console.log("### render:", this.context.objects.length)
+  //console.log("### scene render:", new Date().getTime() - t)
 }
 
 module.exports.prototype.gc = function() {
