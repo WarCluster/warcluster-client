@@ -43,7 +43,7 @@ module.exports.prototype.buildScene = function() {
   console.log(ww, hh);
 
   this.camera = new THREE.PerspectiveCamera(25, ww / hh, 0.1, 100000000);
-  this.camera.position.z = 200;
+  this.camera.position.z = 4000;
 
   THREE.Object3D._threexDomEvent.camera(this.camera);
 
