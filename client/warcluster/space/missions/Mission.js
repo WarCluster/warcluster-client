@@ -89,7 +89,7 @@ module.exports.prototype.update = function(data) {
 
 module.exports.prototype.destroy = function() {
 	this.deactivate();
-	console.log("-destroy-", this.ships.length)
+	
   while (this.ships.length > 0)
 		this.context.shipsFactory.destroy(this.ships.shift());
 
