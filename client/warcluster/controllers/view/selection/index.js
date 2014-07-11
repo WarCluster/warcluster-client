@@ -85,6 +85,9 @@ module.exports = function(context, config, controller){
           self.deselectAll();
           self.selectPlanet(target.data);  
         }
+
+        if (self.selectedPlanets.length == 0)
+          self.removeWaypoints();
       } else {
         if (self.selectedPlanets.length > 0) {
             if (self.ctrlKey && !self.shiftKey) {
@@ -208,6 +211,9 @@ module.exports.prototype.hitTestPlanets = function(rect) {
       selectedPlanets: selectedPlanets,
       deselectedPlanets: deselectedPlanets
     });
+
+  if (this.selectedPlanets.length == 0)
+    this.removeWaypoints();
 }
 
 module.exports.prototype.deselectAll = function() {
