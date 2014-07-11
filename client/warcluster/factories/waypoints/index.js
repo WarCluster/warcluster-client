@@ -5,11 +5,10 @@ module.exports = function(context){
   this.cache = [];
 }
 
-module.exports.prototype.build = function() {
+module.exports.prototype.build = function(num) {
   var p = this.context.spaceViewController.getMousePosition();
   var waypoint = this.cache.length > 0 ? this.cache.shift() : new Waypoint(this.context);
-  waypoint.position.x = p.x;
-  waypoint.position.y = p.y;
+  waypoint.prepare(p, num)
 
   this.context.container.add(waypoint);
 

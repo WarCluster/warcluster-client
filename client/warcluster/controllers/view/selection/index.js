@@ -116,7 +116,7 @@ module.exports = function(context, config, controller){
       }
     } else {
       if (self.shiftKey && self.selectedPlanets.length > 0) {
-        var waypoint = self.context.waypointsFactory.build()
+        var waypoint = self.context.waypointsFactory.build(self.waypoints.length + 1)
         self.waypoints.push(waypoint);
       } else {
         self.removeWaypoints();
