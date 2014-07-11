@@ -1,14 +1,32 @@
+var InteractiveObject = require("../InteractiveObject");
+
 module.exports = function(data, context) {
-  this.metaInfo = {
-    timestamp: (new Date()).getTime()
-  };
-  this.data = data;
-  this.context = context;
-  this.ships = [];
+	InteractiveObject.call(this);
+	
+	this.context = context;
+	this.data = data;
+	this.ships = [];
+
+	this.progress = 0;
+	this.delta_x = 0;
+	this.delta_y = 0;
+
+	this.direction = Math.random() > 0.5 ? 1 : -1;
+	this.angle = Math.random() * 360;
+	this.formation = null;
 }
 
+module.exports.prototype = new InteractiveObject();
 module.exports.prototype.send = function(formation, color) {
-  var ship;
+	this.delta_x = this.data.Target.Position.X - this.data.Source.Position.X;
+	this.delta_y = this.data.Target.Position.Y - this.data.Source.Position.Y;
+	
+	this.rotation.z = -Math.atan2(this.delta_x, this.delta_y) + Math.PI;
+	//this.ship.rotation.y = Math.PI * Math.random();
+
+	this.endTime = this.data.StartTime + this.data.TravelTime;
+
+	var ship;
   var color = new THREE.Color().setRGB(color.R, color.G, color.B);
 
   var totalShips = this.data.ShipCount;
@@ -30,13 +48,29 @@ module.exports.prototype.send = function(formation, color) {
     ship = this.context.shipsFactory.build(sizes[i], this, color, formation[i]);
     ship.send();
 
+    this.add(ship);
     this.ships.push(ship);
   }
+
+  this.activate();
 }
 
-module.exports.prototype.update = function(data) {
-}
+module.exports.prototype.tick = function() {
+	if (this.context.currentTime > this.endTime) {
+		this.destroy();
+	} else {
+		this.progress = (this.context.currentTime - this.data.StartTime) / this.data.TravelTime;
 
+		if (this.progress > 1)
+			this.progress = 1;
+
+		this.position.x = this.data.Source.Position.X + this.delta_x * this.progress;
+		this.position.y = this.data.Source.Position.Y + this.delta_y * this.progress;
+
+		for (var i = 0;i < this.ships.length;i ++)
+			this.ships[i].tick(this.progress);
+	}
+}
 module.exports.prototype.getSize = function(ships) {
   if (ships > 100 && ships <= 200)
     return 2;
@@ -50,14 +84,14 @@ module.exports.prototype.getSize = function(ships) {
   return 1;
 }
 
-module.exports.prototype.destroy = function(ship) {
-  var index = this.ships.indexOf(ship);
-  this.ships.splice(index, 1);
+module.exports.prototype.update = function(data) {
+}
 
-  this.context.shipsFactory.destroy(ship);
+module.exports.prototype.destroy = function() {
+	this.deactivate();
+	
+  while (this.ships.length > 0)
+		this.context.shipsFactory.destroy(this.ships.shift());
 
-  if (this.ships.length == 0)
-    this.context.missionsFactory.destroy(this);
-
-  return ship;
+  this.context.missionsFactory.destroy(this);
 }

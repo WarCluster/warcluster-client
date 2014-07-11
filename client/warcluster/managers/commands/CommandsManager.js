@@ -1,17 +1,13 @@
 var PlayerData = require("../../data/PlayerData");
 
 module.exports = function(url, context){
+  var self = this;
   this.url = url;
   this.context = context;
 
   this.loginFn = null;
   this.renderViewFn = null;
-
-  this.renderData = {
-    suns: [],
-    planets: [],
-    missions: []
-  }
+  this.connected = false;
 }
 
 module.exports.prototype.prepare = function(username, twitterId) {
@@ -27,6 +23,7 @@ module.exports.prototype.prepare = function(username, twitterId) {
   };
   var new_status = function(status) {
     console.log(status);
+    self.connected = status === 'connected';
   };
   var on_message = function(msg) {
     self.parseMessage(msg.data);
@@ -43,14 +40,10 @@ module.exports.prototype.prepare = function(username, twitterId) {
 }
 
 module.exports.prototype.parseMessage = function(command) {
-  try {
-    var data = JSON.parse(command);
-    //console.log("###.parseMessage:", data);
-  } catch(err) {
-    console.log("###.InvalidData:", command);
-    return false;
-  }
-  
+  var data = JSON.parse(command);
+  //var data = JSON.parse(command);
+  //console.log("###.parseMessage:", data);
+
   if (data.Command) {
     this.context.currentTime =  data.Timestamp;
     switch (data.Command) {

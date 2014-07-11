@@ -33,12 +33,6 @@ module.exports.prototype.managePlanetData = function(planets) {
     var planet = this.context.objectsById[id];
     planets[id].id = id; 
 
-
-
-
-
-  
-
     if (!planet) {
       planet = this.context.planetsFactory.build(planets[id]);
     } else {

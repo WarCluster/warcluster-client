@@ -31,13 +31,9 @@ module.exports = function(size, context) {
 	this.material = new THREE.MeshPhongMaterial({map: map});
 
 	this.ship = new THREE.Mesh(resource.geometry, this.material);
-	this.ship.scale.set(0.3, 0.3, 0.3); 
+	this.ship.scale.set(0.4, 0.4, 0.4); 
 	this.add(this.ship);
 	
-	this.progress = 0;
-	this.delta_x = 0;
-	this.delta_y = 0;
-
 	this.direction = Math.random() > 0.5 ? 1 : -1;
 	this.angle = Math.random() * 360;
 	this.formation = null;
@@ -45,40 +41,19 @@ module.exports = function(size, context) {
 
 module.exports.prototype = new InteractiveObject();
 module.exports.prototype.send = function() {
-	this.delta_x = this.mission.data.Target.Position.X - this.mission.data.Source.Position.X;
-	this.delta_y = this.mission.data.Target.Position.Y - this.mission.data.Source.Position.Y;
-	
-	this.rotation.z = -Math.atan2(this.delta_x, this.delta_y) + Math.PI;
-	this.ship.rotation.y = Math.PI * Math.random();
-
-	this.endTime = this.mission.data.StartTime + this.mission.data.TravelTime;
-
-	this.ship.position.x = this.formation.x;
-	this.ship.position.y = this.formation.y;
-	this.ship.position.z = this.formation.z;
+	this.position.x = this.formation.x;
+	this.position.y = this.formation.y;
+	this.position.z = this.formation.z;
 }
 
-module.exports.prototype.tick = function() {
-	if (this.context.currentTime > this.endTime) {
-		this.mission.destroy(this);
-	} else {
-		this.progress = (this.context.currentTime - this.mission.data.StartTime) / this.mission.data.TravelTime;
+module.exports.prototype.tick = function(progress) {
+	this.angle += this.direction;
 
-		if (this.progress > 1)
-			this.progress = 1;
+	var ind = Math.sin(this.angle*(Math.PI/180))
+	var ind2 = Math.sin((180 * progress)*(Math.PI/180))
 
-		this.position.x = this.mission.data.Source.Position.X + this.delta_x * this.progress;
-		this.position.y = this.mission.data.Source.Position.Y + this.delta_y * this.progress;
+	this.rotation.y = -0.5 * ind - 0.5;
 
-		this.angle += this.direction;
-
-		var ind = Math.sin(this.angle*(Math.PI/180))
-		var ind2 = Math.sin((180 * this.progress)*(Math.PI/180))
-
-		this.ship.rotation.y = -0.5 * ind - 0.5;
-
-		this.ship.position.x = this.formation.x * ind2 + ind * 15;
-		this.ship.position.y = this.formation.y * ind2;
-		this.ship.position.z = (this.formation.z + 250) * ind2;
-	}
+	this.position.set(this.formation.x * ind2 + ind * 15, this.formation.y * ind2, (this.formation.z + 250) * ind2);
+	this.scale.set(ind2, ind2, ind2)
 }

@@ -13,7 +13,7 @@ module.exports = function(context){
   var i;
 
   // stars
-  var radius = 2500000;
+  var radius = 1500000;
   var i, r = radius, starsGeometry = [ new THREE.Geometry(), new THREE.Geometry() ];
 
   for ( i = 0; i < 250; i ++ ) {
@@ -59,6 +59,7 @@ module.exports = function(context){
     stars.rotation.z = Math.random() * 6;
 
     stars.position.x = 9000000 * (i - 10) / 20 - 9000000 / 2; //Math.random() * 9000000 - 9000000 / 2;
+    //stars.position.z = 1542000;
 
     stars.matrixAutoUpdate = false;
     stars.updateMatrix();

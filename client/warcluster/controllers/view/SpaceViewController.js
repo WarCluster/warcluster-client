@@ -118,9 +118,10 @@ module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.activate = function() {
 	if (!this.active) {
 		this.active = true;
-    this.scroller.scaleIndex = this.zoomer.getZoomIndex();
+    
     this.zoomer.prepare();
-
+    this.scroller.scaleIndex = this.zoomer.getZoomIndex();
+    
     this.updateResolution();
 
     this.tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (this.resolution.width / 2), this.context.spaceScene.camera.position.y + (this.resolution.height / 2));

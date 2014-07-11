@@ -14,3 +14,7 @@ module.exports.prototype.deactivate = function() {
   if (index != -1)
     this.context.interactiveObjects.splice(index, 1);
 }
+
+module.exports.prototype.tick = function() {
+	
+}

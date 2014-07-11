@@ -16,10 +16,8 @@ module.exports.prototype.build = function(size, mission, color, formationPositio
 	ship.material.color = color;
 	ship.material.ambient = color;
 	ship.formation = formationPosition;
-	ship.activate();
 
 	this.context.container.add(ship);
-	this.context.objects.push(ship);
 
 	return ship;
 }
@@ -28,8 +26,6 @@ module.exports.prototype.destroy = function(ship) {
 	ship.deactivate();
 
 	this.context.container.remove(ship);
-	this.context.objects.splice(this.context.objects.indexOf(ship), 1);
-
 	this.cache[ship.size].push(ship);
 
 	return ship;

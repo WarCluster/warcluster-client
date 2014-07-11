@@ -4,113 +4,92 @@ module.exports = function(context, data){
   this.selected = false;
 	this.context = context;
 
-	
+	if (!module.exports.sphereGeometry)
+    module.exports.sphereGeometry = new THREE.SphereGeometry(1, 12, 12);
 
-  this.metaInfo = {
-    timestamp: (new Date()).getTime()
-  };
+  if (!module.exports.planeGeometry)
+    module.exports.planeGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+
+  this.planet =  new THREE.Mesh(module.exports.sphereGeometry, new THREE.MeshPhongMaterial({bumpScale: 10,shininess: 5, color: 0xFFFFFF, ambient: 0xFFFFFF, specular: 0xffffff, emissive: 0x000000}));
+  this.add(this.planet);  
+
+  this.hitObject = this.planet;
+
+  var spriteMaterial = new THREE.SpriteMaterial({ 
+    map: new THREE.ImageUtils.loadTexture( '/images/glow2.png' ), 
+    useScreenCoordinates: false, alignment: THREE.SpriteAlignment.center,
+    color: 0xFFFFFF, transparent: false, blending: THREE.AdditiveBlending,
+    side:THREE.BackSide, depthWrite: false, depthTest: false
+  });
+  spriteMaterial.opacity = 0.3;
+
+  this.glow = new THREE.Sprite( spriteMaterial );
+  this.add(this.glow);
+
+  var selectionGlow = this.context.resourcesLoader.get("/images/planets/planet_selection_glow.png");
+
+  this.selection =  new THREE.Mesh(module.exports.planeGeometry, new THREE.MeshBasicMaterial({map: selectionGlow, transparent : true}));
+  this.selection.visible = false;
+  this.add(this.selection);
+
+  this.populationTexture = new THREE.DataTexture();
+  this.populationMaterial = new THREE.MeshBasicMaterial({map: this.populationTexture, transparent : true})
+  this.populationMaterial.map.needsUpdate = true;
+  this.population = new THREE.Mesh(module.exports.planeGeometry, this.populationMaterial);
+  this.population.visible = false;
+
+  this.add(this.population);  
+
+
+  this.ownerTexture = new THREE.DataTexture();
+
+  this.ownerMaterial = new THREE.MeshBasicMaterial({ map: this.ownerTexture, transparent: true});
+  this.owner = new THREE.Mesh(module.exports.planeGeometry, this.ownerMaterial);
+  this.owner.visible = false;
+
+  this.add(this.owner);
+
+
+  var ringMap = this.context.resourcesLoader.get("/images/planets/ring.png");
+  this.ring = new THREE.Mesh(module.exports.planeGeometry, new THREE.MeshBasicMaterial({
+    map: ringMap, transparent : true,
+    depthWrite: false, depthTest: false
+  }))
+
+  this.ring.visible = false;
+  this.add(this.ring);
 }
 
 module.exports.prototype = new THREE.Object3D();
 module.exports.prototype.prepare = function(data) {
-  
-
   this.data = data;
   this.data.width = 90 + 10 * this.data.Size;
   this.data.height = 90 + 10 * this.data.Size;
 
   this.position.x = this.data.Position.X;
   this.position.y = this.data.Position.Y;
+  
+  this.updateColor();
 
-
-  var ring;
-  var pz = Math.random() * (-50);
   var bmd1 = this.context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
   
-  if (!this.planet) {
-    var color = new THREE.Color().setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
-    this.planet =  new THREE.Mesh(new THREE.SphereGeometry(1, 12, 12), new THREE.MeshLambertMaterial({map: null, color: color, ambient: color}));
-    this.add(this.planet);  
-
-    this.hitObject = this.planet;
-  } else
-    this.planet.material.color.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
-
   this.planet.material.map = bmd1;
+  this.planet.material.bumpMap = bmd1;
   this.planet.scale.set(this.data.width / 2, this.data.width / 2, this.data.width / 2);
 
-  if (!this.selection) {
-    var selectionGlow = this.context.resourcesLoader.get("/images/planets/planet_selection_glow.png");
-
-    this.selection =  new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), new THREE.MeshBasicMaterial({map: selectionGlow, transparent : true}));
-    this.selection.visible = false;
-    this.add(this.selection);
-  }
+  this.glow.scale.set(this.data.width * 3, this.data.width * 3, this.data.width * 3);
 
   this.selection.scale.set(this.data.width*1.35, this.data.height*1.35, 1);
 
-  if (this.data.IsHome) {
-    if (!this.ring) {
-      ring = this.context.resourcesLoader.get("/images/planets/ring.png");
-      this.ring = new THREE.Mesh(new THREE.PlaneGeometry(this.data.width*1.35, this.data.height*1.35, 1, 1), new THREE.MeshBasicMaterial({map: ring, transparent : true}))
-      this.ring.rotateX(0.99);
-      this.add(this.ring);
-    }
+  this.ring.visible = this.data.IsHome && this.data.Owner == this.context.playerData.Username;
+  this.ring.scale.set(this.data.width * 1.5, this.data.width * 0.8, this.data.width * 1.5);
 
-    this.ring.visible = true;
-    this.ring.position.setZ(pz + 250);
-  } else if (!this.data.IsHome && this.ring) {
-    this.ring.visible = false;
-  }
-
-
-  //TODO: refactor for DRY(Don't Repeat Yourself)
-
-  if (!this.population) {
-    var result = this.context.canvasTextFactory.buildUint8Array(this.data.ShipCount, null, 45);
-
-    var ww = result.canvas2d.width;
-    var hh = result.canvas2d.height;
-
-    this.populationTexture = new THREE.DataTexture(result.uint8Array, result.canvas2d.width, result.canvas2d.height);
-    this.populationMaterial = new THREE.MeshBasicMaterial({map: this.populationTexture, transparent : true})
-    this.populationMaterial.map.needsUpdate = true;
-    this.population = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.populationMaterial);
-    this.population.scale.set(ww, hh, 1.0);
-
-    this.add(this.population);  
-  } else
-    this.updatePopulationInfo();
+  this.updatePopulationInfo();
   
   this.population.visible = this.data.ShipCount != -1 && this.data.Owner == this.context.playerData.Username;
-  this.population.position.set(0, this.data.height * (0.78), pz + 50);
+  this.population.position.set(0, this.data.height * (0.78), 0);
   
-  if (!this.owner) {
-    if (this.data.Owner) {
-      result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner, null, 45);
-
-      this.ownerTexture = new THREE.DataTexture(result.uint8Array, result.canvas2d.width, result.canvas2d.height);
-      this.activate();
-    } else {
-      this.ownerTexture = new THREE.DataTexture();
-    }
-
-    var ww = result.canvas2d.width;
-    var hh = result.canvas2d.height;
-
-    this.ownerMaterial = new THREE.MeshBasicMaterial({ map: this.ownerTexture, transparent: true});
-    this.owner = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), this.ownerMaterial);
-    this.owner.scale.set(ww, hh, 1.0);
-
-    if (this.data.Owner) 
-      this.ownerMaterial.map.needsUpdate = true;
-    else 
-      this.owner.visible = false;
-
-    this.add(this.owner);
-  } else 
-    this.updateOwnerInfo();
-
+  this.updateOwnerInfo();
   this.owner.position.set(0,this.data.height * (-0.78),0);
 }
 
@@ -166,8 +145,17 @@ module.exports.prototype.hideSupportSelection = function() {
 }
 
 module.exports.prototype.updateColor = function() {
+  var colors = [0x0cff00, 0xff0000, 0x005aff, 0xf6ff00];
+  var color = this.data.Owner ? new THREE.Color(colors[parseInt(colors.length*Math.random())]) : new THREE.Color(0x999999);
+
+  this.data.Color.R = color.r; 
+  this.data.Color.G = color.g;
+  this.data.Color.B = color.b;
+  
   this.planet.material.color.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
   this.planet.material.ambient.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
+
+  this.glow.material.color.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
 }
 
 module.exports.prototype.updatePopulationInfo = function() {
