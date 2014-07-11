@@ -6,12 +6,9 @@ module.exports = function(context){
   if (!module.exports.planeGeometry)
     module.exports.planeGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 
+  var color = new THREE.Color(0x008efc);
   var map = this.context.resourcesLoader.get("/images/waypoint.png");
-  var spriteMaterial = new THREE.SpriteMaterial({ 
-    map: map, 
-    useScreenCoordinates: false, alignment: THREE.SpriteAlignment.center,
-    color: 0xFFFFFF, transparent: false
-  });
+  var spriteMaterial = new THREE.SpriteMaterial({ map: map, color: color, transparent: true, useScreenCoordinates: false });
 
   this.waypoint = new THREE.Sprite( spriteMaterial );
   this.waypoint.scale.set(350, 350);
@@ -19,7 +16,7 @@ module.exports = function(context){
 
   this.numberTexture = new THREE.DataTexture();
 
-  this.numberMaterial = new THREE.MeshBasicMaterial({ map: this.numberTexture, transparent: true});
+  this.numberMaterial = new THREE.MeshBasicMaterial({ map: this.numberTexture, transparent: true, ambient: color, color: color});
   this.number = new THREE.Mesh(module.exports.planeGeometry, this.numberMaterial);
 
   this.add(this.number);
