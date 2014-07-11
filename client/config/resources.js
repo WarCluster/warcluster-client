@@ -29,7 +29,8 @@ module.exports = {
     "/images/planets/planet9.png",
     "/images/planets/planet_selection_glow.png",
 
-    "/images/planets/ring.png"
+    "/images/planets/ring.png",
+    "/images/waypoint.png"
   ],
   models: [
     "/models/ship1.js",

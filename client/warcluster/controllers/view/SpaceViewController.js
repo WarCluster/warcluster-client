@@ -3,6 +3,8 @@ var Selection = require("./selection");
 var Zoomer = require("./zoomer");
 var Info = require("./info");
 
+var utils = require("../../utils")
+
 module.exports = function(context, config){
 	THREE.EventDispatcher.call(this);
 
@@ -53,7 +55,7 @@ module.exports = function(context, config){
     self.info.updatePosition();
   });
 
-  this.selection = new Selection(context, config.selection);
+  this.selection = new Selection(context, config.selection, this);
   this.selection.addEventListener("attackPlanet", function(e) {
     self.dispatchEvent(e);
   });
@@ -112,16 +114,29 @@ module.exports = function(context, config){
     e.preventDefault();
     return false;
   }
+
+  this.mousePosition = { x: 0, y: 0 };
+
+  $(window).mousemove(function(e) {
+    self.mousePosition.x = e.clientX;
+    self.mousePosition.y = e.clientY;
+  })
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.activate = function() {
 	if (!this.active) {
 		this.active = true;
+
+    var sc = 9999999;
+    this.hitPlane =  new THREE.Mesh(new THREE.PlaneGeometry(1366 * sc, 768 * sc, 1, 1));
+    this.hitPlane.visible = false;
+
+    this.context.container.add(this.hitPlane);
     
     this.zoomer.prepare();
     this.scroller.scaleIndex = this.zoomer.getZoomIndex();
-    
+
     this.updateResolution();
 
     this.tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (this.resolution.width / 2), this.context.spaceScene.camera.position.y + (this.resolution.height / 2));
@@ -315,6 +330,14 @@ module.exports.prototype.setScrollPosition = function(x, y, z){
   }
   
   return true;
+}
+
+module.exports.prototype.getMousePosition = function() {
+  var intersects = utils.getMouseIntersectionObjects(this.mousePosition.x, this.mousePosition.y, [this.hitPlane], this.context)
+  if (intersects.length > 0)
+    return intersects[0].point;
+  
+  return null;
 }
 
 module.exports.prototype.pressCtrlKey = function(){

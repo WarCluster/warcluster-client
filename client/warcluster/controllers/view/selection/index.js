@@ -1,4 +1,6 @@
-module.exports = function(context, config){
+var Waypoint = require("../../../space/waypoint");
+
+module.exports = function(context, config, controller){
   THREE.EventDispatcher.call(this);
 
   var self = this;
@@ -6,10 +8,13 @@ module.exports = function(context, config){
   config = config || {};
 
   this.context = context;
+  this.controller = controller;
   this.mpos = {
     x: 0, 
     y: 0
   };
+
+  this.waypoints = [];
 
   this.attackTarget = null;
   this.supportTarget = null;
@@ -35,7 +40,7 @@ module.exports = function(context, config){
   }
 
   $(document).bind("contextmenu",function(e){
-    if (!self.shiftKey)
+    if (!self.ctrlKey)
       return false;
   });
 
@@ -66,7 +71,8 @@ module.exports = function(context, config){
           self.dispatchEvent({
             type: "supplyPlanet", 
             supportSourcesIds: self.getSelectedPlanetsIds(),
-            planetToSupportId: self.getPlanetТоSupportId()
+            planetToSupportId: self.getPlanetТоSupportId(),
+            waypoints: self.getWaypointsPositions()
           });
         } else if (self.shiftKey && !self.ctrlKey) {
           var index = self.getSelectedPlanetIndexById(target.data.id);
@@ -85,25 +91,36 @@ module.exports = function(context, config){
               self.dispatchEvent({
                 type: "supplyPlanet", 
                 supportSourcesIds: self.getSelectedPlanetsIds(),
-                planetToSupportId: self.getPlanetТоSupportId()
+                planetToSupportId: self.getPlanetТоSupportId(),
+                waypoints: self.getWaypointsPositions()
               });
           } else if (self.attackTarget) {
               self.dispatchEvent({
                 type: "attackPlanet", 
                 attackSourcesIds: self.getSelectedPlanetsIds(),
-                planetToAttackId: self.getPlanetТоAttackId()
+                planetToAttackId: self.getPlanetТоAttackId(),
+                waypoints: self.getWaypointsPositions()
               });
           } else if (self.spyTarget && self.ctrlKey && self.shiftKey) {
             self.dispatchEvent({
               type: "spyPlanet",
               spySourcesIds: self.getSelectedPlanetsIds(),
-              planetToSpyId: self.getPlanetТоSpyId()
+              planetToSpyId: self.getPlanetТоSpyId(),
+                waypoints: self.getWaypointsPositions()
             });
           }
         }
       }
     } else {
-      self.deselectAll();
+      if (self.shiftKey && self.selectedPlanets.length > 0) {
+        var waypoint = self.context.waypointsFactory.build()
+        self.waypoints.push(waypoint);
+      } else {
+        self.removeWaypoints();
+
+        if (!self.shiftKey)
+          self.deselectAll();
+      }
     }
   }
 
@@ -320,6 +337,21 @@ module.exports.prototype.getPlanetТоSupportId = function() {
   return this.supportTarget.data.id;
 }
 
+module.exports.prototype.getPlanetТоSpyId = function() {
+  return this.spyTarget.data.id;
+}
+
+module.exports.prototype.getWaypointsPositions = function() {
+  var positions = [];
+  for (var i = 0;i < this.waypoints.length;i ++)
+    positions.push({
+      x: this.waypoints[i].position.x,
+      y: this.waypoints[i].position.y
+    })
+  
+  return positions;
+}
+
 module.exports.prototype.updateSelectedPlanetData = function(data) {
   for (var i = 0;i < this.selectedPlanets.length;i ++)
     if (this.selectedPlanets[i].id == data.id) {
@@ -396,6 +428,7 @@ module.exports.prototype.releaseShiftKey = function(){
   }
 }
 
-module.exports.prototype.getPlanetТоSpyId = function() {
-  return this.spyTarget.data.id;
+module.exports.prototype.removeWaypoints = function() {
+  while (this.waypoints.length > 0)
+    this.context.waypointsFactory.destroy(this.waypoints.shift());  
 }

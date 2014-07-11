@@ -26,15 +26,6 @@ module.exports = function(context, config, controller){
 module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.prepare = function() {
   this.context.camera.position.z = this.controller.scrollPosition.z;
-  
-  var sc = 5000 * 5
-  this.hitPlane =  new THREE.Mesh(new THREE.PlaneGeometry(1366 * sc, 768 * sc, 1, 1));
-  this.hitPlane.visible = false;
-
-  this.tmpObj = new THREE.Object3D();
-
-  this.context.container.add(this.hitPlane);
-  this.context.container.add(this.tmpObj);
 }
 
 module.exports.prototype.zoomIn = function() {
@@ -52,7 +43,7 @@ module.exports.prototype.zoomTo = function(e) {
     return ;
 
   step = Math.abs(dist) < Math.abs(step) ? dist : step;
-  var intersects = utils.getMouseIntersectionObjects(e.clientX, e.clientY, [this.hitPlane], this.context)
+  var intersects = utils.getMouseIntersectionObjects(e.clientX, e.clientY, [this.controller.hitPlane], this.context)
   if (intersects.length > 0) {
     var p = intersects[0].point;
     var v = new THREE.Vector3(p.x - this.context.camera.position.x, p.y - this.context.camera.position.y, p.z - this.context.camera.position.z)
