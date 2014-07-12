@@ -7,4 +7,5 @@ require("./jquery-ui-sliderAccess");
 require("./jquery.bpopup.min");
 require("./jquery-center");
 require("./jquery-linkify.min");
+require("./jquery.noty.packaged")
 //require("./jquery-mobile-detect.min");

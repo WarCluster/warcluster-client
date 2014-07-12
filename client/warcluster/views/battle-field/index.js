@@ -183,7 +183,6 @@ module.exports = Backbone.View.extend({
       }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
-      //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
     }
 
     this.commandsManager.renderViewFn = function(data) {

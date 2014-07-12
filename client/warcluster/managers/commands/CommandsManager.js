@@ -78,9 +78,7 @@ module.exports.prototype.parseMessage = function(command) {
         this.context.missionsFactory.build(data.Mission);
       break;
       case "send_mission_failed":
-        if (!humane._animating) {
-          humane.error("You're attacking with less than one pilot", {image: "./images/adjutant.gif",timeout:4000, clickToClose: true});
-        }
+        $.notify("You're attacking with less than one pilot", {globalPosition: 'bottom left'});
       break;
       case "server_params":
         _.extend(this.context.Teams, data.Teams);
@@ -88,6 +86,24 @@ module.exports.prototype.parseMessage = function(command) {
           this.context.Teams[name].R = Math.ceil(this.context.Teams[name].R * 255);
           this.context.Teams[name].G = Math.ceil(this.context.Teams[name].G * 255);
           this.context.Teams[name].B = Math.ceil(this.context.Teams[name].B * 255);
+        }
+      break;
+      case "owner_change":
+        var self = this;
+        for (key in data.Planet) {
+          var n = noty({
+              text   : "You've lost planet " + data.Planet[key].Name,
+              type   : 'warning',
+              planetCoordinates : data.Planet[key].Position,
+              buttons: [
+                  { addClass: 'btn btn-primary', text: 'View', 
+                    onClick: _.bind(function($noty) {
+                      $noty.close();
+                      this.context.spaceViewController.scroller.scrollTo($noty.options.planetCoordinates.X, $noty.options.planetCoordinates.Y, true);
+                    }, self)
+                  }
+              ]
+          });
         }
       break;
       default:

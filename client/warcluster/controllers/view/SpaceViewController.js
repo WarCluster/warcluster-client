@@ -60,6 +60,12 @@ module.exports = function(context, config){
         attackSourcesIds: attackSourcesIds,
         planetToAttackId: e.id
       });
+    else {
+      var n = noty({
+              text: "First you must select a planet you control in order to Attack",
+              type: 'information'
+          }); 
+    }
   });
   this.info.addEventListener("supplyPlanet", function(e) {
     var supplySourcesIds = self.selection.getSelectedPlanetsIds()
@@ -69,6 +75,12 @@ module.exports = function(context, config){
         supportSourcesIds: supplySourcesIds,
         planetToSupportId: e.id
       });
+    else {
+      var n = noty({
+              text: "First you must select a planet you control in order to Supply",
+              type: 'information'
+          }); 
+    }
   });
   this.info.addEventListener("spyPlanet", function(e) {
     var spySourcesIds = self.selection.getSelectedPlanetsIds()
@@ -78,6 +90,12 @@ module.exports = function(context, config){
         spySourcesIds: spySourcesIds,
         planetToSpyId: e.id
       });
+    else {
+      var n = noty({
+              text: "First you must select a planet you control in order to Spy",
+              type: 'information'
+          });  
+    }
   });
 
   // *****************************************************************
