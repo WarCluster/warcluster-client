@@ -81,7 +81,7 @@ module.exports.prototype.prepare = function(data) {
 
   this.selection.scale.set(this.data.width*1.35, this.data.height*1.35, 1);
 
-  this.ring.visible = this.data.IsHome && this.data.Owner == this.context.playerData.Username;
+  this.ring.visible = this.data.IsHome;
   this.ring.scale.set(this.data.width * 1.5, this.data.width * 0.8, this.data.width * 1.5);
 
   this.updatePopulationInfo();
