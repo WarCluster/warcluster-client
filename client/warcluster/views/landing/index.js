@@ -19,7 +19,7 @@ module.exports = Backbone.View.extend({
 
     this.selectedRace = 1;
     this.selectedSun = 1;
-    this.selectedRaceName = Object.keys(this.context.Teams)[0];
+    this.selectedRaceName = Object.keys(this.context.Races)[0];
   },
   renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
@@ -32,12 +32,12 @@ module.exports = Backbone.View.extend({
   renderRacePick: function() {
     this.$el.html(this.template({twitter: this.twitter}));
     this.$el.append(pickRaceRender({
-      raceOne: Object.keys(this.context.Teams)[0],
-      raceTwo: Object.keys(this.context.Teams)[1],
-      raceThree: Object.keys(this.context.Teams)[2],
-      raceFour: Object.keys(this.context.Teams)[3],
-      raceFive: Object.keys(this.context.Teams)[4],
-      raceSix: Object.keys(this.context.Teams)[5]
+      raceOne: Object.keys(this.context.Races)[0],
+      raceTwo: Object.keys(this.context.Races)[1],
+      raceThree: Object.keys(this.context.Races)[2],
+      raceFour: Object.keys(this.context.Races)[3],
+      raceFive: Object.keys(this.context.Races)[4],
+      raceSix: Object.keys(this.context.Races)[5]
     }));
     $(".race-choice:nth-of-type(1) ").addClass("selected");
     $(".sun-choice:nth-of-type(1) ").addClass("selected");
@@ -93,8 +93,8 @@ module.exports = Backbone.View.extend({
     //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
     this.selectedRaceName = $.trim($selectedRace.text());
     $(".race-hashtag-color").html("<a href='http://twitter.com/#WarCluster" + this.selectedRaceName + "' target='_blank'>#WarCluster" + this.selectedRaceName + "</a>");
-    $(".race-hashtag-color a").css({"color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B +", 1) !important"});
-    $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + ", 0.6)"})
+    $(".race-hashtag-color a").css({"color":"rgba(" + this.context.Races[this.selectedRaceName].R + "," + this.context.Races[this.selectedRaceName].G + "," + this.context.Races[this.selectedRaceName].B +", 1) !important"});
+    $(".overlay").css({"background-color":"rgba(" + this.context.Races[this.selectedRaceName].R + "," + this.context.Races[this.selectedRaceName].G + "," + this.context.Races[this.selectedRaceName].B + ", 0.6)"})
     $(".race-portrait img").attr('src', "/images/races/" + this.selectedRaceName + ".png");
   }
 })

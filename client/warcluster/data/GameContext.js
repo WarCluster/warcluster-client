@@ -11,7 +11,7 @@ module.exports = function(){
   this.width = 0;
   this.height = 0;
 
-  this.Teams = {};
+  this.Races = {};
 
   this.currentTime = 0;
   this.processingTime = 0;
