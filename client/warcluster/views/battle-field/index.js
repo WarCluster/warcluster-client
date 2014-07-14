@@ -23,7 +23,8 @@ var LandingView = require("../landing");
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: { 
-    "click .toggle-landing-btn": "toggleLandingStatisticsView"
+    "click .toggle-landing-btn": "toggleLandingStatisticsView",
+    "touchstart .toggle-landing-btn": "toggleLandingStatisticsView"
   },
   className: "game-container",
   initialize: function(options) {
@@ -175,11 +176,12 @@ module.exports = Backbone.View.extend({
       self.spaceViewController.activate();
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
-      
-      self.toggleLandingStatisticsView();
+
+      if (!self.context.playerData.JustRegistered) {
+        self.toggleLandingStatisticsView();
+      }
 
       this.context.KeyboardManager = new KeyboardManager(self.context);
-      //humane.log("Welcome back General!", {image: "./images/adjutant.gif", timeout:8000, clickToClose: true});
     }
 
     this.commandsManager.renderViewFn = function(data) {

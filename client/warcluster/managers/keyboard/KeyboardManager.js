@@ -53,8 +53,8 @@ module.exports = function(context) {
   });
 
   $(document).keydown(function(e) {
-    // number buttons from 1 to 5
-    if (e.keyCode > 48 && e.keyCode < 54) {
+    // number buttons from 0 to 9
+    if (e.keyCode > 47 && e.keyCode < 58) {
       self.context.missionsMenu.switchType(e.keyCode - 48);
     }
   });

@@ -1,7 +1,8 @@
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
-    "click .unit": "onSwitchType"
+    "click .unit": "onSwitchType",
+    "touchstart .unit": "onSwitchType"
   },
   className: "missions-menu",
   initialize: function(options) {
@@ -9,11 +10,16 @@ module.exports = Backbone.View.extend({
     this.context = options.context;
     this.currentType = 1;
     this.percentArray = {
-      1: 5,
-      2: 10,
-      3: 20,
-      4: 50,
-      5: 100
+      1: 10,
+      2: 20,
+      3: 30,
+      4: 40,
+      5: 50,
+      6: 60,
+      7: 70,
+      8: 80,
+      9: 90,
+      0: 100,
     };
   },
   onSwitchType: function(e) {

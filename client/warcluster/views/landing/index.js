@@ -7,7 +7,10 @@ module.exports = Backbone.View.extend({
   events: {
     "click .start-game": "startGame",
     "click .race-choice": "selectRace",
-    "click .sun-choice": "selectSun"
+    "click .sun-choice": "selectSun",
+    "touchstart .race-choice": "selectRace",
+    "touchstart .sun-choice": "selectSun",
+    "touchstart .start-game": "startGame",
   },
   className: "landing-view container text-center",
   initialize: function(context) {
@@ -47,6 +50,7 @@ module.exports = Backbone.View.extend({
       if (confirm("Are you sure you want to start with " + this.selectedRaceName + "? You cannot change your race until the end of the round") === true) {
         this.context.commandsManager.setupParameters(this.selectedRace, this.selectedSun);
         this.context.commandsManager.toggleTutorial();
+        this.context.playerData.JustRegistered = true;
       } else {
         return;
       }
@@ -79,7 +83,7 @@ module.exports = Backbone.View.extend({
     var sunPNGNumber = $(e.currentTarget).attr("data-id");
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).addClass("selected");
-    $(".sun-type").css({"background-image": "url('/images/suns/sun" + sunPNGNumber +".png')"})
+    $(".sun-type").attr("src", "/images/suns/sun" + sunPNGNumber + ".png");
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
   },
   _switchRace: function($selectedRace) {

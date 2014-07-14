@@ -7,7 +7,10 @@ module.exports = Backbone.View.extend({
     "click .deselect-planet":           "executeDeselectPlanet",
     "click .selection-planet-item":     "moveCameraToPlanet",
     "mouseover .selection-planet-item": "hoverSelectedPlanet",
-    "mouseout .selection-planet-item":  "unhoverSelectedPlanet"
+    "mouseout .selection-planet-item":  "unhoverSelectedPlanet",
+    "touchstart .collapsed-list":            "togglePlanets",
+    "touchstart .deselect-planet":           "executeDeselectPlanet",
+    "touchstart .selection-planet-item":     "moveCameraToPlanet"
   },
   className: "planets-selection",
   initialize: function(options) {

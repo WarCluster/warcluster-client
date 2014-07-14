@@ -11,6 +11,107 @@
   refactor css in less style
   make it responsive :D
 */
+@media all and (max-width: 1098px) and (min-width: 768px) {
+  .race-portrait .race-image {
+    height: 60%;
+  }
+  .sun-menu-container .sun-type {
+    top: 15%;
+    width: 80%;
+  }
+}
+@media all and (max-width: 767px) {
+  .pick-race-panel .sci-fi-container {
+    height: 50%;
+    overflow: auto;
+  }
+  .pick-race-panel .sci-fi-container .info {
+    margin-top: 0px;
+  }
+}
+
+.race-menu-container {
+  .race-portrait {
+    height: 50%;
+  }
+  a {
+    color: #FFF;
+    text-decoration: underline;
+  }
+}
+.noty_buttons {
+  background-color: #585858  !important;
+}
+.race-image {
+  height: 100%;
+}
+
+.sun-type {
+    margin: 0 auto;
+    top: 25%;
+    position: relative;
+}
+.sci-fi-container {
+  background-color: #150a06;
+  border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
+  -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
+  border-width: 12px 16px 16px 12px;
+  -moz-border-width: 12px 16px 16px 12px;
+  height: 100%;
+}
+.sun-menu-container {
+  .choices-list {
+    position: absolute;
+    text-align: left;
+    cursor: pointer;
+  }
+  .planet {
+   /* background-image: url('/images/planets/planet0.png');*/
+    width: 43px;
+    height: 43px;
+    position: absolute;
+  }
+  .planet-left {
+    left: 10%;
+    top: 50%;
+  }
+  .planet-right {
+    right: 5%;
+    top: 50%;
+  }
+  .planet-top {
+    top: 10%;
+    right: 35px;
+  }
+  .planet-bottom {
+    bottom: 10%;
+    left: 35%;
+  }
+  .overlay-top {
+    top: 10%;
+    right: 35px;
+  }
+  .overlay-bottom {
+    bottom: 10%;
+    left: 35%;
+  }
+  .overlay-left {
+    left: 10%;
+    top: 50%;
+  }
+  .overlay-right {
+    right: 5%;
+    top: 50%;
+  }
+  .overlay {
+    position: absolute;
+    background-color: rgba(5,151,255,0.5);
+    width: 43px;
+    height: 43px;
+    border-radius: 43px;
+  }
+}
+
 #individual {
   border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
   -moz-border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
@@ -34,80 +135,6 @@
   height: 100%;
   float: right;
   padding-top: 25px;
-  .sun-menu-container {
-    border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
-    -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
-    border-width: 12px 16px 16px 12px;
-    /*margin-top: 25px;*/
-    height: 100%;
-    .choices-list {
-      position: absolute;
-      text-align: left;
-      cursor: pointer;
-    }
-    .planet {
-     /* background-image: url('/images/planets/planet0.png');*/
-      width: 43px;
-      height: 43px;
-      position: absolute;
-    }
-    .planet-left {
-      left: 10%;
-      top: 50%;
-    }
-    .planet-right {
-      right: 5%;
-      top: 50%;
-    }
-    .planet-top {
-      top: 10%;
-      right: 35px;
-    }
-    .planet-bottom {
-      bottom: 10%;
-      left: 35%;
-    }
-    .overlay-top {
-      top: 10%;
-      right: 35px;
-    }
-    .overlay-bottom {
-      bottom: 10%;
-      left: 35%;
-    }
-    .overlay-left {
-      left: 10%;
-      top: 50%;
-    }
-    .overlay-right {
-      right: 5%;
-      top: 50%;
-    }
-    .overlay {
-      position: absolute;
-      background-color: rgba(5,151,255,0.5);
-      width: 43px;
-      height: 43px;
-      border-radius: 43px;
-    }
-  }
-  .race-menu-container {
-    background-color: #150a06;
-    border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
-    -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
-    border-width: 12px 16px 16px 12px;
-    height: 100%;
-    .race-portrait {
-      height: 50%;
-      .race-image {
-        height: 100%;
-      }
-    }
-    a {
-      color: #FFF;
-      text-decoration: underline;
-    }
-  }
   .races {
     display: block;
     position: relative;
@@ -116,14 +143,6 @@
   }
   .selected {
     border-style: solid;
-  }
-  .sun-type {
-    background-image: url("/images/suns/sun0.png");
-    width: 309px;
-    height: 302px;
-    margin: 0 auto;
-    top: 25%;
-    position: relative;
   }
   .race {
     width: 40%;
@@ -341,7 +360,7 @@
   }
   .mission-buttons {
     position: absolute;
-    bottom: -38px;
+    bottom: -50px;
     left: 55px;
   }
   .player-info {
@@ -686,28 +705,28 @@ html, body {
 }
 
 .missions-menu {
-  background-image:url('/images/missions-menu.png');
-  width: 405px;
-  height: 141px;
+  background-image:url('/images/ui/pilots_per_mission_menu.png');
+  width: 596px;
+  height: 90px;
   position: absolute;
   top: -141px;
   left: 0px;
   li {
-    width: 60px;
-    height: 60px;
-    margin-right: 18px;
+    width: 49px;
+    height: 45px;
+    margin-right: 1px;
   }
   .list-inline {
     position: absolute;
-    left: 17px;
-    bottom: -3px;
+    left: 81px;
+    top:15px;
   }
 }
 
 .missions-menu-selection {
-  background-image:url('/images/ui/mission-selection.png');
-  width: 60px;
-  height: 60px;
+  background-image:url('/images/ui/pilots_per_mission_selected.png');
+  width: 49px;
+  height: 45px;
 }
 
 .planets-selection {
@@ -716,7 +735,7 @@ html, body {
   width: 250px;
   top: 200px;
   left: -250px;
-  border-image: url("/images/ui/planets_selection.png") 42 9 9 9 repeat;//42px 9px 9px 9px
+  border-image: url("/images/ui/planets_selection.png") 42 9 9 9 repeat;
   -moz-border-image: url("/images/ui/planets_selection.png") 42 9 9 9 repeat;
   border-width: 42px 9px 9px 9px;
   border-style: solid;
@@ -791,4 +810,5 @@ html, body {
 .white {
   color: #fff;
 }
+
 
