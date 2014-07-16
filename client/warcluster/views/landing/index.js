@@ -17,8 +17,8 @@ module.exports = Backbone.View.extend({
     this.context = context;
     this.twitter = context.playerData.twitter;
 
-    this.selectedRace = 1;
-    this.selectedSun = 1;
+    this.selectedRace = 0;
+    this.selectedSun = 0;
     this.selectedRaceName = Object.keys(this.context.serverParams.Races)[0];
   },
   renderStatistics: function() {
@@ -87,7 +87,7 @@ module.exports = Backbone.View.extend({
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
   },
   _switchRace: function($selectedRace) {
-    this.selectedRace = parseInt($($selectedRace).attr("data-id"));
+    this.selectedRace = this.context.serverParams.Races[$selectedRace.text()].ID;
     ////TODO: remove the trim() once you understand 
     //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
     //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe

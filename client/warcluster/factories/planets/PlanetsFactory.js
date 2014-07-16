@@ -8,6 +8,7 @@ module.exports = function(context){
 module.exports.prototype.build = function(planetData, selected) {
 	var success = this.context.spaceViewController.selection.updateSelectedPlanetData(planetData);
 	var planet = this.cache.length > 0 ? this.cache.shift() : new Planet(this.context);
+
 	planet.prepare(planetData);
 	
 	this.context.container.add(planet);
