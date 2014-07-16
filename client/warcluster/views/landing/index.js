@@ -92,12 +92,34 @@ module.exports = Backbone.View.extend({
     //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
     //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
     this.selectedRaceName = $.trim($selectedRace.text());
+    var hashtag = "#WarCluster";
+
+    switch (this.selectedRaceName) {
+      case "BurgasLab":
+        hashtag += "Green";
+        break;
+      case "VarnaLab":
+        hashtag += "Orange";
+        break;
+      case "Hackube":
+        hashtag += "Blue";
+      break;
+      case "MegaDev":
+        hashtag += "Pink";
+      break;
+      case "InitLab":
+        hashtag += "Red";
+      break;
+      case "Hackafe":
+        hashtag += "Yellow";
+      break;
+    }
     var colors = {
       R: Math.floor(this.context.serverParams.Races[this.selectedRaceName].Color.R*255),
       G: Math.floor(this.context.serverParams.Races[this.selectedRaceName].Color.G*255),
       B: Math.floor(this.context.serverParams.Races[this.selectedRaceName].Color.B*255)
     }
-    $(".race-hashtag-color").html("<a href='http://twitter.com/#WarCluster" + this.selectedRaceName + "' target='_blank'>#WarCluster" + this.selectedRaceName + "</a>");
+    $(".race-hashtag-color").html("<a href='http://twitter.com/" + hashtag + "' target='_blank'>" + hashtag + "</a>");
     $(".race-hashtag-color a").css({"color":"rgba(" + colors.R + "," + colors.G + "," + colors.B +", 1) !important"});
     $(".overlay").css({"background-color":"rgba(" + colors.R + "," + colors.G + "," + colors.B + ", 0.6)"})
     $(".race-portrait img").attr('src', "/images/races/" + this.selectedRaceName + ".png");

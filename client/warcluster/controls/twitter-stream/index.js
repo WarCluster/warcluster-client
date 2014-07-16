@@ -2,8 +2,8 @@ var OrangeRaceTwitterStreamRender = jadeCompile(require("./render/orange-stream.
 var RedRaceTwitterStreamRender = jadeCompile(require("./render/red-stream.jade"));
 var YellowRaceTwitterStreamRender = jadeCompile(require("./render/yellow-stream.jade"));
 var GreenRaceTwitterStreamRender =  jadeCompile(require("./render/green-stream.jade"));
-// var BlueRaceTwitterStreamRender =   jadeCompile(require("./render/blue-stream.jade"));
-// var PinkRaceTwitterStreamRender =   jadeCompile(require("./render/pink-stream.jade"));
+var BlueRaceTwitterStreamRender =   jadeCompile(require("./render/blue-stream.jade"));
+var PinkRaceTwitterStreamRender =   jadeCompile(require("./render/pink-stream.jade"));
 
 
 module.exports = Backbone.View.extend({
@@ -30,6 +30,12 @@ module.exports = Backbone.View.extend({
       case 3:
         this.$el.append(GreenRaceTwitterStreamRender());
         break;
+      case 4:
+        this.$el.append(BlueRaceTwitterStreamRender());
+      break;
+      case 5:
+        this.$el.append(PinkRaceTwitterStreamRender());
+      break
     }
     return this;
   },

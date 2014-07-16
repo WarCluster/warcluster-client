@@ -38,15 +38,14 @@ module.exports = function(context){
 module.exports.prototype = new InteractiveObject();
 module.exports.prototype.prepare = function(data) {
   this.data = data;
-
   this.position.x = this.data.Position.X;
   this.position.y = this.data.Position.Y;
   this.position.z = -300;
 
   this.rotation.y = Math.random() * 0.5 - 0.25;
 
-  var colors = [0x0cff00, 0xff0000, 0x00a2ff, 0xf6ff00, 0xffe362, 0xffe362];
-  var color = new THREE.Color(colors[parseInt(colors.length*Math.random())]);
+  var colors = [0xf6ff00, 0xffe362, 0xffe362];//0x0cff00, 0xff0000, 0x00a2ff
+  var color = new THREE.Color(colors[1]);
 
   //var title = "/images/suns/sun_texture" + (parseInt(Math.random() * 6)) + ".jpg";
   var bmd1 = this.context.resourcesLoader.get("/images/suns/sun_texture" + this.data.SunTextureId + ".jpg");
@@ -59,10 +58,10 @@ module.exports.prototype.prepare = function(data) {
   this.sun.scale.set(size, size, size)
   this.sun.material.color = color;
 
-  this.glow1.scale.set(size * 2, size * 2, 1.0);
+  this.glow1.scale.set(size * 12, size * 12, 1.0);
   this.glow1.material.color = color;
 
-  this.glow2.scale.set(size * 3, size * 3, 1.0);
+  this.glow2.scale.set(size * 13, size * 13, 1.0);
   this.glow2.material.color = color;
 
   this.light.color = color;
