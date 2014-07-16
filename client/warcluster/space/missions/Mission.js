@@ -17,7 +17,7 @@ module.exports = function(data, context) {
 }
 
 module.exports.prototype = new InteractiveObject();
-module.exports.prototype.send = function(formation, color) {
+module.exports.prototype.send = function(formation, Color) {
 	this.delta_x = this.data.Target.Position.X - this.data.Source.Position.X;
 	this.delta_y = this.data.Target.Position.Y - this.data.Source.Position.Y;
 	
@@ -27,7 +27,7 @@ module.exports.prototype.send = function(formation, color) {
 	this.endTime = this.data.StartTime + this.data.TravelTime;
 
 	var ship;
-  var color = new THREE.Color().setRGB(color.R, color.G, color.B);
+  var color = new THREE.Color().setRGB(Color.R, Color.G, Color.B);
 
   var totalShips = this.data.ShipCount;
   var step = Math.ceil(this.data.ShipCount / 5);

@@ -59,10 +59,10 @@ module.exports.prototype.prepare = function(data) {
   this.sun.scale.set(size, size, size)
   this.sun.material.color = color;
 
-  this.glow1.scale.set(size * 12, size * 12, 1.0);
+  this.glow1.scale.set(size * 2, size * 2, 1.0);
   this.glow1.material.color = color;
 
-  this.glow2.scale.set(size * 13, size * 13, 1.0);
+  this.glow2.scale.set(size * 3, size * 3, 1.0);
   this.glow2.material.color = color;
 
   this.light.color = color;

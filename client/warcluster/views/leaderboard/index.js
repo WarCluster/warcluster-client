@@ -1,5 +1,5 @@
 var individualRender = jadeCompile(require("./render/individual.jade"));
-var teamRender = jadeCompile(require("./render/team.jade"));
+var raceRender = jadeCompile(require("./render/race.jade"));
 
 //TODO: need to refactor this whole view O_O There's a lot of copy-pasting, especially for the animations 
 
@@ -7,13 +7,13 @@ module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
     "click #individualBtn": "showIndividualLeaderboard",
-    "click #teamBtn": "showTeamLeaderboard",
-    "click .race-color": "showTeamLeaderboard",
+    "click #raceBtn": "showRaceLeaderboard",
+    "click .race-color": "showRaceLeaderboard",
     "click .previous-page": "goToPreviousPage",
     "click .next-page": "goToNextPage",
     "touchstart #individualBtn": "showIndividualLeaderboard",
-    "touchstart #teamBtn": "showTeamLeaderboard",
-    "touchstart .race-color": "showTeamLeaderboard",
+    "touchstart #RaceBtn": "showRaceLeaderboard",
+    "touchstart .race-color": "showRaceLeaderboard",
     "touchstart .previous-page": "goToPreviousPage",
     "touchstart .next-page": "goToNextPage",
     "keypress #search-field": "searchPlayer"
@@ -66,8 +66,8 @@ module.exports = Backbone.View.extend({
     });
   },
   showIndividualLeaderboard: function() {
-    $("#team").remove();
-    $("#teamBtn").parent().removeClass("active");
+    $("#race").remove();
+    $("#RaceBtn").parent().removeClass("active");
     $("#individualBtn").parent().addClass("active");
     if ($("#individual").length === 0){
       this.currentPage = 1;
@@ -76,27 +76,27 @@ module.exports = Backbone.View.extend({
       this._connectIndividualLeaderboard();
     }
   },
-  showTeamLeaderboard: function(){
+  showRaceLeaderboard: function(){
     $("#individual").remove();
     $("#individualBtn").parent().removeClass("active");
-    $("#teamBtn").parent().addClass("active");
-    if ($("#team").length === 0) {
+    $("#RaceBtn").parent().addClass("active");
+    if ($("#race").length === 0) {
       this.leaderboardDataCache = {};
-      this.connectTeamLeaderboard();
-      this.$el.append(teamRender());
+      this.connectRaceLeaderboard();
+      this.$el.append(RaceRender());
     }
   },
   _connectIndividualLeaderboard: function(){
     clearTimeout(this.leaderboardAjaxTimeout);
     this._pollIndividual(this.currentPage);
   },
-  connectTeamLeaderboard: function(){
+  connectRaceLeaderboard: function(){
     clearTimeout(this.leaderboardAjaxTimeout);
-    this._pollTeams();
+    this._pollRaces();
   },
-  _pollTeams: function() {
+  _pollRaces: function() {
     $.ajax({
-      url: self.config.ajaxUrl + "/teams/",
+      url: self.config.ajaxUrl + "/races/",
       dataType: 'json',
       context: this,
       statusCode: {
@@ -113,7 +113,7 @@ module.exports = Backbone.View.extend({
           alert("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
         }
       },
-      success: this._populateTeams
+      success: this._populateRaces
     });
   },
   _pollIndividual: function(page) {
@@ -133,10 +133,10 @@ module.exports = Backbone.View.extend({
           alert("Bad request. Page Not Found - 400");
         }
       },
-      success: this._polulateIndividual
+      success: this._populateIndividual
     });
   },
-  _polulateIndividual: function(data) {
+  _populateIndividual: function(data) {
     var _that = this,
          j = this.currentPage*10,
          n,
@@ -193,12 +193,12 @@ module.exports = Backbone.View.extend({
       _that._pollIndividual(_that.currentPage);
     }, 2500);
   },
-  _populateTeams: function(data) {
+  _populateRaces: function(data) {
     var _that = this;
 
     if (jQuery.isEmptyObject(this.leaderboardDataCache)) {
       for(var i=0; i < data.length; i++) {
-        this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
+        this._setRaceData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
       }
     } 
     else {
@@ -236,7 +236,7 @@ module.exports = Backbone.View.extend({
           _.bind(this._implodeAnimation,_that.iter);
           this._implodeAnimation(_that.iter);
 
-          this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
+          this._setRaceData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
           
           _.bind(this._explodeAnimation,_that.iter);
           this._explodeAnimation(_that.iter);
@@ -245,8 +245,8 @@ module.exports = Backbone.View.extend({
     }
     this.leaderboardDataCache = data;
     this.leaderboardAjaxTimeout = setTimeout(function() {
-      _.bind(_that._pollTeams,_that);
-      _that._pollTeams();
+      _.bind(_that._pollRaces,_that);
+      _that._pollRaces();
     }, 2500);
   },
   goToNextPage: function() {
@@ -292,7 +292,7 @@ module.exports = Backbone.View.extend({
   _setPlayerData: function(element, data) {
     if (data) {
       element.find(".twitter-username").html("<a href='https://twitter.com/"+data.Username+"' target='_blank'>@"+data.Username+"</a>");
-      element.find(".race-color").css({"background": "rgb("+ parseInt(data.Team.R*255)+","+parseInt(data.Team.G*255) +","+parseInt(data.Team.B*255)+")"});
+      element.find(".race-color").css({"background": "rgb("+ parseInt(data.Race.R*255)+","+parseInt(data.Race.G*255) +","+parseInt(data.Race.B*255)+")"});
       element.find(".home-planet").html(data.HomePlanet);
       element.find(".planets").html(data.Planets);
     } else {
@@ -302,9 +302,9 @@ module.exports = Backbone.View.extend({
       element.find(".planets").html("");
     }
   },
-  _setTeamData: function(element, data) {
-    element.find(".team-race-color").css({"background": "rgb("+ parseInt(data.Color.R*255)+","+parseInt(data.Color.G*255) +","+parseInt(data.Color.B*255)+")"});
-    element.find(".team-race-color").html(data.Name);
+  _setRaceData: function(element, data) {
+    element.find(".race-race-color").css({"background": "rgb("+ parseInt(data.Color.R*255)+","+parseInt(data.Color.G*255) +","+parseInt(data.Color.B*255)+")"});
+    element.find(".race-race-color").html(data.Name);
     element.find(".players-number").html(data.Players);
     element.find(".planets-number").html(data.Planets);
   }
