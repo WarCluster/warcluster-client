@@ -71,7 +71,7 @@ module.exports.prototype.parseMessage = function(command) {
         this.context.missionsFactory.build(data.Mission);
       break;
       case "send_mission_failed":
-        $.notify("You're attacking with less than one pilot", {globalPosition: 'bottom left'});
+        var n = noty({text:"You're attacking with less than one pilot",type:"info"});
       break;
       case "server_params":
 
