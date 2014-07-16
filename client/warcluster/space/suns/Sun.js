@@ -49,7 +49,7 @@ module.exports.prototype.prepare = function(data) {
 
   //var title = "/images/suns/sun_texture" + (parseInt(Math.random() * 6)) + ".jpg";
   var bmd1 = this.context.resourcesLoader.get("/images/suns/sun_texture" + this.data.SunTextureId + ".jpg");
-  var size = 380 - Math.random() * 120;
+  var size = 320;
 
   this.sun.z = Math.random() * (-50);
   this.sun.material.map = bmd1;
