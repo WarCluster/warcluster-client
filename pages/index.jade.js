@@ -9,18 +9,18 @@ var LeaderboardView = require("../client/warcluster/views/leaderboard");
 $(document).ready(function() {
   // var test = $('body').height() - $('#header_wrapper').height() - $('#menu_wrapper').height() - $('#footer_wrapper').height();
   // $("#thframe").height(test);
-  var windowLocation = window.location.host;
-  if(windowLocation !== "0.0.0.0:8118" && windowLocation !== "127.0.0.1:8118"){
-    $('.login').click( function() {
-      var key = prompt("The alpha server is closed! You can go to http://signup.warcluster.com if you want to know when we open our doors ;P Thanks",
-        "closed alpha password");
-        if (key === "panda") {
-          $(".login").attr("href", "/twitter/connect");
-        } else {
-          $(".login").attr("href", "#");
-        }
-    });
-  }
+  // var windowLocation = window.location.host;
+  // if(windowLocation !== "0.0.0.0:8118" && windowLocation !== "127.0.0.1:8118"){
+  //   $('.login').click( function() {
+  //     var key = prompt("The alpha server is closed! You can go to http://signup.warcluster.com if you want to know when we open our doors ;P Thanks",
+  //       "closed alpha password");
+  //       if (key === "panda") {
+  //         $(".login").attr("href", "/twitter/connect");
+  //       } else {
+  //         $(".login").attr("href", "#");
+  //       }
+  //   });
+  // }
 
   //Google analytics
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
