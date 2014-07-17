@@ -44,8 +44,8 @@ module.exports.prototype.prepare = function(data) {
 
   this.rotation.y = Math.random() * 0.5 - 0.25;
 
-  var colors = [0xf6ff00, 0xffe362, 0xffe362];//0x0cff00, 0xff0000, 0x00a2ff
-  var color = new THREE.Color(colors[1]);
+  // var colors = [0xf6ff00, 0xffe362, 0xffe362];//0x0cff00, 0xff0000, 0x00a2ff
+  var color = new THREE.Color(0xf6ff00);
 
   //var title = "/images/suns/sun_texture" + (parseInt(Math.random() * 6)) + ".jpg";
   var bmd1 = this.context.resourcesLoader.get("/images/suns/sun_texture" + this.data.SunTextureId + ".jpg");
