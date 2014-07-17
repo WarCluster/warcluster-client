@@ -55,5 +55,6 @@ module.exports.prototype.tick = function(progress) {
 	this.rotation.y = -0.5 * ind - 0.5;
 
 	this.position.set(this.formation.x * ind2 + ind * 15, this.formation.y * ind2, (this.formation.z + 250) * ind2);
-	this.scale.set(ind2, ind2, ind2)
+	// this.scale.set(ind2, ind2, ind2);
+	this.scale.set(1, 1, 1);
 }
