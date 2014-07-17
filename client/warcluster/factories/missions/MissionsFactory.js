@@ -31,19 +31,10 @@ module.exports = function(context){
 module.exports.prototype.build = function(data) {
   if (data.ShipCount == 0)
     return;
-
-  var colors = [0x0cff00, 0xff0000, 0x005aff, 0xf6ff00];
-  var color = new THREE.Color(colors[parseInt(colors.length*Math.random())]);
-
-  data.Color.R = color.r; 
-  data.Color.G = color.g;
-  data.Color.B = color.b;
-
-
+  
   var formation = this.formations[parseInt(this.formations.length * Math.random())]
   var mission = new Mission(data, this.context);
   
-
   this.context.container.add(mission);
   this.context.objects.push(mission);
   this.context.objectsById[data.id] = mission;

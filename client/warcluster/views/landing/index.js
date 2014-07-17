@@ -10,16 +10,16 @@ module.exports = Backbone.View.extend({
     "click .sun-choice": "selectSun",
     "touchstart .race-choice": "selectRace",
     "touchstart .sun-choice": "selectSun",
-    "touchstart .start-game": "startGame",
+    "touchstart .start-game": "startGame"
   },
   className: "landing-view container text-center",
   initialize: function(context) {
     this.context = context;
     this.twitter = context.playerData.twitter;
 
-    this.selectedRace = 1;
-    this.selectedSun = 1;
-    this.selectedRaceName = Object.keys(this.context.Teams)[0];
+    this.selectedRace = 0;
+    this.selectedSun = 0;
+    this.selectedRaceName = Object.keys(this.context.serverParams.Races)[0];
   },
   renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
@@ -32,12 +32,12 @@ module.exports = Backbone.View.extend({
   renderRacePick: function() {
     this.$el.html(this.template({twitter: this.twitter}));
     this.$el.append(pickRaceRender({
-      raceOne: Object.keys(this.context.Teams)[0],
-      raceTwo: Object.keys(this.context.Teams)[1],
-      raceThree: Object.keys(this.context.Teams)[2],
-      raceFour: Object.keys(this.context.Teams)[3],
-      raceFive: Object.keys(this.context.Teams)[4],
-      raceSix: Object.keys(this.context.Teams)[5]
+      raceOne: Object.keys(this.context.serverParams.Races)[0],
+      raceTwo: Object.keys(this.context.serverParams.Races)[1],
+      raceThree: Object.keys(this.context.serverParams.Races)[2],
+      raceFour: Object.keys(this.context.serverParams.Races)[3],
+      raceFive: Object.keys(this.context.serverParams.Races)[4],
+      raceSix: Object.keys(this.context.serverParams.Races)[5]
     }));
     $(".race-choice:nth-of-type(1) ").addClass("selected");
     $(".sun-choice:nth-of-type(1) ").addClass("selected");
@@ -83,18 +83,45 @@ module.exports = Backbone.View.extend({
     var sunPNGNumber = $(e.currentTarget).attr("data-id");
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).addClass("selected");
-    $(".sun-type").attr("src", "/images/suns/sun" + sunPNGNumber + ".png");
+    $(".sun-type").attr("src", "/images/suns/sun_texture" + sunPNGNumber + ".png");
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
   },
   _switchRace: function($selectedRace) {
-    this.selectedRace = parseInt($($selectedRace).attr("data-id"));
+    this.selectedRace = this.context.serverParams.Races[$selectedRace.text()].ID;
     ////TODO: remove the trim() once you understand 
     //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
     //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
     this.selectedRaceName = $.trim($selectedRace.text());
-    $(".race-hashtag-color").html("<a href='http://twitter.com/#WarCluster" + this.selectedRaceName + "' target='_blank'>#WarCluster" + this.selectedRaceName + "</a>");
-    $(".race-hashtag-color a").css({"color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B +", 1) !important"});
-    $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + ", 0.6)"})
+    var hashtag = "#WarCluster";
+
+    switch (this.selectedRaceName) {
+      case "BurgasLab":
+        hashtag += "Green";
+        break;
+      case "VarnaLab":
+        hashtag += "Orange";
+        break;
+      case "Hackube":
+        hashtag += "Blue";
+      break;
+      case "MegaDev":
+        hashtag += "Pink";
+      break;
+      case "InitLab":
+        hashtag += "Red";
+      break;
+      case "Hackafe":
+        hashtag += "Yellow";
+      break;
+    }
+    var colors = {
+      R: Math.floor(this.context.serverParams.Races[this.selectedRaceName].Color.R*255),
+      G: Math.floor(this.context.serverParams.Races[this.selectedRaceName].Color.G*255),
+      B: Math.floor(this.context.serverParams.Races[this.selectedRaceName].Color.B*255)
+    }
+    $(".race-hashtag-color").html("<a href='http://twitter.com/" + hashtag + "' target='_blank'>" + hashtag + "</a>");
+    $(".race-hashtag-color a").css({"color":"rgba(" + colors.R + "," + colors.G + "," + colors.B +", 1) !important"});
+    $(".overlay").css({"background-color":"rgba(" + colors.R + "," + colors.G + "," + colors.B + ", 0.6)"})
     $(".race-portrait img").attr('src', "/images/races/" + this.selectedRaceName + ".png");
   }
 })

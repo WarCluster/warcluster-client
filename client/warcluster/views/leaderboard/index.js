@@ -1,5 +1,5 @@
 var individualRender = jadeCompile(require("./render/individual.jade"));
-var teamRender = jadeCompile(require("./render/team.jade"));
+var raceRender = jadeCompile(require("./render/race.jade"));
 
 //TODO: need to refactor this whole view O_O There's a lot of copy-pasting, especially for the animations 
 
@@ -7,13 +7,13 @@ module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
     "click #individualBtn": "showIndividualLeaderboard",
-    "click #teamBtn": "showTeamLeaderboard",
-    "click .race-color": "showTeamLeaderboard",
+    "click #raceBtn": "showRaceLeaderboard",
+    "click .race-color": "showRaceLeaderboard",
     "click .previous-page": "goToPreviousPage",
     "click .next-page": "goToNextPage",
     "touchstart #individualBtn": "showIndividualLeaderboard",
-    "touchstart #teamBtn": "showTeamLeaderboard",
-    "touchstart .race-color": "showTeamLeaderboard",
+    "touchstart #RaceBtn": "showRaceLeaderboard",
+    "touchstart .race-color": "showRaceLeaderboard",
     "touchstart .previous-page": "goToPreviousPage",
     "touchstart .next-page": "goToNextPage",
     "keypress #search-field": "searchPlayer"
@@ -33,6 +33,8 @@ module.exports = Backbone.View.extend({
       this.goToUsernamePage(twitterUsername);
     } 
     this.showIndividualLeaderboard();
+
+
     
     return this;
   },
@@ -66,8 +68,8 @@ module.exports = Backbone.View.extend({
     });
   },
   showIndividualLeaderboard: function() {
-    $("#team").remove();
-    $("#teamBtn").parent().removeClass("active");
+    $("#race").remove();
+    $("#raceBtn").parent().removeClass("active");
     $("#individualBtn").parent().addClass("active");
     if ($("#individual").length === 0){
       this.currentPage = 1;
@@ -76,27 +78,27 @@ module.exports = Backbone.View.extend({
       this._connectIndividualLeaderboard();
     }
   },
-  showTeamLeaderboard: function(){
+  showRaceLeaderboard: function(){
     $("#individual").remove();
     $("#individualBtn").parent().removeClass("active");
-    $("#teamBtn").parent().addClass("active");
-    if ($("#team").length === 0) {
+    $("#raceBtn").parent().addClass("active");
+    if ($("#race").length === 0) {
       this.leaderboardDataCache = {};
-      this.connectTeamLeaderboard();
-      this.$el.append(teamRender());
+      this.connectRaceLeaderboard();
+      this.$el.append(raceRender());
     }
   },
   _connectIndividualLeaderboard: function(){
     clearTimeout(this.leaderboardAjaxTimeout);
     this._pollIndividual(this.currentPage);
   },
-  connectTeamLeaderboard: function(){
+  connectRaceLeaderboard: function(){
     clearTimeout(this.leaderboardAjaxTimeout);
-    this._pollTeams();
+    this._pollRaces();
   },
-  _pollTeams: function() {
+  _pollRaces: function() {
     $.ajax({
-      url: self.config.ajaxUrl + "/teams/",
+      url: self.config.ajaxUrl + "/races/",
       dataType: 'json',
       context: this,
       statusCode: {
@@ -113,7 +115,7 @@ module.exports = Backbone.View.extend({
           alert("Woops, we didn't have time to handle this error right. Sorry for the inconvinience! Why don't you refresh? :) ");
         }
       },
-      success: this._populateTeams
+      success: this._populateRaces
     });
   },
   _pollIndividual: function(page) {
@@ -133,10 +135,10 @@ module.exports = Backbone.View.extend({
           alert("Bad request. Page Not Found - 400");
         }
       },
-      success: this._polulateIndividual
+      success: this._populateIndividual
     });
   },
-  _polulateIndividual: function(data) {
+  _populateIndividual: function(data) {
     var _that = this,
          j = this.currentPage*10,
          n,
@@ -193,18 +195,18 @@ module.exports = Backbone.View.extend({
       _that._pollIndividual(_that.currentPage);
     }, 2500);
   },
-  _populateTeams: function(data) {
+  _populateRaces: function(data) {
     var _that = this;
 
     if (jQuery.isEmptyObject(this.leaderboardDataCache)) {
       for(var i=0; i < data.length; i++) {
-        this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
+        this._setRaceData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
       }
     } 
     else {
       for(var i=0; i < data.length; i++) {
-        if (this.leaderboardDataCache[i].Name === data[i].Name) {
-          if (this.leaderboardDataCache[i].Players !== data[i].Players) { 
+        if (this.leaderboardDataCache[i] && this.leaderboardDataCache[i].Name && this.leaderboardDataCache[i].Name === data[i].Name) {
+          if (this.leaderboardDataCache[i].Players && this.leaderboardDataCache[i].Players !== data[i].Players) { 
             _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .players-number");
 
             _.bind(this._implodeAnimation,_that.iter);
@@ -230,13 +232,13 @@ module.exports = Backbone.View.extend({
           }
           
         }
-        else if (this.leaderboardDataCache[i].Name !== data[i].Name && data[i].Name && this.leaderboardDataCache[i].Name) {
+        else if (this.leaderboardDataCache[i] && this.leaderboardDataCache[i].Name && this.leaderboardDataCache[i].Name !== data[i].Name && data[i].Name) {
           _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
           //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
           _.bind(this._implodeAnimation,_that.iter);
           this._implodeAnimation(_that.iter);
 
-          this._setTeamData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
+          this._setRaceData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
           
           _.bind(this._explodeAnimation,_that.iter);
           this._explodeAnimation(_that.iter);
@@ -245,8 +247,8 @@ module.exports = Backbone.View.extend({
     }
     this.leaderboardDataCache = data;
     this.leaderboardAjaxTimeout = setTimeout(function() {
-      _.bind(_that._pollTeams,_that);
-      _that._pollTeams();
+      _.bind(_that._pollRaces,_that);
+      _that._pollRaces();
     }, 2500);
   },
   goToNextPage: function() {
@@ -290,9 +292,58 @@ module.exports = Backbone.View.extend({
     });
   },
   _setPlayerData: function(element, data) {
+    
+    //TODO: https://trello.com/c/CZbrIQfl/404-add-races-color-in-leaderboard-responses
+    //when they're ready with this card we should remove this hardcoded switch
+    if (data !== undefined) {
+      switch (data.RaceId) {
+        case 0:
+          data.Race = {
+            R: 228,
+            G: 8,
+            B: 14
+          }
+        break;
+        case 1:
+          data.Race = {
+            R: 244,
+            G: 75,
+            B: 15
+          }
+        break;
+        case 2:
+          data.Race = {
+            R: 254,
+            G: 203,
+            B: 4
+          }
+        break;
+        case 3:
+          data.Race = {
+            R: 100,
+            G: 229,
+            B: 26
+          }
+        break;
+        case 4:
+          data.Race = {
+            R: 0,
+            G: 208,
+            B: 255
+          }
+        break;
+        case 5:
+          data.Race = {
+            R: 255,
+            G: 0,
+            B: 200
+          }
+        break;
+      }
+    }
     if (data) {
       element.find(".twitter-username").html("<a href='https://twitter.com/"+data.Username+"' target='_blank'>@"+data.Username+"</a>");
-      element.find(".race-color").css({"background": "rgb("+ parseInt(data.Team.R*255)+","+parseInt(data.Team.G*255) +","+parseInt(data.Team.B*255)+")"});
+      element.find(".race-color").css({"background": "rgb("+ parseInt(data.Race.R)+","+parseInt(data.Race.G) +","+parseInt(data.Race.B)+")"});
       element.find(".home-planet").html(data.HomePlanet);
       element.find(".planets").html(data.Planets);
     } else {
@@ -302,9 +353,55 @@ module.exports = Backbone.View.extend({
       element.find(".planets").html("");
     }
   },
-  _setTeamData: function(element, data) {
-    element.find(".team-race-color").css({"background": "rgb("+ parseInt(data.Color.R*255)+","+parseInt(data.Color.G*255) +","+parseInt(data.Color.B*255)+")"});
-    element.find(".team-race-color").html(data.Name);
+  _setRaceData: function(element, data) {
+    //TODO: https://trello.com/c/CZbrIQfl/404-add-races-color-in-leaderboard-responses
+    //when they're ready with this card we should remove this hardcoded switch
+    switch (data.Id) {
+        case 0:
+          data.Color = {
+            R: 228,
+            G: 8,
+            B: 14
+          }
+        break;
+        case 1:
+          data.Color = {
+            R: 244,
+            G: 75,
+            B: 15
+          }
+        break;
+        case 2:
+          data.Color = {
+            R: 254,
+            G: 203,
+            B: 4
+          }
+        break;
+        case 3:
+          data.Color = {
+            R: 100,
+            G: 229,
+            B: 26
+          }
+        break;
+        case 4:
+          data.Color = {
+            R: 0,
+            G: 208,
+            B: 255
+          }
+        break;
+        case 5:
+          data.Color = {
+            R: 255,
+            G: 0,
+            B: 200
+          }
+        break;
+      }
+    element.find(".race-race-color").css({"background": "rgb("+ parseInt(data.Color.R)+","+parseInt(data.Color.G) +","+parseInt(data.Color.B)+")"});
+    element.find(".race-race-color").html(data.Name);
     element.find(".players-number").html(data.Players);
     element.find(".planets-number").html(data.Planets);
   }

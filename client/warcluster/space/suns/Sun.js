@@ -38,19 +38,18 @@ module.exports = function(context){
 module.exports.prototype = new InteractiveObject();
 module.exports.prototype.prepare = function(data) {
   this.data = data;
-
   this.position.x = this.data.Position.X;
   this.position.y = this.data.Position.Y;
   this.position.z = -300;
 
   this.rotation.y = Math.random() * 0.5 - 0.25;
 
-  var colors = [0x0cff00, 0xff0000, 0x00a2ff, 0xf6ff00, 0xffe362, 0xffe362];
-  var color = new THREE.Color(colors[parseInt(colors.length*Math.random())]);
+  // var colors = [0xf6ff00, 0xffe362, 0xffe362];//0x0cff00, 0xff0000, 0x00a2ff
+  var color = new THREE.Color(0xffe362);
 
   //var title = "/images/suns/sun_texture" + (parseInt(Math.random() * 6)) + ".jpg";
   var bmd1 = this.context.resourcesLoader.get("/images/suns/sun_texture" + this.data.SunTextureId + ".jpg");
-  var size = 380 - Math.random() * 120;
+  var size = 320;
 
   this.sun.z = Math.random() * (-50);
   this.sun.material.map = bmd1;

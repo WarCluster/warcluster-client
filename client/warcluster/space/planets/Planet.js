@@ -81,7 +81,7 @@ module.exports.prototype.prepare = function(data) {
 
   this.selection.scale.set(this.data.width*1.35, this.data.height*1.35, 1);
 
-  this.ring.visible = this.data.IsHome && this.data.Owner == this.context.playerData.Username;
+  this.ring.visible = this.data.IsHome;
   this.ring.scale.set(this.data.width * 1.5, this.data.width * 0.8, this.data.width * 1.5);
 
   this.updatePopulationInfo();
@@ -145,12 +145,12 @@ module.exports.prototype.hideSupportSelection = function() {
 }
 
 module.exports.prototype.updateColor = function() {
-  var colors = [0x0cff00, 0xff0000, 0x005aff, 0xf6ff00];
-  var color = this.data.Owner ? new THREE.Color(colors[parseInt(colors.length*Math.random())]) : new THREE.Color(0x999999);
+  // var colors = [0x0cff00, 0xff0000, 0x005aff, 0xf6ff00];
+  // var color = this.data.Owner ? new THREE.Color(colors[parseInt(colors.length*Math.random())]) : new THREE.Color(0x999999);
 
-  this.data.Color.R = color.r; 
-  this.data.Color.G = color.g;
-  this.data.Color.B = color.b;
+  // this.data.Color.R = 1; 
+  // this.data.Color.G = 0;
+  // this.data.Color.B = 0.7843137254901961;
   
   this.planet.material.color.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);
   this.planet.material.ambient.setRGB(this.data.Color.R, this.data.Color.G, this.data.Color.B);

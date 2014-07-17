@@ -116,9 +116,9 @@ module.exports.prototype.managePopulation = function() {
 module.exports.prototype.getBuildIndex = function (planetData) {
   if(planetData.Owner === "")
     return 0;
-  else if (planetData.IsHome <= 2)
+  else if (planetData.IsHome)
     return this.context.serverParams.HomeSPM;
-  else if (planetData.Size <= 2)
+  else
     return this.context.serverParams.PlanetsSPM[planetData.Size];
 
   return 0;
