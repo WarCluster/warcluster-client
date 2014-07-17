@@ -83,7 +83,7 @@ module.exports = Backbone.View.extend({
     var sunPNGNumber = $(e.currentTarget).attr("data-id");
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).addClass("selected");
-    $(".sun-type").attr("src", "/images/suns/sun" + sunPNGNumber + ".png");
+    $(".sun-type").attr("src", "/images/suns/sun_texture" + sunPNGNumber + ".png");
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
   },
   _switchRace: function($selectedRace) {
