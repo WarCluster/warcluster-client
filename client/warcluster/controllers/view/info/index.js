@@ -8,7 +8,7 @@ module.exports = function(context){
   this.context = context;
   this.selectedTooltipPlanet = null;
 
-  this.popover = new UserPopover();
+  this.popover = new UserPopover(this.context);
   this.popover.on("attack", function(id) {
     self.dispatchEvent({
       type: "attackPlanet",
