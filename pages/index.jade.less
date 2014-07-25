@@ -11,6 +11,65 @@
   refactor css in less style
   make it responsive :D
 */
+
+.ingame-wrapper {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 4000;
+  background-color: #150a06;
+}
+
+.raceslector-wrapper {
+  float: left; 
+  position: relative; 
+  width: 75%;
+  height: 100%;
+}
+
+.leaderboard-wrapper {
+  float: left; 
+  position: relative; 
+  width: 75%;
+}
+
+.landing-wrapper {
+  float: left; 
+  position: relative; 
+  width: 75%;
+}
+
+.info-wrapper {
+  float: right; 
+  position: relative; 
+  width: 25%;
+}
+
+.controls-content {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+
+  .star-column {
+    width: 10px;
+    padding-top: 10px;
+  }
+
+  .search-field {
+    width: 200px;
+    padding: 4px;
+    margin-right: 10px;
+  }
+
+  .paginator {
+    margin-top: 0px;
+  }
+}
+
 #individual {
   border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
   -moz-border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
@@ -29,16 +88,17 @@
     cursor: pointer;
   }
 }
+
 .pick-race-panel {
-  width: 65%;
-  height: 100%;
-  float: right;
+
   padding-top: 25px;
   .sun-menu-container {
     border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     border-width: 12px 16px 16px 12px;
     /*margin-top: 25px;*/
+    width: 50%;
+    float: right;
     height: 100%;
     .choices-list {
       position: absolute;
@@ -92,15 +152,18 @@
     }
   }
   .race-menu-container {
+    float: left;
     background-color: #150a06;
     border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     -moz-border-image: url("/images/ui/registration/pick_race_border.png") 12 16 16 12 repeat;
     border-width: 12px 16px 16px 12px;
+    width: 50%;
     height: 100%;
+    text-align: center;
     .race-portrait {
       height: 50%;
       .race-image {
-        height: 100%;
+        height: 50%;
       }
     }
     a {
@@ -250,11 +313,11 @@
   .animation-iteration-count(infinite);
 }
 .landing-content {
-  margin-top: 50px;
+  margin-top: 60px;
   text-align: left;
-  width: 25%;
-  height: 100%;
-  float: right;
+  //width: 25%;
+  //height: 100%;
+  //float: right;
   padding-left: 20px;
   padding-right: 20px;
   p {
@@ -268,9 +331,11 @@
     }
   }
 }
+
 .leaderboard-view {
   z-index: 3003;
 }
+
 .landing-view {
   z-index: 3003;
   position: absolute;
@@ -279,6 +344,7 @@
   width: 100%;
   background-color: #150a06;
 }
+
 .left-panel {
   top: 0px;
   left:0px;
@@ -287,6 +353,7 @@
   position: absolute;
   width: 75%;
 }
+
 .leaderboard-content {
   position: absolute;
   background-color: #150a06; 

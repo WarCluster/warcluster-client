@@ -1,15 +1,17 @@
-var LeaderboardView = require("../leaderboard");
+/*var LeaderboardView = require("../leaderboard");
 var statisticsRender = jadeCompile(require("./render/statistics.jade"));
-var pickRaceRender = jadeCompile(require("./render/pick-race.jade"));
+var pickRaceRender = jadeCompile(require("./render/pick-race.jade"));*/
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
+  info: jadeCompile(require("./info/index.jade")),
   events: {
-    "click .start-game": "startGame",
+    //"click .start-game": "startGame",
     "click .race-choice": "selectRace",
-    "click .sun-choice": "selectSun"
+    //"click .sun-choice": "selectSun"
+    "click .loginBtn": "close"
   },
-  className: "landing-view container text-center",
+  className: "ingame-wrapper",
   initialize: function(context) {
     this.context = context;
     this.twitter = context.playerData.twitter;
@@ -18,7 +20,39 @@ module.exports = Backbone.View.extend({
     this.selectedSun = 1;
     this.selectedRaceName = Object.keys(this.context.Teams)[0];
   },
-  renderStatistics: function() {
+  render: function() {
+    console.log("this.context.Teams:", this.context.Teams)
+    this.$el.html(this.template({teams: this.context.Teams}));
+    this.$(".info-wrapper").append($(this.info({name: this.context.playerData.twitter.screen_name})))
+  },
+  selectRace: function(e) {
+    $(e.currentTarget).parent().find(".selected").removeClass("selected");
+    $(e.currentTarget).addClass("selected");
+    //this._switchRace($(e.currentTarget));
+
+    var name = $(e.currentTarget).attr("data-id");
+    var team = this.context.Teams[name];
+
+    console.log("team:", name, team)
+
+    this.selectedRace = team.ID;
+    this.selectedRaceName = team.Name;
+
+    this.$(".race-image").attr('src', "/images/races/" + this.selectedRaceName + ".png");
+
+    ////TODO: remove the trim() once you understand 
+    //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
+    //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
+    
+    /*$(".race-hashtag-color").html("<a href='http://twitter.com/#WarCluster" + this.selectedRaceName + "' target='_blank'>#WarCluster" + this.selectedRaceName + "</a>");
+    $(".race-hashtag-color a").css({"color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B +", 1) !important"});
+    $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + ", 0.6)"})
+    $(".race-portrait img").attr('src', "/images/races/" + this.selectedRaceName + ".png");*/
+  },
+  close: function() {
+    this.$el.remove();
+  }
+  /*renderStatistics: function() {
     this.$el.html(this.template({twitter: this.twitter}));
     this.$el.append(statisticsRender());
     this.leaderboard = new LeaderboardView();
@@ -92,5 +126,5 @@ module.exports = Backbone.View.extend({
     $(".race-hashtag-color a").css({"color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B +", 1) !important"});
     $(".overlay").css({"background-color":"rgba(" + this.context.Teams[this.selectedRaceName].R + "," + this.context.Teams[this.selectedRaceName].G + "," + this.context.Teams[this.selectedRaceName].B + ", 0.6)"})
     $(".race-portrait img").attr('src', "/images/races/" + this.selectedRaceName + ".png");
-  }
+  }*/
 })

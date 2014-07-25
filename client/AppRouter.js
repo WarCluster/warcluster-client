@@ -21,12 +21,14 @@ module.exports = Backbone.Router.extend({
   //   landingView.renderLandingView();
   // },
   battleField: function() {
+    console.log("-battleField-")
     var battleField = new BattleFieldView({twitter: this.twitter});
     $("body").html("").append(battleField.el);
     $("body").css({"overflow": "hidden"});
     battleField.render();
   },
   leaderboard: function() {
+    console.log("-leaderboard-")
     var leaderboard = new LeaderboardView();
     $("body").html("").append(leaderboard.el);
     $("body").css({"overflow": "hidden"});

@@ -48,7 +48,7 @@ module.exports.prototype.buildScene = function() {
   THREE.Object3D._threexDomEvent.camera(this.camera);
 
   this.scene = new THREE.Scene();
-  this.scene.add( new THREE.AmbientLight( 0xb0b0b0 ) );
+  this.scene.add( new THREE.AmbientLight( 0x6e6e6e ) );
 
   this.projector = new THREE.Projector();
 
@@ -85,9 +85,9 @@ module.exports.prototype.buildScene = function() {
     self.context.height = hh;
 
     self.renderer.setSize( ww, hh );
-    
-    if (self.context.commandsManager.connected)
-      self.context.spaceViewController.checkPosition();
+    // TODO fix on resize
+    /*if (self.context.commandsManager.connected)
+      self.context.spaceViewController.checkPosition();*/
 
     self.context.spaceViewController.info.updatePosition();
   }

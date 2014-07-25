@@ -1,17 +1,45 @@
-.landing-content
-  h1 Hello !{twitter.name}
-  h4 To experience maximum fun and bigger chance of success we suggest you to use our "bring a friend" policy ;)
-  
-  h2 Invite some friends now
-  h2
-    ul.social
-      li
-        a.facebook-button.ease-all(target="_blank", href='http://www.facebook.com/sharer.php?u=http://warcluster.com')
-          i.fa.fa-facebook
-      li
-        a.twitter-button.ease-all(target="_blank", href='https://twitter.com/intent/tweet?text=Hey friends, join me playing @warcluster so we can conquer the galaxy together! :D', data-size='large', data-related='warcluster', data-url='http://warcluster.com', data-dnt='true')
-          i.fa.fa-twitter
-      li
-        a.google-button.ease-all(target="_blank", href='https://plusone.google.com/_/+1/confirm?hl=en&url=http://warcluster.com')
-          i.fa.fa-google-plus
-  p "The more, the merrier" ~ Winnie the Pooh :D
+.controls-content
+  .raceslector-wrapper.pick-race-panel
+    .race-menu-container
+      h3.info Pick the race you want to play with!
+      .btn-group-cl-effect
+        for team, key in teams
+          if (team.Name)
+            a.race-choice(href='#', data-hover= team.Name, data-id= key)
+              span= team.Name
+        
+      .badge Locked race*
+        i.fa.fa-lock
+      p
+        | Subscribe to our 
+        a(href='http://eepurl.com/MvxdX', target="_blank") newsletter
+        |  for news about the upcoming race!
+      p 
+        | Your color & communications #hashtag will be: 
+        span.race-hashtag-color 
+      table
+        tr
+          td
+            img.race-image
+    .sun-menu-container
+      h3.info Customize your starting solar system!
+      .planets-container
+        img.planet.planet-bottom(src="/images/planets/planet1.png")
+        .overlay-bottom.overlay
+        img.planet.planet-top(src="/images/planets/planet2.png")
+        .overlay-top.overlay
+        img.planet.planet-left(src="/images/planets/planet3.png")
+        .overlay-left.overlay
+        img.planet.planet-right(src="/images/planets/planet5.png")
+        .overlay-right.overlay
+      .btn-group-cl-effect
+        a.sun-choice(href='#', data-hover='Kopernik', data-id="0")
+          span Kopernik
+        a.sun-choice(href='#', data-hover='Acamar', data-id="1")
+          span Acamar
+        p Upload your own     
+          i.fa.fa-lock
+      .sun-type
+  .info-wrapper
+.loginBtn.text-center
+  a.btn.login.start-game Close

@@ -1,3 +1,5 @@
+var Moon = require("./Moon")
+
 module.exports = function(context, data){
 	THREE.Object3D.call(this);
 	

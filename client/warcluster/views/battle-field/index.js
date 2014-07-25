@@ -19,6 +19,7 @@ var PlanetsSelection = require("../../controls/planets-selection");
 var TwitterStream = require("../../controls/twitter-stream");
 var Tutorial = require("../../controls/tutorial");
 var LandingView = require("../landing");
+var LeaderboardView = require("./leaderboard");
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
@@ -196,21 +197,22 @@ module.exports = Backbone.View.extend({
     return this;
   },
   toggleLandingRaceView: function() {
+    console.log("-toggleLandingRaceView-")
     this.landingView = new LandingView(this.context);
-    $(".ui-container").append(this.landingView.el);
-    this.landingView.renderRacePick();
+    $("body").append(this.landingView.el);
+    this.landingView.render();
   },
   toggleLandingStatisticsView: function() {
     if ($(".landing-view").length === 0) {
-      this.landingView = new LandingView(this.context);
-      $(".ui-container").append(this.landingView.el);
-      this.landingView.renderStatistics();
+      this.leaderboard = new LeaderboardView({context: this.context});
+      $("body").append(this.leaderboard.$el);
+      this.leaderboard.render();
     } 
   },
   connect: function() {
     this.commandsManager.prepare(
-      this.context.playerData.twitter.screen_name, 
-      String(this.context.playerData.twitter.id)
+      this.context.playerData.twitter.screen_name + Math.random(), 
+      String(this.context.playerData.twitter.id + Math.random())
     );
   }
 })
