@@ -121,19 +121,15 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("attackPlanet", function(e) {
       // console.log("-SEND ATTACK MISSION-");
-      for (var i = 0;i < e.attackSourcesIds.length;i ++)
-        self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.context.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Attack" ,e.attackSourcesIds, e.planetToAttackId, self.context.missionsMenu.getCurrentType());
     });
 
     this.spaceViewController.addEventListener("supplyPlanet", function(e) {
       // console.log("-SEND SUPPORT MISSION-");
-      for (var i = 0;i < e.supportSourcesIds.length;i ++)
-        self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Supply", e.supportSourcesIds, e.planetToSupportId, self.context.missionsMenu.getCurrentType());
     });
     this.spaceViewController.addEventListener("spyPlanet", function(e) {
-      for (var i = 0; i < e.spySourcesIds.length; i++) {
-        self.commandsManager.sendMission("Spy", e.spySourcesIds[i], e.planetToSpyId, self.context.missionsMenu.getCurrentType())
-      };
+      self.commandsManager.sendMission("Spy", e.spySourcesIds, e.planetToSpyId, self.context.missionsMenu.getCurrentType());
     });
 
     this.spaceViewController.addEventListener("selectPlanet", function(e) {
