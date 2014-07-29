@@ -16,7 +16,7 @@ module.exports = function(context){
 
   var sparams = { 
     map: new THREE.ImageUtils.loadTexture( '/images/lensflare0.png' ), 
-    useScreenCoordinates: false, alignment: THREE.SpriteAlignment.center,
+    useScreenCoordinates: false,
     transparent: false, blending: THREE.AdditiveBlending,
     side:THREE.BackSide, depthWrite: false, depthTest: false
   }

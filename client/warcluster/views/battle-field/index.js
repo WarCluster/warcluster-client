@@ -11,6 +11,8 @@ var SunsFactory = require("../../factories/suns/SunsFactory");
 var CommandsManager = require("../../managers/commands/CommandsManager");
 var PlanetsManager = require("../../managers/planets/PlanetsManager");
 var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
+var ShadersManager = require("../../managers/shaders/ShadersManager");
+var ShipsManager = require("../../managers/ships/ShipsManager");
 
 var SpaceScene = require("../../scene/SpaceScene");
 
@@ -181,7 +183,10 @@ module.exports = Backbone.View.extend({
         self.toggleLandingStatisticsView();
       }
 
-      this.context.KeyboardManager = new KeyboardManager(self.context);
+      self.context.KeyboardManager = new KeyboardManager(self.context);
+
+      self.shadersManager.prepare();
+      self.shipsManager.prepare();
     }
 
     this.commandsManager.renderViewFn = function(data) {
@@ -194,6 +199,12 @@ module.exports = Backbone.View.extend({
     this.commandsManager.toggleTutorial = function() {
       self.tutorialMenu.toggleTutorial();
     }
+
+    this.shadersManager = new ShadersManager(this.context);
+    this.context.shadersManager = this.shadersManager;
+    console.log("-ShipsManager-")
+    this.shipsManager = new ShipsManager(this.context);
+    this.context.shipsManager = this.shipsManager;
 
     return this;
   },

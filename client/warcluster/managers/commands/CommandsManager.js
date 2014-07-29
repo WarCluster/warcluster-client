@@ -68,10 +68,12 @@ module.exports.prototype.parseMessage = function(command) {
         this.requestSetupParameters();
       break;
       case "send_mission":
-        this.context.missionsFactory.build(data.Mission);
+        //this.context.missionsFactory.build(data.Mission);
+        //console.log(data.Mission.ShipCount)
+        this.context.shipsManager.addShips(data.Mission);
       break;
       case "send_mission_failed":
-        var n = noty({text:"You're attacking with less than one pilot",type:"info"});
+        //var n = noty({text:"You're attacking with less than one pilot",type:"info"});
       break;
       case "server_params":
         this.context.serverParams = {

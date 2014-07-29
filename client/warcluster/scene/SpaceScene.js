@@ -118,6 +118,8 @@ module.exports.prototype.startRendering = function() {
 
     t = (new Date()).getTime();
 
+    self.context.shipsManager.update();
+
     self.renderer.render(self.scene, self.camera);
     self.stats.update();
 

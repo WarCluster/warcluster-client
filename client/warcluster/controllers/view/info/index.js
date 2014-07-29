@@ -80,7 +80,7 @@ module.exports.prototype.getTooltipPosition = function() {
   if (!this.selectedTooltipPlanet)
     return null;
   var worldPosition = new THREE.Vector3();
-  worldPosition.getPositionFromMatrix(this.selectedTooltipPlanet.matrixWorld);
+  worldPosition.setFromMatrixPosition(this.selectedTooltipPlanet.matrixWorld);
   // worldPosition.x += this.selectedTooltipPlanet.data.width/2;
   return this.toScreenXY(worldPosition, this.context.camera, this.context.$content);
 }

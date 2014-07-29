@@ -17,7 +17,7 @@ module.exports = function(context, data){
 
   var spriteMaterial = new THREE.SpriteMaterial({ 
     map: new THREE.ImageUtils.loadTexture( '/images/glow2.png' ), 
-    useScreenCoordinates: false, alignment: THREE.SpriteAlignment.center,
+    useScreenCoordinates: false,
     color: 0xFFFFFF, transparent: false, blending: THREE.AdditiveBlending,
     side:THREE.BackSide, depthWrite: false, depthTest: false
   });
@@ -216,7 +216,7 @@ module.exports.prototype.getOwner = function() {
 module.exports.prototype.rectHitTest = function(rect) {
 	var halfSize = this.data.width / 2;
   var worldPosition = new THREE.Vector3();
-  worldPosition.getPositionFromMatrix(this.matrixWorld);
+  worldPosition.setFromMatrixPosition(this.matrixWorld);
   var sc = this.toScreenXY(worldPosition);
 
   return sc.x >= rect.x && sc.x <= rect.x + rect.width &&
