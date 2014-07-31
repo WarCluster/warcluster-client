@@ -26,6 +26,7 @@ module.exports.prototype.prepare = function(username, twitterId) {
     self.connected = status === 'connected';
   };
   var on_message = function(msg) {
+    // console.log("on_message", JSON.parse(msg.data));
     self.parseMessage(msg.data);
   };
   var on_open = function() {
@@ -55,7 +56,6 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Position = data.Position;
         pd.Race = data.RaceID;
         pd.HomePlanet = data.HomePlanet;
-
         this.loginFn(pd);
       break;
       case "scope_of_view_result":
