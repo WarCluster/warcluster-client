@@ -18,10 +18,10 @@ module.exports.prototype.prepare = function() {
   this.stats = new Stats();
   this.stats.domElement.style.position = 'absolute';
   this.stats.domElement.style.bottom = '0px';
-  this.stats.domElement.style.right = '140px';
+  this.stats.domElement.style.right = '160px';
   this.context.$content.append(this.stats.domElement);
 
-  this.$info = $('<div style="font-size: 10px; background-color: #1111FF; padding: 2px; width: 100px" />')
+  this.$info = $('<div style="font-size: 10px; background-color: #1111FF; padding: 2px; width: 120px" />')
 
   $(this.stats.domElement).append(this.$info);
 
@@ -29,11 +29,13 @@ module.exports.prototype.prepare = function() {
 
   this.stats.update = function() {
     self.$info.html(
-      "Obj: " + self.context.objects.length +
+      "Obj: " + self.context.objects.length + "/" + self.context.container.children.length +
       ", Sh: "+(self.context.shipsManager ? self.context.shipsManager.objectsIndexes.length : 0) + 
       "<br/>М: "+ self.context.missions.length + 
       ", Pl: " + self.context.planetsHitObjects.length + 
-      ", Sn: " + self.context.suns.length
+      ", Sn: " + self.context.suns.length + 
+      ", IO: " + self.context.interactiveObjects.length
+      
     );
 
     return u.apply(this, arguments);
@@ -150,6 +152,7 @@ module.exports.prototype.startRendering = function() {
 }
 
 module.exports.prototype.render = function(data) {
+  //console.log("----- ### scene render -----------------------------------------------------");
   var t1 = new Date().getTime();
   this.gc();
   var t2 = new Date().getTime();
@@ -171,19 +174,13 @@ module.exports.prototype.render = function(data) {
 
     var mission = this.context.objectsById[data.Missions[s].id];
     if (!mission) {
-      console.log("render:", s)
+      //console.log("render:", s)
       this.context.missionsFactory.build(data.Missions[s]);
     }
   }
   var t5 = new Date().getTime();
 
-  /*if (k)
-    console.log("K:", k)*/
-
-  if (this.afterRenderFn != null)
-    this.afterRenderFn();
-
-  console.log("### scene render:", new Date().getTime() - t1, t2 - t1, t3 - t2, t4 - t3, t5 - t4)
+  //console.log("----- ### scene render:", new Date().getTime() - t1, t2 - t1, t3 - t2, t4 - t3, t5 - t4)
 }
 
 module.exports.prototype.gc = function() {
@@ -211,7 +208,7 @@ module.exports.prototype.gc = function() {
   while (forRemove.length > 0) 
     this.destroyObject(forRemove.shift())
 
-  console.log("---------------------- GC --------------------", Date.now() - t)
+  //console.log("---------------------- GC --------------------", Date.now() - t)
 }
 
 module.exports.prototype.clear = function() {

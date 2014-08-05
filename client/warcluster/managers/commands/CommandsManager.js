@@ -40,9 +40,9 @@ module.exports.prototype.prepare = function(username, twitterId) {
 }
 
 module.exports.prototype.parseMessage = function(command) {
-  var t1 = Date.now();
+  //var t1 = Date.now();
   var data = JSON.parse(command);
-  var t2 = Date.now();
+  //var t2 = Date.now();
 
   if (data.Command) {
     this.context.currentTime =  data.Timestamp;
@@ -62,13 +62,14 @@ module.exports.prototype.parseMessage = function(command) {
         this.renderViewFn(data);
       break;
       case "state_change":
+        console.log("###.parseMessage[state_change]:", data);
         this.renderViewFn(data);
       break;
       case "request_setup_params":
         this.requestSetupParameters();
       break;
       case "send_missions":
-        console.log("send_missions:", data)
+        //console.log("send_missions:", data)
         for (var i in data.Missions) {
           data.Missions[i].id = i;
           if (!this.context.objectsById[data.Missions[i].id])
@@ -108,20 +109,13 @@ module.exports.prototype.parseMessage = function(command) {
     }
   }
 
-  console.log("###.parseMessage:", Date.now() - t1, t2 - t1, data);
+  //console.log("###.parseMessage:", data);
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
   //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
   var data = {"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}
-  console.log("scopeOfView", data)
-  this.sockjs.send(JSON.stringify(data));
-}
-
-module.exports.prototype.scopeOfView2 = function(rect) {
-  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
-  var data = {"Command": "scope_of_view", "Position": {x: rect.cx, y: rect.cy}, "Resolution": [rect.width, rect.height]}
-  console.log("scopeOfView", data)
+  //console.log("scopeOfView", data)
   this.sockjs.send(JSON.stringify(data));
 }
 

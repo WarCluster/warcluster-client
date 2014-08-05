@@ -55,10 +55,9 @@ module.exports.prototype.managePlanetData = function(planets) {
       t = Date.now();
       planet.population.visible = (planets[id].ShipCount !== -1);
 
-      var updatePopulation = (planets[id].ShipCount !== -1); //|| planet.data.ShipCount !== planets[id].ShipCount); //&& (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
+      var updatePopulation = ~~planet.data.ShipCount !== planets[id].ShipCount; //&& (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
       var updateOwner = planet.data.Owner !== planets[id].Owner;
       var updateColor = planet.data.Color !== planets[id].Color;
-      var currentOwner = planet.data.Owner;
 
       _.extend(planet.data, planets[id]);
 
@@ -69,7 +68,7 @@ module.exports.prototype.managePlanetData = function(planets) {
       }
 
       if (updateOwner) {
-        if (currentOwner === this.context.playerData.Username)
+        if (planet.data.Owner === this.context.playerData.Username)
           this.context.spaceViewController.selection.deselectPlanet(planet);
         planet.updateOwnerInfo();
       }
@@ -81,7 +80,7 @@ module.exports.prototype.managePlanetData = function(planets) {
     }
   }
 
-  console.log("### managePlanetData:", total, new Date().getTime() - t3, t1, t2, " >", t4, pl)
+  //console.log("### managePlanetData:", total, new Date().getTime() - t3, t1, t2, " >", t4, pl)
 
   if (updated.length > 0)
     this.dispatchEvent({

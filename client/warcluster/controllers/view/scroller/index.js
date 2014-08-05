@@ -16,7 +16,6 @@ module.exports = function(context, config, controller) {
   var scrollMouseUp = function(e) {
     window.removeEventListener("mousemove", scrollMouseMove);
     window.removeEventListener("mouseup", scrollMouseUp);
-    window.removeEventListener("mouseout",  scrollMouseUp);
   }
 
   var scrollMouseMove = function(e) {
@@ -58,12 +57,20 @@ module.exports.prototype.scrollTo = function(x, y, animated){
   var self = this;
 
   if (animated) {
-    TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
+    if (this.animation)
+      this.animation.kill();
+
+    this.animation = TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
       x: this.controller.scrollPosition.x, 
       y: this.controller.scrollPosition.y,
       ease: Cubic.easeOut,
       onUpdate: this.scrollFn
     });
+
+    /*this.context.camera.position.x = this.controller.scrollPosition.x;
+    this.context.camera.position.y = this.controller.scrollPosition.y;
+    
+    this.scrollFn();*/
   } else {
     this.context.camera.position.x = this.controller.scrollPosition.x;
     this.context.camera.position.y = this.controller.scrollPosition.y;

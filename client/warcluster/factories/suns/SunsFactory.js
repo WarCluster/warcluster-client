@@ -25,7 +25,8 @@ module.exports.prototype.build = function(sunData) {
 module.exports.prototype.destroy = function(sun) {
   sun.destroy();
   //this.context.container.remove(sun);
-  sun.visible = false;
+  //sun.visible = false;
+  sun.position.x = -9999999999999;
 
   delete this.context.objectsById[sun.data.id];
   this.context.objects.splice(this.context.objects.indexOf(sun), 1);

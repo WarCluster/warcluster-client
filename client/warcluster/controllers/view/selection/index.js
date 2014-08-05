@@ -21,19 +21,6 @@ module.exports = function(context, config){
 
   this.selectionRect = $('<div class="selection-rect"></div>');
 
-  // *****************************************************************
-
-  this.context.spaceScene.afterRenderFn = function() {
-    for (var i=0;i < self.context.planetsHitObjects.length;i ++) {
-      self.context.planetsHitObjects[i].on("mouseover", function(e) {
-        self.onPlanetMouseOver(e);
-      });
-      self.context.planetsHitObjects[i].on("mouseout", function(e) {
-        self.onPlanetMouseOut(e);
-      });
-    }
-  }
-
   $(document).bind("contextmenu",function(e){
     if (!self.shiftKey)
       return false;
@@ -398,4 +385,15 @@ module.exports.prototype.releaseShiftKey = function(){
 
 module.exports.prototype.getPlanetТоSpyId = function() {
   return this.spyTarget.data.id;
+}
+
+module.exports.prototype.addPlanetEvents = function(planet) {
+  var self = this;
+  planet.hitObject.on("mouseover", function(e) { self.onPlanetMouseOver(e); });
+  planet.hitObject.on("mouseout", function(e) { self.onPlanetMouseOut(e); });
+}
+
+module.exports.prototype.removePlanetEvents = function(planet) {
+  planet.hitObject.off("mouseover");
+  planet.hitObject.off("mouseout");
 }

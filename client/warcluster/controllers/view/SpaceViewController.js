@@ -28,10 +28,10 @@ module.exports = function(context, config){
 
   this.zoomer = new Zoomer(context, config.zoomer, this);
   this.zoomer.zoomFn = function(zoom) {
+    //console.log("zoomFn:", zoom)
     self.scroller.scaleIndex = zoom;
     self.info.updatePosition();
     self.checkPosition();
-    console.log("-zoomFn-")
   };
 
   this.scroller = new Scroller(context, config.scroller, this);
@@ -159,14 +159,13 @@ module.exports.prototype.checkPosition = function() {
     
     this.updateScreenRect();
 
-    console.log("---- ########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
+    //console.log("---- ########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
 
     var position = {
       x: Math.ceil(this.context.spaceScene.camera.position.x),
       y: Math.ceil(this.context.spaceScene.camera.position.y)
     };
 
-    //this.context.commandsManager.scopeOfView2(this.screenRect);
     this.context.commandsManager.scopeOfView(position, this.resolution);
   }
 }

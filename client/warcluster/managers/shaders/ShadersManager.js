@@ -25,12 +25,11 @@ module.exports.prototype.prepareShipMaterial = function(type) {
     "varying float vRotation;",
 
     "void main() {",
-      "float progress = time / travelTime;",
-
-      "if (time != -1.0) ",
+      "if (time >= 0.0 && time < travelTime) ",
       "{",
         "vRotation = rotation;",
         "vColor = customColor;",
+        "float progress = time / travelTime;",
 
         "vec3 newpos = (displacement * progress) + startPosition;",
         "vec4 mvPosition = modelViewMatrix * vec4( newpos, 1.0 );",

@@ -42,7 +42,7 @@ module.exports.prototype.prepare = function() {
     values_time[v] = -1;
     values_color[v] = new THREE.Color( 0xffaa00 );
 
-    this.startTimes [v] = 0;
+    this.startTimes[v] = 0;
     values_travelTime [v] = 0;
   }
 
@@ -98,7 +98,7 @@ module.exports.prototype.addShips = function(sizes, data, color, formation) {
 
   //this.cloud.geometry.verticesNeedUpdate = true;
 
-  console.log("### addShips:", total)
+  //console.log("### addShips:", total)
 
   return objs;
 }

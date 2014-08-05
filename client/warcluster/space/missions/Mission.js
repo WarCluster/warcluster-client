@@ -40,7 +40,7 @@ module.exports.prototype.send = function(formation, Color) {
 
 module.exports.prototype.removeShipsIfNecessary = function() {
   if (this.context.currentTime > this.endTime) {
-    console.log("1.-removeShipsIfNecessary-", this.context.currentTime, this.endTime)
+    //console.log("1.-removeShipsIfNecessary-", this.context.currentTime, this.endTime)
     this.destroy();
   } else {
     this.progress = (this.context.currentTime - this.data.StartTime) / this.data.TravelTime;
@@ -55,7 +55,7 @@ module.exports.prototype.removeShipsIfNecessary = function() {
 
     if (!(this.x >= rect.x && this.x <= rect.x + rect.width &&
         this.y <= rect.y && this.y >= rect.y - rect.height)) {
-      console.log("2.-removeShipsIfNecessary-", this.progress)
+      //console.log("2.-removeShipsIfNecessary-", this.progress)
       this.destroy();
     }
       
@@ -63,7 +63,7 @@ module.exports.prototype.removeShipsIfNecessary = function() {
 }
 
 module.exports.prototype.destroy = function() {
-  console.log("-destroy-", this.ships)
+  //console.log("-destroy-", this.ships)
   while (this.ships.length > 0)
 		this.context.shipsManager.removeShips(this.ships);
 

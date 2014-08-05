@@ -180,6 +180,7 @@ module.exports.prototype.updatePopulationInfo = function() {
   this.population.scale.x = result.canvas2d.width;
   this.population.scale.y = result.canvas2d.height;
 
+  //console.log("-updatePopulationInfo-")
 }
 
 module.exports.prototype.updateOwnerInfo = function() {
@@ -206,6 +207,8 @@ module.exports.prototype.updateOwnerInfo = function() {
 
   //this.population.visible = this.data.Owner == "" || this.data.Owner == this.context.playerData.Username;
   this.population.visible = this.data.ShipCount != -1 && this.data.Owner == this.context.playerData.Username;
+
+  //console.log("-updateOwnerInfo-")
 }
 
 module.exports.prototype.activate = function() {

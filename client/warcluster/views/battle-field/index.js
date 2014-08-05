@@ -189,7 +189,7 @@ module.exports = Backbone.View.extend({
 
     this.shadersManager = new ShadersManager(this.context);
     this.context.shadersManager = this.shadersManager;
-    console.log("-ShipsManager-")
+    
     this.shipsManager = new ShipsManager(this.context);
     this.context.shipsManager = this.shipsManager;
 
