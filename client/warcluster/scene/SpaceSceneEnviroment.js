@@ -101,7 +101,7 @@ module.exports = function(context){
   var xGrid = 50;
   var yGrid = 50;
 
-  this.grid =  new THREE.Mesh(new THREE.PlaneGeometry(5000 * xGrid, 5000 * yGrid, xGrid, yGrid), new THREE.MeshBasicMaterial( { color: 0x534D00 , wireframe: true } ));
+  this.grid =  new THREE.Mesh(new THREE.PlaneGeometry(this.context.areaSize * xGrid, this.context.areaSize * yGrid, xGrid, yGrid), new THREE.MeshBasicMaterial( { color: 0x534D00 , wireframe: true } ));
   this.grid.visible = false;
 
   this.add(this.grid);

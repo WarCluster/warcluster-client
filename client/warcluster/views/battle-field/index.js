@@ -110,7 +110,7 @@ module.exports = Backbone.View.extend({
       zoomer: {
         maxZoom: 60000000,
         minZoom: 4000,
-        zoomStep: 1500,
+        zoomStep: 3000,
         zoom: 4000
       },
       scroller: {
@@ -123,19 +123,15 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("attackPlanet", function(e) {
       // console.log("-SEND ATTACK MISSION-");
-      for (var i = 0;i < e.attackSourcesIds.length;i ++)
-        self.commandsManager.sendMission("Attack" ,e.attackSourcesIds[i], e.planetToAttackId, self.context.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Attack" ,e.attackSourcesIds, e.planetToAttackId, self.context.missionsMenu.getCurrentType());
     });
 
     this.spaceViewController.addEventListener("supplyPlanet", function(e) {
       // console.log("-SEND SUPPORT MISSION-");
-      for (var i = 0;i < e.supportSourcesIds.length;i ++)
-        self.commandsManager.sendMission("Supply", e.supportSourcesIds[i], e.planetToSupportId, self.context.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Supply", e.supportSourcesIds, e.planetToSupportId, self.context.missionsMenu.getCurrentType());
     });
     this.spaceViewController.addEventListener("spyPlanet", function(e) {
-      for (var i = 0; i < e.spySourcesIds.length; i++) {
-        self.commandsManager.sendMission("Spy", e.spySourcesIds[i], e.planetToSpyId, self.context.missionsMenu.getCurrentType())
-      };
+      self.commandsManager.sendMission("Spy", e.spySourcesIds, e.planetToSpyId, self.context.missionsMenu.getCurrentType())
     });
 
     this.spaceViewController.addEventListener("selectPlanet", function(e) {
@@ -156,15 +152,6 @@ module.exports = Backbone.View.extend({
         self.context.missionsMenu.hideMenu();    
     });
 
-    /*this.spaceViewController.addEventListener("scopeOfView", function(e) {
-      //TODO: https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view-to-not-spam
-      var position = {
-        x: Math.ceil(self.context.spaceViewController.scrollPosition.x),
-        y: Math.ceil(self.context.spaceViewController.scrollPosition.y)
-      };
-      self.commandsManager.scopeOfView(position, self.context.spaceViewController.getResolution());
-    });*/
-    
     this.context.spaceViewController = this.spaceViewController;
 
 

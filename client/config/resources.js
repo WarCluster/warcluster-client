@@ -1,6 +1,7 @@
 module.exports = {
   textures: [
     "/images/ships/ship1.png",
+    "/images/ships/ship1_glow.png",
     "/images/ships/ship2.png",
     "/images/ships/ship3.png",
     "/images/ships/ship4.png",

@@ -40,9 +40,9 @@ module.exports.prototype.prepare = function(username, twitterId) {
 }
 
 module.exports.prototype.parseMessage = function(command) {
+  var t1 = Date.now();
   var data = JSON.parse(command);
-  //var data = JSON.parse(command);
-  //console.log("###.parseMessage:", data);
+  var t2 = Date.now();
 
   if (data.Command) {
     this.context.currentTime =  data.Timestamp;
@@ -67,10 +67,13 @@ module.exports.prototype.parseMessage = function(command) {
       case "request_setup_params":
         this.requestSetupParameters();
       break;
-      case "send_mission":
-        //this.context.missionsFactory.build(data.Mission);
-        //console.log(data.Mission.ShipCount)
-        this.context.shipsManager.addShips(data.Mission);
+      case "send_missions":
+        console.log("send_missions:", data)
+        for (var i in data.Missions) {
+          data.Missions[i].id = i;
+          if (!this.context.objectsById[data.Missions[i].id])
+            this.context.missionsFactory.build(data.Missions[i]);
+        }
       break;
       case "send_mission_failed":
         //var n = noty({text:"You're attacking with less than one pilot",type:"info"});
@@ -104,12 +107,21 @@ module.exports.prototype.parseMessage = function(command) {
         console.log(data);
     }
   }
+
+  console.log("###.parseMessage:", Date.now() - t1, t2 - t1, data);
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
   //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
   var data = {"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}
-  //console.log("scopeOfView", data)
+  console.log("scopeOfView", data)
+  this.sockjs.send(JSON.stringify(data));
+}
+
+module.exports.prototype.scopeOfView2 = function(rect) {
+  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
+  var data = {"Command": "scope_of_view", "Position": {x: rect.cx, y: rect.cy}, "Resolution": [rect.width, rect.height]}
+  console.log("scopeOfView", data)
   this.sockjs.send(JSON.stringify(data));
 }
 
@@ -118,7 +130,7 @@ module.exports.prototype.sendMission = function(type, source, target, ships) {
   this.sockjs.send(JSON.stringify({
     "Command": "start_mission",
     "Type": type,
-    "StartPlanet": source,
+    "StartPlanets": source,
     "EndPlanet": target,
     "Fleet": ships
   }));

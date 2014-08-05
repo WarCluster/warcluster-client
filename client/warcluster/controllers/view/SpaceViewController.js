@@ -12,9 +12,6 @@ module.exports = function(context, config){
   this.config = config;
   this.scrollPosition = new THREE.Vector3();
 
-  this.gridWidth = 5000;
-  this.gridHeight = 5000;
-
   this.cell = {xIndex: null, yIndex: null};
   this.tlPosition = {xIndex: null, yIndex: null};
   this.brPosition = {xIndex: null, yIndex: null};
@@ -30,28 +27,18 @@ module.exports = function(context, config){
   this.resolution = { width: 0, height: 0 }
 
   this.zoomer = new Zoomer(context, config.zoomer, this);
-  this.zoomer.addEventListener("scopeOfView", function(e) {
-    self.scroller.scaleIndex = e.zoom;
-    self.dispatchEvent(e);
-    self.info.updatePosition();
-  });
-  this.zoomer.addEventListener("zoom", function(e) {
-    self.scroller.scaleIndex = e.zoom;
-    self.dispatchEvent(e);
+  this.zoomer.zoomFn = function(zoom) {
+    self.scroller.scaleIndex = zoom;
     self.info.updatePosition();
     self.checkPosition();
-  });
+    console.log("-zoomFn-")
+  };
 
   this.scroller = new Scroller(context, config.scroller, this);
-  this.scroller.addEventListener("scroll", function(e) {
-    self.dispatchEvent(e);
+  this.scroller.scrollFn = function() {
     self.info.updatePosition();
     self.checkPosition();
-  });
-  this.scroller.addEventListener("scopeOfView", function(e) {
-    self.dispatchEvent(e);
-    self.info.updatePosition();
-  });
+  }
 
   this.selection = new Selection(context, config.selection);
   this.selection.addEventListener("attackPlanet", function(e) {
@@ -172,13 +159,14 @@ module.exports.prototype.checkPosition = function() {
     
     this.updateScreenRect();
 
-    //console.log("1.########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
+    console.log("---- ########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
 
     var position = {
       x: Math.ceil(this.context.spaceScene.camera.position.x),
       y: Math.ceil(this.context.spaceScene.camera.position.y)
     };
 
+    //this.context.commandsManager.scopeOfView2(this.screenRect);
     this.context.commandsManager.scopeOfView(position, this.resolution);
   }
 }
@@ -215,27 +203,27 @@ module.exports.prototype.getCellPosition = function(xIndex, yIndex, position) {
   switch (position) {
     case "tr":
       return {
-        x: xIndex > 0 ? Math.ceil(xIndex * this.gridWidth) : Math.floor((xIndex + 1) * this.gridWidth),
-        y: yIndex > 0 ? Math.ceil(yIndex * this.gridHeight) : Math.floor((yIndex + 1) * this.gridHeight)
+        x: xIndex > 0 ? Math.ceil(xIndex * this.context.areaSize) : Math.floor((xIndex + 1) * this.context.areaSize),
+        y: yIndex > 0 ? Math.ceil(yIndex * this.context.areaSize) : Math.floor((yIndex + 1) * this.context.areaSize)
       };
     break;
     case "bl":
       return {
-        x: xIndex > 0 ? Math.ceil((xIndex - 1) * this.gridWidth) : Math.floor(xIndex * this.gridWidth),
-        y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.gridHeight) : Math.floor(yIndex * this.gridHeight)
+        x: xIndex > 0 ? Math.ceil((xIndex - 1) * this.context.areaSize) : Math.floor(xIndex * this.context.areaSize),
+        y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.context.areaSize) : Math.floor(yIndex * this.context.areaSize)
       };
     break;
     case "br":
       return {
-        x: xIndex > 0 ? Math.ceil(xIndex * this.gridWidth) : Math.floor((xIndex + 1) * this.gridWidth),
-        y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.gridHeight) : Math.floor(yIndex * this.gridHeight)
+        x: xIndex > 0 ? Math.ceil(xIndex * this.context.areaSize) : Math.floor((xIndex + 1) * this.context.areaSize),
+        y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.context.areaSize) : Math.floor(yIndex * this.context.areaSize)
       };
     break;
   }
 
   return {
-    x: xIndex > 0 ? Math.ceil((xIndex - 1) * this.gridWidth) : Math.floor(xIndex * this.gridWidth),
-    y: yIndex > 0 ? Math.ceil(yIndex * this.gridHeight) : Math.floor((yIndex + 1) * this.gridHeight)
+    x: xIndex > 0 ? Math.ceil((xIndex - 1) * this.context.areaSize) : Math.floor(xIndex * this.context.areaSize),
+    y: yIndex > 0 ? Math.ceil(yIndex * this.context.areaSize) : Math.floor((yIndex + 1) * this.context.areaSize)
   };
 }
 
@@ -243,14 +231,14 @@ module.exports.prototype.getCellPosition = function(xIndex, yIndex, position) {
 
 module.exports.prototype.getGridPosition = function(x, y) {
   return {
-    xIndex: this.roundCoordinate(x, this.gridWidth),
-    yIndex: this.roundCoordinate(y, this.gridHeight)
+    xIndex: this.roundCoordinate(x, this.context.areaSize),
+    yIndex: this.roundCoordinate(y, this.context.areaSize)
   }
 }
 
 module.exports.prototype.roundCoordinate = function(d, w) {
   if (d > 0)
-    return parseInt(d / w) + 1;
+    return Math.floor(d / w) + 1;
   else if (d < 0)
     return Math.floor(d / w);
 
@@ -264,20 +252,6 @@ module.exports.prototype.translateIndex = function(i, d) {
     return i + d + 1;
   return i + d;
 }
-
-/*module.exports.prototype.getRect = function(xIndex1, yIndex1, xIndex2, yIndex2){
-  var tl = this.getCellPosition(xIndex1, yIndex1);
-  var br = this.getCellPosition(xIndex2, yIndex2, "br");
-  //console.log("######## getRect:", tl, br)
-  return {
-    width: Math.abs(br.x - tl.x),
-    height: Math.abs(tl.y - br.y),
-    cx: tl.x + Math.abs(br.x - tl.x) / 2,
-    cy: tl.y - Math.abs(tl.y - br.y) / 2,
-    x: tl.x,
-    y: tl.y
-  }
-}*/
 
 module.exports.prototype.addScrollPosition = function(dx, dy, dz){
   return this.setScrollPosition(this.scrollPosition.x + dx, this.scrollPosition.y + dy, this.scrollPosition.z + dz)

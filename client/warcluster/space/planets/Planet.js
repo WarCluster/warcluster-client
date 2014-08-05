@@ -71,18 +71,21 @@ module.exports.prototype.prepare = function(data) {
   
   this.updateColor();
 
-  var bmd1 = this.context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
+  if (!this.planet.material.map) {
+    var bmd1 = this.context.resourcesLoader.get("/images/planets/planet"+this.data.Texture+".png");
   
-  this.planet.material.map = bmd1;
-  this.planet.material.bumpMap = bmd1;
+    this.planet.material.map = bmd1;
+    this.planet.material.bumpMap = bmd1;  
+  }
+  
   this.planet.scale.set(this.data.width / 2, this.data.width / 2, this.data.width / 2);
 
-  this.glow.scale.set(this.data.width * 3, this.data.width * 3, this.data.width * 3);
+  this.glow.scale.set(this.data.width * 1.365, this.data.width * 1.365, this.data.width * 1.365);
 
   this.selection.scale.set(this.data.width*1.35, this.data.height*1.35, 1);
 
-  this.ring.visible = this.data.IsHome;
-  this.ring.scale.set(this.data.width * 1.5, this.data.width * 0.8, this.data.width * 1.5);
+  /*this.ring.visible = this.data.IsHome;
+  this.ring.scale.set(this.data.width * 1.5, this.data.width * 0.8, this.data.width * 1.5);*/
 
   this.updatePopulationInfo();
   
@@ -159,6 +162,12 @@ module.exports.prototype.updateColor = function() {
 }
 
 module.exports.prototype.updatePopulationInfo = function() {
+  if (this.data.Owner !== this.context.playerData.Username) {
+    this.population.visible = false;
+    return;
+  } else 
+    this.population.visible = true;
+
   var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
   
   // this.population.visible = (this.data.ShipCount !== -1);
@@ -174,6 +183,12 @@ module.exports.prototype.updatePopulationInfo = function() {
 }
 
 module.exports.prototype.updateOwnerInfo = function() {
+  if (!this.data.Owner || this.data.Owner !== this.context.playerData.Username) {
+    this.owner.visible = false;
+    return;
+  } else 
+    this.owner.visible = true;
+
   var result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner || " ", null, 45);
   this.ownerTexture.image.data = new Uint8Array(result.context2d.getImageData(0, 0, result.canvas2d.width, result.canvas2d.height).data.buffer);
   this.ownerTexture.image.width = result.canvas2d.width;

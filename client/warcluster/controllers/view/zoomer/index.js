@@ -12,7 +12,7 @@ module.exports = function(context, config, controller){
   this.mousePosition = { x: 0, y: 0};
   this.controller = controller;
   this.shiftKey = false;
-
+  this.zoomFn = null;
   this.controller.scrollPosition.z = config.zoom || 4000;
 
   $(window).mousewheel(function(e){
@@ -78,18 +78,7 @@ module.exports.prototype.animateIt = function() {
     y: this.controller.scrollPosition.y,
     z: this.controller.scrollPosition.z,
     ease: Cubic.easeOut,
-    onUpdate: function() {
-      self.dispatchEvent({
-        type: "zoom", 
-        zoom: self.getZoomIndex()
-      });
-    }/*,
-    onComplete: function(){        
-      self.dispatchEvent({
-        type: "zoom", 
-        zoom: self.getZoomIndex()
-      });
-    }*/
+    onUpdate: function() { self.zoomFn(self.getZoomIndex()) }
   });
 }
 

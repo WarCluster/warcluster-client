@@ -5,25 +5,25 @@ module.exports = function(context){
 
   this.formations = [
     [
-      {x: 0, y: -100, z: 0},
-      {x: -70, y: 0, z: 100},
-      {x: 70, y: 0, z: 100},
-      {x: -140, y: 100, z: -100},
-      {x: 140, y: 100, z: -100}
+      THREE.Vector3(0, -100, 0),
+      THREE.Vector3(-70, 0, 100),
+      THREE.Vector3(70, 0, 100),
+      THREE.Vector3(-140, 100, -100),
+      THREE.Vector3(140, 100, -100)
     ],
     [
-      {x: 0, y: -100, z: 0},
-      {x: -100, y: 0, z: 100},
-      {x: 100, y: 0, z: 100},
-      {x: -50, y: 100, z: -200},
-      {x: 50, y: 100, z: -200}
+      THREE.Vector3(0, -100, 0),
+      THREE.Vector3(-100, 0, 100),
+      THREE.Vector3(100, 0, 100),
+      THREE.Vector3(-50, 100, -200),
+      THREE.Vector3(50, 100, -200)
     ],
     [
-      {x: -50, y: -70, z: 0},
-      {x: 50, y: -70, z: 0},
-      {x: 100, y: 0, z: 100},
-      {x: -100, y: 0, z: 100},
-      {x: 0, y: 70, z: -100}
+      THREE.Vector3(-50, -70, 0),
+      THREE.Vector3(50, -70, 0),
+      THREE.Vector3(100, 0, 100),
+      THREE.Vector3(-100, 0, 100),
+      THREE.Vector3(0, 70, -100)
     ]
   ];
 }
@@ -35,8 +35,7 @@ module.exports.prototype.build = function(data) {
   var formation = this.formations[parseInt(this.formations.length * Math.random())]
   var mission = new Mission(data, this.context);
   
-  this.context.container.add(mission);
-  this.context.objects.push(mission);
+  this.context.missions.push(mission);
   this.context.objectsById[data.id] = mission;
 
   mission.send(formation, data.Color);
@@ -45,9 +44,7 @@ module.exports.prototype.build = function(data) {
 }
 
 module.exports.prototype.destroy = function(mission) {
-  this.context.container.remove(mission);
-  this.context.objects.splice(this.context.objects.indexOf(mission), 1);
-
+  this.context.missions.splice(this.context.missions.indexOf(mission), 1);
   delete this.context.objectsById[mission.data.id];
 
   return mission;

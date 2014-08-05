@@ -18,8 +18,26 @@ module.exports.prototype.prepare = function() {
   this.stats = new Stats();
   this.stats.domElement.style.position = 'absolute';
   this.stats.domElement.style.bottom = '0px';
-  this.stats.domElement.style.right = '100px';
+  this.stats.domElement.style.right = '140px';
   this.context.$content.append(this.stats.domElement);
+
+  this.$info = $('<div style="font-size: 10px; background-color: #1111FF; padding: 2px; width: 100px" />')
+
+  $(this.stats.domElement).append(this.$info);
+
+  var u = this.stats.update;
+
+  this.stats.update = function() {
+    self.$info.html(
+      "Obj: " + self.context.objects.length +
+      ", Sh: "+(self.context.shipsManager ? self.context.shipsManager.objectsIndexes.length : 0) + 
+      "<br/>М: "+ self.context.missions.length + 
+      ", Pl: " + self.context.planetsHitObjects.length + 
+      ", Sn: " + self.context.suns.length
+    );
+
+    return u.apply(this, arguments);
+  }
 
   for (var i = 0;i < resources.textures.length;i ++)
     this.context.resourcesLoader.loadTexture(resources.textures[i]);
@@ -132,9 +150,9 @@ module.exports.prototype.startRendering = function() {
 }
 
 module.exports.prototype.render = function(data) {
-  var t = new Date().getTime();
+  var t1 = new Date().getTime();
   this.gc();
-
+  var t2 = new Date().getTime();
   for (s in data.Suns) {
     data.Suns[s].id = s;
     if (!data.Suns[s].Position) {
@@ -145,29 +163,37 @@ module.exports.prototype.render = function(data) {
     if (!sun)
       sun = this.context.sunsFactory.build(data.Suns[s]);
   }
+  var t3 = new Date().getTime();
   this.context.planetsManager.managePlanetData(data.Planets);
-
+  var t4 = new Date().getTime();
   for (s in data.Missions) {
-    if (!data.Missions[s].id)
-      data.Missions[s].id = s;
+    data.Missions[s].id = s;
+
     var mission = this.context.objectsById[data.Missions[s].id];
-    if (!mission)
+    if (!mission) {
+      console.log("render:", s)
       this.context.missionsFactory.build(data.Missions[s]);
-    else
-      mission.update(data.Missions[s]);
+    }
   }
+  var t5 = new Date().getTime();
+
+  /*if (k)
+    console.log("K:", k)*/
 
   if (this.afterRenderFn != null)
     this.afterRenderFn();
 
-  //console.log("### scene render:", new Date().getTime() - t)
+  console.log("### scene render:", new Date().getTime() - t1, t2 - t1, t3 - t2, t4 - t3, t5 - t4)
 }
 
 module.exports.prototype.gc = function() {
+  var t = Date.now();
   var rect = this.context.spaceViewController.screenRect;
+  var i;
+
   //console.log("1.-gc-", rect, this.context.objects.length)
   var forRemove = [];
-  for (var i = 0;i < this.context.objects.length;i ++) {
+  for (i = 0;i < this.context.objects.length;i ++) {
     var object = this.context.objects[i];
 
     if (!(object.position.x >= rect.x && object.position.x <= rect.x + rect.width &&
@@ -175,10 +201,17 @@ module.exports.prototype.gc = function() {
       forRemove.push(object)
   }
 
+  this.context.shipsManager.update();
+
+  for (i = 0;i < this.context.missions.length;i ++)
+    this.context.missions[i].removeShipsIfNecessary();
+
   //console.log("1.-gc-DESTROY OBJECT:", forRemove.length, this.context.objects.length)
   
   while (forRemove.length > 0) 
     this.destroyObject(forRemove.shift())
+
+  console.log("---------------------- GC --------------------", Date.now() - t)
 }
 
 module.exports.prototype.clear = function() {

@@ -1,7 +1,4 @@
-var InteractiveObject = require("../InteractiveObject");
-
 module.exports = function(data, context) {
-	InteractiveObject.call(this);
 	
 	this.context = context;
 	this.data = data;
@@ -11,19 +8,13 @@ module.exports = function(data, context) {
 	this.delta_x = 0;
 	this.delta_y = 0;
 
-	this.direction = Math.random() > 0.5 ? 1 : -1;
-	this.angle = Math.random() * 360;
 	this.formation = null;
 }
 
-module.exports.prototype = new InteractiveObject();
 module.exports.prototype.send = function(formation, Color) {
 	this.delta_x = this.data.Target.Position.X - this.data.Source.Position.X;
 	this.delta_y = this.data.Target.Position.Y - this.data.Source.Position.Y;
 	
-	this.rotation.z = -Math.atan2(this.delta_x, this.delta_y) + Math.PI;
-	//this.ship.rotation.y = Math.PI * Math.random();
-
 	this.endTime = this.data.StartTime + this.data.TravelTime;
 
 	var ship;
@@ -44,33 +35,42 @@ module.exports.prototype.send = function(formation, Color) {
     }
   }
 
-  for (var i = 0;i < sizes.length;i ++) {
-    ship = this.context.shipsFactory.build(sizes[i], this, color, formation[i]);
-    ship.send();
+  this.ships = this.context.shipsFactory.build(sizes, this, color, formation);
+}
 
-    this.add(ship);
-    this.ships.push(ship);
+module.exports.prototype.removeShipsIfNecessary = function() {
+  if (this.context.currentTime > this.endTime) {
+    console.log("1.-removeShipsIfNecessary-", this.context.currentTime, this.endTime)
+    this.destroy();
+  } else {
+    this.progress = (this.context.currentTime - this.data.StartTime) / this.data.TravelTime;
+    
+    if (this.progress > 1)
+      this.progress = 1;
+
+    this.x = this.data.Source.Position.X + this.delta_x * this.progress;
+    this.y = this.data.Source.Position.Y + this.delta_y * this.progress;
+
+    var rect = this.context.spaceViewController.screenRect;
+
+    if (!(this.x >= rect.x && this.x <= rect.x + rect.width &&
+        this.y <= rect.y && this.y >= rect.y - rect.height)) {
+      console.log("2.-removeShipsIfNecessary-", this.progress)
+      this.destroy();
+    }
+      
   }
-
-  this.activate();
 }
 
-module.exports.prototype.tick = function() {
-	if (this.context.currentTime > this.endTime) {
-		this.destroy();
-	} else {
-		this.progress = (this.context.currentTime - this.data.StartTime) / this.data.TravelTime;
+module.exports.prototype.destroy = function() {
+  console.log("-destroy-", this.ships)
+  while (this.ships.length > 0)
+		this.context.shipsManager.removeShips(this.ships);
 
-		if (this.progress > 1)
-			this.progress = 1;
-
-		this.position.x = this.data.Source.Position.X + this.delta_x * this.progress;
-		this.position.y = this.data.Source.Position.Y + this.delta_y * this.progress;
-
-		for (var i = 0;i < this.ships.length;i ++)
-			this.ships[i].tick(this.progress);
-	}
+  this.ships = null;
+  this.context.missionsFactory.destroy(this);
 }
+
 module.exports.prototype.getSize = function(ships) {
   if (ships > 100 && ships <= 200)
     return 2;
@@ -82,16 +82,4 @@ module.exports.prototype.getSize = function(ships) {
     return 5;
 
   return 1;
-}
-
-module.exports.prototype.update = function(data) {
-}
-
-module.exports.prototype.destroy = function() {
-	this.deactivate();
-	
-  while (this.ships.length > 0)
-		this.context.shipsFactory.destroy(this.ships.shift());
-
-  this.context.missionsFactory.destroy(this);
 }

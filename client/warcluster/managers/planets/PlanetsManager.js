@@ -28,14 +28,31 @@ module.exports.prototype.stop = function() {
 
 module.exports.prototype.managePlanetData = function(planets) {
   var updated = [];
+  var t = 0;
+  var t1 = 0;
+  var t2 = 0;
+  var t3 = Date.now();
+  var t4 = 0;
+  var pl;
+  var total = 0;
 
   for (var id in planets) {
+    total ++
     var planet = this.context.objectsById[id];
     planets[id].id = id; 
 
     if (!planet) {
+      t = Date.now();
       planet = this.context.planetsFactory.build(planets[id]);
+      
+      if (Date.now() - t > t4) {
+        pl = planet;
+        t4 = Date.now() - t;
+      }
+      
+      t1 += Date.now() - t;
     } else {
+      t = Date.now();
       planet.population.visible = (planets[id].ShipCount !== -1);
 
       var updatePopulation = (planets[id].ShipCount !== -1); //|| planet.data.ShipCount !== planets[id].ShipCount); //&& (planet.data.Owner === this.context.playerData.Username || planet.data.Owner === "")
@@ -59,8 +76,12 @@ module.exports.prototype.managePlanetData = function(planets) {
 
       if (updateColor)
         planet.updateColor();
+
+      t2 += Date.now() - t;
     }
   }
+
+  console.log("### managePlanetData:", total, new Date().getTime() - t3, t1, t2, " >", t4, pl)
 
   if (updated.length > 0)
     this.dispatchEvent({
