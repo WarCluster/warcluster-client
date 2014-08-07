@@ -11,8 +11,9 @@ module.exports = Backbone.View.extend({
     "touchstart .spy":       "spy",
     "touchstart .supply":    "supply"
   },
-  initialize: function() {
+  initialize: function(context) {
     this.planetData = null;
+    this.context = context;
   },
   render: function(){
     var planetCategory = this.planetData.IsHome ? "Home Planet: " : "Planet Name: ";
@@ -20,9 +21,7 @@ module.exports = Backbone.View.extend({
     var planetName = this.planetData.Name;
     var twitterAvatar = screenName ? "https://twitter.com/api/users/profile_image/"+screenName+"?size=bigger" : "/images/default_avatar.png";
     var owner = screenName ? "@" + screenName : "Neutral Planet"; 
-    var production = this.planetData && this.planetData.Size ? this.planetData.Size : 0;
-    var ceilProduction = Math.ceil(production/3);
-    var productionPerMinute = (ceilProduction > 3) ? 3 : ceilProduction;
+    var productionPerMinute = this.planetData.IsHome ? this.context.serverParams.HomeSPM : this.context.serverParams.PlanetsSPM[this.planetData.Size]
 
     this.$el.html(this.template({
      playerName:        owner,
