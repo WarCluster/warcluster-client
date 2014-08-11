@@ -1,10 +1,10 @@
 module.exports = {
   textures: [
     "/images/ships/ship1.png",
-    "/images/ships/ship1_glow.png",
     "/images/ships/ship2.png",
     "/images/ships/ship3.png",
     "/images/ships/ship4.png",
+    "/images/ships/ships.png",
 
     "/images/backgrounds/background5.jpg",
     "/images/backgrounds/background6.jpg",
@@ -27,6 +27,7 @@ module.exports = {
     "/images/planets/planet8.png",
     "/images/planets/planet9.png",
     "/images/planets/planet_selection_glow.png",
+    "/images/planets/water.jpg",
 
     "/images/planets/ring.png"
   ],

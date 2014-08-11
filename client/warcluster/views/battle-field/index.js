@@ -4,14 +4,12 @@ var ResourcesLoader = require("../../loaders/resources/ResourcesLoader");
 
 var PlanetsFactory = require("../../factories/planets/PlanetsFactory");
 var MissionsFactory = require("../../factories/missions/MissionsFactory");
-var ShipsFactory = require("../../factories/ships/ShipsFactory");
 var CanvasTextFactory = require("../../factories/text/CanvasTextFactory");
 var SunsFactory = require("../../factories/suns/SunsFactory");
 
 var CommandsManager = require("../../managers/commands/CommandsManager");
 var PlanetsManager = require("../../managers/planets/PlanetsManager");
 var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
-var ShadersManager = require("../../managers/shaders/ShadersManager");
 var ShipsManager = require("../../managers/ships/ShipsManager");
 
 var SpaceScene = require("../../scene/SpaceScene");
@@ -89,7 +87,6 @@ module.exports = Backbone.View.extend({
 
     this.context.planetsFactory = new PlanetsFactory(this.context);
     this.context.missionsFactory = new MissionsFactory(this.context);
-    this.context.shipsFactory = new ShipsFactory(this.context);
     this.context.sunsFactory = new SunsFactory(this.context);
 
     this.context.canvasTextFactory = new CanvasTextFactory(true, this.context);
@@ -104,14 +101,14 @@ module.exports = Backbone.View.extend({
       console.log("--complete space scene--");
       self.connect();
     });
-    this.context.spaceScene.prepare();
+    
 
     this.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
         maxZoom: 60000000,
-        minZoom: 4000,
-        zoomStep: 3000,
-        zoom: 4000
+        minZoom: 5,//4000,
+        zoomStep: 7,
+        zoom: 10
       },
       scroller: {
         xMin: -5000000,
@@ -163,8 +160,8 @@ module.exports = Backbone.View.extend({
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.Race).el);
       console.log("-loginFn-", self.context.playerData);
       self.spaceViewController.activate();
-      self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
-      self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
+      self.spaceViewController.scrollTo(data.HomePlanet.Position.X* this.context.globalScale-50000, data.HomePlanet.Position.Y* this.context.globalScale-50000);
+      self.spaceViewController.scrollTo(data.HomePlanet.Position.X* this.context.globalScale, data.HomePlanet.Position.Y* this.context.globalScale);
 
       if (!self.context.playerData.JustRegistered) {
         self.toggleLandingStatisticsView();
@@ -172,7 +169,6 @@ module.exports = Backbone.View.extend({
 
       self.context.KeyboardManager = new KeyboardManager(self.context);
 
-      self.shadersManager.prepare();
       self.shipsManager.prepare();
     }
 
@@ -187,11 +183,10 @@ module.exports = Backbone.View.extend({
       self.tutorialMenu.toggleTutorial();
     }
 
-    this.shadersManager = new ShadersManager(this.context);
-    this.context.shadersManager = this.shadersManager;
-    
-    this.shipsManager = new ShipsManager(this.context);
+    this.shipsManager = new ShipsManager(this.context, 300000);
     this.context.shipsManager = this.shipsManager;
+
+    this.context.spaceScene.prepare();
 
     return this;
   },

@@ -129,8 +129,8 @@ module.exports.prototype.activate = function() {
     
     this.updateResolution();
 
-    this.tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (this.resolution.width / 2), this.context.spaceScene.camera.position.y + (this.resolution.height / 2));
-    this.brPosition = this.getGridPosition(this.context.spaceScene.camera.position.x + (this.resolution.width / 2), this.context.spaceScene.camera.position.y - (this.resolution.height / 2));
+    this.tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x * this.context.invGlobalScale - (this.resolution.width / 2), this.context.spaceScene.camera.position.y * this.context.invGlobalScale + (this.resolution.height / 2));
+    this.brPosition = this.getGridPosition(this.context.spaceScene.camera.position.x * this.context.invGlobalScale + (this.resolution.width / 2), this.context.spaceScene.camera.position.y * this.context.invGlobalScale - (this.resolution.height / 2));
 
     this.updateScreenRect();
 
@@ -148,8 +148,11 @@ module.exports.prototype.deactivate = function() {
 module.exports.prototype.checkPosition = function() {
   this.updateResolution();
 
-  var tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (this.resolution.width / 2), this.context.spaceScene.camera.position.y + (this.resolution.height / 2));
-  var brPosition = this.getGridPosition(this.context.spaceScene.camera.position.x + (this.resolution.width / 2), this.context.spaceScene.camera.position.y - (this.resolution.height / 2));
+  var cpx = this.context.spaceScene.camera.position.x * this.context.invGlobalScale;
+  var cpy = this.context.spaceScene.camera.position.y * this.context.invGlobalScale;
+
+  var tlPosition = this.getGridPosition(cpx - (this.resolution.width / 2), cpy + (this.resolution.height / 2));
+  var brPosition = this.getGridPosition(cpx + (this.resolution.width / 2), cpy - (this.resolution.height / 2));
 
   if (this.tlPosition.xIndex != tlPosition.xIndex || this.tlPosition.yIndex != tlPosition.yIndex || 
       this.brPosition.xIndex != brPosition.xIndex || this.brPosition.yIndex != brPosition.yIndex) {
@@ -162,8 +165,8 @@ module.exports.prototype.checkPosition = function() {
     //console.log("---- ########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
 
     var position = {
-      x: Math.ceil(this.context.spaceScene.camera.position.x),
-      y: Math.ceil(this.context.spaceScene.camera.position.y)
+      x: Math.ceil(cpx),
+      y: Math.ceil(cpy)
     };
 
     this.context.commandsManager.scopeOfView(position, this.resolution);
@@ -175,8 +178,8 @@ module.exports.prototype.scrollTo = function (x, y, animated) {
 }
 
 module.exports.prototype.updateResolution = function() {
-  this.resolution.width = Math.ceil(this.context.width*this.scroller.scaleIndex);
-  this.resolution.height = Math.ceil(this.context.height*this.scroller.scaleIndex);
+  this.resolution.width = Math.ceil(this.context.width * this.context.invGlobalScale * this.scroller.scaleIndex);
+  this.resolution.height = Math.ceil(this.context.height * this.context.invGlobalScale * this.scroller.scaleIndex);
 }
 
 module.exports.prototype.updateScreenRect = function() {

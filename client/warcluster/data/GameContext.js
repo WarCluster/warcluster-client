@@ -1,6 +1,8 @@
 module.exports = function(){
   this.$content = null;
   
+  this.globalScale = 0.002;
+  this.invGlobalScale = 1 / this.globalScale;
   this.areaSize = 5000;
   this.container = null;
   this.planetsHitObjects = [];
@@ -16,6 +18,7 @@ module.exports = function(){
 
   this.Races = {};
 
+  this.renderTime = 0;
   this.currentTime = 0;
   this.processingTime = 0;
 }

@@ -1,23 +1,4 @@
-require("../client/vendor/jquery");
-require("../client/vendor/bootstrap");
-require("../client/vendor/bootstrap-fileupload.min");
-require("../client/vendor/bootstrap-colorselector");
-require("../client/vendor/google-code-prettify/prettify");
-require("../client/vendor/TweenLite.min");	
-require("../client/vendor/plugins/jquery-mousewheel.min")($);
-require("../client/vendor/plugins/CSSPlugin.min");
-require("../client/vendor/easing/EasePack.min");
-// require("../client/vendor/notify")
-
-SockReconnect = require("../client/vendor/SockReconnect.min");
-
-KeyboardJS = require("./vendor/keyboardjs.min");
-
-_ = require("../client/vendor/underscore");
-Backbone = require("../client/vendor/backbone");
-
-require("../client/vendor/backbone/backbone_bind_to");
-
+require("../client/vendor");
 config = require("config");
 
 //Nqkakva gadost za notifications

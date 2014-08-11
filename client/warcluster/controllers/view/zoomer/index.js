@@ -14,6 +14,7 @@ module.exports = function(context, config, controller){
   this.shiftKey = false;
   this.zoomFn = null;
   this.controller.scrollPosition.z = config.zoom || 4000;
+  this.context.camera.position.z = this.controller.scrollPosition.z;
 
   $(window).mousewheel(function(e){
     if (self.shiftKey)
@@ -25,8 +26,6 @@ module.exports = function(context, config, controller){
 
 module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.prepare = function() {
-  this.context.camera.position.z = this.controller.scrollPosition.z;
-  
   var sc = 5000 * 5
   this.hitPlane =  new THREE.Mesh(new THREE.PlaneGeometry(1366 * sc, 768 * sc, 1, 1));
   this.hitPlane.visible = false;
@@ -35,6 +34,8 @@ module.exports.prototype.prepare = function() {
 
   this.context.container.add(this.hitPlane);
   this.context.container.add(this.tmpObj);
+
+  this.zoomFn(this.getZoomIndex())
 }
 
 module.exports.prototype.zoomIn = function() {

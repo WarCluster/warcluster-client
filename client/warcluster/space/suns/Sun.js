@@ -17,8 +17,8 @@ module.exports = function(context){
   this.sun.material.bumpMap = bmd1;
   this.sun.material.specularMap = bmd1;  
 
-  this.light = new THREE.PointLight( 0xffffff, 1.5, 5000 );
-  this.light.position.z = -1400;
+  this.light = new THREE.PointLight( 0xffffff, 1.5 * this.context.globalScale, 15000 * this.context.globalScale );
+  this.light.position.z = -1400 * this.context.globalScale;
 
   if (!module.exports.glowMaterial1) {
     var sparams = { 
@@ -69,6 +69,8 @@ module.exports.prototype.prepare = function(data) {
   this.sun.scale.set(size, size, size)
   this.sun.material.color = color;
 
+  size *= this.context.globalScale;
+
   this.glow1.scale.set(size * 5, size * 5, 1.0);
   this.glow1.material.color = color;
 
@@ -92,8 +94,8 @@ module.exports.prototype.destroy = function() {
 }
 
 module.exports.prototype.tick = function() {
-  this.glow1.rotation += -0.0005;
+  /*this.glow1.rotation += -0.0005;
   this.glow2.rotation += 0.001;
 
-  this.glow2.scale.x = this.glow2.scale.y = 1600 + 200 * Math.sin(new Date().getTime() * 0.001);
+  this.glow2.scale.x = this.glow2.scale.y = 1600 + 200 * Math.sin(new Date().getTime() * 0.001);*/
 }

@@ -14172,7 +14172,7 @@ THREE.Texture = function ( image, mapping, wrapS, wrapT, magFilter, minFilter, f
 
 	this.anisotropy = anisotropy !== undefined ? anisotropy : 1;
 
-	this.format = format !== undefined ? format : THREE.RGBAFormat;
+	this.format = format !== undefined ? format : THREE.RGBAFormat; 
 	this.type = type !== undefined ? type : THREE.UnsignedByteType;
 
 	this.offset = new THREE.Vector2( 0, 0 );
@@ -35385,7 +35385,7 @@ THREE.SpritePlugin = function () {
 
 			'void main() {',
 
-				'vec4 texture = texture2D( map, vUV );',
+				'vec4 texture = texture2D( map, vUV );', 
 
 				'if ( texture.a < alphaTest ) discard;',
 

@@ -5,25 +5,25 @@ module.exports = function(context){
 
   this.formations = [
     [
-      THREE.Vector3(0, -100, 0),
-      THREE.Vector3(-70, 0, 100),
-      THREE.Vector3(70, 0, 100),
-      THREE.Vector3(-140, 100, -100),
-      THREE.Vector3(140, 100, -100)
+      new THREE.Vector3(0, -100, 0),
+      new THREE.Vector3(-70, 0, 0),
+      new THREE.Vector3(70, 0, 0),
+      new THREE.Vector3(-140, 100, 0),
+      new THREE.Vector3(140, 100, 0)
     ],
     [
-      THREE.Vector3(0, -100, 0),
-      THREE.Vector3(-100, 0, 100),
-      THREE.Vector3(100, 0, 100),
-      THREE.Vector3(-50, 100, -200),
-      THREE.Vector3(50, 100, -200)
+      new THREE.Vector3(0, -100, 0),
+      new THREE.Vector3(-100, 0, 0),
+      new THREE.Vector3(100, 0, 0),
+      new THREE.Vector3(-50, 100, 0),
+      new THREE.Vector3(50, 100, 0)
     ],
     [
-      THREE.Vector3(-50, -70, 0),
-      THREE.Vector3(50, -70, 0),
-      THREE.Vector3(100, 0, 100),
-      THREE.Vector3(-100, 0, 100),
-      THREE.Vector3(0, 70, -100)
+      new THREE.Vector3(-50, -70, 0),
+      new THREE.Vector3(50, -70, 0),
+      new THREE.Vector3(100, 0, 0),
+      new THREE.Vector3(-100, 0, 0),
+      new THREE.Vector3(0, 70, 0)
     ]
   ];
 }

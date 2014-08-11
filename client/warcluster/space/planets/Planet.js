@@ -10,7 +10,7 @@ module.exports = function(context, data){
   if (!module.exports.planeGeometry)
     module.exports.planeGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 
-  this.planet =  new THREE.Mesh(module.exports.sphereGeometry, new THREE.MeshPhongMaterial({bumpScale: 10,shininess: 5, color: 0xFFFFFF, ambient: 0xFFFFFF, specular: 0xffffff, emissive: 0x000000}));
+  this.planet =  new THREE.Mesh(module.exports.sphereGeometry, new THREE.MeshPhongMaterial({bumpScale: 0.3,shininess: 10, color: 0xFFFFFF, ambient: 0xFFFFFF, specular: 0xffffff, emissive: 0x000000}));
   this.add(this.planet);  
 
   this.hitObject = this.planet;
@@ -19,7 +19,7 @@ module.exports = function(context, data){
     map: new THREE.ImageUtils.loadTexture( '/images/glow2.png' ), 
     useScreenCoordinates: false,
     color: 0xFFFFFF, transparent: false, blending: THREE.AdditiveBlending,
-    side:THREE.BackSide, depthWrite: false, depthTest: false
+    depthWrite: false, depthTest: false
   });
   spriteMaterial.opacity = 0.3;
 
@@ -80,9 +80,8 @@ module.exports.prototype.prepare = function(data) {
   
   this.planet.scale.set(this.data.width / 2, this.data.width / 2, this.data.width / 2);
 
-  this.glow.scale.set(this.data.width * 1.365, this.data.width * 1.365, this.data.width * 1.365);
-
-  this.selection.scale.set(this.data.width*1.35, this.data.height*1.35, 1);
+  this.glow.scale.set(this.data.width * 1.365 * this.context.globalScale, this.data.width * 1.365 * this.context.globalScale, 1);
+  this.selection.scale.set(this.data.width*1.35 , this.data.height*1.35 , 1);
 
   /*this.ring.visible = this.data.IsHome;
   this.ring.scale.set(this.data.width * 1.5, this.data.width * 0.8, this.data.width * 1.5);*/
@@ -162,7 +161,7 @@ module.exports.prototype.updateColor = function() {
 }
 
 module.exports.prototype.updatePopulationInfo = function() {
-  if (this.data.Owner !== this.context.playerData.Username) {
+  if (this.data.ShipCount == -1) {
     this.population.visible = false;
     return;
   } else 
@@ -184,7 +183,7 @@ module.exports.prototype.updatePopulationInfo = function() {
 }
 
 module.exports.prototype.updateOwnerInfo = function() {
-  if (!this.data.Owner || this.data.Owner !== this.context.playerData.Username) {
+  if (!this.data.Owner) {
     this.owner.visible = false;
     return;
   } else 

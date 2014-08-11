@@ -62,7 +62,7 @@ module.exports.prototype.parseMessage = function(command) {
         this.renderViewFn(data);
       break;
       case "state_change":
-        console.log("###.parseMessage[state_change]:", data);
+        console.log("###.parseMessage[state_change]:");
         this.renderViewFn(data);
       break;
       case "request_setup_params":
@@ -109,7 +109,7 @@ module.exports.prototype.parseMessage = function(command) {
     }
   }
 
-  //console.log("###.parseMessage:", data);
+  //console.log("###.parseMessage:", JSON.stringify(data, null, 2));
 }
 
 module.exports.prototype.scopeOfView = function(position, resolution) {
@@ -136,4 +136,54 @@ module.exports.prototype.setupParameters = function(race, sun) {
     "Race": race,
     "SunTextureId": sun
   }))
+}
+
+module.exports.prototype.testShips = function() {
+
+  var message = {
+    "Command": "send_missions",
+    "Timestamp": Date.now(),
+    "Missions": {
+      
+    },
+    "FailedMissions": {}
+  } 
+
+  
+
+  for (var i = 0;i < 500; i++) {
+    var id = "mission." + Math.random();
+
+    var p1 = this.context.planetsHitObjects[parseInt( this.context.planetsHitObjects.length * Math.random() )].parent;
+    var p2 = this.context.planetsHitObjects[parseInt( this.context.planetsHitObjects.length * Math.random() )].parent;
+
+    while (p2 == p1)
+      p2 = this.context.planetsHitObjects[parseInt( this.context.planetsHitObjects.length * Math.random() )].parent;
+
+    message.Missions[id] = {
+      "Color": {
+        "R": 0.39215687,
+        "G": 0.8980392,
+        "B": 0.10196078
+      },
+      "Source": {
+        "Name": "TOX6448",
+        "Owner": "toxic_real",
+        "Position": p1.data.Position
+      },
+      "Target": {
+        "Name": "TOX6443",
+        "Owner": "toxic_real",
+        "Position": p2.data.Position
+      },
+      "Type": "Supply",
+      "StartTime": Date.now(),
+      "TravelTime": 15000 + 10000 * Math.random(),
+      "Player": "toxic_real",
+      "ShipCount": 100 + parseInt(Math.random() * 5000),
+      "id": id
+    }
+  }
+  this.parseMessage(JSON.stringify(message));
+  //console.log("testShips", message)
 }

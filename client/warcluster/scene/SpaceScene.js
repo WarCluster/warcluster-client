@@ -9,6 +9,33 @@ module.exports = function(context){
   this.context = context;
   this.interval = null;
   this.afterRenderFn = null;
+
+  var ww = window.innerWidth;
+  var hh = window.innerHeight;
+  var self = this;
+
+  console.log(ww, hh);
+
+  this.camera = new THREE.PerspectiveCamera(25, ww / hh, 0.1, 100000000);
+
+  THREE.Object3D._threexDomEvent.camera(this.camera);
+
+  this.scene = new THREE.Scene();
+  this.scene.add( new THREE.AmbientLight( 0xb0b0b0 ) );
+
+  this.projector = new THREE.Projector();
+
+  this.renderer = new THREE.WebGLRenderer( { antialias: true} );
+  this.renderer.setSize(ww, hh);
+  //this.renderer.shadowMapEnabled = true;
+  //this.renderer.shadowMapSoft = true;
+  this.renderer.sortObjects = false
+  //this.renderer.autoClear = false;
+
+  this.context.camera = this.camera;
+  this.context.scene = this.scene;
+  this.context.projector = this.projector;
+  this.context.renderer = this.renderer;
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
@@ -22,6 +49,9 @@ module.exports.prototype.prepare = function() {
   this.context.$content.append(this.stats.domElement);
 
   this.$info = $('<div style="font-size: 10px; background-color: #1111FF; padding: 2px; width: 120px" />')
+  this.$info.click(function() {
+    self.context.commandsManager.testShips();
+  })
 
   $(this.stats.domElement).append(this.$info);
 
@@ -53,44 +83,21 @@ module.exports.prototype.prepare = function() {
     self.context.planetsManager.start();
     self.dispatchEvent({type: "complete"});
   });
+
+  this.renderer.render(this.scene, this.camera);
 }
 
 module.exports.prototype.buildScene = function() {
-  var ww = window.innerWidth;
-  var hh = window.innerHeight;
   var self = this;
 
-  console.log(ww, hh);
-
-  this.camera = new THREE.PerspectiveCamera(25, ww / hh, 0.1, 100000000);
-  this.camera.position.z = 4000;
-
-  THREE.Object3D._threexDomEvent.camera(this.camera);
-
-  this.scene = new THREE.Scene();
-  this.scene.add( new THREE.AmbientLight( 0xb0b0b0 ) );
-
-  this.projector = new THREE.Projector();
-
-  this.renderer = new THREE.WebGLRenderer( { antialias: true} );
-  this.renderer.setSize(ww, hh);
-  //this.renderer.shadowMapEnabled = true;
-  //this.renderer.shadowMapSoft = true;
-  this.renderer.sortObjects = false
-  //this.renderer.autoClear = false;
-
   this.container = new THREE.Object3D();
+  this.container.scale.set(this.context.globalScale, this.context.globalScale, this.context.globalScale)
   this.scene.add(this.container);
 
   this.enviroment = new SpaceSceneEnviroment(this.context);
   this.container.add(this.enviroment);
 
   this.context.hitPlane = this.enviroment.hitPlane;
-
-  this.context.camera = this.camera;
-  this.context.scene = this.scene;
-  this.context.projector = this.projector;
-  this.context.renderer = this.renderer;
   this.context.container = this.container;
 
   this.ctrlKey = false;
@@ -120,35 +127,41 @@ module.exports.prototype.buildScene = function() {
 
 module.exports.prototype.startRendering = function() {
   var self = this;
-  var ct = (new Date()).getTime();
-  var t = ct;
-  var tMax = 0;
+  this.context.renderTime = Date.now();
+  var t = this.context.renderTime;
+  //var tMax = 0;
   var render = function() {
     requestAnimationFrame(render);
 
-    ct = (new Date()).getTime();
-    self.context.processingTime = ct - t;
+    self.context.renderTime = Date.now();
+    self.context.processingTime = self.context.renderTime - t;
     self.context.currentTime += self.context.processingTime;
-    t = ct;
+    t = self.context.renderTime;
 
     for(var i = 0;i < self.context.interactiveObjects.length;i ++)
       self.context.interactiveObjects[i].tick();
-    tMax = Math.max(tMax, (new Date()).getTime() - t)
-    //console.log("1.RenderTime:", (new Date()).getTime() - t, tMax, self.context.interactiveObjects.length);
+   // tMax = Math.max(tMax, Date.now() - t)
+    //console.log("1.RenderTime:", Date.now() - t, tMax, self.context.interactiveObjects.length);
 
-    t = (new Date()).getTime();
+    //t = Date.now();
 
     self.context.shipsManager.update();
-
-    self.renderer.render(self.scene, self.camera);
     self.stats.update();
 
-    tMax = Math.max(tMax, (new Date()).getTime() - t)
+    self.renderer.render(self.scene, self.camera);
+    self.context.shipsManager.checkForRemove();
+    
+
+    //console.log("t:", Date.now() - t)
+
+   // tMax = Math.max(tMax, Date.now() - t)
     //if (self.ctrlKey && self.spaceKey)
-      //console.log("2.RenderTime:", /*(new Date()).getTime() - t, tMax, */self.context.interactiveObjects.length, self.context.objects.length, self.context.planets.length);
+      //console.log("2.RenderTime:", /*Date.now() - t, tMax, */self.context.interactiveObjects.length, self.context.objects.length, self.context.planets.length);
   }
 
   render();
+
+  
 }
 
 module.exports.prototype.render = function(data) {
@@ -184,13 +197,11 @@ module.exports.prototype.render = function(data) {
 }
 
 module.exports.prototype.gc = function() {
-  var t = Date.now();
+  //var t = Date.now();
   var rect = this.context.spaceViewController.screenRect;
-  var i;
 
-  //console.log("1.-gc-", rect, this.context.objects.length)
   var forRemove = [];
-  for (i = 0;i < this.context.objects.length;i ++) {
+  for (var i = 0;i < this.context.objects.length;i ++) {
     var object = this.context.objects[i];
 
     if (!(object.position.x >= rect.x && object.position.x <= rect.x + rect.width &&
@@ -198,13 +209,6 @@ module.exports.prototype.gc = function() {
       forRemove.push(object)
   }
 
-  this.context.shipsManager.update();
-
-  for (i = 0;i < this.context.missions.length;i ++)
-    this.context.missions[i].removeShipsIfNecessary();
-
-  //console.log("1.-gc-DESTROY OBJECT:", forRemove.length, this.context.objects.length)
-  
   while (forRemove.length > 0) 
     this.destroyObject(forRemove.shift())
 
