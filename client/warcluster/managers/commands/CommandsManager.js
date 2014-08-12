@@ -62,7 +62,7 @@ module.exports.prototype.parseMessage = function(command) {
         this.renderViewFn(data);
       break;
       case "state_change":
-        console.log("###.parseMessage[state_change]:");
+        //console.log("###.parseMessage[state_change]:");
         this.renderViewFn(data);
       break;
       case "request_setup_params":
@@ -112,30 +112,32 @@ module.exports.prototype.parseMessage = function(command) {
   //console.log("###.parseMessage:", JSON.stringify(data, null, 2));
 }
 
-module.exports.prototype.scopeOfView = function(position, resolution) {
-  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
-  var data = {"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}
-  //console.log("scopeOfView", data)
-  this.sockjs.send(JSON.stringify(data));
+module.exports.prototype.scopeOfView = function(x, y, width, height) {
+  //console.log("scopeOfView", x, y, width, height)
+  this.sockjs.send('{' +
+    '"Command": "scope_of_view",' +
+    '"Position": {"x": '+x+', "y": '+y+'},' +
+    '"Resolution": ['+width+', '+height+']' +
+  '}');
 }
 
 module.exports.prototype.sendMission = function(type, source, target, ships) {
   //console.log("sendMission:", type, source, target, ships)
-  this.sockjs.send(JSON.stringify({
-    "Command": "start_mission",
-    "Type": type,
-    "StartPlanets": source,
-    "EndPlanet": target,
-    "Fleet": ships
-  }));
+  this.sockjs.send('{' +
+    '"Command": "start_mission",' +
+    '"Type": "'+type+'",' +
+    '"StartPlanets": ["'+source.join('","')+'"],' +
+    '"EndPlanet": "'+target+'",' +
+    '"Fleet": '+ ships +
+  '}');
 }
 
 module.exports.prototype.setupParameters = function(race, sun) {
-  this.sockjs.send(JSON.stringify({
-    "Command": "setup_parameters",
-    "Race": race,
-    "SunTextureId": sun
-  }))
+  this.sockjs.send('{' +
+    '"Command": "setup_parameters",' +
+    '"Race": '+race+',' +
+    '"SunTextureId": '+ sun +
+  '}')
 }
 
 module.exports.prototype.testShips = function() {
@@ -148,8 +150,6 @@ module.exports.prototype.testShips = function() {
     },
     "FailedMissions": {}
   } 
-
-  
 
   for (var i = 0;i < 500; i++) {
     var id = "mission." + Math.random();

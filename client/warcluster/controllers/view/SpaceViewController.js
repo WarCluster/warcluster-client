@@ -164,12 +164,7 @@ module.exports.prototype.checkPosition = function() {
 
     //console.log("---- ########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
 
-    var position = {
-      x: Math.ceil(cpx),
-      y: Math.ceil(cpy)
-    };
-
-    this.context.commandsManager.scopeOfView(position, this.resolution);
+    this.context.commandsManager.scopeOfView(Math.ceil(cpx), Math.ceil(cpy), this.resolution.width, this.resolution.height);
   }
 }
 
