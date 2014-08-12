@@ -76,7 +76,7 @@ module.exports = function(context){
 
   for(i = 0;i < 4; i ++) {
     var bgd = this.context.resourcesLoader.get("/images/backgrounds/background" + (i + 5) + ".jpg");
-    var mat = new THREE.MeshBasicMaterial({map: bgd, transparent : true});
+    var mat = new THREE.MeshBasicMaterial({map: bgd, transparent : true, depthWrite: false, depthTest: false});
     mat.opacity = 0.25;
 
     var mesh =  new THREE.Mesh(backgroundGeometry, mat);

@@ -29,7 +29,7 @@ module.exports = function(context){
   this.renderer.setSize(ww, hh);
   //this.renderer.shadowMapEnabled = true;
   //this.renderer.shadowMapSoft = true;
-  this.renderer.sortObjects = false
+  this.renderer.sortObjects = true;
   //this.renderer.autoClear = false;
 
   this.context.camera = this.camera;

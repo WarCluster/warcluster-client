@@ -33,7 +33,7 @@ module.exports = function(context, data){
   this.add(this.selection);
 
   this.populationTexture = new THREE.DataTexture();
-  this.populationMaterial = new THREE.MeshBasicMaterial({map: this.populationTexture, transparent : true})
+  this.populationMaterial = new THREE.MeshBasicMaterial({map: this.populationTexture, transparent : true })
   this.populationMaterial.map.needsUpdate = true;
   this.population = new THREE.Mesh(module.exports.planeGeometry, this.populationMaterial);
   this.population.visible = false;
@@ -43,7 +43,7 @@ module.exports = function(context, data){
 
   this.ownerTexture = new THREE.DataTexture();
 
-  this.ownerMaterial = new THREE.MeshBasicMaterial({ map: this.ownerTexture, transparent: true});
+  this.ownerMaterial = new THREE.MeshBasicMaterial({ map: this.ownerTexture, transparent : true });
   this.owner = new THREE.Mesh(module.exports.planeGeometry, this.ownerMaterial);
   this.owner.visible = false;
 

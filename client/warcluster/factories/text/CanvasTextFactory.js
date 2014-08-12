@@ -3,6 +3,7 @@ module.exports = function(useGlobalCanvas, context){
     module.exports.canvas = document.createElement('canvas');
 
   this.canvas2d = useGlobalCanvas ? module.exports.canvas : document.createElement('canvas');
+  this.canvas2d.globalAlpha = 0;
   this.context2d = this.canvas2d.getContext('2d');
   this.uint8Array = null;
 }
@@ -18,7 +19,7 @@ module.exports.prototype.build = function(text, font, size) {
 
   this.canvas2d.width = this.context2d.measureText(textHandler).width;
   this.canvas2d.height = size*2;
-
+  this.canvas2d.fillStyle = "rgba(0, 0, 0, 0)";
   this.context2d.font = size + 'pt ' + font;
   this.context2d.fillStyle = 'white';
   this.context2d.textAlign = "center";

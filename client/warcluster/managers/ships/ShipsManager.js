@@ -197,7 +197,7 @@ module.exports.prototype.buildShipMaterial = function() {
     "varying float vRotation;",
     "varying vec2 vTexPosition;",
 
-    "const float showHideTime = 4000.0;",
+    "const float showHideTime = 3300.0;",
 
     "void main() {",
       "if (time >= 0.0 && time < travelTime) ",
@@ -209,10 +209,10 @@ module.exports.prototype.buildShipMaterial = function() {
         "float sc = (clamp(time, 0.0, showHideTime) / showHideTime) * (1.0 - clamp(time - (travelTime - showHideTime), 0.0, showHideTime) / showHideTime);",
 
         "float progress = time / travelTime;",
-        "vec3 newpos = (displacement * progress) + startPosition + formation * (sc + 0.1);",
+        "vec3 newpos = (displacement * progress) + startPosition + formation * (sc + 0.2);",
         "vec4 mvPosition = modelViewMatrix * vec4( newpos, 1.0 );",
 
-        "gl_PointSize = size * sc * ( 300.0 / length( mvPosition.xyz ) );",
+        "gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) ) * (sc + 0.05);",
         "gl_Position = projectionMatrix * mvPosition;",
       "}",
     "}"
