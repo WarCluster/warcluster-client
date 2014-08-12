@@ -72,8 +72,8 @@ module.exports.prototype.addShips = function(sizes, mission, color, formation) {
 
   var tsVec = this.cloud.material.uniforms.tileSize.value;
 
-  var sc1 = 10;
-  var sc2 = 30;
+  var sc1 = 5;
+  var sc2 = 15;
 
   for ( var i = 0; i < objs.length; i++ ) {
     var v = objs[ i ];

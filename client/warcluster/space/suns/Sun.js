@@ -17,7 +17,8 @@ module.exports = function(context){
   this.sun.material.bumpMap = bmd1;
   this.sun.material.specularMap = bmd1;  
 
-  this.light = new THREE.PointLight( 0xffffff, 1.5 * this.context.globalScale, 15000 * this.context.globalScale );
+  //this.light = new THREE.PointLight( 0xffffff, 1.5 * this.context.globalScale, 15000 * this.context.globalScale );
+  this.light = new THREE.PointLight( 0xffffff, 0.5, 3800 );
   this.light.position.z = -1400 * this.context.globalScale;
 
   if (!module.exports.glowMaterial1) {

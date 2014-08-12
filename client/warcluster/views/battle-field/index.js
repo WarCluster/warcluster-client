@@ -9,6 +9,8 @@ var SunsFactory = require("../../factories/suns/SunsFactory");
 
 var CommandsManager = require("../../managers/commands/CommandsManager");
 var PlanetsManager = require("../../managers/planets/PlanetsManager");
+var PlanetsTextureManager = require("../../managers/planets/PlanetsTextureManager");
+
 var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
 var ShipsManager = require("../../managers/ships/ShipsManager");
 
@@ -96,6 +98,8 @@ module.exports = Backbone.View.extend({
       self.planetsSelection.updatePopulations(e.updated);
     });
 
+    this.context.planetsTextureManager = new PlanetsTextureManager(this.context);
+
     this.context.spaceScene = new SpaceScene(this.context);
     this.context.spaceScene.addEventListener("complete", function() { 
       console.log("--complete space scene--");
@@ -106,9 +110,9 @@ module.exports = Backbone.View.extend({
     this.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
         maxZoom: 60000000,
-        minZoom: 5,//4000,
-        zoomStep: 7,
-        zoom: 10
+        minZoom: 3000,
+        zoomStep: 1200,
+        zoom: 4000
       },
       scroller: {
         xMin: -5000000,
