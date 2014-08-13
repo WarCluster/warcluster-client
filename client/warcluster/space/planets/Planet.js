@@ -16,7 +16,7 @@ module.exports = function(context, data){
   this.hitObject = this.planet;
 
   var spriteMaterial = new THREE.SpriteMaterial({ 
-    map: new THREE.ImageUtils.loadTexture( '/images/glow2.png' ), 
+    map: this.context.resourcesLoader.get("/images/glow2.png"), 
     useScreenCoordinates: false,
     color: 0xFFFFFF, transparent: false, blending: THREE.AdditiveBlending,
     depthWrite: false, depthTest: false

@@ -72,9 +72,15 @@ module.exports.prototype.zoomIt = function(step) {
   this.animateIt();
 }
 
-module.exports.prototype.animateIt = function() {
+module.exports.prototype.zoomAt = function(z) {
+  if (!this.controller.setScrollPosition(null, null, z))
+    return false;
+  this.animateIt();
+}
+
+module.exports.prototype.animateIt = function(time) {
   var self = this;
-  TweenLite.to(this.context.spaceScene.camera.position, 0.5, {
+  TweenLite.to(this.context.spaceScene.camera.position, time || 0.5, {
     x: this.controller.scrollPosition.x,
     y: this.controller.scrollPosition.y,
     z: this.controller.scrollPosition.z,

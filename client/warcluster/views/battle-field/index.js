@@ -13,6 +13,7 @@ var PlanetsTextureManager = require("../../managers/planets/PlanetsTextureManage
 
 var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
 var ShipsManager = require("../../managers/ships/ShipsManager");
+var SunsManager = require("../../managers/suns/SunsManager");
 
 var SpaceScene = require("../../scene/SpaceScene");
 
@@ -109,7 +110,7 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
-        maxZoom: 60000000,
+        maxZoom: 45907,
         minZoom: 3000,
         zoomStep: 1200,
         zoom: 4000
@@ -174,6 +175,7 @@ module.exports = Backbone.View.extend({
       self.context.KeyboardManager = new KeyboardManager(self.context);
 
       self.shipsManager.prepare();
+      self.sunsManager.prepare();
     }
 
     this.commandsManager.renderViewFn = function(data) {
@@ -189,6 +191,10 @@ module.exports = Backbone.View.extend({
 
     this.shipsManager = new ShipsManager(this.context, 100000);
     this.context.shipsManager = this.shipsManager;
+
+    this.sunsManager = new SunsManager(this.context, 500);
+    this.context.sunsManager = this.sunsManager;
+    
 
     this.context.spaceScene.prepare();
 

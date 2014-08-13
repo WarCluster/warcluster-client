@@ -29,6 +29,8 @@ module.exports = {
     "/images/planets/planet_selection_glow.png",
     "/images/planets/water.jpg",
 
+    "/images/lensflare0.png",
+    "/images/glow2.png",
     "/images/planets/ring.png"
   ],
   models: [

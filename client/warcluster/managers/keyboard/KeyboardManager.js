@@ -32,6 +32,10 @@ module.exports = function(context) {
   KeyboardJS.KeyboardJS.on('ctrl + enter', function() {
     self.context.spaceScene.enviroment.toggleGrid();
   });
+
+  KeyboardJS.KeyboardJS.on('m', function() {
+    //self.context.spaceViewController.toggleMapView();
+  });
   
   KeyboardJS.KeyboardJS.on('ctrl',
   //onDownCallback

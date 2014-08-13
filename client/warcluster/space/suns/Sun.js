@@ -36,19 +36,12 @@ module.exports = function(context){
     module.exports.glowMaterial2.opacity = 0.4;
   }
 
-  var sparams = { 
-    map: new THREE.ImageUtils.loadTexture( '/images/lensflare0.png' ), 
-    useScreenCoordinates: false,
-    transparent: false, blending: THREE.AdditiveBlending,
-    side:THREE.BackSide, depthWrite: false, depthTest: false
-  }
+  //this.glow1 = new THREE.Sprite( module.exports.glowMaterial1 );
+  //this.add(this.glow1); 
 
-  this.glow1 = new THREE.Sprite( module.exports.glowMaterial1 );
-  this.add(this.glow1); 
-
-  this.glow2 = new THREE.Sprite( module.exports.glowMaterial2 );
+  /*this.glow2 = new THREE.Sprite( module.exports.glowMaterial2 );
   this.glow2.rotation.z = Math.random() * 3.14;
-  this.add(this.glow2);
+  this.add(this.glow2);*/
 }
 
 module.exports.prototype = new InteractiveObject();
@@ -72,26 +65,29 @@ module.exports.prototype.prepare = function(data) {
 
   size *= this.context.globalScale;
 
-  this.glow1.scale.set(size * 5, size * 5, 1.0);
-  this.glow1.material.color = color;
+  //this.glow1.scale.set(size * 5, size * 5, 1.0);
+  //this.glow1.material.color = color;
 
-  this.glow2.scale.set(size * 6, size * 6, 1.0);
-  this.glow2.material.color = color;
+  //this.glow2.scale.set(size * 6, size * 6, 1.0);
+ // this.glow2.material.color = color;
 
   this.light.color = color;
 
-  this.glow1.rotation = Math.random() * Math.PI;
-  this.glow2.rotation = Math.random() * Math.PI;
+  //this.glow1.rotation = Math.random() * Math.PI;
+  //this.glow2.rotation = Math.random() * Math.PI;
 
   this.light.position.set( this.position.x, this.position.y, this.position.z );
   this.context.scene.add( this.light );
 
-  this.activate();
+  //this.activate();
+
+  this.sunGlowIndex = this.context.sunsManager.addSunGlow(this.position.x, this.position.y, this.position.z, color);
 }
 
 module.exports.prototype.destroy = function() {
   this.context.scene.remove( this.light );
-  this.deactivate();
+  this.context.sunsManager.removeSunGlow(this.sunGlowIndex);
+  //this.deactivate();
 }
 
 module.exports.prototype.tick = function() {

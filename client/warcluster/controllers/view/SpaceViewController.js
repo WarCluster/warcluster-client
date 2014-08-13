@@ -28,7 +28,7 @@ module.exports = function(context, config){
 
   this.zoomer = new Zoomer(context, config.zoomer, this);
   this.zoomer.zoomFn = function(zoom) {
-    //console.log("zoomFn:", zoom)
+    //console.log("zoomFn:", zoom, self.scrollPosition.z)
     self.scroller.scaleIndex = zoom;
     self.info.updatePosition();
     self.checkPosition();
@@ -304,6 +304,17 @@ module.exports.prototype.setScrollPosition = function(x, y, z){
   }
   
   return true;
+}
+
+module.exports.prototype.toggleMapView = function(){
+  if (this.scrollPosition.z == 300000) {
+    this.scrollPosition.z = this.previousZ;  
+  } else {
+    this.previousZ = this.scrollPosition.z;
+    this.scrollPosition.z = 300000;  
+  }
+  
+  this.zoomer.animateIt();
 }
 
 module.exports.prototype.pressCtrlKey = function(){
