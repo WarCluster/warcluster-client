@@ -108,8 +108,10 @@ module.exports.prototype.buildScene = function() {
     var hh = $("body").height();
     self.camera.aspect = ww / hh;
     self.camera.updateProjectionMatrix();
+
     self.context.width = ww;
     self.context.height = hh;
+    self.context.aspect = hh / 1000;
 
     self.renderer.setSize( ww, hh );
     
@@ -117,6 +119,8 @@ module.exports.prototype.buildScene = function() {
       self.context.spaceViewController.checkPosition();
 
     self.context.spaceViewController.info.updatePosition();
+    self.context.shipsManager.updateSize();
+    self.context.sunsManager.updateSize();
   }
 
   this.context.$content.append(this.renderer.domElement);

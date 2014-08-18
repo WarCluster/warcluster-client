@@ -110,7 +110,7 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
-        maxZoom: 45907,
+        maxZoom: 145907,
         minZoom: 3000,
         zoomStep: 1200,
         zoom: 4000

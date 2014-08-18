@@ -25,13 +25,16 @@ module.exports.prototype.prepare = function() {
   var vertices = this.cloud.geometry.vertices;
   var values_color = shaderMaterial.attributes.color.value;
   var values_time = shaderMaterial.attributes.time.value;
+  var values_aspect = this.cloud.material.attributes.aspect.value;
   
   for ( var v = 0; v < vertices.length; v++ ) {
     values_time[v] = -1;
     values_color[v] = new THREE.Color( 0xffaa00 );
+    values_aspect[ v ] = this.context.aspect;
   }
 
   this.context.container.add( this.cloud );
+  this.t = Date.now();
 }
 
 module.exports.prototype.addSunGlow = function(x, y, z, color) {
@@ -45,6 +48,7 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
   var vertices = this.cloud.geometry.vertices;
   var values_color = this.cloud.material.attributes.color.value;
   var values_time = this.cloud.material.attributes.time.value;
+  var values_aspect = this.cloud.material.attributes.aspect.value;
 
   var v = objs[ 0 ];
   
@@ -52,11 +56,13 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
   vertices[v].y = y;
   vertices[v].z = z;
 
-  values_time[v] = -1;
+  values_time[v] = 20;
   values_color[v] = color;
+  values_aspect[ v ] = this.context.aspect;
   
   this.cloud.material.attributes.color.needsUpdate = true;
   this.cloud.material.attributes.time.needsUpdate = true;
+  this.cloud.material.attributes.aspect.needsUpdate = true;
 
   this.cloud.geometry.verticesNeedUpdate = true;
 
@@ -73,12 +79,24 @@ module.exports.prototype.removeSunGlow = function(item) {
 
 module.exports.prototype.update = function() {
   var ln = this.objectsIndexes.length;
-
-  for( var i = 0; i < ln; i++ )
-    this.cloud.material.attributes.time.value[ this.objectsIndexes[ i ] ] = this.context.currentTime;
+  if (ln) {
+    for( var i = 0; i < ln; i++ )
+      this.cloud.material.attributes.time.value[ this.objectsIndexes[ i ] ] += (Date.now() - this.t) * 0.00002;
   
-  if (ln)
-    this.cloud.material.attributes.time.needsUpdate = true;
+    this.cloud.material.attributes.time.needsUpdate = true;  
+  }
+
+  this.t = Date.now();
+}
+
+module.exports.prototype.updateSize = function() {
+  var ln = this.objectsIndexes.length;
+  if (ln) {
+    for( var i = 0; i < ln; i++ )
+      this.cloud.material.attributes.aspect.value[ this.objectsIndexes[ i ] ] = this.context.aspect;
+  
+    this.cloud.material.attributes.aspect.needsUpdate = true;  
+  }
 }
 
 module.exports.prototype.buildGlowMaterial = function() {
@@ -86,18 +104,19 @@ module.exports.prototype.buildGlowMaterial = function() {
 
     "attribute float time;",
     "attribute vec3 color;",
+    "attribute float aspect;",
 
-    "varying vec3 vColor;",
     "varying float vTime;",
+    "varying vec3 vColor;",
 
     "void main() {",
       "if (time != -1.0) {",
-        "vColor = color;",
         "vTime = time;",
+        "vColor = color;",
 
         "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
-
-        "gl_PointSize = 9000.0 * ( 300.0 / length( mvPosition.xyz ) );",
+        
+        "gl_PointSize = 12000.0 * ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
         "gl_Position = projectionMatrix * mvPosition;",
       "}",
     "}"
@@ -113,18 +132,21 @@ module.exports.prototype.buildGlowMaterial = function() {
 
     "void main() {",
       "float mid = 0.5;",
-      "float angle = vTime * 0.002;",
+      "float angle = vTime;",
       "vec2 rotated = vec2(cos(angle) * (gl_PointCoord.x - mid) - sin(angle) * (gl_PointCoord.y - mid) + mid,",
                           "cos(angle) * (gl_PointCoord.y - mid) + sin(angle) * (gl_PointCoord.x - mid) + mid);",
 
+      // 
+
       "gl_FragColor = vec4( vColor , 1.0 );",
-      "gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );",
+      "gl_FragColor *= texture2D( texture, gl_PointCoord );",
 
     "}"
   ].join("\n")
 
   var attributes = {
     time: { type: 'f', value: [] },
+    aspect: { type: 'f', value: [] },
     color: { type: 'c', value: [] }
   };
 

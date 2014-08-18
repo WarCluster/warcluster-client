@@ -32,6 +32,7 @@ module.exports.prototype.prepare = function() {
   var values_time = shaderMaterial.attributes.time.value;
   var values_rotation = shaderMaterial.attributes.rotation.value;
   var values_travelTime = shaderMaterial.attributes.travelTime.value;
+  var values_aspect = this.cloud.material.attributes.aspect.value;
   
   for ( var v = 0; v < vertices.length; v++ ) {
     values_displacement[v] = new THREE.Vector3();
@@ -43,6 +44,8 @@ module.exports.prototype.prepare = function() {
 
     this.startTimes[v] = 0;
     values_travelTime [v] = 0;
+
+    values_aspect[ v ] = this.context.aspect;
   }
 
   this.context.container.add( this.cloud );
@@ -62,6 +65,7 @@ module.exports.prototype.addShips = function(sizes, mission, color, formation) {
   var values_rotation = this.cloud.material.attributes.rotation.value;
   var values_travelTime = this.cloud.material.attributes.travelTime.value;
   var values_texPosition = this.cloud.material.attributes.texPosition.value;
+  var values_aspect = this.cloud.material.attributes.aspect.value;
 
   var tsVec = this.cloud.material.uniforms.tileSize.value;
 
@@ -91,7 +95,9 @@ module.exports.prototype.addShips = function(sizes, mission, color, formation) {
 
     this.startTimes[v] = data.StartTime;
     values_travelTime[v] = data.TravelTime;
-    values_texPosition[ v ] = new THREE.Vector2(sizes[i], 0).multiply(tsVec)
+    values_texPosition[ v ] = new THREE.Vector2(sizes[i], 0).multiply(tsVec);
+
+    values_aspect[ v ] = this.context.aspect;
   }
   
   this.cloud.material.attributes.customColor.needsUpdate = true;
@@ -101,6 +107,7 @@ module.exports.prototype.addShips = function(sizes, mission, color, formation) {
   this.cloud.material.attributes.rotation.needsUpdate = true;
   this.cloud.material.attributes.travelTime.needsUpdate = true;
   this.cloud.material.attributes.texPosition.needsUpdate = true;
+  this.cloud.material.attributes.aspect.needsUpdate = true;
 
   this.cloud.geometry.verticesNeedUpdate = true;
 
@@ -124,14 +131,25 @@ module.exports.prototype.removeShips = function(ships) {
 
 module.exports.prototype.update = function() {
   var ln = this.objectsIndexes.length;
-
-  for( var i = 0; i < ln; i++ )
-    this.cloud.material.attributes.time.value[ this.objectsIndexes[ i ] ] = this.context.currentTime - this.startTimes[ this.objectsIndexes[ i ] ];
+  if (ln) {
+    for( var i = 0; i < ln; i++ )
+      this.cloud.material.attributes.time.value[ this.objectsIndexes[ i ] ] = this.context.currentTime - this.startTimes[ this.objectsIndexes[ i ] ];
   
-  if (ln)
-    this.cloud.material.attributes.time.needsUpdate = true;
+    this.cloud.material.attributes.time.needsUpdate = true;  
+  }
+  
 
   //console.log("-update-", Date.now() - t, lsh - this.shipsForRemove.length)
+}
+
+module.exports.prototype.updateSize = function() {
+  var ln = this.objectsIndexes.length;
+  if (ln) {
+    for( var i = 0; i < ln; i++ )
+      this.cloud.material.attributes.aspect.value[ this.objectsIndexes[ i ] ] = this.context.aspect;
+  
+    this.cloud.material.attributes.aspect.needsUpdate = true;  
+  }
 }
 
 module.exports.prototype.checkForRemove = function() {
@@ -167,6 +185,8 @@ module.exports.prototype.buildShipMaterial = function() {
     "attribute float time;",
     "attribute float startTime;",
     "attribute float travelTime;",
+    "attribute float aspect;",
+
     "attribute vec2 texPosition;",
 
     "attribute vec3 customColor;",
@@ -186,7 +206,7 @@ module.exports.prototype.buildShipMaterial = function() {
         "vColor = customColor;",
         "vTexPosition = texPosition;",
 
-        "float sc = (clamp(time, 0.0, showHideTime) / showHideTime) * (1.0 - clamp(time - (travelTime - showHideTime), 0.0, showHideTime) / showHideTime);",
+        "float sc = (clamp(time, 0.0, showHideTime) / showHideTime) * (1.0 - clamp(time - (travelTime - showHideTime), 0.0, showHideTime) / showHideTime) * aspect;",
 
         "float progress = time / travelTime;",
         "vec3 newpos = (displacement * progress) + position + formation * (sc + 0.2);",
@@ -214,19 +234,21 @@ module.exports.prototype.buildShipMaterial = function() {
                           "cos(vRotation) * (gl_PointCoord.y - mid) + sin(vRotation) * (gl_PointCoord.x - mid) + mid);",
 
       "gl_FragColor = vec4( vColor , 1.0 );",
-      "gl_FragColor = gl_FragColor * texture2D( texture, rotated * tileSize + vTexPosition );",
+      "gl_FragColor *= texture2D( texture, rotated * tileSize + vTexPosition );",
 
     "}"
   ].join("\n")
 
   var attributes = {
-    texPosition: { type: "v2", value: [] },
+    
     displacement: { type: 'v3', value: [] },
     formation: { type: 'v3', value: [] },
     rotation: { type: "f", value: [] },
     travelTime: { type: "f", value: [] },
     time: { type: 'f', value: [] },
-    customColor: { type: 'c', value: [] }
+    aspect: { type: 'f', value: [] },
+    customColor: { type: 'c', value: [] },
+    texPosition: { type: "v2", value: [] }
   };
 
   var uniforms = {
