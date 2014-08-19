@@ -10,12 +10,14 @@ var SunsFactory = require("../../factories/suns/SunsFactory");
 var CommandsManager = require("../../managers/commands/CommandsManager");
 var PlanetsManager = require("../../managers/planets/PlanetsManager");
 var PlanetsTextureManager = require("../../managers/planets/PlanetsTextureManager");
-
-var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
 var ShipsManager = require("../../managers/ships/ShipsManager");
 var SunsManager = require("../../managers/suns/SunsManager");
+var SunsTextureManager = require("../../managers/suns/SunsTextureManager");
+
 
 var SpaceScene = require("../../scene/SpaceScene");
+
+var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
 
 var MissionsMenu = require("../../controls/mission-menu");
 var PlanetsSelection = require("../../controls/planets-selection");
@@ -100,6 +102,7 @@ module.exports = Backbone.View.extend({
     });
 
     this.context.planetsTextureManager = new PlanetsTextureManager(this.context);
+    this.context.sunsTextureManager = new SunsTextureManager(this.context);
 
     this.context.spaceScene = new SpaceScene(this.context);
     this.context.spaceScene.addEventListener("complete", function() { 
@@ -165,8 +168,8 @@ module.exports = Backbone.View.extend({
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.Race).el);
       console.log("-loginFn-", self.context.playerData);
       self.spaceViewController.activate();
-      self.spaceViewController.scrollTo(data.HomePlanet.Position.X* this.context.globalScale-50000, data.HomePlanet.Position.Y* this.context.globalScale-50000);
-      self.spaceViewController.scrollTo(data.HomePlanet.Position.X* this.context.globalScale, data.HomePlanet.Position.Y* this.context.globalScale);
+      self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
+      self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
 
       if (!self.context.playerData.JustRegistered) {
         self.toggleLandingStatisticsView();

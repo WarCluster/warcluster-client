@@ -18,13 +18,13 @@ module.exports.prototype.build = function(data) {
   this.materials[data.Texture][hex] = new THREE.MeshPhongMaterial({
     map: map, 
     bumpMap: map, 
-    bumpScale: 1.3,
-    shininess: 10, 
+    bumpScale: 10,
+    shininess: 5, 
     color: color, 
     ambient: color, 
     specular: 0xffffff, 
     emissive: 0x000000
   });
-  console.log("-build-")
+  
   return this.materials[data.Texture][hex];
 }

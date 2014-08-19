@@ -133,13 +133,15 @@ module.exports.prototype.buildGlowMaterial = function() {
     "void main() {",
       "float mid = 0.5;",
       "float angle = vTime;",
-      "vec2 rotated = vec2(cos(angle) * (gl_PointCoord.x - mid) - sin(angle) * (gl_PointCoord.y - mid) + mid,",
-                          "cos(angle) * (gl_PointCoord.y - mid) + sin(angle) * (gl_PointCoord.x - mid) + mid);",
 
-      // 
+      "vec2 rotated1 = vec2(cos(angle) * (gl_PointCoord.x - mid) - sin(angle) * (gl_PointCoord.y - mid) + mid,",
+                           "cos(angle) * (gl_PointCoord.y - mid) + sin(angle) * (gl_PointCoord.x - mid) + mid);",
+
+      "vec2 rotated2 = vec2(cos(-angle) * (gl_PointCoord.x - mid) - sin(-angle) * (gl_PointCoord.y - mid) + mid,",
+                           "cos(-angle) * (gl_PointCoord.y - mid) + sin(-angle) * (gl_PointCoord.x - mid) + mid);",
 
       "gl_FragColor = vec4( vColor , 1.0 );",
-      "gl_FragColor *= texture2D( texture, gl_PointCoord );",
+      "gl_FragColor *= texture2D( texture, rotated1 ) * texture2D( texture, rotated2 );",
 
     "}"
   ].join("\n")
@@ -151,7 +153,7 @@ module.exports.prototype.buildGlowMaterial = function() {
   };
 
   var uniforms = {
-    texture:   { type: "t", value: this.context.resourcesLoader.get('/images/lensflare0.png') }
+    texture:   { type: "t", value: this.context.resourcesLoader.get('/images/suns/sun_glow.png') }
   };
   
   var shaderMaterial = new THREE.ShaderMaterial( {

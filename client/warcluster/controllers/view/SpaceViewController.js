@@ -129,8 +129,8 @@ module.exports.prototype.activate = function() {
     
     this.updateResolution();
 
-    this.tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x * this.context.invGlobalScale - (this.resolution.width / 2), this.context.spaceScene.camera.position.y * this.context.invGlobalScale + (this.resolution.height / 2));
-    this.brPosition = this.getGridPosition(this.context.spaceScene.camera.position.x * this.context.invGlobalScale + (this.resolution.width / 2), this.context.spaceScene.camera.position.y * this.context.invGlobalScale - (this.resolution.height / 2));
+    this.tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (this.resolution.width / 2), this.context.spaceScene.camera.position.y + (this.resolution.height / 2));
+    this.brPosition = this.getGridPosition(this.context.spaceScene.camera.position.x + (this.resolution.width / 2), this.context.spaceScene.camera.position.y - (this.resolution.height / 2));
 
     this.updateScreenRect();
 
@@ -148,8 +148,8 @@ module.exports.prototype.deactivate = function() {
 module.exports.prototype.checkPosition = function() {
   this.updateResolution();
 
-  var cpx = this.context.spaceScene.camera.position.x * this.context.invGlobalScale;
-  var cpy = this.context.spaceScene.camera.position.y * this.context.invGlobalScale;
+  var cpx = this.context.spaceScene.camera.position.x;
+  var cpy = this.context.spaceScene.camera.position.y;
 
   var tlPosition = this.getGridPosition(cpx - (this.resolution.width / 2), cpy + (this.resolution.height / 2));
   var brPosition = this.getGridPosition(cpx + (this.resolution.width / 2), cpy - (this.resolution.height / 2));
@@ -173,8 +173,8 @@ module.exports.prototype.scrollTo = function (x, y, animated) {
 }
 
 module.exports.prototype.updateResolution = function() {
-  this.resolution.width = Math.ceil(this.context.width * this.context.invGlobalScale * this.scroller.scaleIndex);
-  this.resolution.height = Math.ceil(this.context.height * this.context.invGlobalScale * this.scroller.scaleIndex);
+  this.resolution.width = Math.ceil(this.context.width * this.scroller.scaleIndex);
+  this.resolution.height = Math.ceil(this.context.height * this.scroller.scaleIndex);
 }
 
 module.exports.prototype.updateScreenRect = function() {

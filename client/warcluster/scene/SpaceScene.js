@@ -91,7 +91,6 @@ module.exports.prototype.buildScene = function() {
   var self = this;
 
   this.container = new THREE.Object3D();
-  this.container.scale.set(this.context.globalScale, this.context.globalScale, this.context.globalScale)
   this.scene.add(this.container);
 
   this.enviroment = new SpaceSceneEnviroment(this.context);

@@ -253,7 +253,7 @@ module.exports.prototype.buildShipMaterial = function() {
 
   var uniforms = {
     
-    size:      { type: "f", value: 1000 * this.context.globalScale },
+    size:      { type: "f", value: 1000 },
     tileSize:  { type: "v2", value: new THREE.Vector2( 0.2, 1 ) },
     texture:   { type: "t", value: this.context.resourcesLoader.get("/images/ships/ships.png") }
 
