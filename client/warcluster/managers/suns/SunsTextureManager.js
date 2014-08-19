@@ -10,11 +10,8 @@ module.exports.prototype.build = function(data) {
   var map = this.context.resourcesLoader.get("/images/suns/sun_texture"+data.SunTextureId+".jpg");
   
   this.materials[data.SunTextureId] = new THREE.MeshPhongMaterial({
-    bumpScale: 0.05, 
     map: map, 
-    bumpMap: map,
-    specularMap: map
   })
-  
+
   return this.materials[data.SunTextureId];
 }
