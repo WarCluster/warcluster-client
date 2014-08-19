@@ -151,7 +151,7 @@ module.exports.prototype.testShips = function() {
     "FailedMissions": {}
   } 
 
-  for (var i = 0;i < 500; i++) {
+  for (var i = 0;i < 2500; i++) {
     var id = "mission." + Math.random();
 
     var p1 = this.context.planetsHitObjects[parseInt( this.context.planetsHitObjects.length * Math.random() )].parent;

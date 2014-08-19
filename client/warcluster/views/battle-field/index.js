@@ -192,7 +192,7 @@ module.exports = Backbone.View.extend({
       self.tutorialMenu.toggleTutorial();
     }
 
-    this.shipsManager = new ShipsManager(this.context, 100000);
+    this.shipsManager = new ShipsManager(this.context, 200000);
     this.context.shipsManager = this.shipsManager;
 
     this.sunsManager = new SunsManager(this.context, 500);

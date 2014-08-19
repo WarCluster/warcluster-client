@@ -1,5 +1,3 @@
-var InteractiveObject = require("../InteractiveObject");
-
 module.exports = function(context){
   THREE.Object3D.call(this);
   
@@ -15,7 +13,7 @@ module.exports = function(context){
   this.light.position.z = -1400;
 }
 
-module.exports.prototype = new InteractiveObject();
+module.exports.prototype = new THREE.Object3D();
 module.exports.prototype.prepare = function(data) {
   this.data = data;
   this.position.x = this.data.Position.X;
