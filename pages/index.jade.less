@@ -5,31 +5,14 @@
 @import "../style/less/bootstrap/bootstrap.less";
 @import "../style/less/social.less";
 @import "../style/jquery/jquery-ui.less";
+/* At the end of this file we're importing the media queries*/
+
 /*@import "../style/less/responsive.less";*/
 
 /*TODO:
   refactor css in less style
   make it responsive :D
 */
-@media all and (max-width: 1098px) and (min-width: 768px) {
-  .race-portrait .race-image {
-    height: 60%;
-  }
-  .sun-menu-container .sun-type {
-    top: 15%;
-    width: 80%;
-  }
-}
-@media all and (max-width: 767px) {
-  .pick-race-panel .sci-fi-container {
-    height: 50%;
-    overflow: auto;
-  }
-  .pick-race-panel .sci-fi-container .info {
-    margin-top: 0px;
-  }
-}
-
 .race-menu-container {
   .race-portrait {
     height: 50%;
@@ -525,7 +508,7 @@ html, body {
 }
 .newsletter-link {
   position: absolute;
-  bottom: 3%;
+  bottom: 1%;
   right: 3%;
   a {
     color: #FFF;
@@ -541,7 +524,7 @@ html, body {
 }
 
 .description {
-  margin-top: -100px;
+  margin-top: -190px;
   width: 350px;
   position: absolute;
   font-size: 18px;
@@ -811,4 +794,4 @@ html, body {
   color: #fff;
 }
 
-
+@import "../style/less/media.less";
