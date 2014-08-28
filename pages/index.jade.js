@@ -45,5 +45,9 @@ $(document).ready(function() {
 
 });
 
+removeWarningMobileView = function(e) {
+  $(".warning-mobile-view").css({"display": "none"});
+}
+
 
 

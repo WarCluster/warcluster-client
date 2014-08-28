@@ -244,7 +244,7 @@
   }
 }
 .start-game {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   right: 15px;
   .animation-name(pinkPulse);
@@ -524,11 +524,36 @@ html, body {
 }
 
 .description {
-  /*margin-top: -190px;*/
+  margin-top: -40px;
   width: 350px;
-  /*position: absolute;*/
   font-size: 18px;
   color: #fff;
+}
+.warning-mobile-view {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(242,73,96,0.94);
+}
+.mobile-friendly-icon {
+  background-image: url("/images/mobile-friendly-icon.png");
+  width:50px;
+  height: 50px;
+}
+.disclaimer-message {
+  margin: 20px;
+}
+.close-button {
+  position: absolute;
+  text-decoration: none;
+  color: white;
+  border: solid 2px white;
+  padding: 0px 10px;
+  font-weight: bold;
+  font-size: 32px;
+  right: 20px;
+  top: 10px;
 }
 
 .login {
