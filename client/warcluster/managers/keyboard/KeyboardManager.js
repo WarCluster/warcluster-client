@@ -5,10 +5,10 @@ module.exports = function(context) {
 
   // KeyboardJS.KeyboardJS.on('ctrl + shift', function() {
   // });
-  KeyboardJS.KeyboardJS.on('ctrl + equal', function() {
+  KeyboardJS.KeyboardJS.on('ctrl + [', function() {
     self.context.spaceViewController.zoomer.zoomIn();
   });
-  KeyboardJS.KeyboardJS.on('ctrl + dash', function() {
+  KeyboardJS.KeyboardJS.on('ctrl + ]', function() {
     self.context.spaceViewController.zoomer.zoomOut();
   });
   KeyboardJS.KeyboardJS.on('w, up', function() {
