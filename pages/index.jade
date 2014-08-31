@@ -6,6 +6,7 @@ html
     meta(name='description', content='Conquer planets, expand your cluster through diplomacy and warfare to become space Emperor!')
     meta(name='keywords', content='warcluster, threejs, webgl, online, space, strategy, arcade, browser, MMO, RTS, twitter')
     meta(name='author', content='warcluster')
+    meta(name='viewport', content='width=device-width, user-scalable=no, initial-scale=1')
     meta(property='og:url', content='http://warcluster.com')
     meta(property='og:image', content='http://warcluster.com/public/images/warcluster-logo.png')
     meta(name='twitter:card', content='summary_large_image')
@@ -27,7 +28,7 @@ html
       span.badge !{version}
     .welcomePage
       .elements
-        #logo_container.logo_container
+        .logo_container
           div
             img.circle1(src='images/logo/circle1.png')
           div
@@ -49,21 +50,28 @@ html
           .y_ring
             img(src='images/logo/y_ring.png')
         .additional
-          .description Real-time massively multiplayer online space strategy arcade browser game! A lot of words describing the first social game on Twitter that relies on total annihilation! :D
+          .description
+            h3 Conquer planets, expand your cosmic cluster through diplomacy and warfare to become space Emperor!
+            h5 Real-time massively multiplayer online space strategy arcade browser game! A lot of words describing the first social game on Twitter that relies on total annihilation! :D
           .loginBtn.text-center
             a.btn.login(href="/twitter/connect") Login with Twitter
-          .text-center
-            button.leaderboardBtn(id="leaderboardBtn", onclick="return goToLeaderboard();") Leaderboard
-              span.pull-left.glyphicon.glyphicon-star
+          .text-center.margin-10
+            span.glyphicon.glyphicon-star
+              a.leaderboardBtn.margin-10(href="http://staging.warcluster.com/leaderboard/", target="_blank") Leaderboard
+            span.glyphicon.glyphicon-star
+          .newsletter-link
+            a(href="http://eepurl.com/MvxdX", target="_blank") Subscribe to our Newsletter!
+            //TODO: https://trello.com/c/VleteCd0/374-show-the-real-subscribers-number-on-the-landing-page
+            p There're 339 people ahead of you!
     .blog-link 
       a(href="http://blog.warcluster.com", target="_blank") Our Blog
-    .newsletter-link
-      a(href="http://eepurl.com/MvxdX", target="_blank") Subscribe to our Newsletter!
-      //TODO: https://trello.com/c/VleteCd0/374-show-the-real-subscribers-number-on-the-landing-page
-      p Join 256 others!
-    .leaderboardPage
-    .welcome.text-center
-      a.btn.welcomeBtn(id="leaderboardBtn", onclick="return goToWelcome();") Back to Welcome Screen
-        span.pull-left.icon-arrow-down.icon-white
+    .warning-mobile-view
+      a.close-button(onclick="return removeWarningMobileView()") X
+      .disclaimer-message
+        h1 Sorry! 
+        h2 We're not fully responsive and mobile friendly yet
+          img.mobile-friendly-icon(src="/images/mobile-friendly-icon.png")
+        h3 Play at your own risk :P
+
     canvas#myCanvas(style="width:10px;height:10px;")
 
