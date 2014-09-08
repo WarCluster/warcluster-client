@@ -116,7 +116,7 @@ module.exports.prototype.sendMission = function(type, source, target, ships) {
   this.sockjs.send(JSON.stringify({
     "Command": "start_mission",
     "Type": type,
-    "StartPlanet": source,
+    "StartPlanets": source,
     "EndPlanet": target,
     "Fleet": ships
   }));
