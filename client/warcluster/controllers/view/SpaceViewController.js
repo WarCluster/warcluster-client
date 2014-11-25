@@ -23,8 +23,8 @@ module.exports = function(context, config){
     height: 0,
     cx: 0,
     cy: 0,
-    x: 0,
-    y: 0
+   X: 0,
+   Y: 0
   }
 
   this.resolution = { width: 0, height: 0 }
@@ -175,8 +175,8 @@ module.exports.prototype.checkPosition = function() {
     //console.log("1.########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
 
     var position = {
-      x: Math.ceil(this.context.spaceScene.camera.position.x),
-      y: Math.ceil(this.context.spaceScene.camera.position.y)
+     X: Math.ceil(this.context.spaceScene.camera.position.x),
+     Y: Math.ceil(this.context.spaceScene.camera.position.y)
     };
 
     this.context.commandsManager.scopeOfView(position, this.resolution);
@@ -215,27 +215,27 @@ module.exports.prototype.getCellPosition = function(xIndex, yIndex, position) {
   switch (position) {
     case "tr":
       return {
-        x: xIndex > 0 ? Math.ceil(xIndex * this.gridWidth) : Math.floor((xIndex + 1) * this.gridWidth),
-        y: yIndex > 0 ? Math.ceil(yIndex * this.gridHeight) : Math.floor((yIndex + 1) * this.gridHeight)
+       X: xIndex > 0 ? Math.ceil(xIndex * this.gridWidth) : Math.floor((xIndex + 1) * this.gridWidth),
+       Y: yIndex > 0 ? Math.ceil(yIndex * this.gridHeight) : Math.floor((yIndex + 1) * this.gridHeight)
       };
     break;
     case "bl":
       return {
-        x: xIndex > 0 ? Math.ceil((xIndex - 1) * this.gridWidth) : Math.floor(xIndex * this.gridWidth),
-        y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.gridHeight) : Math.floor(yIndex * this.gridHeight)
+       X: xIndex > 0 ? Math.ceil((xIndex - 1) * this.gridWidth) : Math.floor(xIndex * this.gridWidth),
+       Y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.gridHeight) : Math.floor(yIndex * this.gridHeight)
       };
     break;
     case "br":
       return {
-        x: xIndex > 0 ? Math.ceil(xIndex * this.gridWidth) : Math.floor((xIndex + 1) * this.gridWidth),
-        y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.gridHeight) : Math.floor(yIndex * this.gridHeight)
+       X: xIndex > 0 ? Math.ceil(xIndex * this.gridWidth) : Math.floor((xIndex + 1) * this.gridWidth),
+       Y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.gridHeight) : Math.floor(yIndex * this.gridHeight)
       };
     break;
   }
 
   return {
-    x: xIndex > 0 ? Math.ceil((xIndex - 1) * this.gridWidth) : Math.floor(xIndex * this.gridWidth),
-    y: yIndex > 0 ? Math.ceil(yIndex * this.gridHeight) : Math.floor((yIndex + 1) * this.gridHeight)
+   X: xIndex > 0 ? Math.ceil((xIndex - 1) * this.gridWidth) : Math.floor(xIndex * this.gridWidth),
+   Y: yIndex > 0 ? Math.ceil(yIndex * this.gridHeight) : Math.floor((yIndex + 1) * this.gridHeight)
   };
 }
 
@@ -274,8 +274,8 @@ module.exports.prototype.translateIndex = function(i, d) {
     height: Math.abs(tl.y - br.y),
     cx: tl.x + Math.abs(br.x - tl.x) / 2,
     cy: tl.y - Math.abs(tl.y - br.y) / 2,
-    x: tl.x,
-    y: tl.y
+   X: tl.x,
+   Y: tl.y
   }
 }*/
 
