@@ -19,12 +19,12 @@ html
     link(rel='stylesheet', href='/style.css')
     //link(rel='stylesheet', href='http://bootswatch.com/cosmo/bootstrap.min.css')
 
-    script(src="/js/sockjs-0.3.min.js")
+    script(src="/js/reconnecting-websocket.js")
     script(src='/js/jade.js')
     script(src="/code.js")
 
   body(style='background-image: url(\'/images/backgrounds/pattern.png\');')
-    .label version: 
+    .label version:
       span.badge !{version}
     .welcomePage
       .elements
@@ -63,12 +63,12 @@ html
             a(href="http://eepurl.com/MvxdX", target="_blank") Subscribe to our Newsletter!
             //TODO: https://trello.com/c/VleteCd0/374-show-the-real-subscribers-number-on-the-landing-page
             p There're 339 people ahead of you!
-    .blog-link 
+    .blog-link
       a(href="http://blog.warcluster.com", target="_blank") Our Blog
     .warning-mobile-view
       a.close-button(onclick="return removeWarningMobileView()") X
       .disclaimer-message
-        h1 Sorry! 
+        h1 Sorry!
         h2 We're not fully responsive and mobile friendly yet
           img.mobile-friendly-icon(src="/images/mobile-friendly-icon.png")
         h3 Play at your own risk :P
