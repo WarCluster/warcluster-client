@@ -102,27 +102,18 @@ module.exports.prototype.parseMessage = function(command) {
   //console.log("###.parseMessage:", JSON.stringify(data, null, 2));
 }
 
-<<<<<<< HEAD
 module.exports.prototype.scopeOfView = function(x, y, width, height) {
   //console.log("scopeOfView", x, y, width, height)
-  this.sockjs.send('{' +
+  this.ws.send('{' +
     '"Command": "scope_of_view",' +
     '"Position": {"x": '+x+', "y": '+y+'},' +
     '"Resolution": ['+width+', '+height+']' +
   '}');
-=======
-module.exports.prototype.scopeOfView = function(position, resolution) {
-  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
-  var data = {"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}
-  //console.log("scopeOfView", data)
-  this.ws.send(JSON.stringify(data));
->>>>>>> websocket
 }
 
 module.exports.prototype.sendMission = function(type, source, target, ships) {
   //console.log("sendMission:", type, source, target, ships)
-<<<<<<< HEAD
-  this.sockjs.send('{' +
+  this.ws.send('{' +
     '"Command": "start_mission",' +
     '"Type": "'+type+'",' +
     '"StartPlanets": ["'+source.join('","')+'"],' +
@@ -132,7 +123,7 @@ module.exports.prototype.sendMission = function(type, source, target, ships) {
 }
 
 module.exports.prototype.setupParameters = function(race, sun) {
-  this.sockjs.send('{' +
+  this.ws.send('{' +
     '"Command": "setup_parameters",' +
     '"Race": '+race+',' +
     '"SunTextureId": '+ sun +
@@ -186,21 +177,3 @@ module.exports.prototype.testShips = function() {
   this.parseMessage(JSON.stringify(message));
   //console.log("testShips", message)
 }
-=======
-  this.ws.send(JSON.stringify({
-    "Command": "start_mission",
-    "Type": type,
-    "StartPlanets": source,
-    "EndPlanet": target,
-    "Fleet": ships
-  }));
-}
-
-module.exports.prototype.setupParameters = function(race, sun) {
-  this.ws.send(JSON.stringify({
-    "Command": "setup_parameters",
-    "Race": race,
-    "SunTextureId": sun
-  }))
-}
->>>>>>> websocket
