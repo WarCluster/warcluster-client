@@ -17,26 +17,17 @@ module.exports.prototype.prepare = function(username, twitterId) {
   this.twitterId = twitterId;
 
   var msg = {
-    "Command": "login", 
-    "Username": username, 
+    "Command": "login",
+    "Username": username,
     "TwitterId": twitterId
   };
-  var new_status = function(status) {
-    console.log(status);
-    self.connected = status === 'connected';
-  };
-  var on_message = function(msg) {
+  this.ws = new ReconnectingWebSocket(this.url);
+  this.ws.onmessage = function(msg) {
     self.parseMessage(msg.data);
   };
-  var on_open = function() {
-    console.log('open');
-
-    self.sockjs.send(JSON.stringify(msg));
+  this.ws.onopen = function(e) {
+    self.ws.send(JSON.stringify(msg));
   }
-  //TODO: figure out why I need to do SockReconnect.SockReconnect (double time instead of just ones)
-  this.sockjs = new SockReconnect.SockReconnect(this.url, null, new_status, on_message, on_open);
-  this.sockjs.connect();
-
 }
 
 module.exports.prototype.parseMessage = function(command) {
@@ -55,7 +46,6 @@ module.exports.prototype.parseMessage = function(command) {
         pd.Position = data.Position;
         pd.Race = data.RaceID;
         pd.HomePlanet = data.HomePlanet;
-
         this.loginFn(pd);
       break;
       case "scope_of_view_result":
@@ -94,7 +84,7 @@ module.exports.prototype.parseMessage = function(command) {
               type   : 'warning',
               planetCoordinates : data.Planet[key].Position,
               buttons: [
-                  { addClass: 'btn btn-primary', text: 'View', 
+                  { addClass: 'btn btn-primary', text: 'View',
                     onClick: _.bind(function($noty) {
                       $noty.close();
                       this.context.spaceViewController.scroller.scrollTo($noty.options.planetCoordinates.X, $noty.options.planetCoordinates.Y, true);
@@ -112,6 +102,7 @@ module.exports.prototype.parseMessage = function(command) {
   //console.log("###.parseMessage:", JSON.stringify(data, null, 2));
 }
 
+<<<<<<< HEAD
 module.exports.prototype.scopeOfView = function(x, y, width, height) {
   //console.log("scopeOfView", x, y, width, height)
   this.sockjs.send('{' +
@@ -119,10 +110,18 @@ module.exports.prototype.scopeOfView = function(x, y, width, height) {
     '"Position": {"x": '+x+', "y": '+y+'},' +
     '"Resolution": ['+width+', '+height+']' +
   '}');
+=======
+module.exports.prototype.scopeOfView = function(position, resolution) {
+  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
+  var data = {"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}
+  //console.log("scopeOfView", data)
+  this.ws.send(JSON.stringify(data));
+>>>>>>> websocket
 }
 
 module.exports.prototype.sendMission = function(type, source, target, ships) {
   //console.log("sendMission:", type, source, target, ships)
+<<<<<<< HEAD
   this.sockjs.send('{' +
     '"Command": "start_mission",' +
     '"Type": "'+type+'",' +
@@ -187,3 +186,21 @@ module.exports.prototype.testShips = function() {
   this.parseMessage(JSON.stringify(message));
   //console.log("testShips", message)
 }
+=======
+  this.ws.send(JSON.stringify({
+    "Command": "start_mission",
+    "Type": type,
+    "StartPlanets": source,
+    "EndPlanet": target,
+    "Fleet": ships
+  }));
+}
+
+module.exports.prototype.setupParameters = function(race, sun) {
+  this.ws.send(JSON.stringify({
+    "Command": "setup_parameters",
+    "Race": race,
+    "SunTextureId": sun
+  }))
+}
+>>>>>>> websocket

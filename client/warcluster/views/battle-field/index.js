@@ -136,7 +136,7 @@ module.exports = Backbone.View.extend({
       self.commandsManager.sendMission("Supply", e.supportSourcesIds, e.planetToSupportId, self.context.missionsMenu.getCurrentType());
     });
     this.spaceViewController.addEventListener("spyPlanet", function(e) {
-      self.commandsManager.sendMission("Spy", e.spySourcesIds, e.planetToSpyId, self.context.missionsMenu.getCurrentType())
+      self.commandsManager.sendMission("Spy", e.spySourcesIds, e.planetToSpyId, self.context.missionsMenu.getCurrentType());
     });
 
     this.spaceViewController.addEventListener("selectPlanet", function(e) {
@@ -163,12 +163,15 @@ module.exports = Backbone.View.extend({
     this.commandsManager = new CommandsManager(config.socketUrl, this.context);
     this.context.commandsManager = this.commandsManager;
     this.commandsManager.loginFn = function(data) {
+      //we need this because of this - https://trello.com/c/l1gOcEJD/380-don-t-show-the-leaderboard-after-registration
+      data.JustRegistered = self.context.playerData.JustRegistered;
+      //because data doesn't have the correct value of JustRegistered(which is set in startGame method at landing view)
       _.extend(self.context.playerData, data);
       
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.Race).el);
       console.log("-loginFn-", self.context.playerData);
       self.spaceViewController.activate();
-      self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
+      // self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
 
       if (!self.context.playerData.JustRegistered) {

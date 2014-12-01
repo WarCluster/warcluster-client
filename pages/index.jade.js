@@ -1,5 +1,4 @@
 var boot = require("../client/boot");
-var LeaderboardView = require("../client/warcluster/views/leaderboard");
 
 // $(window).resize(function() {
 //     var test = $('body').height() - $('#header_wrapper').height() - $('#menu_wrapper').height() - $('#footer_wrapper').height();
@@ -46,24 +45,9 @@ $(document).ready(function() {
 
 });
 
-goToLeaderboard = function(e){
-  this.leaderboard = new LeaderboardView();
-  $(".leaderboardPage").html("").append(leaderboard.el)
-  leaderboard.render();
-  $(".leaderboardPage").animate({top: 0},{ 
-      duration: "slow", 
-      easing: "easeOutBounce"
-    });
-  $(".welcomeBtn").show();
+removeWarningMobileView = function(e) {
+  $(".warning-mobile-view").css({"display": "none"});
 }
-goToWelcome = function(e){
-  $(".leaderboardPage").animate({top: "100%"},{ 
-      duration: "slow", 
-      easing: "easeOutBounce"
-    });
-  clearTimeout(this.leaderboard.leaderboardAjaxTimeout);
-  delete this.leaderboard;
-  $(".welcomeBtn").hide();
-}
+
 
 

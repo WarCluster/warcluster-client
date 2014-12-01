@@ -8,19 +8,22 @@
     "source": "node_modules/organic-webcell/membrane/ExpressHttpServer",
     "port": 8118,
     "middleware": [
-      { 
+      {
         "source": "node_modules/organic-webcell/membrane/expressMiddleware/cookieParser"
       },
-      { 
+      {
         "source": "http-plugins/Session"
       },
-      { 
+      {
         "source": "node_modules/organic-webcell/membrane/expressMiddleware/staticFolder", 
         "staticDir": "public/" 
       },
       { 
         "source": "node_modules/organic-webcell/membrane/expressMiddleware/staticFolder", 
         "staticDir": "style/" 
+      },
+      {
+        "source": "node_modules/organic-webcell/membrane/expressMiddleware/gzip"
       }
     ]
   },

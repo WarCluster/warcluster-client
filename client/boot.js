@@ -1,4 +1,22 @@
-require("../client/vendor");
+// require("../client/vendor");
+require("../client/vendor/jquery");
+require("../client/vendor/bootstrap");
+require("../client/vendor/bootstrap-fileupload.min");
+require("../client/vendor/bootstrap-colorselector");
+require("../client/vendor/google-code-prettify/prettify");
+require("../client/vendor/TweenLite.min");
+require("../client/vendor/plugins/jquery-mousewheel.min")($);
+require("../client/vendor/plugins/CSSPlugin.min");
+require("../client/vendor/easing/EasePack.min");
+ReconnectingWebSocket = require("../client/vendor/reconnecting-websocket.js");
+
+KeyboardJS = require("./vendor/keyboardjs.min");
+
+_ = require("../client/vendor/underscore");
+Backbone = require("../client/vendor/backbone");
+
+require("../client/vendor/backbone/backbone_bind_to");
+
 config = require("config");
 
 //Nqkakva gadost za notifications
@@ -30,7 +48,7 @@ $.noty.defaults = {
     },
     buttons: false // an array of buttons
 };
-       
+
 
 window.jadeCompile = function(path){
   var compiled = jade.compile(path);

@@ -20,8 +20,8 @@ module.exports = function(context, config){
     height: 0,
     cx: 0,
     cy: 0,
-    x: 0,
-    y: 0
+   X: 0,
+   Y: 0
   }
 
   this.resolution = { width: 0, height: 0 }
@@ -163,7 +163,6 @@ module.exports.prototype.checkPosition = function() {
     this.updateScreenRect();
 
     //console.log("---- ########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
-
     this.context.commandsManager.scopeOfView(Math.ceil(cpx), Math.ceil(cpy), this.resolution.width, this.resolution.height);
   }
 }
@@ -200,27 +199,47 @@ module.exports.prototype.getCellPosition = function(xIndex, yIndex, position) {
   switch (position) {
     case "tr":
       return {
+<<<<<<< HEAD
         x: xIndex > 0 ? Math.ceil(xIndex * this.context.areaSize) : Math.floor((xIndex + 1) * this.context.areaSize),
         y: yIndex > 0 ? Math.ceil(yIndex * this.context.areaSize) : Math.floor((yIndex + 1) * this.context.areaSize)
+=======
+       X: xIndex > 0 ? Math.ceil(xIndex * this.gridWidth) : Math.floor((xIndex + 1) * this.gridWidth),
+       Y: yIndex > 0 ? Math.ceil(yIndex * this.gridHeight) : Math.floor((yIndex + 1) * this.gridHeight)
+>>>>>>> websocket
       };
     break;
     case "bl":
       return {
+<<<<<<< HEAD
         x: xIndex > 0 ? Math.ceil((xIndex - 1) * this.context.areaSize) : Math.floor(xIndex * this.context.areaSize),
         y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.context.areaSize) : Math.floor(yIndex * this.context.areaSize)
+=======
+       X: xIndex > 0 ? Math.ceil((xIndex - 1) * this.gridWidth) : Math.floor(xIndex * this.gridWidth),
+       Y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.gridHeight) : Math.floor(yIndex * this.gridHeight)
+>>>>>>> websocket
       };
     break;
     case "br":
       return {
+<<<<<<< HEAD
         x: xIndex > 0 ? Math.ceil(xIndex * this.context.areaSize) : Math.floor((xIndex + 1) * this.context.areaSize),
         y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.context.areaSize) : Math.floor(yIndex * this.context.areaSize)
+=======
+       X: xIndex > 0 ? Math.ceil(xIndex * this.gridWidth) : Math.floor((xIndex + 1) * this.gridWidth),
+       Y: yIndex > 0 ? Math.ceil((yIndex - 1) * this.gridHeight) : Math.floor(yIndex * this.gridHeight)
+>>>>>>> websocket
       };
     break;
   }
 
   return {
+<<<<<<< HEAD
     x: xIndex > 0 ? Math.ceil((xIndex - 1) * this.context.areaSize) : Math.floor(xIndex * this.context.areaSize),
     y: yIndex > 0 ? Math.ceil(yIndex * this.context.areaSize) : Math.floor((yIndex + 1) * this.context.areaSize)
+=======
+   X: xIndex > 0 ? Math.ceil((xIndex - 1) * this.gridWidth) : Math.floor(xIndex * this.gridWidth),
+   Y: yIndex > 0 ? Math.ceil(yIndex * this.gridHeight) : Math.floor((yIndex + 1) * this.gridHeight)
+>>>>>>> websocket
   };
 }
 
@@ -250,6 +269,23 @@ module.exports.prototype.translateIndex = function(i, d) {
   return i + d;
 }
 
+<<<<<<< HEAD
+=======
+/*module.exports.prototype.getRect = function(xIndex1, yIndex1, xIndex2, yIndex2){
+  var tl = this.getCellPosition(xIndex1, yIndex1);
+  var br = this.getCellPosition(xIndex2, yIndex2, "br");
+  //console.log("######## getRect:", tl, br)
+  return {
+    width: Math.abs(br.x - tl.x),
+    height: Math.abs(tl.y - br.y),
+    cx: tl.x + Math.abs(br.x - tl.x) / 2,
+    cy: tl.y - Math.abs(tl.y - br.y) / 2,
+   X: tl.x,
+   Y: tl.y
+  }
+}*/
+
+>>>>>>> websocket
 module.exports.prototype.addScrollPosition = function(dx, dy, dz){
   return this.setScrollPosition(this.scrollPosition.x + dx, this.scrollPosition.y + dy, this.scrollPosition.z + dz)
 }
