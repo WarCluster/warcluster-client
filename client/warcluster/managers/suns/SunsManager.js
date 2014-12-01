@@ -5,7 +5,7 @@ module.exports = function(context, cacheSize) {
   this.pull = [];
   this.objectsIndexes = [];
   this.cloud = null;
-  this.cacheSize = cacheSize;
+  this.cacheSize = 1;//cacheSize;
 }
 
 module.exports.prototype.prepare = function() {
@@ -115,8 +115,7 @@ module.exports.prototype.buildGlowMaterial = function() {
         "vColor = color;",
 
         "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
-        
-        "gl_PointSize = 12000.0 * ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
+        "gl_PointSize = 12000.0 *  ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
         "gl_Position = projectionMatrix * mvPosition;",
       "}",
     "}"

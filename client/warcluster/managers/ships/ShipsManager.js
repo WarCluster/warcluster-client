@@ -6,7 +6,7 @@ module.exports = function(context, cacheSize) {
   this.objectsIndexes = [];
   this.startTimes = [];
   this.cloud = null;
-  this.cacheSize = cacheSize;
+  this.cacheSize = 1;//cacheSize;
   this.shipsForRemove = [];
   this.index = 0;
 }
