@@ -119,7 +119,6 @@ module.exports.prototype.buildScene = function() {
 
     self.context.spaceViewController.info.updatePosition();
     self.context.shipsManager.updateSize();
-    self.context.sunsManager.updateSize();
   }
 
   this.context.$content.append(this.renderer.domElement);
