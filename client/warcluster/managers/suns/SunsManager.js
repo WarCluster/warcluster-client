@@ -12,7 +12,7 @@ module.exports.prototype.prepare = function() {
 
   var shaderMaterial = this.buildGlowMaterial();
   var colors = shaderMaterial.attributes.color.value;
-  for (var v = 0; v < vertices.length; v++ ) {
+  for (var v = 0; v < geometry.vertices.length; v++ ) {
     color[v] = new THREE.Color( 0xffaa00 );
   }
 
@@ -28,10 +28,10 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
   var vertices = this.cloud.geometry.vertices;
   var colors = this.cloud.material.attributes.color.value;
 
-  vertices.push_back(new THREE.Vector3(x, y, z));
+  vertices.push({x: x, y: y, z: z});
   this.cloud.geometry.verticesNeedUpdate = true;
 
-  colors.push_back(color);
+  colors.push(color);
   this.cloud.material.attributes.color.needsUpdate = true;
 
   return vertices.length-1;
@@ -49,17 +49,19 @@ module.exports.prototype.removeSunGlow = function(idx) {
 
 module.exports.prototype.update = function() {
   var now = Date.now();
-  this.cloud.material.uniform.time.value += (now - this.t) * 0.00002;
-  this.cloud.material.unifrom.time.needsUpdate = true;
-
-  this.cloud.material.uniform.aspect.value = this.context.aspect;
-  this.cloud.material.uniform.aspect.needsUpdate = true;
+  if (this.cloud) {
+    this.cloud.material.uniforms.time.value += (now - this.t) * 0.00002;
+    this.cloud.material.uniforms.time.needsUpdate = true;
+  }
 
   this.t = Date.now();
 }
 
 module.exports.prototype.updateSize = function() {
-  }
+  this.cloud.material.uniforms.aspect.value = this.context.aspect;
+  this.cloud.material.uniforms.aspect.needsUpdate = true;
+
+  this.t = Date.now();
 }
 
 module.exports.prototype.buildGlowMaterial = function() {

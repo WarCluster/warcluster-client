@@ -106,7 +106,7 @@ module.exports.prototype.scopeOfView = function(x, y, width, height) {
   //console.log("scopeOfView", x, y, width, height)
   this.ws.send('{' +
     '"Command": "scope_of_view",' +
-    '"Position": {"x": '+x+', "y": '+y+'},' +
+    '"Position": {"X": '+x+', "Y": '+y+'},' +
     '"Resolution": ['+width+', '+height+']' +
   '}');
 }
