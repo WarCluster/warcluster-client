@@ -63,7 +63,7 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
   this.cloud.material.attributes.color.needsUpdate = true;
   this.cloud.material.attributes.time.needsUpdate = true;
   this.cloud.material.attributes.aspect.needsUpdate = true;
-
+  console.log("addSunGlow:", values_time)
   this.cloud.geometry.verticesNeedUpdate = true;
 
   return objs[0];
@@ -78,6 +78,7 @@ module.exports.prototype.removeSunGlow = function(item) {
 }
 
 module.exports.prototype.update = function() {
+
   var ln = this.objectsIndexes.length;
   if (ln) {
     for( var i = 0; i < ln; i++ )
@@ -108,16 +109,19 @@ module.exports.prototype.buildGlowMaterial = function() {
 
     "varying float vTime;",
     "varying vec3 vColor;",
+    "varying float vDraw;",
 
     "void main() {",
-      "if (time != -1.0) {",
-        "vTime = time;",
-        "vColor = color;",
+      "vTime = time;",
 
+      "if (time != -1.0) {",
+        "vColor = color;",
         "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
         
         "gl_PointSize = 12000.0 * ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
         "gl_Position = projectionMatrix * mvPosition;",
+      "} else {",
+        "vDraw = -1.0;",
       "}",
     "}"
   ].join("\n")
@@ -129,8 +133,12 @@ module.exports.prototype.buildGlowMaterial = function() {
 
     "varying vec3 vColor;",
     "varying float vTime;",
+    "varying float vDraw;",
 
     "void main() {",
+      "if (vDraw < 0.0)",
+        "discard;",
+
       "float mid = 0.5;",
       "float angle = vTime;",
 

@@ -193,6 +193,7 @@ module.exports.prototype.buildShipMaterial = function() {
     "attribute vec3 displacement;",
     "attribute vec3 formation;",
 
+    "varying float vDraw;",
     "varying vec3 vColor;",
     "varying float vRotation;",
     "varying vec2 vTexPosition;",
@@ -200,8 +201,7 @@ module.exports.prototype.buildShipMaterial = function() {
     "const float showHideTime = 3300.0;",
 
     "void main() {",
-      "if (time >= 0.0 && time < travelTime) ",
-      "{",
+      "if (time >= 0.0 && time < travelTime) {",
         "vRotation = rotation;",
         "vColor = customColor;",
         "vTexPosition = texPosition;",
@@ -214,6 +214,8 @@ module.exports.prototype.buildShipMaterial = function() {
 
         "gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) ) * (sc + 0.05);",
         "gl_Position = projectionMatrix * mvPosition;",
+      "} else {",
+        "vDraw = -1.0;",
       "}",
     "}"
   ].join("\n")
@@ -224,11 +226,15 @@ module.exports.prototype.buildShipMaterial = function() {
     "uniform vec2 tileSize;",
     "uniform sampler2D texture;",
 
+    "varying float vDraw;",
     "varying vec3 vColor;",
     "varying float vRotation;",
     "varying vec2 vTexPosition;",
 
     "void main() {",
+      "if (vDraw < 0.0)",
+        "discard;",
+
       "float mid = 0.5;",
       "vec2 rotated = vec2(cos(vRotation) * (gl_PointCoord.x - mid) - sin(vRotation) * (gl_PointCoord.y - mid) + mid,",
                           "cos(vRotation) * (gl_PointCoord.y - mid) + sin(vRotation) * (gl_PointCoord.x - mid) + mid);",
