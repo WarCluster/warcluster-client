@@ -120,10 +120,11 @@ module.exports = function(context, config){
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
-module.exports.prototype.activate = function() {
+module.exports.prototype.activate = function(x, y) {
 	if (!this.active) {
 		this.active = true;
     
+    this.scroller.scrollTo(x,y);
     this.zoomer.prepare();
     this.scroller.scaleIndex = this.zoomer.getZoomIndex();
     

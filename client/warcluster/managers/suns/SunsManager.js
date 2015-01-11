@@ -5,7 +5,7 @@ module.exports = function(context, cacheSize) {
   this.pull = [];
   this.objectsIndexes = [];
   this.cloud = null;
-  this.cacheSize = 1;//cacheSize;
+  this.cacheSize = cacheSize;
 }
 
 module.exports.prototype.prepare = function() {
@@ -108,15 +108,19 @@ module.exports.prototype.buildGlowMaterial = function() {
 
     "varying float vTime;",
     "varying vec3 vColor;",
+    "varying float vDraw;",
 
     "void main() {",
-      "if (time != -1.0) {",
-        "vTime = time;",
-        "vColor = color;",
+      "vTime = time;",
 
+      "if (time != -1.0) {",
+        "vColor = color;",
         "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
-        "gl_PointSize = 12000.0 *  ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
+        
+        "gl_PointSize = 12000.0 * ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
         "gl_Position = projectionMatrix * mvPosition;",
+      "} else {",
+        "vDraw = -1.0;",
       "}",
     "}"
   ].join("\n")
@@ -128,8 +132,12 @@ module.exports.prototype.buildGlowMaterial = function() {
 
     "varying vec3 vColor;",
     "varying float vTime;",
+    "varying float vDraw;",
 
     "void main() {",
+      "if (vDraw < 0.0) {",
+        "discard; }",
+
       "float mid = 0.5;",
       "float angle = vTime;",
 

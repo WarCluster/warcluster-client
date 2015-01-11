@@ -170,7 +170,7 @@ module.exports = Backbone.View.extend({
       
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.Race).el);
       console.log("-loginFn-", self.context.playerData);
-      self.spaceViewController.activate();
+      self.spaceViewController.activate(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       // self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
       self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
 
@@ -195,10 +195,10 @@ module.exports = Backbone.View.extend({
       self.tutorialMenu.toggleTutorial();
     }
 
-    this.shipsManager = new ShipsManager(this.context, 200000);
+    this.shipsManager = new ShipsManager(this.context, 1000);
     this.context.shipsManager = this.shipsManager;
 
-    this.sunsManager = new SunsManager(this.context, 500);
+    this.sunsManager = new SunsManager(this.context, 2);
     this.context.sunsManager = this.sunsManager;
     
 

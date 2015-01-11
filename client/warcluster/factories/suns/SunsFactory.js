@@ -7,6 +7,7 @@ module.exports = function(context){
 
 module.exports.prototype.build = function(sunData) {
   var sun = this.cache.length > 0 ? this.cache.shift() : new Sun(this.context);
+  console.log(this.cache.length);
   sun.prepare(sunData)
 
   if (!sun.parent)
