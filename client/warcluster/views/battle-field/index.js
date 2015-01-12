@@ -172,7 +172,7 @@ module.exports = Backbone.View.extend({
       console.log("-loginFn-", self.context.playerData);
       self.spaceViewController.activate(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       // self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
-      self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
+      // self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
 
       if (!self.context.playerData.JustRegistered) {
         self.toggleLandingStatisticsView();
@@ -195,7 +195,7 @@ module.exports = Backbone.View.extend({
       self.tutorialMenu.toggleTutorial();
     }
 
-    this.shipsManager = new ShipsManager(this.context, 1000);
+    this.shipsManager = new ShipsManager(this.context, 1500);
     this.context.shipsManager = this.shipsManager;
 
     this.sunsManager = new SunsManager(this.context, 2);

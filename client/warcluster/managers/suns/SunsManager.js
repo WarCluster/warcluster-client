@@ -17,7 +17,7 @@ module.exports.prototype.prepare = function() {
     this.pull[i] = i;
     geometry.vertices.push( new THREE.Vector3() );
   }
-
+  console.log("prepare this.pull", this.pull);
   this.cloud = new THREE.PointCloud( geometry, shaderMaterial );
   this.cloud.dynamic = true;
   this.cloud.matrixAutoUpdate = false;
@@ -38,9 +38,10 @@ module.exports.prototype.prepare = function() {
 }
 
 module.exports.prototype.addSunGlow = function(x, y, z, color) {
+  console.log("this.pull",this.pull);
   var objs = this.pull.splice(0, 1);
-
-  if (objs.length)
+  console.log("objs",objs);
+  if (objs.length && objs[0])
    this.objectsIndexes.push(objs[0]);
   else
     return null;
@@ -65,8 +66,8 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
   this.cloud.material.attributes.aspect.needsUpdate = true;
 
   this.cloud.geometry.verticesNeedUpdate = true;
-
-  return objs[0];
+  debugger;
+  return v;
 }
 
 module.exports.prototype.removeSunGlow = function(item) {

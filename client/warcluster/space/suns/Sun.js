@@ -35,9 +35,13 @@ module.exports.prototype.prepare = function(data) {
   this.context.scene.add( this.light );
 
   this.sunGlowIndex = this.context.sunsManager.addSunGlow(this.position.x, this.position.y, this.position.z, color);
+  debugger;
+  console.log("this.sunGlowIndex", this.sunGlowIndex);
 }
 
 module.exports.prototype.destroy = function() {
   this.context.scene.remove( this.light );
+  console.log("destroy this.sunGlowIndex", this.sunGlowIndex);
+  debugger;
   this.context.sunsManager.removeSunGlow(this.sunGlowIndex);
 }
