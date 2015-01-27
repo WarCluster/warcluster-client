@@ -42,17 +42,17 @@ module.exports = function(context){
 
   var stars;
   var starsMaterials = [
-    new THREE.ParticleBasicMaterial( { color: 0xececec, size: 2, sizeAttenuation: false } ),
-    new THREE.ParticleBasicMaterial( { color: 0xececec, size: 1, sizeAttenuation: false } ),
-    new THREE.ParticleBasicMaterial( { color: 0xdbdbdb, size: 2, sizeAttenuation: false } ),
-    new THREE.ParticleBasicMaterial( { color: 0xdbdbdb, size: 1, sizeAttenuation: false } ),
-    new THREE.ParticleBasicMaterial( { color: 0xbfbfbf, size: 2, sizeAttenuation: false } ),
-    new THREE.ParticleBasicMaterial( { color: 0xbfbfbf, size: 1, sizeAttenuation: false } )
+    new THREE.PointCloudMaterial( { color: 0xececec, size: 2, sizeAttenuation: false } ),
+    new THREE.PointCloudMaterial( { color: 0xececec, size: 1, sizeAttenuation: false } ),
+    new THREE.PointCloudMaterial( { color: 0xdbdbdb, size: 2, sizeAttenuation: false } ),
+    new THREE.PointCloudMaterial( { color: 0xdbdbdb, size: 1, sizeAttenuation: false } ),
+    new THREE.PointCloudMaterial( { color: 0xbfbfbf, size: 2, sizeAttenuation: false } ),
+    new THREE.PointCloudMaterial( { color: 0xbfbfbf, size: 1, sizeAttenuation: false } )
   ];
 
   for ( i = 10; i < 30; i ++ ) {
 
-    stars = new THREE.ParticleSystem( starsGeometry[ i % 2 ], starsMaterials[ i % 6 ] );
+    stars = new THREE.PointCloud( starsGeometry[ i % 2 ], starsMaterials[ i % 6 ] );
 
     stars.rotation.x = Math.random() * 6;
     stars.rotation.y = Math.random() * 6;
@@ -72,13 +72,14 @@ module.exports = function(context){
   var bg;
   
   var backgrounds = [];
+  var backgroundGeometry = new THREE.PlaneGeometry(1366 * sc, 768 * sc, 1, 1)
 
   for(i = 0;i < 4; i ++) {
     var bgd = this.context.resourcesLoader.get("/images/backgrounds/background" + (i + 5) + ".jpg");
-    var mat = new THREE.MeshBasicMaterial({map: bgd, transparent : true});
+    var mat = new THREE.MeshBasicMaterial({map: bgd, transparent : true, depthWrite: false, depthTest: false});
     mat.opacity = 0.25;
 
-    var mesh =  new THREE.Mesh(new THREE.PlaneGeometry(1366 * sc, 768 * sc, 1, 1), mat);
+    var mesh =  new THREE.Mesh(backgroundGeometry, mat);
     mesh.position.z = -5000000;
 
     backgrounds.push(mesh);
@@ -100,7 +101,7 @@ module.exports = function(context){
   var xGrid = 50;
   var yGrid = 50;
 
-  this.grid =  new THREE.Mesh(new THREE.PlaneGeometry(5000 * xGrid, 5000 * yGrid, xGrid, yGrid), new THREE.MeshBasicMaterial( { color: 0x534D00 , wireframe: true } ));
+  this.grid =  new THREE.Mesh(new THREE.PlaneGeometry(this.context.areaSize * xGrid, this.context.areaSize * yGrid, xGrid, yGrid), new THREE.MeshBasicMaterial( { color: 0x534D00 , wireframe: true } ));
   this.grid.visible = false;
 
   this.add(this.grid);

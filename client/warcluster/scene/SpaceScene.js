@@ -9,6 +9,33 @@ module.exports = function(context){
   this.context = context;
   this.interval = null;
   this.afterRenderFn = null;
+
+  var ww = window.innerWidth;
+  var hh = window.innerHeight;
+  var self = this;
+
+  console.log(ww, hh);
+
+  this.camera = new THREE.PerspectiveCamera(25, ww / hh, 0.1, 100000000);
+
+  THREE.Object3D._threexDomEvent.camera(this.camera);
+
+  this.scene = new THREE.Scene();
+  this.scene.add( new THREE.AmbientLight( 0xb0b0b0 ) );
+
+  this.projector = new THREE.Projector();
+
+  this.renderer = new THREE.WebGLRenderer( { antialias: true} );
+  this.renderer.setSize(ww, hh);
+  //this.renderer.shadowMapEnabled = true;
+  //this.renderer.shadowMapSoft = true;
+  this.renderer.sortObjects = true;
+  //this.renderer.autoClear = false;
+
+  this.context.camera = this.camera;
+  this.context.scene = this.scene;
+  this.context.projector = this.projector;
+  this.context.renderer = this.renderer;
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
@@ -18,8 +45,31 @@ module.exports.prototype.prepare = function() {
   this.stats = new Stats();
   this.stats.domElement.style.position = 'absolute';
   this.stats.domElement.style.bottom = '0px';
-  this.stats.domElement.style.right = '100px';
+  this.stats.domElement.style.right = '160px';
   this.context.$content.append(this.stats.domElement);
+
+  this.$info = $('<div style="font-size: 10px; background-color: #1111FF; padding: 2px; width: 120px" />')
+  this.$info.click(function() {
+    self.context.commandsManager.testShips();
+  })
+
+  $(this.stats.domElement).append(this.$info);
+
+  var u = this.stats.update;
+
+  this.stats.update = function() {
+    self.$info.html(
+      "Obj: " + self.context.objects.length + "/" + self.context.container.children.length +
+      ", Sh: "+(self.context.shipsManager ? self.context.shipsManager.objectsIndexes.length : 0) + 
+      "<br/>М: "+ self.context.missions.length + 
+      ", Pl: " + self.context.planetsHitObjects.length + 
+      ", Sn: " + self.context.suns.length + 
+      ", IO: " + self.context.interactiveObjects.length
+      
+    );
+
+    return u.apply(this, arguments);
+  }
 
   for (var i = 0;i < resources.textures.length;i ++)
     this.context.resourcesLoader.loadTexture(resources.textures[i]);
@@ -33,31 +83,12 @@ module.exports.prototype.prepare = function() {
     self.context.planetsManager.start();
     self.dispatchEvent({type: "complete"});
   });
+
+  this.renderer.render(this.scene, this.camera);
 }
 
 module.exports.prototype.buildScene = function() {
-  var ww = window.innerWidth;
-  var hh = window.innerHeight;
   var self = this;
-
-  console.log(ww, hh);
-
-  this.camera = new THREE.PerspectiveCamera(25, ww / hh, 0.1, 100000000);
-  this.camera.position.z = 4000;
-
-  THREE.Object3D._threexDomEvent.camera(this.camera);
-
-  this.scene = new THREE.Scene();
-  this.scene.add( new THREE.AmbientLight( 0xb0b0b0 ) );
-
-  this.projector = new THREE.Projector();
-
-  this.renderer = new THREE.WebGLRenderer( { antialias: true} );
-  this.renderer.setSize(ww, hh);
-  //this.renderer.shadowMapEnabled = true;
-  //this.renderer.shadowMapSoft = true;
-  this.renderer.sortObjects = false
-  //this.renderer.autoClear = false;
 
   this.container = new THREE.Object3D();
   this.scene.add(this.container);
@@ -66,11 +97,6 @@ module.exports.prototype.buildScene = function() {
   this.container.add(this.enviroment);
 
   this.context.hitPlane = this.enviroment.hitPlane;
-
-  this.context.camera = this.camera;
-  this.context.scene = this.scene;
-  this.context.projector = this.projector;
-  this.context.renderer = this.renderer;
   this.context.container = this.container;
 
   this.ctrlKey = false;
@@ -81,8 +107,10 @@ module.exports.prototype.buildScene = function() {
     var hh = $("body").height();
     self.camera.aspect = ww / hh;
     self.camera.updateProjectionMatrix();
+
     self.context.width = ww;
     self.context.height = hh;
+    self.context.aspect = hh / 1000;
 
     self.renderer.setSize( ww, hh );
     
@@ -90,6 +118,8 @@ module.exports.prototype.buildScene = function() {
       self.context.spaceViewController.checkPosition();
 
     self.context.spaceViewController.info.updatePosition();
+    self.context.shipsManager.updateSize();
+    self.context.sunsManager.updateSize();
   }
 
   this.context.$content.append(this.renderer.domElement);
@@ -100,39 +130,49 @@ module.exports.prototype.buildScene = function() {
 
 module.exports.prototype.startRendering = function() {
   var self = this;
-  var ct = (new Date()).getTime();
-  var t = ct;
-  var tMax = 0;
+  this.context.renderTime = Date.now();
+  var t = this.context.renderTime;
+  //var tMax = 0;
   var render = function() {
     requestAnimationFrame(render);
 
-    ct = (new Date()).getTime();
-    self.context.processingTime = ct - t;
+    self.context.renderTime = Date.now();
+    self.context.processingTime = self.context.renderTime - t;
     self.context.currentTime += self.context.processingTime;
-    t = ct;
+    t = self.context.renderTime;
 
     for(var i = 0;i < self.context.interactiveObjects.length;i ++)
       self.context.interactiveObjects[i].tick();
-    tMax = Math.max(tMax, (new Date()).getTime() - t)
-    //console.log("1.RenderTime:", (new Date()).getTime() - t, tMax, self.context.interactiveObjects.length);
+   // tMax = Math.max(tMax, Date.now() - t)
+    //console.log("1.RenderTime:", Date.now() - t, tMax, self.context.interactiveObjects.length);
 
-    t = (new Date()).getTime();
+    //t = Date.now();
 
-    self.renderer.render(self.scene, self.camera);
+    self.context.shipsManager.update();
+    self.context.sunsManager.update();
     self.stats.update();
 
-    tMax = Math.max(tMax, (new Date()).getTime() - t)
+    self.renderer.render(self.scene, self.camera);
+    self.context.shipsManager.checkForRemove();
+    
+
+    //console.log("t:", Date.now() - t)
+
+   // tMax = Math.max(tMax, Date.now() - t)
     //if (self.ctrlKey && self.spaceKey)
-      //console.log("2.RenderTime:", /*(new Date()).getTime() - t, tMax, */self.context.interactiveObjects.length, self.context.objects.length, self.context.planets.length);
+      //console.log("2.RenderTime:", /*Date.now() - t, tMax, */self.context.interactiveObjects.length, self.context.objects.length, self.context.planets.length);
   }
 
   render();
+
+  
 }
 
 module.exports.prototype.render = function(data) {
-  var t = new Date().getTime();
+  //console.log("----- ### scene render -----------------------------------------------------");
+  var t1 = new Date().getTime();
   this.gc();
-
+  var t2 = new Date().getTime();
   for (s in data.Suns) {
     data.Suns[s].id = s;
     if (!data.Suns[s].Position) {
@@ -143,27 +183,27 @@ module.exports.prototype.render = function(data) {
     if (!sun)
       sun = this.context.sunsFactory.build(data.Suns[s]);
   }
+  var t3 = new Date().getTime();
   this.context.planetsManager.managePlanetData(data.Planets);
-
+  var t4 = new Date().getTime();
   for (s in data.Missions) {
-    if (!data.Missions[s].id)
-      data.Missions[s].id = s;
+    data.Missions[s].id = s;
+
     var mission = this.context.objectsById[data.Missions[s].id];
-    if (!mission)
+    if (!mission) {
+      //console.log("render:", s)
       this.context.missionsFactory.build(data.Missions[s]);
-    else
-      mission.update(data.Missions[s]);
+    }
   }
+  var t5 = new Date().getTime();
 
-  if (this.afterRenderFn != null)
-    this.afterRenderFn();
-
-  //console.log("### scene render:", new Date().getTime() - t)
+  //console.log("----- ### scene render:", new Date().getTime() - t1, t2 - t1, t3 - t2, t4 - t3, t5 - t4)
 }
 
 module.exports.prototype.gc = function() {
+  //var t = Date.now();
   var rect = this.context.spaceViewController.screenRect;
-  //console.log("1.-gc-", rect, this.context.objects.length)
+
   var forRemove = [];
   for (var i = 0;i < this.context.objects.length;i ++) {
     var object = this.context.objects[i];
@@ -173,10 +213,10 @@ module.exports.prototype.gc = function() {
       forRemove.push(object)
   }
 
-  //console.log("1.-gc-DESTROY OBJECT:", forRemove.length, this.context.objects.length)
-  
   while (forRemove.length > 0) 
     this.destroyObject(forRemove.shift())
+
+  //console.log("---------------------- GC --------------------", Date.now() - t)
 }
 
 module.exports.prototype.clear = function() {

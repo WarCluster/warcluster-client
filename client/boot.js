@@ -1,3 +1,4 @@
+// require("../client/vendor");
 require("../client/vendor/jquery");
 require("../client/vendor/bootstrap");
 require("../client/vendor/bootstrap-fileupload.min");

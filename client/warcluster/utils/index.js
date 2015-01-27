@@ -15,7 +15,7 @@ module.exports.toWorldPosition = function(target) {
   if (!target)
     return null;
   var worldPosition = new THREE.Vector3();
-  worldPosition.getPositionFromMatrix(target.matrixWorld);
+  worldPosition.setFromMatrixPosition(target.matrixWorld);
   return worldPosition;
 }
 

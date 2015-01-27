@@ -31,9 +31,9 @@ module.exports.prototype.prepare = function(username, twitterId) {
 }
 
 module.exports.prototype.parseMessage = function(command) {
+  //var t1 = Date.now();
   var data = JSON.parse(command);
-  //var data = JSON.parse(command);
-  //console.log("###.parseMessage:", data);
+  //var t2 = Date.now();
 
   if (data.Command) {
     this.context.currentTime =  data.Timestamp;
@@ -52,18 +52,22 @@ module.exports.prototype.parseMessage = function(command) {
         this.renderViewFn(data);
       break;
       case "state_change":
+        //console.log("###.parseMessage[state_change]:");
         this.renderViewFn(data);
       break;
       case "request_setup_params":
         this.requestSetupParameters();
       break;
       case "send_missions":
-        for (key in data.Missions) {
-          this.context.missionsFactory.build(data.Missions[key]);
+        console.log("send_missions:", data)
+        for (var i in data.Missions) {
+          data.Missions[i].id = i;
+          if (!this.context.objectsById[data.Missions[i].id])
+            this.context.missionsFactory.build(data.Missions[i]);
         }
       break;
       case "send_mission_failed":
-        var n = noty({text:"You're attacking with less than one pilot",type:"info"});
+        //var n = noty({text:"You're attacking with less than one pilot",type:"info"});
       break;
       case "server_params":
         this.context.serverParams = {
@@ -94,30 +98,82 @@ module.exports.prototype.parseMessage = function(command) {
         console.log(data);
     }
   }
+
+  //console.log("###.parseMessage:", JSON.stringify(data, null, 2));
 }
 
-module.exports.prototype.scopeOfView = function(position, resolution) {
-  //https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view
-  var data = {"Command": "scope_of_view", "Position": position, "Resolution": [resolution.width || 1920, resolution.height || 1080]}
-  //console.log("scopeOfView", data)
-  this.ws.send(JSON.stringify(data));
+module.exports.prototype.scopeOfView = function(x, y, width, height) {
+  //console.log("scopeOfView", x, y, width, height)
+  this.ws.send('{' +
+    '"Command": "scope_of_view",' +
+    '"Position": {"x": '+x+', "y": '+y+'},' +
+    '"Resolution": ['+width+', '+height+']' +
+  '}');
 }
 
 module.exports.prototype.sendMission = function(type, source, target, ships) {
   //console.log("sendMission:", type, source, target, ships)
-  this.ws.send(JSON.stringify({
-    "Command": "start_mission",
-    "Type": type,
-    "StartPlanets": source,
-    "EndPlanet": target,
-    "Fleet": ships
-  }));
+  this.ws.send('{' +
+    '"Command": "start_mission",' +
+    '"Type": "'+type+'",' +
+    '"StartPlanets": ["'+source.join('","')+'"],' +
+    '"EndPlanet": "'+target+'",' +
+    '"Fleet": '+ ships +
+  '}');
 }
 
 module.exports.prototype.setupParameters = function(race, sun) {
-  this.ws.send(JSON.stringify({
-    "Command": "setup_parameters",
-    "Race": race,
-    "SunTextureId": sun
-  }))
+  this.ws.send('{' +
+    '"Command": "setup_parameters",' +
+    '"Race": '+race+',' +
+    '"SunTextureId": '+ sun +
+  '}')
+}
+
+module.exports.prototype.testShips = function() {
+
+  var message = {
+    "Command": "send_missions",
+    "Timestamp": Date.now(),
+    "Missions": {
+      
+    },
+    "FailedMissions": {}
+  } 
+
+  for (var i = 0;i < 2500; i++) {
+    var id = "mission." + Math.random();
+
+    var p1 = this.context.planetsHitObjects[parseInt( this.context.planetsHitObjects.length * Math.random() )].parent;
+    var p2 = this.context.planetsHitObjects[parseInt( this.context.planetsHitObjects.length * Math.random() )].parent;
+
+    while (p2 == p1)
+      p2 = this.context.planetsHitObjects[parseInt( this.context.planetsHitObjects.length * Math.random() )].parent;
+
+    message.Missions[id] = {
+      "Color": {
+        "R": 0.39215687,
+        "G": 0.8980392,
+        "B": 0.10196078
+      },
+      "Source": {
+        "Name": "TOX6448",
+        "Owner": "toxic_real",
+        "Position": p1.data.Position
+      },
+      "Target": {
+        "Name": "TOX6443",
+        "Owner": "toxic_real",
+        "Position": p2.data.Position
+      },
+      "Type": "Supply",
+      "StartTime": Date.now(),
+      "TravelTime": 15000 + 10000 * Math.random(),
+      "Player": "toxic_real",
+      "ShipCount": 100 + parseInt(Math.random() * 5000),
+      "id": id
+    }
+  }
+  this.parseMessage(JSON.stringify(message));
+  //console.log("testShips", message)
 }

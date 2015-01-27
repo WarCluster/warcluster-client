@@ -11,8 +11,12 @@ module.exports.prototype.build = function(planetData, selected) {
 
 	planet.prepare(planetData);
 	
-	this.context.container.add(planet);
+
+	if (!planet.parent)
+		this.context.container.add(planet);
 	
+	//planet.visible = true;
+	this.context.spaceViewController.selection.addPlanetEvents(planet);
 	this.context.planetsHitObjects.push(planet.hitObject);
 	this.context.objects.push(planet);
 	this.context.objectsById[planetData.id] = planet;
@@ -26,8 +30,10 @@ module.exports.prototype.build = function(planetData, selected) {
 module.exports.prototype.destroy = function(planet) {
 	planet.deactivate();
 	planet.deselect();
-	this.context.container.remove(planet);
+	//this.context.container.remove(planet);
+	planet.position.x = -9999999999999;
 	
+	this.context.spaceViewController.selection.removePlanetEvents(planet);
 	this.context.planetsHitObjects.splice(this.context.planetsHitObjects.indexOf(planet.hitObject), 1);
 	this.context.objects.splice(this.context.objects.indexOf(planet), 1);
 

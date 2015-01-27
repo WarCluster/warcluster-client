@@ -4,15 +4,20 @@ var ResourcesLoader = require("../../loaders/resources/ResourcesLoader");
 
 var PlanetsFactory = require("../../factories/planets/PlanetsFactory");
 var MissionsFactory = require("../../factories/missions/MissionsFactory");
-var ShipsFactory = require("../../factories/ships/ShipsFactory");
 var CanvasTextFactory = require("../../factories/text/CanvasTextFactory");
 var SunsFactory = require("../../factories/suns/SunsFactory");
 
 var CommandsManager = require("../../managers/commands/CommandsManager");
 var PlanetsManager = require("../../managers/planets/PlanetsManager");
-var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
+var PlanetsTextureManager = require("../../managers/planets/PlanetsTextureManager");
+var ShipsManager = require("../../managers/ships/ShipsManager");
+var SunsManager = require("../../managers/suns/SunsManager");
+var SunsTextureManager = require("../../managers/suns/SunsTextureManager");
+
 
 var SpaceScene = require("../../scene/SpaceScene");
+
+var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
 
 var MissionsMenu = require("../../controls/mission-menu");
 var PlanetsSelection = require("../../controls/planets-selection");
@@ -87,7 +92,6 @@ module.exports = Backbone.View.extend({
 
     this.context.planetsFactory = new PlanetsFactory(this.context);
     this.context.missionsFactory = new MissionsFactory(this.context);
-    this.context.shipsFactory = new ShipsFactory(this.context);
     this.context.sunsFactory = new SunsFactory(this.context);
 
     this.context.canvasTextFactory = new CanvasTextFactory(true, this.context);
@@ -97,18 +101,21 @@ module.exports = Backbone.View.extend({
       self.planetsSelection.updatePopulations(e.updated);
     });
 
+    this.context.planetsTextureManager = new PlanetsTextureManager(this.context);
+    this.context.sunsTextureManager = new SunsTextureManager(this.context);
+
     this.context.spaceScene = new SpaceScene(this.context);
     this.context.spaceScene.addEventListener("complete", function() { 
       console.log("--complete space scene--");
       self.connect();
     });
-    this.context.spaceScene.prepare();
+    
 
     this.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
-        maxZoom: 60000000,
-        minZoom: 4000,
-        zoomStep: 1500,
+        maxZoom: 145907,
+        minZoom: 3000,
+        zoomStep: 1200,
         zoom: 4000
       },
       scroller: {
@@ -150,15 +157,6 @@ module.exports = Backbone.View.extend({
         self.context.missionsMenu.hideMenu();    
     });
 
-    /*this.spaceViewController.addEventListener("scopeOfView", function(e) {
-      //TODO: https://trello.com/c/slSUdtQd/214-fine-tune-scope-of-view-to-not-spam
-      var position = {
-        x: Math.ceil(self.context.spaceViewController.scrollPosition.x),
-        y: Math.ceil(self.context.spaceViewController.scrollPosition.y)
-      };
-      self.commandsManager.scopeOfView(position, self.context.spaceViewController.getResolution());
-    });*/
-    
     this.context.spaceViewController = this.spaceViewController;
 
 
@@ -172,15 +170,18 @@ module.exports = Backbone.View.extend({
       
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.Race).el);
       console.log("-loginFn-", self.context.playerData);
-      self.spaceViewController.activate();
+      self.spaceViewController.activate(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
       // self.spaceViewController.scrollTo(data.HomePlanet.Position.X-50000, data.HomePlanet.Position.Y-50000);
-      self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
+      // self.spaceViewController.scrollTo(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
 
       if (!self.context.playerData.JustRegistered) {
         self.toggleLandingStatisticsView();
       }
 
-      this.context.KeyboardManager = new KeyboardManager(self.context);
+      self.context.KeyboardManager = new KeyboardManager(self.context);
+
+      self.shipsManager.prepare();
+      self.sunsManager.prepare();
     }
 
     this.commandsManager.renderViewFn = function(data) {
@@ -193,6 +194,15 @@ module.exports = Backbone.View.extend({
     this.commandsManager.toggleTutorial = function() {
       self.tutorialMenu.toggleTutorial();
     }
+
+    this.shipsManager = new ShipsManager(this.context, 1500);
+    this.context.shipsManager = this.shipsManager;
+
+    this.sunsManager = new SunsManager(this.context, 2);
+    this.context.sunsManager = this.sunsManager;
+    
+
+    this.context.spaceScene.prepare();
 
     return this;
   },
