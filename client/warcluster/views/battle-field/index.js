@@ -198,7 +198,7 @@ module.exports = Backbone.View.extend({
     this.shipsManager = new ShipsManager(this.context, 1500);
     this.context.shipsManager = this.shipsManager;
 
-    this.sunsManager = new SunsManager(this.context, 2);
+    this.sunsManager = new SunsManager(this.context, 10);
     this.context.sunsManager = this.sunsManager;
     
 
