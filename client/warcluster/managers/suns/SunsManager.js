@@ -15,7 +15,7 @@ module.exports.prototype.prepare = function() {
 
   for ( var i = 0; i < this.cacheSize; i ++ ) {
     this.pull[i] = i;
-    geometry.vertices.push( new THREE.Vector3() );
+    geometry.vertices.push( new THREE.Vector3(0, 0, 150000) );
   }
 
   this.cloud = new THREE.PointCloud( geometry, shaderMaterial );
@@ -28,7 +28,7 @@ module.exports.prototype.prepare = function() {
   var values_aspect = this.cloud.material.attributes.aspect.value;
   
   for ( var v = 0; v < vertices.length; v++ ) {
-    values_time[v] = -1;
+    values_time[v] = 0;
     values_color[v] = new THREE.Color( 0xffaa00 );
     values_aspect[ v ] = this.context.aspect;
   }
@@ -72,7 +72,12 @@ module.exports.prototype.removeSunGlow = function(item) {
   this.objectsIndexes.splice(index, 1)
   this.pull.push(item)
 
-  this.cloud.material.attributes.time.value[item] = -1;
+  var vertices = this.cloud.geometry.vertices;
+  if (item !== null) {
+    vertices[item].z = 150000;
+  }
+
+  this.cloud.material.attributes.time.needsUpdate = true;
 }
 
 module.exports.prototype.update = function() {
@@ -110,16 +115,11 @@ module.exports.prototype.buildGlowMaterial = function() {
 
     "void main() {",
       "vTime = time;",
-
-      "if (time != -1.0) {",
-        "vColor = color;",
-        "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
-        
-        "gl_PointSize = 12000.0 * ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
-        "gl_Position = projectionMatrix * mvPosition;",
-      "} else {",
-        "vDraw = -1.0;",
-      "}",
+      "vColor = color;",
+      "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+      
+      "gl_PointSize = 12000.0 * ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
+      "gl_Position = projectionMatrix * mvPosition;",
     "}"
   ].join("\n")
 
@@ -133,9 +133,6 @@ module.exports.prototype.buildGlowMaterial = function() {
     "varying float vDraw;",
 
     "void main() {",
-      "if (vDraw < 0.0) {",
-        "discard; }",
-
       "float mid = 0.5;",
       "float angle = vTime;",
 
@@ -147,7 +144,6 @@ module.exports.prototype.buildGlowMaterial = function() {
 
       "gl_FragColor = vec4( vColor , 1.0 );",
       "gl_FragColor *= texture2D( texture, rotated1 ) * texture2D( texture, rotated2 );",
-
     "}"
   ].join("\n")
 
