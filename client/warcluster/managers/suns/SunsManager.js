@@ -78,6 +78,7 @@ module.exports.prototype.removeSunGlow = function(item) {
   }
 
   this.cloud.material.attributes.time.needsUpdate = true;
+  this.cloud.geometry.verticesNeedUpdate = true;
 }
 
 module.exports.prototype.update = function() {
