@@ -154,7 +154,8 @@ module.exports.prototype.updatePopulationInfo = function() {
   } else 
     this.population.visible = true;
 
-  var result = this.context.canvasTextFactory.buildUint8Array(parseInt(this.data.ShipCount), null, 45);
+  var population = parseInt(this.data.ShipCount)+ " / " + parseInt(this.data.MaxShipCount);
+  var result = this.context.canvasTextFactory.buildUint8Array(population, null, 45);
   
   // this.population.visible = (this.data.ShipCount !== -1);
   this.populationTexture.image.data = result.uint8Array;

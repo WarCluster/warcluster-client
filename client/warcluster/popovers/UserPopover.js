@@ -19,7 +19,7 @@ module.exports = Backbone.View.extend({
     var planetCategory = this.planetData.IsHome ? "Home Planet: " : "Planet Name: ";
     var screenName = this.planetData && this.planetData.Owner ? this.planetData.Owner.split("player.").join("") : null;
     var planetName = this.planetData.Name;
-    var twitterAvatar = screenName ? "https://twitter.com/api/users/profile_image/"+screenName+"?size=bigger" : "/images/default_avatar.png";
+    var twitterAvatar = screenName ? "http://avatars.io/twitter/"+screenName+"?size=large" : "/images/default_avatar.png";
     var owner = screenName ? "@" + screenName : "Neutral Planet"; 
     var productionPerMinute = this.planetData.IsHome ? this.context.serverParams.HomeSPM : this.context.serverParams.PlanetsSPM[this.planetData.Size]
 
