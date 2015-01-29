@@ -41,23 +41,19 @@ module.exports.prototype.prepare = function() {
   var values_color = shaderMaterial.attributes.customColor.value;
   var values_displacement = shaderMaterial.attributes.displacement.value;
   var values_formation = this.cloud.material.attributes.formation.value;
-  var values_time = shaderMaterial.attributes.time.value;
   var values_rotation = shaderMaterial.attributes.rotation.value;
   var values_travelTime = shaderMaterial.attributes.travelTime.value;
-  var values_aspect = this.cloud.material.attributes.aspect.value;
   
   for ( var v = 0; v < vertices.length; v++ ) {
     values_displacement[v] = new THREE.Vector3();
     values_formation[v] = new THREE.Vector3();
     values_rotation[v] = 0;
 
-    values_time[v] = 0;
     values_color[v] = new THREE.Color( 0xffaa00 );
 
     this.startTimes[v] = 0;
     values_travelTime [v] = 0;
 
-    values_aspect[ v ] = this.context.aspect;
   }
 
   this.context.container.add( this.cloud );
@@ -73,11 +69,9 @@ module.exports.prototype.addShips = function(sizes, mission, color, formation) {
   var values_color = this.cloud.material.attributes.customColor.value;
   var values_displacement = this.cloud.material.attributes.displacement.value;
   var values_formation = this.cloud.material.attributes.formation.value;
-  var values_time = this.cloud.material.attributes.time.value;
   var values_rotation = this.cloud.material.attributes.rotation.value;
   var values_travelTime = this.cloud.material.attributes.travelTime.value;
   var values_texPosition = this.cloud.material.attributes.texPosition.value;
-  var values_aspect = this.cloud.material.attributes.aspect.value;
 
   var tsVec = this.cloud.material.uniforms.tileSize.value;
 
@@ -102,24 +96,20 @@ module.exports.prototype.addShips = function(sizes, mission, color, formation) {
 
     values_rotation[v] = Math.atan2(v3.y, v3.x) - Math.PI / 2;
 
-    values_time[v] = 0;
     values_color[v] = color;
 
     this.startTimes[v] = data.StartTime;
     values_travelTime[v] = data.TravelTime;
     values_texPosition[ v ] = new THREE.Vector2(sizes[i], 0).multiply(tsVec);
 
-    values_aspect[ v ] = this.context.aspect;
   }
   
   this.cloud.material.attributes.customColor.needsUpdate = true;
   this.cloud.material.attributes.displacement.needsUpdate = true;
   this.cloud.material.attributes.formation.needsUpdate = true;
-  this.cloud.material.attributes.time.needsUpdate = true;
   this.cloud.material.attributes.rotation.needsUpdate = true;
   this.cloud.material.attributes.travelTime.needsUpdate = true;
   this.cloud.material.attributes.texPosition.needsUpdate = true;
-  this.cloud.material.attributes.aspect.needsUpdate = true;
 
   this.cloud.geometry.verticesNeedUpdate = true;
 
@@ -141,7 +131,6 @@ module.exports.prototype.removeShips = function(ships) {
     this.pull.push(item);
     
 
-    this.cloud.material.attributes.time.value[item] = -1;
     this.cloud.geometry.verticesNeedUpdate = true;
   }
 }
@@ -150,9 +139,9 @@ module.exports.prototype.update = function() {
   var ln = this.objectsIndexes.length;
   if (ln) {
     for( var i = 0; i < ln; i++ )
-      this.cloud.material.attributes.time.value[ this.objectsIndexes[ i ] ] = this.context.currentTime - this.startTimes[ this.objectsIndexes[ i ] ];
+      this.cloud.material.uniforms.time.value = this.context.currentTime - this.startTimes[ this.objectsIndexes[ i ] ];
   
-    this.cloud.material.attributes.time.needsUpdate = true;  
+    this.cloud.material.uniforms.time.needsUpdate = true; 
   }
 
   //console.log("-update-", Date.now() - t, lsh - this.shipsForRemove.length)
@@ -161,10 +150,8 @@ module.exports.prototype.update = function() {
 module.exports.prototype.updateSize = function() {
   var ln = this.objectsIndexes.length;
   if (ln) {
-    for( var i = 0; i < ln; i++ )
-      this.cloud.material.attributes.aspect.value[ this.objectsIndexes[ i ] ] = this.context.aspect;
-  
-    this.cloud.material.attributes.aspect.needsUpdate = true;  
+    this.cloud.material.uniforms.aspect.value = this.context.aspect;
+    this.cloud.material.uniforms.aspect.needsUpdate = true;
   }
 }
 
@@ -197,12 +184,12 @@ module.exports.prototype.checkForRemove = function() {
 module.exports.prototype.buildShipMaterial = function() {
   var vertexshader = [
     "uniform float size;",
+    "uniform float time;",
+    "uniform float aspect;",
 
     "attribute float rotation;",
-    "attribute float time;",
     "attribute float startTime;",
     "attribute float travelTime;",
-    "attribute float aspect;",
 
     "attribute vec2 texPosition;",
 
@@ -210,7 +197,6 @@ module.exports.prototype.buildShipMaterial = function() {
     "attribute vec3 displacement;",
     "attribute vec3 formation;",
 
-    "varying float vDraw;",
     "varying vec3 vColor;",
     "varying float vRotation;",
     "varying vec2 vTexPosition;",
@@ -239,7 +225,6 @@ module.exports.prototype.buildShipMaterial = function() {
     "uniform vec2 tileSize;",
     "uniform sampler2D texture;",
 
-    "varying float vDraw;",
     "varying vec3 vColor;",
     "varying float vRotation;",
     "varying vec2 vTexPosition;",
@@ -256,19 +241,17 @@ module.exports.prototype.buildShipMaterial = function() {
   ].join("\n")
 
   var attributes = {
-    
     displacement: { type: 'v3', value: [] },
     formation: { type: 'v3', value: [] },
     rotation: { type: "f", value: [] },
     travelTime: { type: "f", value: [] },
-    time: { type: 'f', value: [] },
-    aspect: { type: 'f', value: [] },
     customColor: { type: 'c', value: [] },
     texPosition: { type: "v2", value: [] }
   };
 
   var uniforms = {
-    
+    time: { type: 'f', value: 0 },
+    aspect: { type: 'f', value: this.context.aspect },
     size:      { type: "f", value: 1000 },
     tileSize:  { type: "v2", value: new THREE.Vector2( 0.2, 1 ) },
     texture:   { type: "t", value: this.context.resourcesLoader.get("/images/ships/ships.png") }

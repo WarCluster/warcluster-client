@@ -24,12 +24,8 @@ module.exports.prototype.prepare = function() {
 
   var vertices = this.cloud.geometry.vertices;
   var values_color = shaderMaterial.attributes.color.value;
-  // var values_time = shaderMaterial.attributes.time.value;
-  // var values_aspect = this.cloud.material.attributes.aspect.value;
-  
+
   for ( var v = 0; v < vertices.length; v++ ) {
-    // values_time[v] = 0;
-    // values_aspect[ v ] = this.context.aspect;
     values_color[v] = new THREE.Color( 0xffaa00 );
   }
 
@@ -46,8 +42,6 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
 
   var vertices = this.cloud.geometry.vertices;
   var values_color = this.cloud.material.attributes.color.value;
-  // var values_time = this.cloud.material.attributes.time.value;
-  // var values_aspect = this.cloud.material.attributes.aspect.value;
 
   var v = objs[ 0 ];
   
@@ -56,12 +50,8 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
   vertices[v].z = z;
 
   values_color[v] = color;
-  // values_time[v] = 20;
-  // values_aspect[v] = this.context.aspect;
-  
+
   this.cloud.material.attributes.color.needsUpdate = true;
-  // this.cloud.material.attributes.time.needsUpdate = true;
-  // this.cloud.material.attributes.aspect.needsUpdate = true;
 
   this.cloud.geometry.verticesNeedUpdate = true;
   return v;
@@ -83,10 +73,6 @@ module.exports.prototype.removeSunGlow = function(item) {
 module.exports.prototype.update = function() {
   var ln = this.objectsIndexes.length;
   if (ln) {
-    // for( var i = 0; i < ln; i++ )
-      // this.cloud.material.attributes.time.value[ this.objectsIndexes[ i ] ] += (Date.now() - this.t) * 0.00002;
-  
-    // this.cloud.material.attributes.time.needsUpdate = true; 
     this.cloud.material.uniforms.time.value += (Date.now() - this.t) * 0.00002;
     this.cloud.material.uniforms.time.needsUpdate = true;
   }
@@ -96,11 +82,7 @@ module.exports.prototype.update = function() {
 
 module.exports.prototype.updateSize = function() {
   var ln = this.objectsIndexes.length;
-  if (ln) {
-    // for( var i = 0; i < ln; i++ )
-      // this.cloud.material.attributes.aspect.value[ this.objectsIndexes[ i ] ] = this.context.aspect;
-  
-    // this.cloud.material.attributes.aspect.needsUpdate = true;  
+  if (ln) { 
     this.cloud.material.uniforms.aspect.value = this.context.aspect;
     this.cloud.material.uniforms.aspect.value.needsUpdate = true;
   }
