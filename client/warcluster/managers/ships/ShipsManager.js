@@ -51,7 +51,7 @@ module.exports.prototype.prepare = function() {
     values_formation[v] = new THREE.Vector3();
     values_rotation[v] = 0;
 
-    values_time[v] = -1;
+    values_time[v] = 0;
     values_color[v] = new THREE.Color( 0xffaa00 );
 
     this.startTimes[v] = 0;
@@ -214,22 +214,18 @@ module.exports.prototype.buildShipMaterial = function() {
     "const float showHideTime = 3300.0;",
 
     "void main() {",
-      "if (time >= 0.0 && time < travelTime) {",
-        "vRotation = rotation;",
-        "vColor = customColor;",
-        "vTexPosition = texPosition;",
+      "vRotation = rotation;",
+      "vColor = customColor;",
+      "vTexPosition = texPosition;",
 
-        "float sc = (clamp(time, 0.0, showHideTime) / showHideTime) * (1.0 - clamp(time - (travelTime - showHideTime), 0.0, showHideTime) / showHideTime) * aspect;",
+      "float sc = (clamp(time, 0.0, showHideTime) / showHideTime) * (1.0 - clamp(time - (travelTime - showHideTime), 0.0, showHideTime) / showHideTime) * aspect;",
 
-        "float progress = time / travelTime;",
-        "vec3 newpos = (displacement * progress) + position + formation * (sc + 0.2);",
-        "vec4 mvPosition = modelViewMatrix * vec4( newpos, 1.0 );",
+      "float progress = time / travelTime;",
+      "vec3 newpos = (displacement * progress) + position + formation * (sc + 0.2);",
+      "vec4 mvPosition = modelViewMatrix * vec4( newpos, 1.0 );",
 
-        "gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) ) * (sc + 0.05);",
-        "gl_Position = projectionMatrix * mvPosition;",
-      "} else {",
-        "vDraw = -1.0;",
-      "}",
+      "gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) ) * (sc + 0.05);",
+      "gl_Position = projectionMatrix * mvPosition;",
     "}"
   ].join("\n")
 
@@ -245,9 +241,6 @@ module.exports.prototype.buildShipMaterial = function() {
     "varying vec2 vTexPosition;",
 
     "void main() {",
-      "if (vDraw < 0.0) {",
-        "discard; }",
-
       "float mid = 0.5;",
       "vec2 rotated = vec2(cos(vRotation) * (gl_PointCoord.x - mid) - sin(vRotation) * (gl_PointCoord.y - mid) + mid,",
                           "cos(vRotation) * (gl_PointCoord.y - mid) + sin(vRotation) * (gl_PointCoord.x - mid) + mid);",
