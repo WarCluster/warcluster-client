@@ -30,7 +30,7 @@ module.exports.prototype.prepare = function() {
 
   for ( var i = 0; i < this.cacheSize; i ++ ) {
     this.pull[i] = i;
-    geometry.vertices.push( new THREE.Vector3() );
+    geometry.vertices.push( new THREE.Vector3(0, 0, 150000) );
   }
 
   this.cloud = new THREE.PointCloud( geometry, shaderMaterial );
@@ -133,11 +133,16 @@ module.exports.prototype.removeShips = function(ships) {
   while (ships.length > 0) {
     item = ships.shift();
 
-    var index = this.objectsIndexes.indexOf(item)
-    this.objectsIndexes.splice(index, 1)
-    this.pull.push(item)
+    var index = this.objectsIndexes.indexOf(item);
+    var vertices = this.cloud.geometry.vertices;
+    
+    this.objectsIndexes.splice(index, 1);
+    vertices[item].z = 150000;
+    this.pull.push(item);
+    
 
     this.cloud.material.attributes.time.value[item] = -1;
+    this.cloud.geometry.verticesNeedUpdate = true;
   }
 }
 
@@ -149,7 +154,6 @@ module.exports.prototype.update = function() {
   
     this.cloud.material.attributes.time.needsUpdate = true;  
   }
-  
 
   //console.log("-update-", Date.now() - t, lsh - this.shipsForRemove.length)
 }
