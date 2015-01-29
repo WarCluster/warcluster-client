@@ -24,13 +24,13 @@ module.exports.prototype.prepare = function() {
 
   var vertices = this.cloud.geometry.vertices;
   var values_color = shaderMaterial.attributes.color.value;
-  var values_time = shaderMaterial.attributes.time.value;
-  var values_aspect = this.cloud.material.attributes.aspect.value;
+  // var values_time = shaderMaterial.attributes.time.value;
+  // var values_aspect = this.cloud.material.attributes.aspect.value;
   
   for ( var v = 0; v < vertices.length; v++ ) {
-    values_time[v] = 0;
+    // values_time[v] = 0;
+    // values_aspect[ v ] = this.context.aspect;
     values_color[v] = new THREE.Color( 0xffaa00 );
-    values_aspect[ v ] = this.context.aspect;
   }
 
   this.context.container.add( this.cloud );
@@ -46,8 +46,8 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
 
   var vertices = this.cloud.geometry.vertices;
   var values_color = this.cloud.material.attributes.color.value;
-  var values_time = this.cloud.material.attributes.time.value;
-  var values_aspect = this.cloud.material.attributes.aspect.value;
+  // var values_time = this.cloud.material.attributes.time.value;
+  // var values_aspect = this.cloud.material.attributes.aspect.value;
 
   var v = objs[ 0 ];
   
@@ -55,39 +55,40 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
   vertices[v].y = y;
   vertices[v].z = z;
 
-  values_time[v] = 20;
   values_color[v] = color;
-  values_aspect[v] = this.context.aspect;
+  // values_time[v] = 20;
+  // values_aspect[v] = this.context.aspect;
   
   this.cloud.material.attributes.color.needsUpdate = true;
-  this.cloud.material.attributes.time.needsUpdate = true;
-  this.cloud.material.attributes.aspect.needsUpdate = true;
+  // this.cloud.material.attributes.time.needsUpdate = true;
+  // this.cloud.material.attributes.aspect.needsUpdate = true;
 
   this.cloud.geometry.verticesNeedUpdate = true;
   return v;
 }
 
 module.exports.prototype.removeSunGlow = function(item) {
-  var index = this.objectsIndexes.indexOf(item)
-  this.objectsIndexes.splice(index, 1)
-  this.pull.push(item)
+  var index = this.objectsIndexes.indexOf(item);
+  this.objectsIndexes.splice(index, 1);
+  this.pull.push(item);
 
   var vertices = this.cloud.geometry.vertices;
   if (item !== null) {
     vertices[item].z = 150000;
   }
 
-  this.cloud.material.attributes.time.needsUpdate = true;
   this.cloud.geometry.verticesNeedUpdate = true;
 }
 
 module.exports.prototype.update = function() {
   var ln = this.objectsIndexes.length;
   if (ln) {
-    for( var i = 0; i < ln; i++ )
-      this.cloud.material.attributes.time.value[ this.objectsIndexes[ i ] ] += (Date.now() - this.t) * 0.00002;
+    // for( var i = 0; i < ln; i++ )
+      // this.cloud.material.attributes.time.value[ this.objectsIndexes[ i ] ] += (Date.now() - this.t) * 0.00002;
   
-    this.cloud.material.attributes.time.needsUpdate = true;  
+    // this.cloud.material.attributes.time.needsUpdate = true; 
+    this.cloud.material.uniforms.time.value += (Date.now() - this.t) * 0.00002;
+    this.cloud.material.uniforms.time.needsUpdate = true;
   }
 
   this.t = Date.now();
@@ -96,26 +97,26 @@ module.exports.prototype.update = function() {
 module.exports.prototype.updateSize = function() {
   var ln = this.objectsIndexes.length;
   if (ln) {
-    for( var i = 0; i < ln; i++ )
-      this.cloud.material.attributes.aspect.value[ this.objectsIndexes[ i ] ] = this.context.aspect;
+    // for( var i = 0; i < ln; i++ )
+      // this.cloud.material.attributes.aspect.value[ this.objectsIndexes[ i ] ] = this.context.aspect;
   
-    this.cloud.material.attributes.aspect.needsUpdate = true;  
+    // this.cloud.material.attributes.aspect.needsUpdate = true;  
+    this.cloud.material.uniforms.aspect.value = this.context.aspect;
+    this.cloud.material.uniforms.aspect.value.needsUpdate = true;
   }
 }
 
 module.exports.prototype.buildGlowMaterial = function() {
   var vertexshader = [
 
-    "attribute float time;",
+    "uniform float time;",
+    "uniform float aspect;",
+    
     "attribute vec3 color;",
-    "attribute float aspect;",
 
-    "varying float vTime;",
     "varying vec3 vColor;",
-    "varying float vDraw;",
 
     "void main() {",
-      "vTime = time;",
       "vColor = color;",
       "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
       
@@ -128,14 +129,13 @@ module.exports.prototype.buildGlowMaterial = function() {
   var fragmentshader = [
 
     "uniform sampler2D texture;",
+    "uniform float time;",
 
     "varying vec3 vColor;",
-    "varying float vTime;",
-    "varying float vDraw;",
 
     "void main() {",
       "float mid = 0.5;",
-      "float angle = vTime;",
+      "float angle = time;",
 
       "vec2 rotated1 = vec2(cos(angle) * (gl_PointCoord.x - mid) - sin(angle) * (gl_PointCoord.y - mid) + mid,",
                            "cos(angle) * (gl_PointCoord.y - mid) + sin(angle) * (gl_PointCoord.x - mid) + mid);",
@@ -149,12 +149,12 @@ module.exports.prototype.buildGlowMaterial = function() {
   ].join("\n")
 
   var attributes = {
-    time: { type: 'f', value: [] },
-    aspect: { type: 'f', value: [] },
     color: { type: 'c', value: [] }
   };
 
   var uniforms = {
+    time: { type: 'f', value: 0 },
+    aspect: { type: 'f', value: this.context.aspect },
     texture:   { type: "t", value: this.context.resourcesLoader.get('/images/suns/sun_glow.png') }
   };
   
