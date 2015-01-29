@@ -58,9 +58,9 @@ module.exports.prototype.addSunGlow = function(x, y, z, color) {
 }
 
 module.exports.prototype.removeSunGlow = function(item) {
-  var index = this.objectsIndexes.indexOf(item);
-  this.objectsIndexes.splice(index, 1);
-  this.pull.push(item);
+  var index = this.objectsIndexes.indexOf(item)
+  this.objectsIndexes.splice(index, 1)
+  this.pull.push(item)
 
   var vertices = this.cloud.geometry.vertices;
   if (item !== null) {
