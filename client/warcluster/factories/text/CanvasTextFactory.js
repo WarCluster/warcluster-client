@@ -10,18 +10,31 @@ module.exports = function(useGlobalCanvas, context){
 
 module.exports.prototype.build = function(text, font, size) {
 	var textHandler = text;
+  var gradient = "white";
+  var populations = text.split("/");
 
-	if (textHandler === "")
-		textHandler = " "
+  if (textHandler === "")
+    textHandler = " "
 
-	font = font || "Ubuntu";
-	size = size || 20;
+  font = font || "Ubuntu";
+  size = size || 20;
+  
+
+  if (populations.length > 1) {
+    //Indicate with red the current population if it's more than the max ship count
+    if (parseInt(populations[0]) > parseInt(populations[1])) {
+      var currentPopulationMeasure = this.context2d.measureText(populations[0]).width;
+      gradient = this.context2d.createLinearGradient(0,0,currentPopulationMeasure,0);
+      gradient.addColorStop(0.99, "red");
+      gradient.addColorStop(0.99, "white");
+    }
+  }
 
   this.canvas2d.width = this.context2d.measureText(textHandler).width;
   this.canvas2d.height = size*2;
   this.canvas2d.fillStyle = "rgba(0, 0, 0, 0)";
   this.context2d.font = size + 'pt ' + font;
-  this.context2d.fillStyle = 'white';
+  this.context2d.fillStyle = gradient;
   this.context2d.textAlign = "center";
   this.context2d.textBaseline = "middle";
 
