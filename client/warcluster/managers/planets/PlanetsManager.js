@@ -138,8 +138,13 @@ module.exports.prototype.getBuildIndex = function (planetData) {
     return 0;
   else if (planetData.IsHome)
     return this.context.serverParams.HomeSPM;
-  else
-    return this.context.serverParams.PlanetsSPM[planetData.Size];
+  else {
+    if (planetData.ShipCount > planetData.MaxShipCount) {
+      return -((planetData.ShipCount - planetData.MaxShipCount) * 0.05) 
+    } else {
+      return this.context.serverParams.PlanetsSPM[planetData.Size];
+    }
+  }
 
   return 0;
 }
