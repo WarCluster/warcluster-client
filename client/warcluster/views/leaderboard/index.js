@@ -274,7 +274,7 @@ module.exports = Backbone.View.extend({
   _implodeAnimation: function(element) {
     element.animate({deg: 60}, {
       duration: 200,
-      step: function(now) {
+      onUpdate: function(now) {
         element.css({
           transform: "rotateX(" + now*1.5 + "deg)" 
         })
@@ -284,7 +284,7 @@ module.exports = Backbone.View.extend({
   _explodeAnimation: function(element) {
     element.animate({deg: 0}, {
       duration: 300,
-      step: function(now) {
+      onUpdate: function(now) {
         element.css({
           transform: "rotateX(" + now*1.5 + "deg)" 
         })
