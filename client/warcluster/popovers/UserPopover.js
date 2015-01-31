@@ -20,8 +20,22 @@ module.exports = Backbone.View.extend({
     var screenName = this.planetData && this.planetData.Owner ? this.planetData.Owner.split("player.").join("") : null;
     var planetName = this.planetData.Name;
     var twitterAvatar = screenName ? "http://avatars.io/twitter/"+screenName+"?size=large" : "/images/default_avatar.png";
-    var owner = screenName ? "@" + screenName : "Neutral Planet"; 
-    var productionPerMinute = this.planetData.IsHome ? this.context.serverParams.HomeSPM : this.context.serverParams.PlanetsSPM[this.planetData.Size]
+    var owner = screenName ? "@" + screenName : "Neutral Planet";
+
+    var productionPerMinute;
+
+    if (this.planetData.ShipCount > this.planetData.MaxShipCount) {
+      productionPerMinute = -parseInt((this.planetData.ShipCount - this.planetData.MaxShipCount) * 0.05); 
+    } else if (this.planetData.ShipCount == this.planetData.MaxShipCount) {
+      productionPerMinute = 0;
+    } else if (this.planetData.IsHome) {
+      productionPerMinute = this.context.serverParams.HomeSPM;
+    } else {
+      productionPerMinute = this.context.serverParams.PlanetsSPM[this.planetData.Size]
+    }
+    console.log(this.context.serverParams);
+    console.log(this.planetData);
+
 
     this.$el.html(this.template({
      playerName:        owner,
