@@ -3,7 +3,6 @@ var LeaderboardView = require("../../client/warcluster/views/leaderboard")
 // config = require("../../client/config");
 
 $(document).ready(function() {
-  var self = this;
 
   //Google analytics
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

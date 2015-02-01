@@ -1,8 +1,6 @@
 var boot = require("../../client/boot");
 var AppRouter = require("../../client/AppRouter");
 
-  
-
 $(document).ready(function() {
   // USERVOICE widget
   (function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/ZD3yBKaqsWuw05GqkIQmyQ.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()
@@ -34,12 +32,6 @@ $(document).ready(function() {
   //try to fix https://trello.com/c/Fxe0XPV2/333-upon-refresh-the-screen-is-black 
   router.navigate("battle-field", {trigger: true});
   //unfortunately I cannot reproduce it so I don't know if this is a fix :D
-
-
-
-  
-
-
 
   /*var renderer  = new THREE.WebGLRenderer({
     antialias : true
