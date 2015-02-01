@@ -1,7 +1,7 @@
 var individualRender = jadeCompile(require("./render/individual.jade"));
 var raceRender = jadeCompile(require("./render/race.jade"));
 
-//TODO: need to refactor this whole view O_O There's a lot of copy-pasting, especially for the animations 
+//TODO: need to refactor this whole view O_O
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
@@ -33,7 +33,7 @@ module.exports = Backbone.View.extend({
       this.goToUsernamePage(twitterUsername);
     } 
     this.showIndividualLeaderboard();
-    
+
     return this;
   },
   searchPlayer: function (e) {
@@ -54,12 +54,12 @@ module.exports = Backbone.View.extend({
       autoFocus: true,
       minLength: 3,
       //this is needed in order to get rid of the nasty message
-      messages: {
-        noResults: '',
-        results: function() {
-          return '';
-        }
-      },
+      // messages: {
+      //   noResults: '',
+      //   results: function() {
+      //     return '';
+      //   }
+      // },
       select: _.bind(function (event, ui) {
         this.goToUsernamePage(ui.item.label);
       }, this)
@@ -284,7 +284,7 @@ module.exports = Backbone.View.extend({
     
     //TODO: https://trello.com/c/CZbrIQfl/404-add-races-color-in-leaderboard-responses
     //when they're ready with this card we should remove this hardcoded switch
-    console.log(data);
+    // console.log(data);
     if (data !== undefined) {
       switch (data.RaceId) {
         case 0:
