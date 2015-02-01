@@ -1,7 +1,7 @@
 var individualRender = jadeCompile(require("./render/individual.jade"));
 var raceRender = jadeCompile(require("./render/race.jade"));
 
-//TODO: need to refactor this whole view O_O There's a lot of copy-pasting, especially for the animations 
+//TODO: need to refactor this whole view O_O
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
@@ -34,8 +34,6 @@ module.exports = Backbone.View.extend({
     } 
     this.showIndividualLeaderboard();
 
-
-    
     return this;
   },
   searchPlayer: function (e) {
@@ -56,12 +54,12 @@ module.exports = Backbone.View.extend({
       autoFocus: true,
       minLength: 3,
       //this is needed in order to get rid of the nasty message
-      messages: {
-        noResults: '',
-        results: function() {
-          return '';
-        }
-      },
+      // messages: {
+      //   noResults: '',
+      //   results: function() {
+      //     return '';
+      //   }
+      // },
       select: _.bind(function (event, ui) {
         this.goToUsernamePage(ui.item.label);
       }, this)
@@ -159,7 +157,8 @@ module.exports = Backbone.View.extend({
         if(i <= dataLen-1) {
           if(i <= this.leaderboardDataCache.length-1) {
             if(this.leaderboardDataCache[i].Username === data[i].Username && this.leaderboardDataCache[i].Planets !== data[i].Planets) {
-              var $current_element = $("tbody tr:nth-child(" + (i+1) + ") > .planets");
+              var $current_element = $("tbody tr:nth-child(" + (i+1) + ") .planets");
+
               _.bind(this._implodeAnimation, $current_element);
               this._implodeAnimation($current_element);
 
@@ -207,24 +206,24 @@ module.exports = Backbone.View.extend({
       for(var i=0; i < data.length; i++) {
         if (this.leaderboardDataCache[i] && this.leaderboardDataCache[i].Name && this.leaderboardDataCache[i].Name === data[i].Name) {
           if (this.leaderboardDataCache[i].Players && this.leaderboardDataCache[i].Players !== data[i].Players) { 
-            _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .players-number");
+            _that.iter = $("tbody tr:nth-child(" + (i+1) + ") .players-number");
 
             _.bind(this._implodeAnimation,_that.iter);
             this._implodeAnimation(_that.iter);
 
-            $("tbody tr:nth-child(" + (i+1) + ") > .players-number").html(data[i].Players);
+            $("tbody tr:nth-child(" + (i+1) + ") .players-number").html(data[i].Players);
 
 
             _.bind(this._explodeAnimation,_that.iter);
             this._explodeAnimation(_that.iter);
           } 
           else if (this.leaderboardDataCache[i].Planets !== data[i].Planets) {
-            _that.iter = $("tbody tr:nth-child(" + (i+1) + ") > .planets-number");
+            _that.iter = $("tbody tr:nth-child(" + (i+1) + ") .planets-number");
 
             _.bind(this._implodeAnimation,_that.iter);
             this._implodeAnimation(_that.iter);
 
-            $("tbody tr:nth-child(" + (i+1) + ") > .planets-number").html(data[i].Planets);
+            $("tbody tr:nth-child(" + (i+1) + ") .planets-number").html(data[i].Planets);
 
 
             _.bind(this._explodeAnimation,_that.iter);
@@ -272,29 +271,20 @@ module.exports = Backbone.View.extend({
   },
   //TODO: find a proper naming for the animation. Figure out a better UX animation
   _implodeAnimation: function(element) {
-    element.animate({deg: 60}, {
-      duration: 200,
-      step: function(now) {
-        element.css({
-          transform: "rotateX(" + now*1.5 + "deg)" 
-        })
-      }
+    element.animate({width: "0%"}, {
+      duration: 200
     });
   },
   _explodeAnimation: function(element) {
-    element.animate({deg: 0}, {
-      duration: 300,
-      step: function(now) {
-        element.css({
-          transform: "rotateX(" + now*1.5 + "deg)" 
-        })
-      }
+    element.animate({width: "100%"}, {
+      duration: 300
     });
   },
   _setPlayerData: function(element, data) {
     
     //TODO: https://trello.com/c/CZbrIQfl/404-add-races-color-in-leaderboard-responses
     //when they're ready with this card we should remove this hardcoded switch
+    // console.log(data);
     if (data !== undefined) {
       switch (data.RaceId) {
         case 0:
