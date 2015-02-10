@@ -5,5 +5,8 @@
   },
   "TwitterOAuth": {
     "callbackFullUrl": "http://staging.warcluster.com/game/#battle-field"
+  },
+  "RenderPage": {
+    "useCache": false
   }
 }
