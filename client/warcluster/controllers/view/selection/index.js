@@ -28,9 +28,10 @@ module.exports = function(context, config){
 
   // *****************************************************************
 
-  var selectionMouseMove = function(e) {
+  var selectionPointerMove = function(e) {
     e.preventDefault();
-
+    e.clientX = e.clientX || e.changedTouches[0].clientX;
+    e.clientY = e.clientY || e.changedTouches[0].clientY;
     var w = e.clientX - self.mpos.x;
     var h = e.clientY - self.mpos.y;
 
@@ -94,8 +95,10 @@ module.exports = function(context, config){
     }
   }
 
-  var selectionMouseUp = function(e) {
+  var selectionPointerUp = function(e) {
     e.preventDefault();
+    e.clientX = e.clientX || e.changedTouches[0].clientX;
+    e.clientY = e.clientY || e.changedTouches[0].clientY;
 
     var w = e.clientX - self.mpos.x;
     var h = e.clientY - self.mpos.y;
@@ -111,13 +114,16 @@ module.exports = function(context, config){
       self.hitTestPlanets(rect);
     self.selectionRect.remove();
     
-    window.removeEventListener("mousemove", selectionMouseMove);
-    window.removeEventListener("mouseup", selectionMouseUp);
+    window.removeEventListener("mousemove", selectionPointerMove);
+    window.removeEventListener("mouseup", selectionPointerUp);
+    window.removeEventListener("touchmove", selectionPointerMove);
+    window.removeEventListener("touchend", selectionPointerUp);
   }
 
   this.selectionMouseDown = function(e) {
     e.preventDefault();
-
+    e.clientX = e.clientX || e.targetTouches[0].clientX;
+    e.clientY = e.clientY || e.targetTouches[0].clientY;
     self.mpos.x = e.clientX;
     self.mpos.y = e.clientY;
 
@@ -132,8 +138,10 @@ module.exports = function(context, config){
 
     $(self.selectionRect).css(css);
 
-    window.addEventListener("mousemove", selectionMouseMove);
-    window.addEventListener("mouseup", selectionMouseUp);
+    window.addEventListener("mousemove", selectionPointerMove);
+    window.addEventListener("mouseup", selectionPointerUp);
+    window.addEventListener("touchmove", selectionPointerMove);
+    window.addEventListener("touchend", selectionPointerUp);
   }
 }
 

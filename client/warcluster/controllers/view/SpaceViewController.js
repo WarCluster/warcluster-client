@@ -20,8 +20,8 @@ module.exports = function(context, config){
     height: 0,
     cx: 0,
     cy: 0,
-   X: 0,
-   Y: 0
+    X: 0,
+    Y: 0
   }
 
   this.resolution = { width: 0, height: 0 }
@@ -108,7 +108,7 @@ module.exports = function(context, config){
 
   this.onMouseDown = function(e) {
     if (self.context.renderer.domElement == e.target) {
-      if (e.button != 0)
+      if (e.button != 0 && e.targetTouches.length > 1) 
         self.scroller.scrollMouseDown(e);
       else
         self.selection.selectionMouseDown(e);
@@ -136,6 +136,7 @@ module.exports.prototype.activate = function(x, y) {
     this.updateScreenRect();
 
 		window.addEventListener("mousedown", this.onMouseDown);
+    window.addEventListener("touchstart", this.onMouseDown);
 	}
 }
 
@@ -143,6 +144,7 @@ module.exports.prototype.deactivate = function() {
 	if (this.active) {
 		this.active = false;
 		window.removeEventListener("mousedown", this.onMouseDown);
+    window.removeEventListener("touchstart", this.onMouseDown);
 	}
 }
 

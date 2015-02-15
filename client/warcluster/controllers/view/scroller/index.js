@@ -16,9 +16,13 @@ module.exports = function(context, config, controller) {
   var scrollMouseUp = function(e) {
     window.removeEventListener("mousemove", scrollMouseMove);
     window.removeEventListener("mouseup", scrollMouseUp);
+    // window.removeEventListener("touchmove", scrollMouseMove);
+    // window.removeEventListener("touchend", scrollMouseUp);
   }
 
   var scrollMouseMove = function(e) {
+    // e.clientX = e.clientX || e.targetTouches[0].clientX;
+    // e.clientY = e.clientY || e.targetTouches[0].clientY;
     var dx = (self.mpos.x - e.clientX) * self.scaleIndex;
     var dy = (e.clientY - self.mpos.y) * self.scaleIndex;
 
@@ -36,6 +40,8 @@ module.exports = function(context, config, controller) {
 
     window.addEventListener("mousemove", scrollMouseMove);
     window.addEventListener("mouseup", scrollMouseUp);
+    // window.addEventListener("touchmove", scrollMouseMove);
+    // window.addEventListener("touchend", scrollMouseUp);
   }
 
   this.scrollFn = null;
