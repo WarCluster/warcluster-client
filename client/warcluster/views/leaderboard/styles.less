@@ -1,3 +1,160 @@
+#individual {
+  border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  -moz-border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  border-style: solid;
+  border-width: 12px 16px 16px 12px;
+  .race-color {
+    cursor: pointer;
+  }
+}
+#team {
+  border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  -moz-border-image: url("/images/ui/border_rectangle.png") 12 16 16 12 repeat;
+  border-width: 12px 16px 16px 12px;
+  border-style: solid;
+  .race-color {
+    cursor: pointer;
+  }
+}
+.pick-race-panel {
+  width: 65%;
+  height: 100%;
+  float: right;
+  padding-top: 25px;
+  .races {
+    display: block;
+    position: relative;
+    width: 95%;
+    margin-top: 20px;
+  }
+  .selected {
+    border-style: solid;
+  }
+  .race {
+    width: 40%;
+    height: 80px;
+    margin-top: 15px;
+    background-size: 100% 100%;
+    background-image: url("/images/ui/race-background.png");
+    cursor: pointer;
+    .race-description {
+      padding: 10px 10px 10px 0px;
+      position: relative;
+      margin: -75px 0px 0px 80px;
+      text-align: left;
+      font-size: 1em;
+      .fa-lock {
+        font-size: 1.2em;
+        margin-left: 6px;
+      }
+    }
+    .race-color {
+      width: 80px;
+    }
+    img {
+      padding: 10px;
+      width: 80px;
+    }
+    &:hover > .race-color {
+      border-color: #f26a21;
+      border-top-style: outset;
+      border-width: 5px;
+    }
+    &:hover > .race-color > img {
+      padding-top: 5px;
+    }
+  }
+  .info {
+    margin-top: -25px;
+    border-left: 2px solid #0597ff;
+    border-right: 2px solid #0597ff;
+    background-color: #150a06;
+    color: #0597ff;
+    max-width: 430px;
+    padding-left: 10px;
+    text-align: left;
+  }
+  .choice {
+    &:hover {
+      color: #0597ff;
+    }
+  }
+  /* Effect 10: reveal, push out */
+  .btn-group-cl-effect a {
+    position: relative;
+    display: inline-block;
+    margin: 15px 25px;
+    width: 147px;
+    outline: none;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3);
+    font-size: 1.35em;
+  }
+  .btn-group-cl-effect  {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-group-cl-effect a {
+    overflow: hidden;
+    margin: 0 15px;
+  }
+
+  .btn-group-cl-effect a span {
+    display: block;
+    padding: 10px 20px;
+    background: rgba(18, 62, 94, 1);
+    -webkit-transition: -webkit-transform 0.3s;
+    -moz-transition: -moz-transform 0.3s;
+    transition: transform 0.3s;
+  }
+
+  .btn-group-cl-effect a::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    padding: 10px 20px;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    color: #0597ff;
+    content: attr(data-hover);
+    -webkit-transition: -webkit-transform 0.3s;
+    -moz-transition: -moz-transform 0.3s;
+    transition: transform 0.3s;
+    -webkit-transform: translateX(-25%);
+  }
+
+  .btn-group-cl-effect a:hover span,
+  .btn-group-cl-effect a:focus span {
+    -webkit-transform: translateX(100%);
+    -moz-transform: translateX(100%);
+    transform: translateX(100%);
+  }
+
+  .btn-group-cl-effect a:hover::before,
+  .btn-group-cl-effect a:focus::before {
+    -webkit-transform: translateX(0%);
+    -moz-transform: translateX(0%);
+    transform: translateX(0%);
+  }
+}
+.start-game {
+  position: fixed;
+  top: 10px;
+  right: 15px;
+  .animation-name(pinkPulse);
+  .animation-duration(2s);
+  .animation-iteration-count(infinite);
+}
+
 .planets, .players-number, .planets-number  {
   overflow: hidden;
 }

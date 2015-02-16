@@ -14,12 +14,6 @@ module.exports = Backbone.Router.extend({
     // Clear twitter credentials from global object
     twitter = null;
   },
-  // landing: function() {
-  //   var landingView = new LandingView({twitter: this.twitter});
-  //   $("body").html("").append(landingView.el);
-  //   $("body").css({"overflow": "auto"});
-  //   landingView.renderLandingView();
-  // },
   battleField: function() {
     var battleField = new BattleFieldView({twitter: this.twitter});
     $("body").html("").append(battleField.el);

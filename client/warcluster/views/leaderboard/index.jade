@@ -1,13 +1,13 @@
 nav.navbar.navbar-default
   .container-fluid
     .navbar-header
-        button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='.navbar-responsive-collapse')
+        button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#warcluster-navbar')
           span.icon-bar
           span.icon-bar
           span.icon-bar
         .navbar-brand
           span.glyphicon.glyphicon-star Leaderboard
-      .navbar-collapse.navbar-responsive-collapse.collapse(style='height: 1px;')
+      .navbar-collapse.collapse#warcluster-navbar(style='height: 1px;')
         ul.nav.navbar-nav
           li.active
             a#individualBtn Emperor
@@ -16,6 +16,5 @@ nav.navbar.navbar-default
           li
             a#hall-of-fame Hall Of Fame
               i.pull-right.fa.fa-lock
-        form.navbar-form.navbar-right
+        form.navbar-form.navbar-right(role="search")
           input#search-field.form-control.col-lg-8(type='text', placeholder='Search for players')
-
