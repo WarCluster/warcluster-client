@@ -1,8 +1,6 @@
 // require("../client/vendor");
 require("../client/vendor/jquery");
 require("../client/vendor/bootstrap");
-require("../client/vendor/bootstrap-fileupload.min");
-require("../client/vendor/bootstrap-colorselector");
 require("../client/vendor/TweenLite.min");
 require("../client/vendor/plugins/jquery-mousewheel.min")($);
 require("../client/vendor/plugins/CSSPlugin.min");
@@ -14,8 +12,6 @@ KeyboardJS = require("./vendor/keyboardjs.min");
 
 _ = require("../client/vendor/underscore");
 Backbone = require("../client/vendor/backbone");
-
-require("../client/vendor/backbone/backbone_bind_to");
 
 config = require("config");
 

@@ -1,11 +1,5 @@
 require("./jquery-1.9.1");
-require("./jquery-ui-1.10.4");
-require("./jquery-upload");
-require("./jquery-fineuploader");
-require("./jquery-ui-timepicker-addon");
-require("./jquery-ui-sliderAccess");
 require("./jquery.bpopup.min");
 require("./jquery-center");
-require("./jquery-linkify.min");
 require("./jquery.noty.packaged")
 //require("./jquery-mobile-detect.min");
