@@ -33,9 +33,6 @@ module.exports = Backbone.View.extend({
     } else {
       productionPerMinute = this.context.serverParams.PlanetsSPM[this.planetData.Size]
     }
-    console.log(this.context.serverParams);
-    console.log(this.planetData);
-
 
     this.$el.html(this.template({
      playerName:        owner,
