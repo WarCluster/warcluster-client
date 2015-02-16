@@ -27,24 +27,6 @@ module.exports = function(context, config){
   });
 
   // *****************************************************************
-
-  var selectionPointerMove = function(e) {
-    e.preventDefault();
-    e.clientX = e.clientX || e.changedTouches[0].clientX;
-    e.clientY = e.clientY || e.changedTouches[0].clientY;
-    var w = e.clientX - self.mpos.x;
-    var h = e.clientY - self.mpos.y;
-
-    var css = {
-      left: w >= 0 ? self.mpos.x : e.clientX,
-      top: h >= 0 ? self.mpos.y : e.clientY,
-      width: w >= 0 ? w : Math.abs(w),
-      height: h >= 0 ? h : Math.abs(h)
-    };
-
-    $(self.selectionRect).css(css);
-  }
-
   var handleMouseActions = function(e) {
     var intersects = self.getMouseIntersectionObjects(e);
     if (intersects.length > 0) {
@@ -95,16 +77,33 @@ module.exports = function(context, config){
     }
   }
 
-  var selectionPointerUp = function(e) {
+  var selectionPointerMove = function(e) {
     e.preventDefault();
     e.clientX = e.clientX || e.changedTouches[0].clientX;
     e.clientY = e.clientY || e.changedTouches[0].clientY;
-
     var w = e.clientX - self.mpos.x;
     var h = e.clientY - self.mpos.y;
+
+    var css = {
+      left: w >= 0 ? self.mpos.x : e.clientX,
+      top: h >= 0 ? self.mpos.y : e.clientY,
+      width: w >= 0 ? w : Math.abs(w),
+      height: h >= 0 ? h : Math.abs(h)
+    };
+
+    $(self.selectionRect).css(css);
+  }
+
+  var selectionPointerUp = function(e) {
+    e.preventDefault();
+    var clientX = e.clientX || e.changedTouches[0].clientX;
+    var clientY = e.clientY || e.changedTouches[0].clientY;
+
+    var w = clientX - self.mpos.x;
+    var h = clientY - self.mpos.y;
     var rect = {
-      x: w >= 0 ? self.mpos.x : e.clientX,
-      y: h >= 0 ? self.mpos.y : e.clientY,
+      x: w >= 0 ? self.mpos.x : clientX,
+      y: h >= 0 ? self.mpos.y : clientY,
       width: w >= 0 ? w : Math.abs(w),
       height: h >= 0 ? h : Math.abs(h)
     };
@@ -120,20 +119,20 @@ module.exports = function(context, config){
     window.removeEventListener("touchend", selectionPointerUp);
   }
 
-  this.selectionMouseDown = function(e) {
+  this.selectionPointerDown = function(e) {
     e.preventDefault();
-    e.clientX = e.clientX || e.targetTouches[0].clientX;
-    e.clientY = e.clientY || e.targetTouches[0].clientY;
-    self.mpos.x = e.clientX;
-    self.mpos.y = e.clientY;
+    var clientX = e.clientX || e.targetTouches[0].clientX;
+    var clientY = e.clientY || e.targetTouches[0].clientY;
+    self.mpos.x = clientX;
+    self.mpos.y = clientY;
 
     $("body").append(self.selectionRect);
 
     var css = {
       left: self.mpos.x,
       top: self.mpos.y,
-      width: e.clientX - self.mpos.x,
-      height: e.clientY - self.mpos.y
+      width: clientX - self.mpos.x,
+      height: clientY - self.mpos.y
     }
 
     $(self.selectionRect).css(css);

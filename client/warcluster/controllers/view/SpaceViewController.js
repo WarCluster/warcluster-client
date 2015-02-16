@@ -105,13 +105,23 @@ module.exports = function(context, config){
   });
 
   // *****************************************************************
+  this.onTouchStart = function(e) {
+    if (self.context.renderer.domElement == e.target) {
+      if (e.targetTouches.length > 1) 
+        self.scroller.scrollPointerDown(e);
+      else
+        self.selection.selectionPointerDown(e);
+    }
 
+    e.preventDefault();
+    return false;
+  }
   this.onMouseDown = function(e) {
     if (self.context.renderer.domElement == e.target) {
-      if (e.button != 0 && e.targetTouches.length > 1) 
-        self.scroller.scrollMouseDown(e);
+      if (e.button != 0) 
+        self.scroller.scrollPointerDown(e);
       else
-        self.selection.selectionMouseDown(e);
+        self.selection.selectionPointerDown(e);
     }
 
     e.preventDefault();
@@ -136,7 +146,7 @@ module.exports.prototype.activate = function(x, y) {
     this.updateScreenRect();
 
 		window.addEventListener("mousedown", this.onMouseDown);
-    window.addEventListener("touchstart", this.onMouseDown);
+    window.addEventListener("touchstart", this.onTouchStart);
 	}
 }
 
@@ -144,7 +154,7 @@ module.exports.prototype.deactivate = function() {
 	if (this.active) {
 		this.active = false;
 		window.removeEventListener("mousedown", this.onMouseDown);
-    window.removeEventListener("touchstart", this.onMouseDown);
+    window.removeEventListener("touchstart", this.onTouchStart);
 	}
 }
 

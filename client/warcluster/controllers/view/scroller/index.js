@@ -13,35 +13,39 @@ module.exports = function(context, config, controller) {
   this.scaleIndex = 1;
 
   var self = this;
-  var scrollMouseUp = function(e) {
-    window.removeEventListener("mousemove", scrollMouseMove);
-    window.removeEventListener("mouseup", scrollMouseUp);
-    // window.removeEventListener("touchmove", scrollMouseMove);
-    // window.removeEventListener("touchend", scrollMouseUp);
+
+  var scrollPointerUp = function(e) {
+    window.removeEventListener("mousemove", scrollPointerMove);
+    window.removeEventListener("mouseup", scrollPointerUp);
+    window.removeEventListener("touchmove", scrollPointerMove);
+    window.removeEventListener("touchend", scrollPointerUp);
   }
 
-  var scrollMouseMove = function(e) {
-    // e.clientX = e.clientX || e.targetTouches[0].clientX;
-    // e.clientY = e.clientY || e.targetTouches[0].clientY;
-    var dx = (self.mpos.x - e.clientX) * self.scaleIndex;
-    var dy = (e.clientY - self.mpos.y) * self.scaleIndex;
+  var scrollPointerMove = function(e) {
+    var clientX = e.clientX || e.targetTouches[0].clientX;
+    var clientY = e.clientY || e.targetTouches[0].clientY;
+    var dx = (self.mpos.x - clientX) * self.scaleIndex;
+    var dy = (clientY - self.mpos.y) * self.scaleIndex;
 
-    self.mpos.x = e.clientX;
-    self.mpos.y = e.clientY;
+    self.mpos.x = clientX;
+    self.mpos.y = clientY;
 
     self.scroll(dx, dy, true)
   }
 
-  this.scrollMouseDown = function(e) {
+  this.scrollPointerDown = function(e) {
     e.preventDefault();
 
-    self.mpos.x = e.clientX;
-    self.mpos.y = e.clientY;
+    var clientX = e.clientX || e.targetTouches[0].clientX;
+    var clientY = e.clientY || e.targetTouches[0].clientY;
 
-    window.addEventListener("mousemove", scrollMouseMove);
-    window.addEventListener("mouseup", scrollMouseUp);
-    // window.addEventListener("touchmove", scrollMouseMove);
-    // window.addEventListener("touchend", scrollMouseUp);
+    self.mpos.x = clientX;
+    self.mpos.y = clientY;
+
+    window.addEventListener("mousemove", scrollPointerMove);
+    window.addEventListener("mouseup", scrollPointerUp);
+    window.addEventListener("touchmove", scrollPointerMove);
+    window.addEventListener("touchend", scrollPointerUp);
   }
 
   this.scrollFn = null;
