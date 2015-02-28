@@ -1,4 +1,4 @@
-var utils = require("../../../utils")
+  var utils = require("../../../utils")
 
 module.exports = function(context, config, controller){
   THREE.EventDispatcher.call(this);
@@ -15,6 +15,7 @@ module.exports = function(context, config, controller){
   this.zoomFn = null;
   this.controller.scrollPosition.z = config.zoom || 4000;
   this.context.camera.position.z = this.controller.scrollPosition.z;
+
 
   $(window).mousewheel(function(e){
     if (self.shiftKey)

@@ -12,6 +12,19 @@ module.exports = function(context, config){
   this.config = config;
   this.scrollPosition = new THREE.Vector3();
 
+  var gameContainer = document.getElementsByClassName("game-container");
+  var hammertime = new Hammer(gameContainer[0]);
+  hammertime.get("pinch").set({ enable: true });
+  hammertime.on('press', function(e) {
+      self.info.renderAt(e);
+  });
+  hammertime.on('pinchin', function(ev) {
+      console.log(ev);
+  });
+  hammertime.on('pinchout', function(ev) {
+      console.log(ev);
+  });
+
   this.cell = {xIndex: null, yIndex: null};
   this.tlPosition = {xIndex: null, yIndex: null};
   this.brPosition = {xIndex: null, yIndex: null};

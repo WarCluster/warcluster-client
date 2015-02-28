@@ -4,20 +4,21 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "organic": "0.1.1",
-    "organic-webcell": "0.2.7",
-    "organic-cells": "0.0.15",
-    "express": "2.5.10",
-    "oauth": "latest",
-    "underscore": "latest",
-    "jquery-browserify": "*",
-    "glob": "latest",
     "async": "latest",
+    "express": "2.5.10",
+    "glob": "latest",
+    "hammerjs": "2.0.4",
+    "jquery-browserify": "*",
     "less": "1.7.0",
-    "organic-bundlestyle": "outbounder/organic-bundlestyle"
+    "oauth": "latest",
+    "organic": "0.1.1",
+    "organic-bundlestyle": "outbounder/organic-bundlestyle",
+    "organic-cells": "0.0.15",
+    "organic-webcell": "0.2.7",
+    "underscore": "latest"
   },
   "devDependencies": {
-    "shelljs" : "*"
+    "shelljs": "*"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

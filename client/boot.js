@@ -6,6 +6,9 @@ require("../client/vendor/plugins/jquery-mousewheel.min")($);
 require("../client/vendor/plugins/CSSPlugin.min");
 require("../client/vendor/plugins/jquery.gsap.min");
 require("../client/vendor/easing/EasePack.min");
+Hammer = require("hammerjs");
+console.log(Hammer);
+
 ReconnectingWebSocket = require("../client/vendor/reconnecting-websocket.js");
 
 KeyboardJS = require("./vendor/keyboardjs.min");

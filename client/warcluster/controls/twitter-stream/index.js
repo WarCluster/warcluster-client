@@ -10,7 +10,7 @@ module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
     "click .twitter-stream-toggle-btn": "toggleTwitterStream",
-    "touchstart. twitter-stream-toggle-btn": "toggleTwitterStream"
+    "touchstart .twitter-stream-toggle-btn": "toggleTwitterStream"
   },
   className: "twitter-stream",
   initialize: function() {    

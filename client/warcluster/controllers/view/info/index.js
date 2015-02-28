@@ -28,20 +28,11 @@ module.exports = function(context){
     });
   });
 
-  var click = function(e) {
-    if (e.button == 0)
-      return ;
+  // var click = function(e) {
+    
+  // }
 
-    var intersects = self.getMouseIntersectionObjects(e);
-    if (intersects.length > 0) {
-      self.selectedTooltipPlanet = intersects[0].object.parent;
-
-      var position = self.getTooltipPosition();
-      self.popover.show(position.x, position.y, self.selectedTooltipPlanet.data);
-    }
-  }
-
-  window.addEventListener("mouseup", click);
+  window.addEventListener("mouseup", self.renderAt.bind(this));
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
@@ -52,9 +43,24 @@ module.exports.prototype.updatePosition = function() {
   }
 }
 
+module.exports.prototype.renderAt = function(e) {
+  if (e.button == 0)
+      return ;
+
+    var intersects = this.getMouseIntersectionObjects(e);
+    if (intersects.length > 0) {
+      this.selectedTooltipPlanet = intersects[0].object.parent;
+
+      var position = this.getTooltipPosition();
+      this.popover.show(position.x, position.y, this.selectedTooltipPlanet.data);
+    }
+}
+
 module.exports.prototype.getMouseIntersectionObjects = function(e) {
-  var mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-  var mouseY = - (e.clientY / window.innerHeight) * 2 + 1;
+  var clientX = e.clientX || e.changedPointers[0].clientX;
+  var clientY = e.clientY || e.changedPointers[0].clientY;
+  var mouseX = (clientX / window.innerWidth) * 2 - 1;
+  var mouseY = - (clientY / window.innerHeight) * 2 + 1;
 
   var vector = new THREE.Vector3( mouseX, mouseY, 0.5 );
   this.context.projector.unprojectVector( vector, this.context.camera );
