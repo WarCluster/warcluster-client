@@ -27,8 +27,9 @@ module.exports = function(context, config){
   });
 
   // *****************************************************************
-  var handleMouseActions = function(e) {
-    var intersects = self.getMouseIntersectionObjects(e);
+  var handlePointerActions = function(e) {
+
+    var intersects = self.getPointerIntersectionObjects(e);
     if (intersects.length > 0) {
       var target = intersects[0].object.parent;
       if (target.data.Owner == self.context.playerData.Username) {
@@ -96,6 +97,7 @@ module.exports = function(context, config){
 
   var selectionPointerUp = function(e) {
     e.preventDefault();
+
     var clientX = e.clientX || e.changedTouches[0].clientX;
     var clientY = e.clientY || e.changedTouches[0].clientY;
 
@@ -108,7 +110,7 @@ module.exports = function(context, config){
       height: h >= 0 ? h : Math.abs(h)
     };
     if (rect.width < 4 && rect.height < 4)
-      handleMouseActions(e);
+      handlePointerActions(e);
     else
       self.hitTestPlanets(rect);
     self.selectionRect.remove();
@@ -121,6 +123,8 @@ module.exports = function(context, config){
 
   this.selectionPointerDown = function(e) {
     e.preventDefault();
+    e.stopPropagation();
+
     var clientX = e.clientX || e.targetTouches[0].clientX;
     var clientY = e.clientY || e.targetTouches[0].clientY;
     self.mpos.x = clientX;
@@ -145,9 +149,11 @@ module.exports = function(context, config){
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
-module.exports.prototype.getMouseIntersectionObjects = function(e) {
-  var mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-  var mouseY = - (e.clientY / window.innerHeight) * 2 + 1;
+module.exports.prototype.getPointerIntersectionObjects = function(e) {
+  var clientX = e.clientX || e.changedTouches[0].clientX;
+  var clientY = e.clientY || e.changedTouches[0].clientY;
+  var mouseX = (clientX / window.innerWidth) * 2 - 1;
+  var mouseY = - (clientY / window.innerHeight) * 2 + 1;
 
   var vector = new THREE.Vector3( mouseX, mouseY, 0.5 );
   this.context.projector.unprojectVector( vector, this.context.camera );
