@@ -149,6 +149,10 @@ module.exports = function(context, config){
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
+
+module.exports.prototype.removeSelectionRect = function() {
+  this.selectionRect.remove();
+}
 module.exports.prototype.getPointerIntersectionObjects = function(e) {
   var clientX = e.clientX || e.changedTouches[0].clientX;
   var clientY = e.clientY || e.changedTouches[0].clientY;

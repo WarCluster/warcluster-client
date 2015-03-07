@@ -14,15 +14,15 @@ module.exports = function(context, config){
 
   var gameContainer = document.getElementsByClassName("game-container");
   var hammertime = new Hammer(gameContainer[0]);
-  hammertime.get("pinch").set({ enable: true });
+  hammertime.get("pinch").set({ enable: true }).set({threshold: 0.5});
   hammertime.on('press', function(e) {
-      self.info.renderAt(e);
+    self.info.renderAt(e);
   });
   hammertime.on('pinchin', function(ev) {
-      console.log(ev);
+    self.zoomer.zoomOut();
   });
   hammertime.on('pinchout', function(ev) {
-      console.log(ev);
+    self.zoomer.zoomIn();
   });
 
   this.cell = {xIndex: null, yIndex: null};
@@ -120,8 +120,10 @@ module.exports = function(context, config){
   // *****************************************************************
   this.onTouchStart = function(e) {
     if (self.context.renderer.domElement == e.target) {
-      if (e.targetTouches.length > 1) 
+      if (e.targetTouches.length > 1) {
+        self.selection.removeSelectionRect();
         self.scroller.scrollPointerDown(e);
+      } 
       else
         self.selection.selectionPointerDown(e);
     }
