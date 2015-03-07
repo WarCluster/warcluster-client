@@ -113,8 +113,13 @@ module.exports = function(context, config){
       handlePointerActions(e);
     else
       self.hitTestPlanets(rect);
+
     self.selectionRect.remove();
-    
+
+    self.removeSelectionEventListeners();
+  }
+
+  this.removeSelectionEventListeners = function() {
     window.removeEventListener("mousemove", selectionPointerMove);
     window.removeEventListener("mouseup", selectionPointerUp);
     window.removeEventListener("touchmove", selectionPointerMove);
@@ -150,8 +155,9 @@ module.exports = function(context, config){
 
 module.exports.prototype = new THREE.EventDispatcher();
 
-module.exports.prototype.removeSelectionRect = function() {
+module.exports.prototype.cancelSelection = function() {
   this.selectionRect.remove();
+  this.removeSelectionEventListeners();
 }
 module.exports.prototype.getPointerIntersectionObjects = function(e) {
   var clientX = e.clientX || e.changedTouches[0].clientX;

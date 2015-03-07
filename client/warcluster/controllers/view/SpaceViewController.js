@@ -16,6 +16,7 @@ module.exports = function(context, config){
   var hammertime = new Hammer(gameContainer[0]);
   hammertime.get("pinch").set({ enable: true }).set({threshold: 0.5});
   hammertime.on('press', function(e) {
+    self.selection.cancelSelection();//don't select the planet we're focusing on.
     self.info.renderAt(e);
   });
   hammertime.on('pinchin', function(ev) {
@@ -121,7 +122,7 @@ module.exports = function(context, config){
   this.onTouchStart = function(e) {
     if (self.context.renderer.domElement == e.target) {
       if (e.targetTouches.length > 1) {
-        self.selection.removeSelectionRect();
+        self.selection.cancelSelection();
         self.scroller.scrollPointerDown(e);
       } 
       else
