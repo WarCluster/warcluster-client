@@ -30,7 +30,6 @@ module.exports = Backbone.View.extend({
   selectionChanged: function(e) {
     if (this.selectedPlanets.length == 0)
       this.show();
-
     if (e.deselectedPlanets)
       for (i = 0;i < e.deselectedPlanets.length;i ++)
         this.removePlanet(e.deselectedPlanets[i])
@@ -60,10 +59,10 @@ module.exports = Backbone.View.extend({
     }
   },
   show: function() {
-      TweenLite.to(this.$el, 0.3, {
-        css:  {left: "0px"},
-        ease: Cubic.easeOut
-      });
+    TweenLite.to(this.$el, 0.3, {
+      css:  {left: "0px"},
+      ease: Cubic.easeOut
+    });
   },
   hide: function() {
     TweenLite.to(this.$el, 0.3, {
@@ -96,6 +95,20 @@ module.exports = Backbone.View.extend({
   expanded: function() {
     return this.$(".expanded-list-container").hasClass("hide");
   },
+  updatePopulationsByIdAndPercent: function(ids, missionPercent) {
+    var currentPilots = 0;
+    var updatedPilots = 0;
+    var allPilots = 0;
+    var elem;
+    for (var i = 0; i < ids.length; i++) {
+      elem = this.$('[data-id="'+ids[i]+'"]').find(".shipCount")
+      currentPilots = parseInt(elem.text());
+      updatedPilots = parseInt(currentPilots - (currentPilots * missionPercent/100));
+      allPilots += updatedPilots;
+      elem.html(updatedPilots);
+    }
+    this.$(".total-pilots").html("(" + allPilots + " pilots)");
+  },
   updatePopulations: function(updated) {
     for (var i = 0;i < updated.length;i ++)
       this.$('[data-id="'+updated[i].id+'"]').find(".shipCount").html(parseInt(updated[i].ShipCount));
@@ -103,7 +116,7 @@ module.exports = Backbone.View.extend({
   },
   updateTotalPopulation: function() {
     var total = 0;
-    for (var i = 0;i < this.selectedPlanets.length;i ++)
+    for (var i = 0; i < this.selectedPlanets.length; i++)
       total += parseInt(this.selectedPlanets[i].ShipCount);
     this.$(".total-pilots").html("(" + total + " pilots)");
     this.$(".selected-planets").html(this.selectedPlanets.length);

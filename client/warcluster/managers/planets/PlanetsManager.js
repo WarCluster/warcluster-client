@@ -37,14 +37,14 @@ module.exports.prototype.managePlanetData = function(planets) {
   var total = 0;
 
   for (var id in planets) {
-    total ++
+    total++;
     var planet = this.context.objectsById[id];
     planets[id].id = id; 
 
     if (!planet) {
       t = Date.now();
       planet = this.context.planetsFactory.build(planets[id]);
-      
+
       if (Date.now() - t > t4) {
         pl = planet;
         t4 = Date.now() - t;
@@ -121,8 +121,9 @@ module.exports.prototype.managePopulation = function() {
       shipCount = planetData.ShipCount;
       planetData.ShipCount += time * this.getBuildIndex(planetData); 
       
-      if (parseInt(shipCount) != parseInt(planetData.ShipCount))
+      if (parseInt(shipCount) != parseInt(planetData.ShipCount)){
         updated.push(planetData);
+      }
     }
   }
 

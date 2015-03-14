@@ -128,14 +128,18 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("attackPlanet", function(e) {
       // console.log("-SEND ATTACK MISSION-");
-      self.commandsManager.sendMission("Attack" ,e.attackSourcesIds, e.planetToAttackId, self.context.missionsMenu.getCurrentType());
+      self.planetsSelection.updatePopulationsByIdAndPercent(e.attackSourcesIds, self.context.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Attack", e.attackSourcesIds, e.planetToAttackId, self.context.missionsMenu.getCurrentType());
     });
 
     this.spaceViewController.addEventListener("supplyPlanet", function(e) {
+      console.log("-----------supplyPlanet", e);
       // console.log("-SEND SUPPORT MISSION-");
+      self.planetsSelection.updatePopulationsByIdAndPercent(e.supportSourcesIds, self.context.missionsMenu.getCurrentType());
       self.commandsManager.sendMission("Supply", e.supportSourcesIds, e.planetToSupportId, self.context.missionsMenu.getCurrentType());
     });
     this.spaceViewController.addEventListener("spyPlanet", function(e) {
+      self.planetsSelection.updatePopulationsByIdAndPercent(e.spySourcesIds, self.context.missionsMenu.getCurrentType());
       self.commandsManager.sendMission("Spy", e.spySourcesIds, e.planetToSpyId, self.context.missionsMenu.getCurrentType());
     });
 
