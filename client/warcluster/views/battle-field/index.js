@@ -27,7 +27,7 @@ var LandingView = require("../landing");
 
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
-  events: { 
+  events: {
     "click .toggle-landing-btn": "toggleLandingStatisticsView",
     "touchstart .toggle-landing-btn": "toggleLandingStatisticsView"
   },
@@ -37,15 +37,15 @@ module.exports = Backbone.View.extend({
     this.context.playerData = {
       twitter: options.twitter
     };
-  }, 
+  },
   render: function() {
     this.$el.html(this.template());
-    
+
     var self = this;
 
     this.context.$content = $(".content");
     this.context.currentTime = (new Date()).getTime();
-    
+
     this.tutorialMenu = new Tutorial({context: this.context});
     $(".ui-container").append(this.tutorialMenu.render().el);
 
@@ -61,7 +61,7 @@ module.exports = Backbone.View.extend({
       var planet = self.context.objectsById[id];
       if (planet)
         planet.hideHoverSelection();
-      
+
       self.spaceViewController.selection.deselectPlanetById(id);
     });
 
@@ -87,7 +87,7 @@ module.exports = Backbone.View.extend({
 
     this.context.planetsSelection = this.planetsSelection;
     $(".ui-container").append(this.planetsSelection.render().el);
-    
+
     this.context.resourcesLoader = new ResourcesLoader();
 
     this.context.planetsFactory = new PlanetsFactory(this.context);
@@ -97,7 +97,7 @@ module.exports = Backbone.View.extend({
     this.context.canvasTextFactory = new CanvasTextFactory(true, this.context);
 
     this.context.planetsManager = new PlanetsManager(this.context);
-    this.context.planetsManager.addEventListener("selectionDataUpdated", function(e) { 
+    this.context.planetsManager.addEventListener("selectionDataUpdated", function(e) {
       self.planetsSelection.updatePopulations(e.updated);
     });
 
@@ -105,11 +105,11 @@ module.exports = Backbone.View.extend({
     this.context.sunsTextureManager = new SunsTextureManager(this.context);
 
     this.context.spaceScene = new SpaceScene(this.context);
-    this.context.spaceScene.addEventListener("complete", function() { 
+    this.context.spaceScene.addEventListener("complete", function() {
       console.log("--complete space scene--");
       self.connect();
     });
-    
+
 
     this.spaceViewController = new SpaceViewController(this.context, {
       zoomer: {
@@ -128,18 +128,14 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("attackPlanet", function(e) {
       // console.log("-SEND ATTACK MISSION-");
-      self.planetsSelection.updatePopulationsByIdAndPercent(e.attackSourcesIds, self.context.missionsMenu.getCurrentType());
       self.commandsManager.sendMission("Attack", e.attackSourcesIds, e.planetToAttackId, self.context.missionsMenu.getCurrentType());
     });
 
     this.spaceViewController.addEventListener("supplyPlanet", function(e) {
-      console.log("-----------supplyPlanet", e);
       // console.log("-SEND SUPPORT MISSION-");
-      self.planetsSelection.updatePopulationsByIdAndPercent(e.supportSourcesIds, self.context.missionsMenu.getCurrentType());
       self.commandsManager.sendMission("Supply", e.supportSourcesIds, e.planetToSupportId, self.context.missionsMenu.getCurrentType());
     });
     this.spaceViewController.addEventListener("spyPlanet", function(e) {
-      self.planetsSelection.updatePopulationsByIdAndPercent(e.spySourcesIds, self.context.missionsMenu.getCurrentType());
       self.commandsManager.sendMission("Spy", e.spySourcesIds, e.planetToSpyId, self.context.missionsMenu.getCurrentType());
     });
 
@@ -158,7 +154,7 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
         self.planetsSelection.deselectAllPlanets();
-        self.context.missionsMenu.hideMenu();    
+        self.context.missionsMenu.hideMenu();
     });
 
     this.context.spaceViewController = this.spaceViewController;
@@ -171,7 +167,7 @@ module.exports = Backbone.View.extend({
       data.JustRegistered = self.context.playerData.JustRegistered;
       //because data doesn't have the correct value of JustRegistered(which is set in startGame method at landing view)
       _.extend(self.context.playerData, data);
-      
+
       $(".ui-container").append(self.twitterStream.render(self.context.playerData.Race).el);
       console.log("-loginFn-", self.context.playerData);
       self.spaceViewController.activate(data.HomePlanet.Position.X, data.HomePlanet.Position.Y);
@@ -204,7 +200,7 @@ module.exports = Backbone.View.extend({
 
     this.sunsManager = new SunsManager(this.context, 1000);
     this.context.sunsManager = this.sunsManager;
-    
+
 
     this.context.spaceScene.prepare();
 
@@ -220,11 +216,11 @@ module.exports = Backbone.View.extend({
       this.landingView = new LandingView(this.context);
       $(".ui-container").append(this.landingView.el);
       this.landingView.renderStatistics();
-    } 
+    }
   },
   connect: function() {
     this.commandsManager.prepare(
-      this.context.playerData.twitter.screen_name, 
+      this.context.playerData.twitter.screen_name,
       String(this.context.playerData.twitter.id)
     );
   }

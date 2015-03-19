@@ -8,9 +8,9 @@ module.exports = Backbone.View.extend({
     "click .selection-planet-item":     "moveCameraToPlanet",
     "mouseover .selection-planet-item": "hoverSelectedPlanet",
     "mouseout .selection-planet-item":  "unhoverSelectedPlanet",
-    "touchstart .collapsed-list":            "togglePlanets",
-    "touchstart .deselect-planet":           "executeDeselectPlanet",
-    "touchstart .selection-planet-item":     "moveCameraToPlanet"
+    "touchstart .collapsed-list":       "togglePlanets",
+    "touchstart .deselect-planet":      "executeDeselectPlanet",
+    "touchstart .selection-planet-item":"moveCameraToPlanet"
   },
   className: "planets-selection",
   initialize: function(options) {
@@ -44,7 +44,6 @@ module.exports = Backbone.View.extend({
   },
   addPlanet: function(planetData) {
     this.$(".expanded-list").append(Render({model: planetData}));
-
     this.selectedPlanets.push(planetData);
     this.updateTotalPopulation();
   },
@@ -95,29 +94,22 @@ module.exports = Backbone.View.extend({
   expanded: function() {
     return this.$(".expanded-list-container").hasClass("hide");
   },
-  updatePopulationsByIdAndPercent: function(ids, missionPercent) {
-    var currentPilots = 0;
-    var updatedPilots = 0;
-    var allPilots = 0;
-    var elem;
-    for (var i = 0; i < ids.length; i++) {
-      elem = this.$('[data-id="'+ids[i]+'"]').find(".shipCount")
-      currentPilots = parseInt(elem.text());
-      updatedPilots = parseInt(currentPilots - (currentPilots * missionPercent/100));
-      allPilots += updatedPilots;
-      elem.html(updatedPilots);
-    }
-    this.$(".total-pilots").html("(" + allPilots + " pilots)");
-  },
   updatePopulations: function(updated) {
-    for (var i = 0;i < updated.length;i ++)
+    for (var i = 0; i < updated.length; i++) {
+      for (var j = 0; j < this.selectedPlanets.length; j++) {
+        if(this.selectedPlanets[j].id === updated[i].id) {
+          this.selectedPlanets[j].ShipCount = updated[i].ShipCount;
+        }
+      };
       this.$('[data-id="'+updated[i].id+'"]').find(".shipCount").html(parseInt(updated[i].ShipCount));
+    }
     this.updateTotalPopulation();
   },
   updateTotalPopulation: function() {
     var total = 0;
-    for (var i = 0; i < this.selectedPlanets.length; i++)
+    for (var i = 0; i < this.selectedPlanets.length; i++) {
       total += parseInt(this.selectedPlanets[i].ShipCount);
+    }
     this.$(".total-pilots").html("(" + total + " pilots)");
     this.$(".selected-planets").html(this.selectedPlanets.length);
   },

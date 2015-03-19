@@ -15,7 +15,7 @@ module.exports.prototype.start = function() {
     this.t = (new Date()).getTime();
     this.interval = setInterval(function() {
       self.managePopulation();
-    }, 500);  
+    }, 500);
   }
 }
 
@@ -35,11 +35,12 @@ module.exports.prototype.managePlanetData = function(planets) {
   var t4 = 0;
   var pl;
   var total = 0;
+  var selection = this.context.spaceViewController.selection;
 
   for (var id in planets) {
     total++;
     var planet = this.context.objectsById[id];
-    planets[id].id = id; 
+    planets[id].id = id;
 
     if (!planet) {
       t = Date.now();
@@ -49,7 +50,7 @@ module.exports.prototype.managePlanetData = function(planets) {
         pl = planet;
         t4 = Date.now() - t;
       }
-      
+
       t1 += Date.now() - t;
     } else {
       t = Date.now();
@@ -62,9 +63,14 @@ module.exports.prototype.managePlanetData = function(planets) {
       _.extend(planet.data, planets[id]);
 
       if (updatePopulation) {
-        if (planet.data.Owner === this.context.playerData.Username)
-          updated.push(planets[id]);
-        planet.updatePopulationInfo();
+        if (planet.data.Owner === this.context.playerData.Username) {
+          for(var i = 0; i < selection.selectedPlanets.length; i++) {
+            if(selection.selectedPlanets[i].id === id) {
+              updated.push(planets[id]);
+            }
+          }
+          planet.updatePopulationInfo();
+        }
       }
 
       if (updateOwner) {
@@ -84,9 +90,9 @@ module.exports.prototype.managePlanetData = function(planets) {
 
   if (updated.length > 0)
     this.dispatchEvent({
-      type: "selectionDataUpdated", 
+      type: "selectionDataUpdated",
       updated: updated
-    });  
+    });
 
   //console.log("--------------> managePlanetData:", num, newp, objs1, objs2, this.context.objects.length, this.context.planetsHitObjects.length, this.context.objectsById)
 }
@@ -100,14 +106,14 @@ module.exports.prototype.managePopulation = function() {
   this.t = t;
 
   var selection = this.context.spaceViewController.selection;
-  
-  for(var i = 0;i < this.context.planets.length;i ++) {
+
+  for(var i = 0; i < this.context.planets.length; i++) {
     if (this.context.planets[i].data.ShipCount === -1) continue;
 
     planetData = this.context.planets[i].data;
     shipCount = planetData.ShipCount;
-    planetData.ShipCount += time * this.getBuildIndex(planetData);  
-    
+    planetData.ShipCount += time * this.getBuildIndex(planetData);
+
     if (parseInt(shipCount) != parseInt(planetData.ShipCount)) {
       this.context.objectsById[planetData.id].updatePopulationInfo();
       if (selection.getSelectedPlanetDataById(planetData.id))
@@ -115,12 +121,12 @@ module.exports.prototype.managePopulation = function() {
     }
   }
 
-  for(var i = 0;i < selection.selectedPlanets.length;i ++) {
+  for(var i = 0; i < selection.selectedPlanets.length; i++) {
     planetData = selection.selectedPlanets[i];
     if (!this.context.objectsById[planetData.id]) {
       shipCount = planetData.ShipCount;
-      planetData.ShipCount += time * this.getBuildIndex(planetData); 
-      
+      planetData.ShipCount += time * this.getBuildIndex(planetData);
+
       if (parseInt(shipCount) != parseInt(planetData.ShipCount)){
         updated.push(planetData);
       }
@@ -129,7 +135,7 @@ module.exports.prototype.managePopulation = function() {
 
   if (updated.length > 0)
     this.dispatchEvent({
-      type: "selectionDataUpdated", 
+      type: "selectionDataUpdated",
       updated: updated
     });
 }
@@ -141,7 +147,7 @@ module.exports.prototype.getBuildIndex = function (planetData) {
     return this.context.serverParams.HomeSPM;
   else {
     if (planetData.ShipCount > planetData.MaxShipCount) {
-      return -((planetData.ShipCount - planetData.MaxShipCount) * 0.05); 
+      return -((planetData.ShipCount - planetData.MaxShipCount) * 0.05);
     } else {
       return this.context.serverParams.PlanetsSPM[planetData.Size];
     }
