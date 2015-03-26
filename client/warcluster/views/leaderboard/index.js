@@ -31,7 +31,7 @@ module.exports = Backbone.View.extend({
 
     if (twitterUsername) {
       this.goToUsernamePage(twitterUsername);
-    } 
+    }
     this.showIndividualLeaderboard();
 
     return this;
@@ -88,10 +88,12 @@ module.exports = Backbone.View.extend({
   },
   _connectIndividualLeaderboard: function(){
     clearTimeout(this.leaderboardAjaxTimeout);
+    this.leaderboardAjaxTimeout = null;
     this._pollIndividual(this.currentPage);
   },
   connectRaceLeaderboard: function(){
     clearTimeout(this.leaderboardAjaxTimeout);
+    this.leaderboardAjaxTimeout = null;
     this._pollRaces();
   },
   _pollRaces: function() {
@@ -151,7 +153,7 @@ module.exports = Backbone.View.extend({
         //animate only when necessary
         this._setPlayerData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
         }
-    } 
+    }
     else {
       for(var i = 0; i < 10; i++) {
         if(i <= dataLen-1) {
@@ -166,7 +168,7 @@ module.exports = Backbone.View.extend({
 
               _.bind(this._explodeAnimation, $current_element);
               this._explodeAnimation($current_element);
-            } 
+            }
             else if (this.leaderboardDataCache[i].Username !== data[i].Username && this.leaderboardDataCache[i].Username) {
               var $current_element = $("tbody tr:nth-child(" + (i+1) + ")");
               //asynchronous animations are slower than the iteration of the 'for' - that's why I need to bind the calls
@@ -182,13 +184,17 @@ module.exports = Backbone.View.extend({
           else {
             this._setPlayerData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
           }
-        } 
+        }
         else if (i > dataLen - 1) {
           this._setPlayerData($("tbody tr:nth-child(" + (i+1) + ")"));
         }
       }
     }
     this.leaderboardDataCache = data;
+    if (this.leaderboardAjaxTimeout) {
+      clearTimeout(this.leaderboardAjaxTimeout);
+      this.leaderboardAjaxTimeout = null;
+    }
     this.leaderboardAjaxTimeout = setTimeout(function() {
       _.bind(_that._pollIndividual,_that);
       _that._pollIndividual(_that.currentPage);
@@ -201,11 +207,11 @@ module.exports = Backbone.View.extend({
       for(var i=0; i < data.length; i++) {
         this._setRaceData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
       }
-    } 
+    }
     else {
       for(var i=0; i < data.length; i++) {
         if (this.leaderboardDataCache[i] && this.leaderboardDataCache[i].Name && this.leaderboardDataCache[i].Name === data[i].Name) {
-          if (this.leaderboardDataCache[i].Players && this.leaderboardDataCache[i].Players !== data[i].Players) { 
+          if (this.leaderboardDataCache[i].Players && this.leaderboardDataCache[i].Players !== data[i].Players) {
             _that.iter = $("tbody tr:nth-child(" + (i+1) + ") .players-number");
 
             _.bind(this._implodeAnimation,_that.iter);
@@ -216,7 +222,7 @@ module.exports = Backbone.View.extend({
 
             _.bind(this._explodeAnimation,_that.iter);
             this._explodeAnimation(_that.iter);
-          } 
+          }
           else if (this.leaderboardDataCache[i].Planets !== data[i].Planets) {
             _that.iter = $("tbody tr:nth-child(" + (i+1) + ") .planets-number");
 
@@ -229,7 +235,7 @@ module.exports = Backbone.View.extend({
             _.bind(this._explodeAnimation,_that.iter);
             this._explodeAnimation(_that.iter);
           }
-          
+
         }
         else if (this.leaderboardDataCache[i] && this.leaderboardDataCache[i].Name && this.leaderboardDataCache[i].Name !== data[i].Name && data[i].Name) {
           _that.iter = $("tbody tr:nth-child(" + (i+1) + ")");
@@ -238,13 +244,17 @@ module.exports = Backbone.View.extend({
           this._implodeAnimation(_that.iter);
 
           this._setRaceData($("tbody tr:nth-child(" + (i+1) + ")"), data[i]);
-          
+
           _.bind(this._explodeAnimation,_that.iter);
           this._explodeAnimation(_that.iter);
         }
       }
     }
     this.leaderboardDataCache = data;
+    if (this.leaderboardAjaxTimeout) {
+      clearTimeout(this.leaderboardAjaxTimeout);
+      this.leaderboardAjaxTimeout = null;
+    }
     this.leaderboardAjaxTimeout = setTimeout(function() {
       _.bind(_that._pollRaces,_that);
       _that._pollRaces();
@@ -281,7 +291,7 @@ module.exports = Backbone.View.extend({
     });
   },
   _setPlayerData: function(element, data) {
-    
+
     //TODO: https://trello.com/c/CZbrIQfl/404-add-races-color-in-leaderboard-responses
     //when they're ready with this card we should remove this hardcoded switch
     // console.log(data);

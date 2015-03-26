@@ -13,11 +13,11 @@ $(document).ready(function() {
     forum_id: 214551,
     tab_label: 'Feedback & Support',
     tab_color: '#0496ff',
-    tab_position: 'top-right',
+    tab_position: 'bottom-left',
     tab_inverted: false
   }]);
   // end of UserVoice widget
-  // 
+  //
   //Google analytics
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -29,7 +29,7 @@ $(document).ready(function() {
 
   router = new AppRouter();
   Backbone.history.start({trigger: true});
-  //try to fix https://trello.com/c/Fxe0XPV2/333-upon-refresh-the-screen-is-black 
+  //try to fix https://trello.com/c/Fxe0XPV2/333-upon-refresh-the-screen-is-black
   router.navigate("battle-field", {trigger: true});
   //unfortunately I cannot reproduce it so I don't know if this is a fix :D
 
@@ -39,7 +39,7 @@ $(document).ready(function() {
   renderer.setSize( window.innerWidth, window.innerHeight );
   document.body.appendChild( renderer.domElement );
   //renderer.shadowMapEnabled = true
-  
+
   var onRenderFcts= [];
   var scene = new THREE.Scene();
   var camera  = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 100000000 );
@@ -67,7 +67,7 @@ $(document).ready(function() {
     earthMesh.material.map = bmd1;
     earthMesh.material.bumpMap = bmd1;
 
-    
+
     var geometry  = new THREE.SphereGeometry(0.5, 32, 32)
     var material  = THREEx.createAtmosphereMaterial()
     material.side = THREE.BackSide
@@ -99,7 +99,7 @@ $(document).ready(function() {
   renderer.setSize( window.innerWidth, window.innerHeight );
   document.body.appendChild( renderer.domElement );
   //renderer.shadowMapEnabled = true
-  
+
   var onRenderFcts= [];
   var scene = new THREE.Scene();
   var camera  = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 0.01, 100000000 );
@@ -131,7 +131,7 @@ $(document).ready(function() {
     //earthMesh.receiveShadow = true
     //earthMesh.castShadow  = true
     containerEarth.add(earthMesh)
-    
+
     var geometry  = new THREE.SphereGeometry(0.5, 32, 32)
     var material  = THREEx.createAtmosphereMaterial()
     material.side = THREE.BackSide
@@ -162,9 +162,9 @@ $(document).ready(function() {
   //    render the scene            //
   //////////////////////////////////////////////////////////////////////////////////
   onRenderFcts.push(function(){
-    renderer.render( scene, camera );   
+    renderer.render( scene, camera );
   })
-  
+
   //////////////////////////////////////////////////////////////////////////////////
   //    loop runner             //
   //////////////////////////////////////////////////////////////////////////////////

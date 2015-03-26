@@ -69,7 +69,7 @@ module.exports = Backbone.View.extend({
       ease: Cubic.easeOut,
       onComplete: function() {
         $(".landing-view").remove();
-        delete this.leaderboard;    
+        delete this.leaderboard;
       }
     });
     // router.navigate("battle-field", true)
@@ -84,11 +84,11 @@ module.exports = Backbone.View.extend({
     $(e.currentTarget).parent().find(".selected").removeClass("selected");
     $(e.currentTarget).addClass("selected");
     $(".sun-type").attr("src", "/images/suns/sun_texture" + sunPNGNumber + ".png");
-    this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));   
+    this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));
   },
   _switchRace: function($selectedRace) {
     this.selectedRace = this.context.serverParams.Races[$selectedRace.text()].ID;
-    ////TODO: remove the trim() once you understand 
+    ////TODO: remove the trim() once you understand
     //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
     //https://trello.com/c/gQvImDwW/376-mysterious-whitespace-added-when-choosing-hackafe
     this.selectedRaceName = $.trim($selectedRace.text());
