@@ -136,10 +136,10 @@ module.exports.prototype.testShips = function() {
     "Command": "send_missions",
     "Timestamp": Date.now(),
     "Missions": {
-      
+
     },
     "FailedMissions": {}
-  } 
+  }
 
   for (var i = 0;i < 2500; i++) {
     var id = "mission." + Math.random();

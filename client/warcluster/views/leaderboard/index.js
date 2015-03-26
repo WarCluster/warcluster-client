@@ -82,18 +82,16 @@ module.exports = Backbone.View.extend({
     $("#raceBtn").parent().addClass("active");
     if ($("#race").length === 0) {
       this.leaderboardDataCache = {};
-      this.connectRaceLeaderboard();
+      this._connectRaceLeaderboard();
       this.$el.append(raceRender());
     }
   },
   _connectIndividualLeaderboard: function(){
     clearTimeout(this.leaderboardAjaxTimeout);
-    this.leaderboardAjaxTimeout = null;
     this._pollIndividual(this.currentPage);
   },
-  connectRaceLeaderboard: function(){
+  _connectRaceLeaderboard: function(){
     clearTimeout(this.leaderboardAjaxTimeout);
-    this.leaderboardAjaxTimeout = null;
     this._pollRaces();
   },
   _pollRaces: function() {
