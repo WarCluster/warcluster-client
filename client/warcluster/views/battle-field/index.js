@@ -35,7 +35,8 @@ module.exports = Backbone.View.extend({
   initialize: function(options) {
     this.context = new GameContext();
     this.context.playerData = {
-      twitter: options.twitter
+      twitter: options.twitter,
+      tokens: options.tokens
     };
   },
   render: function() {
@@ -221,7 +222,8 @@ module.exports = Backbone.View.extend({
   connect: function() {
     this.commandsManager.prepare(
       this.context.playerData.twitter.screen_name,
-      String(this.context.playerData.twitter.id)
+      String(this.context.playerData.twitter.id),
+      this.context.playerData.tokens
     );
   }
 })

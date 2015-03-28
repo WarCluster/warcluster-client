@@ -6,8 +6,8 @@ html
     meta(name='description', content='Conquer planets, expand your cluster through diplomacy and warfare to become space Emperor!')
     meta(name='keywords', content='warcluster, threejs, webgl, online, space, strategy, arcade, browser, MMO, RTS, twitter')
     meta(name='author', content='warcluster')
-    meta(name="msapplication-tap-highlight", content="no") 
-    meta(name="viewport", content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1")        
+    meta(name="msapplication-tap-highlight", content="no")
+    meta(name="viewport", content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1")
     meta(property='og:url', content='http://warcluster.com')
     meta(property='og:image', content='http://warcluster.com/public/images/warcluster-logo.png')
     meta(name='twitter:card', content='summary_large_image')
@@ -21,6 +21,7 @@ html
     //- TODO: think about security before closed beta testing
     script
       var twitter = !{JSON.stringify(session.twitter)}
+      var query = !{JSON.stringify(query)}
     script(src="/js/reconnecting-websocket.js")
     script(src="/js/three.min.js")
     script(src="/js/threex.domevent.js")

@@ -10,7 +10,7 @@ module.exports = function(url, context){
   this.connected = false;
 }
 
-module.exports.prototype.prepare = function(username, twitterId) {
+module.exports.prototype.prepare = function(username, twitterId, tokens) {
   var self = this;
 
   this.username = username;
@@ -19,7 +19,9 @@ module.exports.prototype.prepare = function(username, twitterId) {
   var msg = {
     "Command": "login",
     "Username": username,
-    "TwitterId": twitterId
+    "TwitterId": twitterId,
+    "AccessToken": tokens.oauth_token,
+    "AccessTokenSecret": tokens.oauth_verifier
   };
   this.ws = new ReconnectingWebSocket(this.url);
   this.ws.onmessage = function(msg) {

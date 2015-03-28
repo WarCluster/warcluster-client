@@ -10,12 +10,14 @@ module.exports = Backbone.Router.extend({
   },
   initialize: function(options) {
     this.twitter = twitter;
+    this.tokens = query;
 
     // Clear twitter credentials from global object
+    query = null
     twitter = null;
   },
   battleField: function() {
-    var battleField = new BattleFieldView({twitter: this.twitter});
+    var battleField = new BattleFieldView({twitter: this.twitter, tokens: this.tokens});
     $("body").html("").append(battleField.el);
     $("body").css({"overflow": "hidden"});
     battleField.render();
