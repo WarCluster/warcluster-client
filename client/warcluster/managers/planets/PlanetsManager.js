@@ -143,8 +143,12 @@ module.exports.prototype.managePopulation = function() {
 module.exports.prototype.getBuildIndex = function (planetData) {
   if(planetData.Owner === "")
     return 0;
-  else if (planetData.IsHome)
+  else if (planetData.IsHome) {
+    if (planetData.ShipCount > planetData.MaxShipCount) {
+      return -((planetData.ShipCount - planetData.MaxShipCount) * 0.05)
+    }
     return this.context.serverParams.HomeSPM;
+  }
   else {
     if (planetData.ShipCount > planetData.MaxShipCount) {
       return -((planetData.ShipCount - planetData.MaxShipCount) * 0.05);
