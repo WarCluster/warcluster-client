@@ -6,13 +6,8 @@ module.exports = function(config) {
         if (!req.session.twitter)
           res.redirect("/");
         else {
-          // res.redirect("/game/");
-          // next();
-          res.sendPage();
+          res.redirect("/game/");
         }
-      },
-      function(req, res, next){
-        res.sendPage();
       }
     ]
   }
