@@ -25,7 +25,7 @@ module.exports = Backbone.View.extend({
     var productionPerMinute;
 
     if (this.planetData.ShipCount > this.planetData.MaxShipCount) {
-      productionPerMinute = -parseInt((this.planetData.ShipCount - this.planetData.MaxShipCount) * 0.05); 
+      productionPerMinute = -parseInt((this.planetData.ShipCount - this.planetData.MaxShipCount) * 0.05);
     } else if (this.planetData.ShipCount == this.planetData.MaxShipCount) {
       productionPerMinute = 0;
     } else if (this.planetData.IsHome) {
@@ -44,7 +44,7 @@ module.exports = Backbone.View.extend({
 
     this.delegateEvents();
     $(".ui-container").append(this.el);
-    
+
     return this;
   },
   updateInfo: function() {
@@ -63,11 +63,11 @@ module.exports = Backbone.View.extend({
     this.remove();
   },
   attack: function(e) {
-    console.log("attack: " + e);
+    // console.log("attack: " + e);
     this.trigger("attack", this.planetData.id);
   },
   spy: function(e) {
-    console.log("spy: " + e);
+    // console.log("spy: " + e);
     this.trigger("spy", this.planetData.id);
   },
   supply: function(e) {
