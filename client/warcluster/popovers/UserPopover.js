@@ -9,7 +9,8 @@ module.exports = Backbone.View.extend({
     "touchstart .close-btn": "removePopover",
     "touchstart .attack":    "attack",
     "touchstart .spy":       "spy",
-    "touchstart .supply":    "supply"
+    "touchstart .supply":    "supply",
+    "touchstart .player-name": "navigateToTwitterProfile"
   },
   initialize: function(context) {
     this.planetData = null;
@@ -72,5 +73,8 @@ module.exports = Backbone.View.extend({
   },
   supply: function(e) {
     this.trigger("supply", this.planetData.id);
+  },
+  navigateToTwitterProfile: function (e) {
+    window.open(e.target.href)
   }
 })
