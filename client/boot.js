@@ -4,7 +4,6 @@ require("../client/vendor/bootstrap");
 require("../client/vendor/TweenLite.min");
 require("../client/vendor/plugins/jquery-mousewheel.min")($);
 require("../client/vendor/plugins/CSSPlugin.min");
-require("../client/vendor/plugins/jquery.gsap.min");
 require("../client/vendor/easing/EasePack.min");
 Hammer = require("hammerjs");
 

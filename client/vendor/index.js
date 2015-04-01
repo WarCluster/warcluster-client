@@ -2,6 +2,7 @@ require("./jquery");
 require("./bootstrap");
 require("./bootstrap-fileupload.min");
 require("./bootstrap-colorselector");
+require("./google-code-prettify/prettify");
 require("./TweenLite.min");  
 require("./plugins/jquery-mousewheel.min")($);
 require("./plugins/CSSPlugin.min");
