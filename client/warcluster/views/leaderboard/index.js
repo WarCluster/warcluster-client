@@ -279,13 +279,23 @@ module.exports = Backbone.View.extend({
   },
   //TODO: find a proper naming for the animation. Figure out a better UX animation
   _implodeAnimation: function(element) {
-    element.animate({width: "0%"}, {
-      duration: 200
+    element.animate({deg: 60}, {
+      duration: 200,
+      step: function(now) {
+        element.css({
+          transform: "rotateX(" + now*1.5 + "deg)"
+        })
+      }
     });
   },
   _explodeAnimation: function(element) {
-    element.animate({width: "100%"}, {
-      duration: 300
+    element.animate({deg: 0}, {
+      duration: 300,
+      step: function(now) {
+        element.css({
+          transform: "rotateX(" + now*1.5 + "deg)"
+        })
+      }
     });
   },
   _setPlayerData: function(element, data) {
