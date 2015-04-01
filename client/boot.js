@@ -5,6 +5,7 @@ require("../client/vendor/TweenLite.min");
 require("../client/vendor/plugins/jquery-mousewheel.min")($);
 require("../client/vendor/plugins/CSSPlugin.min");
 require("../client/vendor/easing/EasePack.min");
+require("../client/vendor/itemslide.min");
 Hammer = require("hammerjs");
 
 ReconnectingWebSocket = require("../client/vendor/reconnecting-websocket.js");

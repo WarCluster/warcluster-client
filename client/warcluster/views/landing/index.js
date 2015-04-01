@@ -39,9 +39,15 @@ module.exports = Backbone.View.extend({
       raceFive: Object.keys(this.context.serverParams.Races)[4],
       raceSix: Object.keys(this.context.serverParams.Races)[5]
     }));
-    $(".race-choice:nth-of-type(1) ").addClass("selected");
-    $(".sun-choice:nth-of-type(1) ").addClass("selected");
-    this._switchRace($(".btn-group-cl-effect a:first()"));
+    $("ul").itemslide(
+      {
+        one_item: true,
+        parent_width: true
+      }
+    );
+    // $(".race-choice:nth-of-type(1) ").addClass("selected");
+    // $(".sun-choice:nth-of-type(1) ").addClass("selected");
+    // this._switchRace($(".btn-group-cl-effect a:first()"));
 
     return this;
   },
