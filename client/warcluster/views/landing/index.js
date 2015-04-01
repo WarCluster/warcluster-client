@@ -45,9 +45,9 @@ module.exports = Backbone.View.extend({
         parent_width: true
       }
     );
-    $(".race-choice:nth-of-type(1) ").addClass("selected");
-    $(".sun-choice:nth-of-type(1) ").addClass("selected");
-    this._switchRace($(".btn-group-cl-effect a:first()"));
+    $(".race-choice:nth-of-type(1) ").addClass("active");
+    $(".sun-choice:nth-of-type(1) ").addClass("active");
+    this._switchRace($(".race-menu-container a:first()"));
 
     return this;
   },
@@ -81,8 +81,8 @@ module.exports = Backbone.View.extend({
     // router.navigate("battle-field", true)
   },
   selectRace: function(e) {
-    $(e.currentTarget).parent().find(".selected").removeClass("selected");
-    $(e.currentTarget).addClass("selected");
+    $(e.currentTarget).parent().find("active").removeClass("active");
+    $(e.currentTarget).addClass("active");
     this._switchRace($(e.currentTarget));
   },
   selectSun: function(e) {
@@ -93,6 +93,7 @@ module.exports = Backbone.View.extend({
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));
   },
   _switchRace: function($selectedRace) {
+    console.log($selectedRace)
     this.selectedRace = this.context.serverParams.Races[$selectedRace.text()].ID;
     ////TODO: remove the trim() once you understand
     //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
@@ -125,6 +126,7 @@ module.exports = Backbone.View.extend({
       G: Math.floor(this.context.serverParams.Races[this.selectedRaceName].Color.G*255),
       B: Math.floor(this.context.serverParams.Races[this.selectedRaceName].Color.B*255)
     }
+    $selectedRace.css({"background-color": "rgba(" + colors.R + "," + colors.G + "," + colors.B +", 0.5) !important"});
     $(".race-hashtag-color").html("<a href='http://twitter.com/" + hashtag + "' target='_blank'>" + hashtag + "</a>");
     $(".race-hashtag-color a").css({"color":"rgba(" + colors.R + "," + colors.G + "," + colors.B +", 1) !important"});
     $(".overlay").css({"background-color":"rgba(" + colors.R + "," + colors.G + "," + colors.B + ", 0.6)"})
