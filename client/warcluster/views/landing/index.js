@@ -81,7 +81,8 @@ module.exports = Backbone.View.extend({
     // router.navigate("battle-field", true)
   },
   selectRace: function(e) {
-    $(e.currentTarget).parent().find("active").removeClass("active");
+    $(e.currentTarget).parent().find(".active").css({"background-color": "rgb(33,33,33)"})
+      .removeClass("active");
     $(e.currentTarget).addClass("active");
     this._switchRace($(e.currentTarget));
   },
@@ -93,7 +94,6 @@ module.exports = Backbone.View.extend({
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));
   },
   _switchRace: function($selectedRace) {
-    console.log($selectedRace)
     this.selectedRace = this.context.serverParams.Races[$selectedRace.text()].ID;
     ////TODO: remove the trim() once you understand
     //why when selecting "Hackafe" selectedRaceName = " Hackafe" (notice the whitespace infront)
