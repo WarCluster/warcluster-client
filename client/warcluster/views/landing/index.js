@@ -45,9 +45,9 @@ module.exports = Backbone.View.extend({
         parent_width: true
       }
     );
-    // $(".race-choice:nth-of-type(1) ").addClass("selected");
-    // $(".sun-choice:nth-of-type(1) ").addClass("selected");
-    // this._switchRace($(".btn-group-cl-effect a:first()"));
+    $(".race-choice:nth-of-type(1) ").addClass("selected");
+    $(".sun-choice:nth-of-type(1) ").addClass("selected");
+    this._switchRace($(".btn-group-cl-effect a:first()"));
 
     return this;
   },
