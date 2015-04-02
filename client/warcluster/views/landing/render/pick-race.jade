@@ -1,50 +1,55 @@
-.loginBtn.text-center
-  a.btn.login.start-game Start Game
-.pick-race-panel.left-panel
-  .race-menu-container.sci-fi-container.col-sm-6
-    h3.info Pick the race you want to play with!
-    .btn-group-cl-effect
-      a.race-choice(href='#', data-hover='#{raceOne}')
+#frame
+  ul.itemslide
+    li
+      .race-menu-container.sci-fi-container.row
+        h3.info Pick the race you want to play with!
+        a.race-choice.btn.btn-primary(data-hover='#{raceOne}')
           span !{raceOne}
-      a.race-choice(href='#', data-hover='#{raceTwo}')
-        span !{raceTwo}
-      a.race-choice(href='#', data-hover='#{raceThree}')
-        span !{raceThree}
-      a.race-choice(href='#', data-hover='#{raceFour}')
-        span !{raceFour}
-      a.race-choice(href='#', data-hover='#{raceFive}')
-        span !{raceFive}
-      a.race-choice(href='#', data-hover='#{raceSix}')
-        span !{raceSix}
-    p
-      | Your color & communications #hashtag will be:
-      span.race-hashtag-color
-    .race-portrait
-      img.race-image
-  .sun-menu-container.sci-fi-container.col-sm-6
-    h3.info Choose the visual type of sun for your solar system!
-    .planets-container
-      img.planet.planet-bottom(src="/images/planets/planet1.png")
-      .overlay-bottom.overlay
-      img.planet.planet-top(src="/images/planets/planet2.png")
-      .overlay-top.overlay
-      img.planet.planet-left(src="/images/planets/planet3.png")
-      .overlay-left.overlay
-      img.planet.planet-right(src="/images/planets/planet5.png")
-      .overlay-right.overlay
-    .btn-group-cl-effect
-      a.sun-choice(href='#', data-hover='Kopernik', data-id="0")
-        span Kopernik
-      a.sun-choice(href='#', data-hover='Acamar', data-id="1")
-        span Acamar
-      a.sun-choice(href='#', data-hover='Mekbuda', data-id="2")
-        span Mekbuda
-      a.sun-choice(href='#', data-hover='Sarin', data-id="3")
-        span Sarin
-      a.sun-choice(href='#', data-hover='Cepheus', data-id="4")
-        span Cepheus
-      a.sun-choice(href='#', data-hover='Decrux', data-id="5")
-        span Decrux
-      p Upload your own
-        i.fa.fa-lock
-    img.sun-type(src="/images/suns/sun_texture0.png")
+        a.race-choice.btn.btn-primary(data-hover='#{raceTwo}')
+          span !{raceTwo}
+        a.race-choice.btn.btn-primary(data-hover='#{raceThree}')
+          span !{raceThree}
+        a.race-choice.btn.btn-primary(data-hover='#{raceFour}')
+          span !{raceFour}
+        a.race-choice.btn.btn-primary(data-hover='#{raceFive}')
+          span !{raceFive}
+        a.race-choice.btn.btn-primary(data-hover='#{raceSix}')
+          span !{raceSix}
+        h4
+          | Your color & communications #hashtag in twitter will be:
+          span.race-hashtag-color
+        .race-portrait
+          img.race-image
+        .next-step.btn.btn-primary Next
+          i.fa.fa-chevron-right
+    li
+      .sun-menu-container.sci-fi-container.row
+        h3.info Choose the visual type of sun for your solar system!
+        h5.info For now it has only a visual aesthetic ;)
+        .planets-container
+          img.planet.planet-bottom(src="/images/planets/planet1.png")
+          .overlay-bottom.overlay
+          img.planet.planet-top(src="/images/planets/planet2.png")
+          .overlay-top.overlay
+          img.planet.planet-left(src="/images/planets/planet3.png")
+          .overlay-left.overlay
+          img.planet.planet-right(src="/images/planets/planet5.png")
+          .overlay-right.overlay
+        a.sun-choice.btn.btn-primary(data-hover='Kopernik', data-id="0")
+          span Kopernik
+        a.sun-choice.btn.btn-primary(data-hover='Acamar', data-id="1")
+          span Acamar
+        a.sun-choice.btn.btn-primary(data-hover='Mekbuda', data-id="2")
+          span Mekbuda
+        a.sun-choice.btn.btn-primary(data-hover='Sarin', data-id="3")
+          span Sarin
+        a.sun-choice.btn.btn-primary(data-hover='Cepheus', data-id="4")
+          span Cepheus
+        a.sun-choice.btn.btn-primary(data-hover='Decrux', data-id="5")
+          span Decrux
+        h5 Upload your own
+          i.fa.fa-lock
+        img.sun-type(src="/images/suns/sun_texture0.png")
+        a.btn.start-game-btn.text-center Start Game
+        .previous-step.btn.btn-primary
+          i.fa.fa-chevron-left Back
