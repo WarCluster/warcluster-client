@@ -141,19 +141,20 @@ module.exports.prototype.managePopulation = function() {
 }
 
 module.exports.prototype.getBuildIndex = function (planetData) {
+  var serverParams = this.context.serverParams;
   if(planetData.Owner === "")
     return 0;
   else if (planetData.IsHome) {
     if (planetData.ShipCount > planetData.MaxShipCount) {
-      return -((planetData.ShipCount - planetData.MaxShipCount) * 0.05)
+      return -(serverParams.PlanetsSPM[planetData.Size]*serverParams.ShipsDeathModifier)
     }
-    return this.context.serverParams.HomeSPM;
+    return serverParams.HomeSPM;
   }
   else {
     if (planetData.ShipCount > planetData.MaxShipCount) {
-      return -((planetData.ShipCount - planetData.MaxShipCount) * 0.05);
+      return -(serverParams.PlanetsSPM[planetData.Size]*serverParams.ShipsDeathModifier);
     } else {
-      return this.context.serverParams.PlanetsSPM[planetData.Size];
+      return serverParams.PlanetsSPM[planetData.Size];
     }
   }
 

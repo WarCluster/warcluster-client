@@ -24,9 +24,10 @@ module.exports = Backbone.View.extend({
     var owner = screenName ? "@" + screenName : "Neutral Planet";
 
     var productionPerMinute;
+    var serverParams = this.context.serverParams;
 
     if (this.planetData.ShipCount > this.planetData.MaxShipCount) {
-      productionPerMinute = -parseInt((this.planetData.ShipCount - this.planetData.MaxShipCount) * 0.05);
+      productionPerMinute = -parseInt(serverParams.PlanetsSPM[this.planetData.Size]*serverParams.ShipsDeathModifier);
     } else if (this.planetData.ShipCount == this.planetData.MaxShipCount) {
       productionPerMinute = 0;
     } else if (this.planetData.IsHome) {

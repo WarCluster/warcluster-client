@@ -75,7 +75,8 @@ module.exports.prototype.parseMessage = function(command) {
         this.context.serverParams = {
           HomeSPM: data.HomeSPM,
           PlanetsSPM: data.PlanetsSPM,
-          Races: data.Races
+          Races: data.Races,
+          ShipsDeathModifier: data.ShipsDeathModifier
         }
         break;
       case "owner_change":
