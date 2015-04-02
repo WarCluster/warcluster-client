@@ -6,11 +6,19 @@ module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
     "click .start-game": "startGame",
+    "click .start-game-btn": "startGame",
     "click .race-choice": "selectRace",
     "click .sun-choice": "selectSun",
+    "click .next-step": "goToNextStep",
+    "click .previous-step": "goToPreviousStep",
     "touchstart .race-choice": "selectRace",
     "touchstart .sun-choice": "selectSun",
-    "touchstart .start-game": "startGame"
+    "touchstart .start-game": "startGame",
+    "touchstart .start-game-btn": "startGame",
+    "touchstart .next-step": "goToNextStep",
+    "touchend .next-step": "goToNextStep",
+    "touchstart .previous-step": "goToPreviousStep",
+    "touchend .previous-step": "goToPreviousStep"
   },
   className: "landing-view container text-center",
   initialize: function(context) {
@@ -51,8 +59,8 @@ module.exports = Backbone.View.extend({
 
     return this;
   },
-  startGame: function() {
-    if ($(".start-game").html() === "Start Game") {
+  startGame: function(e) {
+    if ($(".start-game-btn").html() === "Start Game") {
       if (confirm("Are you sure you want to start with " + this.selectedRaceName + "? You cannot change your race until the end of the round") === true) {
         this.context.commandsManager.setupParameters(this.selectedRace, this.selectedSun);
         this.context.commandsManager.toggleTutorial();
@@ -88,10 +96,20 @@ module.exports = Backbone.View.extend({
   },
   selectSun: function(e) {
     var sunPNGNumber = $(e.currentTarget).attr("data-id");
-    $(e.currentTarget).parent().find(".selected").removeClass("selected");
-    $(e.currentTarget).addClass("selected");
+    $(e.currentTarget).parent().find(".active").removeClass("active");
+    $(e.currentTarget).addClass("active");
     $(".sun-type").attr("src", "/images/suns/sun_texture" + sunPNGNumber + ".png");
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));
+  },
+  goToNextStep: function(e) {
+    $("ul").next(1);
+    e.stopPropagation();
+    e.preventDefault()
+  },
+  goToPreviousStep: function(e) {
+    $("ul").previous();
+    e.stopPropagation();
+    e.preventDefault()
   },
   _switchRace: function($selectedRace) {
     this.selectedRace = this.context.serverParams.Races[$selectedRace.text()].ID;
