@@ -53,6 +53,7 @@ module.exports = Backbone.View.extend({
         parent_width: true
       }
     );
+
     $(".race-choice:nth-of-type(1) ").addClass("active");
     $(".sun-choice:nth-of-type(1) ").addClass("active");
     this._switchRace($(".race-menu-container a:first()"));
