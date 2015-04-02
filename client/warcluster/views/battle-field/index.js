@@ -129,17 +129,14 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("attackPlanet", function(e) {
       // console.log("-SEND ATTACK MISSION-");
-      updatePlanetsSelectionPopulation();
       self.commandsManager.sendMission("Attack", e.attackSourcesIds, e.planetToAttackId, self.context.missionsMenu.getCurrentType());
     });
 
     this.spaceViewController.addEventListener("supplyPlanet", function(e) {
       // console.log("-SEND SUPPORT MISSION-");
-      updatePlanetsSelectionPopulation();
       self.commandsManager.sendMission("Supply", e.supportSourcesIds, e.planetToSupportId, self.context.missionsMenu.getCurrentType());
     });
     this.spaceViewController.addEventListener("spyPlanet", function(e) {var updated = []
-      updatePlanetsSelectionPopulation();
       self.commandsManager.sendMission("Spy", e.spySourcesIds, e.planetToSpyId, self.context.missionsMenu.getCurrentType());
     });
 
@@ -162,16 +159,6 @@ module.exports = Backbone.View.extend({
     });
 
     this.context.spaceViewController = this.spaceViewController;
-
-    var updatePlanetsSelectionPopulation = function () {
-      var updated = []
-      var selection = self.context.spaceViewController.selection;
-      for(var i = 0; i < selection.selectedPlanets.length; i++) {
-        selection.selectedPlanets[i].ShipCount -= parseInt(selection.selectedPlanets[i].ShipCount * self.context.missionsMenu.getCurrentType()/100)
-        updated.push(selection.selectedPlanets[i]);
-      }
-      self.planetsSelection.updatePopulations(updated);
-    }
 
     this.commandsManager = new CommandsManager(config.socketUrl, this.context);
     this.context.commandsManager = this.commandsManager;
