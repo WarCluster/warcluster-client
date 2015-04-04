@@ -1,4 +1,6 @@
-module.exports = function(context, config){
+var Waypoint = require("../../../space/waypoint");
+
+module.exports = function(context, config, controller){
   THREE.EventDispatcher.call(this);
 
   var self = this;
@@ -6,10 +8,13 @@ module.exports = function(context, config){
   config = config || {};
 
   this.context = context;
+  this.controller = controller;
   this.mpos = {
-    x: 0, 
+    x: 0,
     y: 0
   };
+
+  this.waypoints = [];
 
   this.attackTarget = null;
   this.supportTarget = null;
@@ -22,7 +27,7 @@ module.exports = function(context, config){
   this.selectionRect = $('<div class="selection-rect"></div>');
 
   $(document).bind("contextmenu",function(e){
-    if (!self.shiftKey)
+    if (!self.ctrlKey)
       return false;
   });
 
@@ -35,46 +40,63 @@ module.exports = function(context, config){
       if (target.data.Owner == self.context.playerData.Username) {
         if (self.supportTarget && self.ctrlKey) {
           self.dispatchEvent({
-            type: "supplyPlanet", 
+            type: "supplyPlanet",
             supportSourcesIds: self.getSelectedPlanetsIds(),
-            planetToSupportId: self.getPlanetТоSupportId()
+            planetToSupportId: self.getPlanetТоSupportId(),
+            waypoints: self.getWaypointsPositions()
           });
         } else if (self.shiftKey && !self.ctrlKey) {
           var index = self.getSelectedPlanetIndexById(target.data.id);
           if (index == -1) {
-            self.selectPlanet(target.data);  
+            self.selectPlanet(target.data);
           } else {
             self.deselectPlanet(target.data);
           }
         } else {
           self.deselectAll();
-          self.selectPlanet(target.data);  
+          self.selectPlanet(target.data);
         }
+
+        if (self.selectedPlanets.length == 0)
+          self.removeWaypoints();
       } else {
         if (self.selectedPlanets.length > 0) {
             if (self.ctrlKey && !self.shiftKey) {
               self.dispatchEvent({
-                type: "supplyPlanet", 
+                type: "supplyPlanet",
                 supportSourcesIds: self.getSelectedPlanetsIds(),
-                planetToSupportId: self.getPlanetТоSupportId()
+                planetToSupportId: self.getPlanetТоSupportId(),
+                waypoints: self.getWaypointsPositions()
               });
           } else if (self.attackTarget) {
+              console.log(self.getWaypointsPositions())
               self.dispatchEvent({
-                type: "attackPlanet", 
+                type: "attackPlanet",
                 attackSourcesIds: self.getSelectedPlanetsIds(),
-                planetToAttackId: self.getPlanetТоAttackId()
+                planetToAttackId: self.getPlanetТоAttackId(),
+                waypoints: self.getWaypointsPositions()
               });
           } else if (self.spyTarget && self.ctrlKey && self.shiftKey) {
             self.dispatchEvent({
               type: "spyPlanet",
               spySourcesIds: self.getSelectedPlanetsIds(),
-              planetToSpyId: self.getPlanetТоSpyId()
+              planetToSpyId: self.getPlanetТоSpyId(),
+                waypoints: self.getWaypointsPositions()
             });
           }
         }
       }
     } else {
-      self.deselectAll();
+      if (self.shiftKey && self.selectedPlanets.length > 0) {
+        var waypoint = self.context.waypointsFactory.build(self.waypoints.length + 1)
+        console.log("waypoint", waypoint);
+        self.waypoints.push(waypoint);
+      } else {
+        self.removeWaypoints();
+
+        if (!self.shiftKey)
+          self.deselectAll();
+      }
     }
   }
 
@@ -197,10 +219,13 @@ module.exports.prototype.hitTestPlanets = function(rect) {
 
   if (selectedPlanets.length > 0 || deselectedPlanets.length > 0)
     this.dispatchEvent({
-      type: "selectionChanged", 
+      type: "selectionChanged",
       selectedPlanets: selectedPlanets,
       deselectedPlanets: deselectedPlanets
     });
+
+  if (this.selectedPlanets.length == 0)
+    this.removeWaypoints();
 }
 
 module.exports.prototype.deselectAll = function() {
@@ -209,7 +234,7 @@ module.exports.prototype.deselectAll = function() {
     if (planet)
       planet.deselect();
   }
-  
+
   this.selectedPlanets = [];
   this.dispatchEvent({
     type: "deselectAllPlanets"
@@ -223,9 +248,9 @@ module.exports.prototype.selectPlanet = function(planetData, notDispatch) {
     this.selectedPlanets.push(planetData);
     if (!notDispatch)
       this.dispatchEvent({
-        type: "selectionChanged", 
+        type: "selectionChanged",
         selectedPlanets: [planetData]
-      });  
+      });
   }
 }
 
@@ -233,12 +258,12 @@ module.exports.prototype.deselectPlanet = function(planetData, notDispatch) {
   var index = this.getSelectedPlanetIndexById(planetData.id);
   if (index != -1) {
     var planet = this.context.objectsById[planetData.id];
-    if (planet) 
+    if (planet)
       planet.deselect();
     this.selectedPlanets.splice(index, 1);
     if (!notDispatch)
       this.dispatchEvent({
-        type: "selectionChanged", 
+        type: "selectionChanged",
         deselectedPlanets: [planetData]
       });
   }
@@ -261,7 +286,7 @@ module.exports.prototype.onPlanetMouseOver = function(e) {
         this.spyTarget.showSpySelection();
       } else {
         this.attackTarget = e.target.parent;
-        this.attackTarget.showAttackSelection();  
+        this.attackTarget.showAttackSelection();
       }
     }
   }
@@ -283,7 +308,7 @@ module.exports.prototype.onPlanetMouseOut = function(e) {
 module.exports.prototype.handleShowSupportSelection = function() {
   if (this.selectedPlanets.length == 1) {
     if (this.supportTarget.data.id != this.selectedPlanets[0].id) {
-      this.supportTarget.showSupportSelection();  
+      this.supportTarget.showSupportSelection();
     }
   } else {
     this.supportTarget.showSupportSelection();
@@ -292,7 +317,7 @@ module.exports.prototype.handleShowSupportSelection = function() {
 
 module.exports.prototype.getSelectedPlanetsIds = function() {
   var ids = [];
-  for (var i = 0;i < this.selectedPlanets.length;i ++) 
+  for (var i = 0;i < this.selectedPlanets.length;i ++)
     if (!this.supportTarget || this.supportTarget.data.id != this.selectedPlanets[i].id)
       ids.push(this.selectedPlanets[i].id);
   return ids;
@@ -300,7 +325,7 @@ module.exports.prototype.getSelectedPlanetsIds = function() {
 
 module.exports.prototype.getSelectedPlanetsData = function() {
   var planets = [];
-  for (var i = 0;i < this.selectedPlanets.length;i ++) 
+  for (var i = 0;i < this.selectedPlanets.length;i ++)
     if (!this.supportTarget || this.supportTarget.id != this.selectedPlanets[i].id)
       planets.push(this.selectedPlanets[i]);
   return planets;
@@ -330,6 +355,21 @@ module.exports.prototype.getPlanetТоSupportId = function() {
   return this.supportTarget.data.id;
 }
 
+module.exports.prototype.getPlanetТоSpyId = function() {
+  return this.spyTarget.data.id;
+}
+
+module.exports.prototype.getWaypointsPositions = function() {
+  var positions = [];
+  for (var i = 0;i < this.waypoints.length;i ++)
+    positions.push({
+      X: this.waypoints[i].position.x,
+      Y: this.waypoints[i].position.y
+    })
+
+  return positions;
+}
+
 module.exports.prototype.updateSelectedPlanetData = function(data) {
   for (var i = 0;i < this.selectedPlanets.length;i ++)
     if (this.selectedPlanets[i].id == data.id) {
@@ -351,7 +391,7 @@ module.exports.prototype.pressCtrlKey = function(){
       this.supportTarget.showSupportSelection();
     }
 
-    this.attackTarget = null;  
+    this.attackTarget = null;
   } else if (this.supportTarget) {
     this.supportTarget.showSupportSelection();
   }
@@ -365,7 +405,7 @@ module.exports.prototype.releaseCtrlKey = function(){
       this.attackTarget = this.spyTarget;
       this.attackTarget.showAttackSelection();
 
-      this.spyTarget = null;  
+      this.spyTarget = null;
     } else {
       this.spyTarget.hideSpySelection();
     }
@@ -374,7 +414,7 @@ module.exports.prototype.releaseCtrlKey = function(){
       this.attackTarget = this.supportTarget;
       this.attackTarget.showAttackSelection();
 
-      this.supportTarget = null;  
+      this.supportTarget = null;
     } else {
       this.supportTarget.hideSupportSelection();
     }
@@ -406,8 +446,9 @@ module.exports.prototype.releaseShiftKey = function(){
   }
 }
 
-module.exports.prototype.getPlanetТоSpyId = function() {
-  return this.spyTarget.data.id;
+module.exports.prototype.removeWaypoints = function() {
+  while (this.waypoints.length > 0)
+    this.context.waypointsFactory.destroy(this.waypoints.shift());
 }
 
 module.exports.prototype.addPlanetEvents = function(planet) {

@@ -37,6 +37,8 @@ module.exports.prototype.prepare = function() {
   this.context.container.add(this.tmpObj);
 
   this.zoomFn(this.getZoomIndex())
+  //merge-develop
+  this.context.camera.position.z = this.controller.scrollPosition.z;
 }
 
 module.exports.prototype.zoomIn = function() {
@@ -54,7 +56,7 @@ module.exports.prototype.zoomTo = function(e) {
     return ;
 
   step = Math.abs(dist) < Math.abs(step) ? dist : step;
-  var intersects = utils.getMouseIntersectionObjects(e.clientX, e.clientY, [this.hitPlane], this.context)
+  var intersects = utils.getMouseIntersectionObjects(e.clientX, e.clientY, [this.controller.hitPlane], this.context)
   if (intersects.length > 0) {
     var p = intersects[0].point;
     var v = new THREE.Vector3(p.x - this.context.camera.position.x, p.y - this.context.camera.position.y, p.z - this.context.camera.position.z)

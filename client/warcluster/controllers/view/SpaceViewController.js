@@ -3,6 +3,8 @@ var Selection = require("./selection");
 var Zoomer = require("./zoomer");
 var Info = require("./info");
 
+var utils = require("../../utils")
+
 module.exports = function(context, config){
 	THREE.EventDispatcher.call(this);
 
@@ -54,7 +56,7 @@ module.exports = function(context, config){
     self.checkPosition();
   }
 
-  this.selection = new Selection(context, config.selection);
+  this.selection = new Selection(context, config.selection, this);
   this.selection.addEventListener("attackPlanet", function(e) {
     self.dispatchEvent(e);
   });
@@ -76,7 +78,7 @@ module.exports = function(context, config){
     var attackSourcesIds = self.selection.getSelectedPlanetsIds()
     if (attackSourcesIds.length > 0)
       self.dispatchEvent({
-        type: "attackPlanet", 
+        type: "attackPlanet",
         attackSourcesIds: attackSourcesIds,
         planetToAttackId: e.id
       });
@@ -84,14 +86,14 @@ module.exports = function(context, config){
       var n = noty({
               text: "First you must select a planet you control in order to Attack",
               type: 'information'
-          }); 
+          });
     }
   });
   this.info.addEventListener("supplyPlanet", function(e) {
     var supplySourcesIds = self.selection.getSelectedPlanetsIds()
     if (supplySourcesIds.length > 0)
       self.dispatchEvent({
-        type: "supplyPlanet", 
+        type: "supplyPlanet",
         supportSourcesIds: supplySourcesIds,
         planetToSupportId: e.id
       });
@@ -99,14 +101,14 @@ module.exports = function(context, config){
       var n = noty({
               text: "First you must select a planet you control in order to Supply",
               type: 'information'
-          }); 
+          });
     }
   });
   this.info.addEventListener("spyPlanet", function(e) {
     var spySourcesIds = self.selection.getSelectedPlanetsIds()
     if (spySourcesIds.length > 0)
       self.dispatchEvent({
-        type: "spyPlanet", 
+        type: "spyPlanet",
         spySourcesIds: spySourcesIds,
         planetToSpyId: e.id
       });
@@ -114,7 +116,7 @@ module.exports = function(context, config){
       var n = noty({
               text: "First you must select a planet you control in order to Spy",
               type: 'information'
-          });  
+          });
     }
   });
 
@@ -124,7 +126,7 @@ module.exports = function(context, config){
       if (e.targetTouches.length > 1) {
         self.selection.cancelSelection();
         self.scroller.scrollPointerDown(e);
-      } 
+      }
       else
         self.selection.selectionPointerDown(e);
     }
@@ -134,7 +136,7 @@ module.exports = function(context, config){
   }
   this.onMouseDown = function(e) {
     if (self.context.renderer.domElement == e.target) {
-      if (e.button != 0) 
+      if (e.button != 0)
         self.scroller.scrollPointerDown(e);
       else
         self.selection.selectionPointerDown(e);
@@ -143,17 +145,30 @@ module.exports = function(context, config){
     e.preventDefault();
     return false;
   }
+
+  this.mousePosition = { x: 0, y: 0 };
+
+  $(window).mousemove(function(e) {
+    self.mousePosition.x = e.clientX;
+    self.mousePosition.y = e.clientY;
+  })
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
 module.exports.prototype.activate = function(x, y) {
 	if (!this.active) {
 		this.active = true;
-    
+
+    var sc = 9999999;
+    this.hitPlane =  new THREE.Mesh(new THREE.PlaneGeometry(1366 * sc, 768 * sc, 1, 1));
+    this.hitPlane.visible = false;
+
+    this.context.container.add(this.hitPlane);
+
     this.scroller.scrollTo(x,y);
     this.zoomer.prepare();
     this.scroller.scaleIndex = this.zoomer.getZoomIndex();
-    
+
     this.updateResolution();
 
     this.tlPosition = this.getGridPosition(this.context.spaceScene.camera.position.x - (this.resolution.width / 2), this.context.spaceScene.camera.position.y + (this.resolution.height / 2));
@@ -183,12 +198,12 @@ module.exports.prototype.checkPosition = function() {
   var tlPosition = this.getGridPosition(cpx - (this.resolution.width / 2), cpy + (this.resolution.height / 2));
   var brPosition = this.getGridPosition(cpx + (this.resolution.width / 2), cpy - (this.resolution.height / 2));
 
-  if (this.tlPosition.xIndex != tlPosition.xIndex || this.tlPosition.yIndex != tlPosition.yIndex || 
+  if (this.tlPosition.xIndex != tlPosition.xIndex || this.tlPosition.yIndex != tlPosition.yIndex ||
       this.brPosition.xIndex != brPosition.xIndex || this.brPosition.yIndex != brPosition.yIndex) {
 
     this.tlPosition = tlPosition;
     this.brPosition = brPosition;
-    
+
     this.updateScreenRect();
 
     //console.log("---- ########## checkPosition:", this.tlPosition, this.brPosition, this.screenRect)
@@ -297,9 +312,9 @@ module.exports.prototype.setScrollPosition = function(x, y, z){
     else if (x > this.config.scroller.xMax)
       this.scrollPosition.x = this.config.scroller.xMax;
     else
-      this.scrollPosition.x = x;  
+      this.scrollPosition.x = x;
   }
-  
+
   if (yb) {
     if (y < this.config.scroller.yMin)
       this.scrollPosition.y = this.config.scroller.yMin;
@@ -331,19 +346,26 @@ module.exports.prototype.setScrollPosition = function(x, y, z){
       this.scrollPosition.z = z;
     }
   }
-  
+
   return true;
 }
 
 module.exports.prototype.toggleMapView = function(){
   if (this.scrollPosition.z == 300000) {
-    this.scrollPosition.z = this.previousZ;  
+    this.scrollPosition.z = this.previousZ;
   } else {
     this.previousZ = this.scrollPosition.z;
-    this.scrollPosition.z = 300000;  
+    this.scrollPosition.z = 300000;
   }
-  
+
   this.zoomer.animateIt();
+}
+module.exports.prototype.getMousePosition = function() {
+  var intersects = utils.getMouseIntersectionObjects(this.mousePosition.x, this.mousePosition.y, [this.hitPlane], this.context)
+  if (intersects.length > 0)
+    return intersects[0].point;
+
+  return null;
 }
 
 module.exports.prototype.pressCtrlKey = function(){

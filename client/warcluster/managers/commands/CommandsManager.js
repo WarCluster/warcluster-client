@@ -114,14 +114,24 @@ module.exports.prototype.scopeOfView = function(x, y, width, height) {
   '}');
 }
 
-module.exports.prototype.sendMission = function(type, source, target, ships) {
-  //console.log("sendMission:", type, source, target, ships)
+module.exports.prototype.sendMission = function(type, source, target, ships, waypoints) {
+  // console.log("sendMission:", type, source, target, ships, waypoints)
+  var waypointsPath = waypoints ? JSON.stringify(waypoints) : "[]";
+  console.log('{' +
+    '"Command": "start_mission",' +
+    '"Type": "'+type+'",' +
+    '"StartPlanets": ["'+source.join('","')+'"],' +
+    '"EndPlanet": "'+target+'",' +
+    '"Fleet": '+ ships + ',' +
+    '"Path": '+ waypointsPath +
+  '}')
   this.ws.send('{' +
     '"Command": "start_mission",' +
     '"Type": "'+type+'",' +
     '"StartPlanets": ["'+source.join('","')+'"],' +
     '"EndPlanet": "'+target+'",' +
-    '"Fleet": '+ ships +
+    '"Fleet": '+ ships + ',' +
+    '"Path": '+ waypointsPath +
   '}');
 }
 
