@@ -2,10 +2,11 @@ var GameContext = require("../../data/GameContext");
 var SpaceViewController = require("../../controllers/view/SpaceViewController");
 var ResourcesLoader = require("../../loaders/resources/ResourcesLoader");
 
-var PlanetsFactory = require("../../factories/planets/PlanetsFactory");
-var MissionsFactory = require("../../factories/missions/MissionsFactory");
-var CanvasTextFactory = require("../../factories/text/CanvasTextFactory");
-var SunsFactory = require("../../factories/suns/SunsFactory");
+var PlanetsFactory = require("../../factories/planets");
+var MissionsFactory = require("../../factories/missions");
+var CanvasTextFactory = require("../../factories/text");
+var SunsFactory = require("../../factories/suns");
+var WaypointsFactory = require("../../factories/waypoints");
 
 var CommandsManager = require("../../managers/commands/CommandsManager");
 var PlanetsManager = require("../../managers/planets/PlanetsManager");
@@ -94,6 +95,7 @@ module.exports = Backbone.View.extend({
     this.context.planetsFactory = new PlanetsFactory(this.context);
     this.context.missionsFactory = new MissionsFactory(this.context);
     this.context.sunsFactory = new SunsFactory(this.context);
+    this.context.waypointsFactory = new WaypointsFactory(this.context);
 
     this.context.canvasTextFactory = new CanvasTextFactory(true, this.context);
 
@@ -129,15 +131,27 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("attackPlanet", function(e) {
       // console.log("-SEND ATTACK MISSION-");
-      self.commandsManager.sendMission("Attack", e.attackSourcesIds, e.planetToAttackId, self.context.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Attack",
+        e.attackSourcesIds,
+        e.planetToAttackId,
+        self.context.missionsMenu.getCurrentType(),
+        e.waypoints);
     });
 
     this.spaceViewController.addEventListener("supplyPlanet", function(e) {
       // console.log("-SEND SUPPORT MISSION-");
-      self.commandsManager.sendMission("Supply", e.supportSourcesIds, e.planetToSupportId, self.context.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Supply",
+        e.supportSourcesIds,
+        e.planetToSupportId,
+        self.context.missionsMenu.getCurrentType(),
+        e.waypoints);
     });
     this.spaceViewController.addEventListener("spyPlanet", function(e) {var updated = []
-      self.commandsManager.sendMission("Spy", e.spySourcesIds, e.planetToSpyId, self.context.missionsMenu.getCurrentType());
+      self.commandsManager.sendMission("Spy",
+        e.spySourcesIds,
+        e.planetToSpyId,
+        self.context.missionsMenu.getCurrentType(),
+        e.waypoints);
     });
 
     this.spaceViewController.addEventListener("selectPlanet", function(e) {

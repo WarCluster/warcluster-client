@@ -9,8 +9,8 @@ module.exports = {
     "/images/backgrounds/background5.jpg",
     "/images/backgrounds/background6.jpg",
     "/images/backgrounds/background7.jpg",
-    "/images/backgrounds/background8.jpg",  
-    
+    "/images/backgrounds/background8.jpg",
+
     "/images/suns/sun_texture0.jpg",
     "/images/suns/sun_texture1.jpg",
     "/images/suns/sun_texture2.jpg",
@@ -31,7 +31,8 @@ module.exports = {
     "/images/planets/planet9.png",
     "/images/planets/planet_selection_glow.png",
     "/images/planets/planet_glow.png",
-    "/images/planets/ring.png"
+    "/images/planets/ring.png",
+    "/images/waypoint.png"
   ],
   models: [
   ]

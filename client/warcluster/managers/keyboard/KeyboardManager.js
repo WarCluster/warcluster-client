@@ -25,8 +25,11 @@ module.exports = function(context) {
   });
 
   KeyboardJS.KeyboardJS.on('space', function() {
-    // this.trigger("scrollToPlanet", self.context.playerData.HomePlanet);
     self.context.spaceViewController.scroller.scrollTo(homePlanet.X, homePlanet.Y, true);
+  });
+
+  KeyboardJS.KeyboardJS.on('escape', function() {
+    self.context.spaceViewController.selection.removeWaypoints();
   });
 
   KeyboardJS.KeyboardJS.on('ctrl + enter', function() {
