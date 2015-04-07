@@ -48,25 +48,25 @@ module.exports.prototype.prepare = function() {
   this.stats.domElement.style.right = '160px';
   this.context.$content.append(this.stats.domElement);
 
-  this.$info = $('<div style="font-size: 10px; background-color: #1111FF; padding: 2px; width: 120px" />')
-  this.$info.click(function() {
-    self.context.commandsManager.testShips();
-  })
+  // this.$info = $('<div style="font-size: 10px; background-color: #1111FF; padding: 2px; width: 120px" />')
+  // this.$info.click(function() {
+  //   self.context.commandsManager.testShips();
+  // })
 
   $(this.stats.domElement).append(this.$info);
 
   var u = this.stats.update;
 
   this.stats.update = function() {
-    self.$info.html(
-      "Obj: " + self.context.objects.length + "/" + self.context.container.children.length +
-      ", Sh: "+(self.context.shipsManager ? self.context.shipsManager.objectsIndexes.length : 0) + 
-      "<br/>М: "+ self.context.missions.length + 
-      ", Pl: " + self.context.planetsHitObjects.length + 
-      ", Sn: " + self.context.suns.length + 
-      ", IO: " + self.context.interactiveObjects.length
-      
-    );
+    // self.$info.html(
+    //   "Obj: " + self.context.objects.length + "/" + self.context.container.children.length +
+    //   ", Sh: "+(self.context.shipsManager ? self.context.shipsManager.objectsIndexes.length : 0) +
+    //   "<br/>М: "+ self.context.missions.length +
+    //   ", Pl: " + self.context.planetsHitObjects.length +
+    //   ", Sn: " + self.context.suns.length +
+    //   ", IO: " + self.context.interactiveObjects.length
+
+    // );
 
     return u.apply(this, arguments);
   }
@@ -77,7 +77,7 @@ module.exports.prototype.prepare = function() {
   for (var i = 0;i < resources.models.length;i ++)
     this.context.resourcesLoader.loadModel(resources.models[i]);
 
-  this.context.resourcesLoader.addEventListener("complete", function() { 
+  this.context.resourcesLoader.addEventListener("complete", function() {
     self.buildScene();
     self.startRendering();
     self.context.planetsManager.start();
@@ -113,7 +113,7 @@ module.exports.prototype.buildScene = function() {
     self.context.aspect = hh / 1000;
 
     self.renderer.setSize( ww, hh );
-    
+
     if (self.context.commandsManager.connected)
       self.context.spaceViewController.checkPosition();
 
@@ -154,7 +154,7 @@ module.exports.prototype.startRendering = function() {
 
     self.renderer.render(self.scene, self.camera);
     self.context.shipsManager.checkForRemove();
-    
+
 
     //console.log("t:", Date.now() - t)
 
@@ -165,7 +165,7 @@ module.exports.prototype.startRendering = function() {
 
   render();
 
-  
+
 }
 
 module.exports.prototype.render = function(data) {
@@ -178,7 +178,7 @@ module.exports.prototype.render = function(data) {
     if (!data.Suns[s].Position) {
       data.Suns[s].Position = [data.Suns[s].Position.X, data.Suns[s].Position.Y];
     }
-    
+
     var sun = this.context.objectsById[data.Suns[s].id];
     if (!sun)
       sun = this.context.sunsFactory.build(data.Suns[s]);
@@ -213,7 +213,7 @@ module.exports.prototype.gc = function() {
       forRemove.push(object)
   }
 
-  while (forRemove.length > 0) 
+  while (forRemove.length > 0)
     this.destroyObject(forRemove.shift())
 
   //console.log("---------------------- GC --------------------", Date.now() - t)
@@ -227,9 +227,9 @@ module.exports.prototype.clear = function() {
   while (this.context.interactiveObjects.length) {
     obj = this.context.interactiveObjects.shift();
 
-    if (obj instanceof Sun)  
+    if (obj instanceof Sun)
       this.context.sunsFactory.destroy(obj);
-    else if (obj instanceof Planet)  
+    else if (obj instanceof Planet)
       this.context.planetsFactory.destroy(obj);
   }
 }
