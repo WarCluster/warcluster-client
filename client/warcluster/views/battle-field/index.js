@@ -156,11 +156,13 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("selectPlanet", function(e) {
         self.planetsSelection.selectPlanet(e.planet.data);
+        // self.commandsMenager.addToSubscribed(e)
         self.context.missionsMenu.showMenu();
     });
 
     this.spaceViewController.addEventListener("selectionChanged", function(e) {
       self.planetsSelection.selectionChanged(e);
+      // self.commandsMenager.changeSubscriptions(e)
       if (self.planetsSelection.hasPlanets())
         self.context.missionsMenu.showMenu();
       else
@@ -169,6 +171,7 @@ module.exports = Backbone.View.extend({
 
     this.spaceViewController.addEventListener("deselectAllPlanets", function(e) {
         self.planetsSelection.deselectAllPlanets();
+        // self.commandsMenager.unsubscribeAll()
         self.context.missionsMenu.hideMenu();
     });
 

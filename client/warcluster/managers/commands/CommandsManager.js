@@ -141,6 +141,26 @@ module.exports.prototype.setupParameters = function(race, sun) {
   '}')
 }
 
+module.exports.prototype.changeSubscriptions = function(objects) {
+  // this.ws.send('{' +
+  //   '"Command": "addToSubscribed",' +
+  //   '"Objects": ' + JSON.stringify(objects) +
+  // '}')
+}
+
+module.exports.prototype.addToSubscribed = function(objects) {
+  // this.ws.send('{' +
+  //   '"Command": "addToSubscribed",' +
+  //   '"Objects": ' + JSON.stringify(objects) +
+  // '}')
+}
+
+module.exports.prototype.unsubscribeAll = function() {
+  // this.ws.send('{' +
+  //   '"Command": "unsubscribeAll"' +
+  // '}')
+}
+
 module.exports.prototype.testShips = function() {
 
   var message = {
