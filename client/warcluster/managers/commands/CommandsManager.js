@@ -68,8 +68,8 @@ module.exports.prototype.parseMessage = function(command) {
             this.context.missionsFactory.build(data.Missions[i]);
         }
       break;
-      case "selection_change":
-        this.context.planetsSelection.updatePopulations(data)
+      case "subscription_change":
+        this.context.planetsSelection.updatePopulations(data.Planets)
         break;
       case "send_mission_failed":
         var n = noty({text:"You're attacking with less than one pilot", type:"info"});
@@ -142,15 +142,9 @@ module.exports.prototype.setupParameters = function(race, sun) {
 }
 
 module.exports.prototype.changeSubscriptions = function(objects) {
+  // console.log("changeSubscriptions", JSON.stringify(objects, null, '\t'))
   // this.ws.send('{' +
-  //   '"Command": "addToSubscribed",' +
-  //   '"Objects": ' + JSON.stringify(objects) +
-  // '}')
-}
-
-module.exports.prototype.addToSubscribed = function(objects) {
-  // this.ws.send('{' +
-  //   '"Command": "addToSubscribed",' +
+  //   '"Command": "change_subscriptions",' +
   //   '"Objects": ' + JSON.stringify(objects) +
   // '}')
 }

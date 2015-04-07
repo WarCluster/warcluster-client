@@ -27,7 +27,7 @@ module.exports = Backbone.View.extend({
     var serverParams = this.context.serverParams;
 
     if (this.planetData.ShipCount > this.planetData.MaxShipCount) {
-      productionPerMinute = -parseInt(serverParams.PlanetsSPM[this.planetData.Size]*serverParams.ShipsDeathModifier);
+      productionPerMinute = -(serverParams.PlanetsSPM[this.planetData.Size]*serverParams.ShipsDeathModifier);
     } else if (this.planetData.ShipCount == this.planetData.MaxShipCount) {
       productionPerMinute = 0;
     } else if (this.planetData.IsHome) {
@@ -39,7 +39,7 @@ module.exports = Backbone.View.extend({
     this.$el.html(this.template({
      playerName:        owner,
      twitterAvatar:     twitterAvatar,
-     planetProduction:  productionPerMinute,
+     planetProduction:  parseInt(productionPerMinute),
      planetLink:        planetName,
      planetCategory:    planetCategory
     }));
