@@ -68,8 +68,11 @@ module.exports.prototype.parseMessage = function(command) {
             this.context.missionsFactory.build(data.Missions[i]);
         }
       break;
+      case "selection_change":
+        this.context.planetsSelection.updatePopulations(data)
+        break;
       case "send_mission_failed":
-        //var n = noty({text:"You're attacking with less than one pilot",type:"info"});
+        var n = noty({text:"You're attacking with less than one pilot", type:"info"});
       break;
       case "server_params":
         this.context.serverParams = {
@@ -78,6 +81,9 @@ module.exports.prototype.parseMessage = function(command) {
           Races: data.Races,
           ShipsDeathModifier: data.ShipsDeathModifier
         }
+        break;
+      case "error":
+          console.error(data.Message)
         break;
       case "owner_change":
         var self = this;
