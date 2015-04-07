@@ -24,7 +24,7 @@ module.exports.prototype.prepare = function() {
 
   var vertices = this.cloud.geometry.vertices;
   var values_color = shaderMaterial.attributes.color.value;
-  
+
   for ( var v = 0; v < vertices.length; v++ ) {
     values_color[v] = new THREE.Color( 0xffaa00 );
   }
@@ -35,26 +35,30 @@ module.exports.prototype.prepare = function() {
 
 module.exports.prototype.addSunGlow = function(x, y, z, color) {
   var objs = this.pull.splice(0, 1);
-  if (objs.length && objs[0])
+  //with this !!++ we're converting to truthy/falsy variable and handling zero values
+  if (objs.length && !!++objs[0])
    this.objectsIndexes.push(objs[0]);
   else
     return null;
 
+
   var vertices = this.cloud.geometry.vertices;
   var values_color = this.cloud.material.attributes.color.value;
 
-  var v = objs[ 0 ];
-  
+  var v = objs[0];
   vertices[v].x = x;
   vertices[v].y = y;
   vertices[v].z = z;
 
   values_color[v] = color;
-  
+
   this.cloud.material.attributes.color.needsUpdate = true;
 
   this.cloud.geometry.verticesNeedUpdate = true;
   return v;
+
+
+
 }
 
 module.exports.prototype.removeSunGlow = function(item) {
@@ -72,7 +76,7 @@ module.exports.prototype.removeSunGlow = function(item) {
 
 module.exports.prototype.update = function() {
   var ln = this.objectsIndexes.length;
-  if (ln) { 
+  if (ln) {
     this.cloud.material.uniforms.time.value += (Date.now() - this.t) * 0.00002;
     this.cloud.material.uniforms.time.needsUpdate = true;
   }
@@ -93,7 +97,7 @@ module.exports.prototype.buildGlowMaterial = function() {
 
     "uniform float time;",
     "uniform float aspect;",
-    
+
     "attribute vec3 color;",
 
     "varying vec3 vColor;",
@@ -101,7 +105,7 @@ module.exports.prototype.buildGlowMaterial = function() {
     "void main() {",
       "vColor = color;",
       "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
-      
+
       "gl_PointSize = 12000.0 * ( 300.0 / length( mvPosition.xyz ) ) * aspect;",
       "gl_Position = projectionMatrix * mvPosition;",
     "}"
@@ -139,7 +143,7 @@ module.exports.prototype.buildGlowMaterial = function() {
     aspect: { type: 'f', value: this.context.aspect },
     texture:   { type: "t", value: this.context.resourcesLoader.get('/images/suns/sun_glow.png') }
   };
-  
+
   var shaderMaterial = new THREE.ShaderMaterial( {
     uniforms:       uniforms,
     attributes:     attributes,
