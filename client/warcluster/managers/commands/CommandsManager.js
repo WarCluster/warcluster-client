@@ -20,8 +20,8 @@ module.exports.prototype.prepare = function(username, twitterId, tokens) {
     "Command": "login",
     "Username": username,
     "TwitterId": twitterId,
-    "AccessToken": tokens.oauth_token,
-    "AccessTokenSecret": tokens.oauth_verifier
+    "AccessToken": tokens.oauthAccessToken,
+    "AccessTokenSecret": tokens.oauthAccessTokenSecret
   };
   this.ws = new ReconnectingWebSocket(this.url);
   this.ws.onmessage = function(msg) {

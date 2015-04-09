@@ -21,7 +21,11 @@ html
     //- TODO: think about security before closed beta testing
     script
       var twitter = !{JSON.stringify(session.twitter)}
-      var query = !{JSON.stringify(query)}
+      var tokens = {
+        "oauthAccessToken": !{JSON.stringify(session.oauthAccessToken)},
+        "oauthAccessTokenSecret": !{JSON.stringify(session.oauthAccessTokenSecret)}
+      }
+
     script(src="/js/reconnecting-websocket.js")
     script(src="/js/three.min.js")
     script(src="/js/threex.domevent.js")

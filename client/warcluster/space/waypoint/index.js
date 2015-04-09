@@ -7,7 +7,7 @@ module.exports = function(context){
     module.exports.planeGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 
   var color = new THREE.Color(0x008efc);
-  var map = this.context.resourcesLoader.get("/images/waypoint.png");
+  var map = this.context.resourcesLoader.get("/images/ui/pilots_per_mission_selected.png");
   var spriteMaterial = new THREE.SpriteMaterial({ map: map, color: color, transparent: true, useScreenCoordinates: false });
 
   this.waypoint = new THREE.Sprite( spriteMaterial );

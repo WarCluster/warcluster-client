@@ -10,10 +10,10 @@ module.exports = Backbone.Router.extend({
   },
   initialize: function(options) {
     this.twitter = twitter;
-    this.tokens = query;
+    this.tokens = tokens;
 
     // Clear twitter credentials from global object
-    query = null
+    tokens = null;
     twitter = null;
   },
   battleField: function() {
