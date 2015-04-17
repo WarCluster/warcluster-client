@@ -103,7 +103,7 @@ module.exports = Backbone.View.extend({
     this.selectedSun = parseInt($(e.currentTarget).attr("data-id"));
   },
   goToNextStep: function(e) {
-    $("ul").next(1);
+    $("ul").next();
     e.stopPropagation();
     e.preventDefault()
   },

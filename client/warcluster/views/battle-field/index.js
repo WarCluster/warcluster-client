@@ -208,6 +208,7 @@ module.exports = Backbone.View.extend({
 
     this.commandsManager.requestSetupParameters = function() {
       self.toggleLandingRaceView();
+      $(".loading-screen").remove();
     }
     this.commandsManager.toggleTutorial = function() {
       self.tutorialMenu.toggleTutorial();
