@@ -180,6 +180,7 @@ module.exports = Backbone.View.extend({
     this.commandsManager = new CommandsManager(config.socketUrl, this.context);
     this.context.commandsManager = this.commandsManager;
     this.commandsManager.loginFn = function(data) {
+      $(".loading-screen").remove()
       //we need this because of this - https://trello.com/c/l1gOcEJD/380-don-t-show-the-leaderboard-after-registration
       data.JustRegistered = self.context.playerData.JustRegistered;
       //because data doesn't have the correct value of JustRegistered(which is set in startGame method at landing view)

@@ -18,13 +18,13 @@ module.exports = Backbone.Router.extend({
   },
   battleField: function() {
     var battleField = new BattleFieldView({twitter: this.twitter, tokens: this.tokens});
-    $("body").html("").append(battleField.el);
+    $("body").append(battleField.el);
     $("body").css({"overflow": "hidden"});
     battleField.render();
   },
   leaderboard: function() {
     var leaderboard = new LeaderboardView();
-    $("body").html("").append(leaderboard.el);
+    $("body").append(leaderboard.el);
     $("body").css({"overflow": "hidden"});
     leaderboard.render();
   }
