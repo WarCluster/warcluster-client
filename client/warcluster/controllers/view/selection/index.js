@@ -88,9 +88,15 @@ module.exports = function(context, config, controller){
       }
     } else {
       if (self.shiftKey && self.selectedPlanets.length > 0) {
-        var waypoint = self.context.waypointsFactory.build(self.waypoints.length + 1)
-        console.log("waypoint", waypoint);
-        self.waypoints.push(waypoint);
+        if (self.waypoints.length < 5) {
+          var waypoint = self.context.waypointsFactory.build(self.waypoints.length + 1)
+          self.waypoints.push(waypoint);
+        } else {
+          var n = noty({
+              text: "You cannot add more than 5 waypoints",
+              type: 'information'
+          });
+        }
       } else {
         self.removeWaypoints();
 
