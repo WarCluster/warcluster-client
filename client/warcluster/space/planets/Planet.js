@@ -1,6 +1,6 @@
 module.exports = function(context, data){
 	THREE.Object3D.call(this);
-	
+
   this.selected = false;
 	this.context = context;
 
@@ -11,12 +11,12 @@ module.exports = function(context, data){
     module.exports.planeGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 
   this.planet =  new THREE.Mesh(module.exports.sphereGeometry);
-  this.add(this.planet);  
+  this.add(this.planet);
 
   this.hitObject = this.planet;
 
-  var spriteMaterial = new THREE.SpriteMaterial({ 
-    map: this.context.resourcesLoader.get("/images/planets/planet_glow.png"), 
+  var spriteMaterial = new THREE.SpriteMaterial({
+    map: this.context.resourcesLoader.get("/images/planets/planet_glow.png"),
     useScreenCoordinates: false,
     color: 0xFFFFFF, transparent: false, blending: THREE.AdditiveBlending,
     depthWrite: false, depthTest: false
@@ -38,7 +38,7 @@ module.exports = function(context, data){
   this.population = new THREE.Mesh(module.exports.planeGeometry, this.populationMaterial);
   this.population.visible = false;
 
-  this.add(this.population);  
+  this.add(this.population);
 
 
   this.ownerTexture = new THREE.DataTexture();
@@ -68,7 +68,7 @@ module.exports.prototype.prepare = function(data) {
 
   this.position.x = this.data.Position.X;
   this.position.y = this.data.Position.Y;
-  
+
   this.updateColor();
 
   this.planet.scale.set(this.data.width / 2, this.data.width / 2, this.data.width / 2);
@@ -80,10 +80,10 @@ module.exports.prototype.prepare = function(data) {
   this.ring.scale.set(this.data.width * 1.5, this.data.width * 0.8, this.data.width * 1.5);
 
   this.updatePopulationInfo();
-  
+
   this.population.visible = this.data.ShipCount != -1 && this.data.Owner == this.context.playerData.Username;
   this.population.position.set(0, this.data.height * (0.78), 0);
-  
+
   this.updateOwnerInfo();
   this.owner.position.set(0,this.data.height * (-0.78),0);
 }
@@ -148,15 +148,9 @@ module.exports.prototype.updateColor = function() {
 }
 
 module.exports.prototype.updatePopulationInfo = function() {
-  if (this.data.ShipCount == -1) {
-    this.population.visible = false;
-    return;
-  } else 
-    this.population.visible = true;
-
   var population = parseInt(this.data.ShipCount)+ " / " + parseInt(this.data.MaxShipCount);
   var result = this.context.canvasTextFactory.buildUint8Array(population, null, 45);
-  
+
   // this.population.visible = (this.data.ShipCount !== -1);
   this.populationTexture.image.data = result.uint8Array;
   this.populationTexture.image.width = result.canvas2d.width;
@@ -167,6 +161,12 @@ module.exports.prototype.updatePopulationInfo = function() {
   this.population.scale.x = result.canvas2d.width;
   this.population.scale.y = result.canvas2d.height;
 
+  if (this.data.ShipCount == -1) {
+    this.population.visible = false;
+    return;
+  } else
+    this.population.visible = true;
+
   //console.log("-updatePopulationInfo-")
 }
 
@@ -174,7 +174,7 @@ module.exports.prototype.updateOwnerInfo = function() {
   if (!this.data.Owner) {
     this.owner.visible = false;
     return;
-  } else 
+  } else
     this.owner.visible = true;
 
   var result = this.context.canvasTextFactory.buildUint8Array(this.data.Owner || " ", null, 45);
@@ -238,9 +238,9 @@ module.exports.prototype.toScreenXY = function (position) {
   projScreenMat.multiplyMatrices( this.context.camera.projectionMatrix, this.context.camera.matrixWorldInverse );
   pos.applyProjection( projScreenMat )
 
-  return { 
+  return {
   	x: ( pos.x + 1 ) * this.context.$content.width() / 2 + this.context.$content.offset().left,
-    y: ( - pos.y + 1) * this.context.$content.height() / 2 + this.context.$content.offset().top 
+    y: ( - pos.y + 1) * this.context.$content.height() / 2 + this.context.$content.offset().top
   };
 }
 
@@ -256,14 +256,14 @@ module.exports.colors = {
   var circleDistance.x = Math.abs(this.circle.x - rect.x);
   var circleDistance.y = Math.abs(this.circle.y - rect.y);
 
-  if (circleDistance.x > (rect.width/2 + this.circle.r)) 
+  if (circleDistance.x > (rect.width/2 + this.circle.r))
   	return false;
-  if (circleDistance.y > (rect.height/2 + this.circle.r)) 
+  if (circleDistance.y > (rect.height/2 + this.circle.r))
   	return false;
 
-  if (circleDistance.x <= (rect.width/2)) 
+  if (circleDistance.x <= (rect.width/2))
   	return true;
-  if (circleDistance.y <= (rect.height/2)) 
+  if (circleDistance.y <= (rect.height/2))
   	return true;
 
   var cornerDistance_sq = Math.sqr(circleDistance.x - rect.width/2) +
