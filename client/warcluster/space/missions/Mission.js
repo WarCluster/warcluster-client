@@ -1,5 +1,5 @@
 module.exports = function(data, context) {
-	
+
 	this.context = context;
 	this.data = data;
 	this.ships = [];
@@ -45,7 +45,7 @@ module.exports.prototype.removeShipsIfNecessary = function() {
     this.destroy();
   } else {
     this.progress = (this.context.currentTime - this.data.StartTime) / this.data.TravelTime;
-    
+
     if (this.progress > 1)
       this.progress = 1;
 
@@ -59,14 +59,14 @@ module.exports.prototype.removeShipsIfNecessary = function() {
       //console.log("2.-removeShipsIfNecessary-", this.progress)
       this.destroy();
     }
-      
+
   }
 }
 
 module.exports.prototype.isForRemove = function() {
   //if (!!(this.context.currentTime > this.endTime))
     //console.log("-isForRemove-", this.context.currentTime, this.endTime)
-    
+
 
   if (this.context.currentTime > this.endTime) {
     //console.log("1.-isForRemove-")
@@ -74,7 +74,7 @@ module.exports.prototype.isForRemove = function() {
   } else {
 
     this.progress = (this.context.currentTime - this.data.StartTime) / this.data.TravelTime;
-    
+
     if (this.progress > 1)
       this.progress = 1;
 
@@ -105,13 +105,13 @@ module.exports.prototype.isForRemove = function() {
 }*/
 
 module.exports.prototype.getSize = function(ships) {
-  if (ships > 100 && ships <= 200)
+  if (ships > 500 && ships <= 1500)
     return 1;
-  else if (ships > 200 && ships <= 500)
+  else if (ships > 1500 && ships <= 3000)
     return 2;
-  else if (ships > 500 && ships <= 1000)
+  else if (ships > 3000 && ships <= 6000)
     return 3;
-  else if (ships > 1000)
+  else if (ships > 6000)
     return 4;
 
   return 0;
