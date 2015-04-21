@@ -9,9 +9,6 @@ module.exports = function(useGlobalCanvas, context){
 }
 
 module.exports.prototype.build = function(text, font, size) {
-  if (text == 1) {
-    debugger;
-  }
 	var textHandler = text;
   var gradient = "white";
   var populations = text.split("/");

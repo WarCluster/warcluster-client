@@ -130,7 +130,7 @@ module.exports = Backbone.View.extend({
       case "Hackube":
         hashtag += "Blue";
       break;
-      case "MegaDev":
+      case "ZaraLab":
         hashtag += "Pink";
       break;
       case "InitLab":

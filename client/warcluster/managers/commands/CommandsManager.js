@@ -54,14 +54,14 @@ module.exports.prototype.parseMessage = function(command) {
         this.renderViewFn(data);
       break;
       case "state_change":
-        //console.log("###.parseMessage[state_change]:");
+        // console.log("###.parseMessage[state_change]:", data);
         this.renderViewFn(data);
       break;
       case "request_setup_params":
         this.requestSetupParameters();
       break;
       case "send_missions":
-        console.log("send_missions:", data)
+        // console.log("send_missions:", data)
         for (var i in data.Missions) {
           data.Missions[i].id = i;
           if (!this.context.objectsById[data.Missions[i].id])

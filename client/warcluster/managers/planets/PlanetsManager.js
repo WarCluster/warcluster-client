@@ -5,7 +5,6 @@ module.exports = function(context){
   this.interval = null;
 
   this.t = 0;
-  this.buildIndexes = [1 / 60000, 2 / 60000, 3 / 60000, 4 / 60000];
 }
 
 module.exports.prototype = new THREE.EventDispatcher();
