@@ -1,4 +1,5 @@
 restart:
-	forever stop /home/owl/warcluster-site/warcluster-staging.js
+	source ~/.nvm/nvm.sh && nvm use 0.10
+	pm2 stop warcluster-staging
 	git pull origin master
-	forever start /home/owl/warcluster-site/warcluster-staging.js
+	pm2 start warcluster-site/warcluster-staging.js
