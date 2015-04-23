@@ -1,10 +1,11 @@
 module.exports = Backbone.View.extend({
   template: jadeCompile(require("./index.jade")),
   events: {
-    "click .close-btn":   "toggleTutorial",
     "click .toggle-btn":  "toggleTutorial",
+    "click .tutorial-close-btn": "toggleTutorial",
     "touchstart .close-btn":   "toggleTutorial",
-    "touchstart .toggle-btn":  "toggleTutorial"
+    "touchstart .toggle-btn":  "toggleTutorial",
+    "touchstart .tutorial-close-btn": "toggleTutorial"
   },
   className: "tutorial-menu",
   initialize: function() {
