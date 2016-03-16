@@ -13,8 +13,8 @@
   },
   "TwitterOAuth": {
     "source": "plasma/TwitterOAuth",
-    "consumerKey": "PWlHfyxHf78KUjOTXBNVA",
-    "consumerSecret": "c7DMDAV5Ag3oYhrn67nkN7xHg3NXRBwtoxKpVl6AIo",
+    "consumerKey": "your twitter consumer key",
+    "consumerSecret": "your twitter secret key",
     "connectUrl": "/twitter/connect",
     "callbackUrl": "/redirect",
     "callbackFullUrl": "http://127.0.0.1:8118/redirect/#battle-field"
