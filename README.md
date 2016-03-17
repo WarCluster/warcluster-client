@@ -1,12 +1,14 @@
 ![warcluster logo](https://mir-s3-cdn-cf.behance.net/project_modules/disp/28168026279733.563586a13f4ae.gif)
 
-WarCluster - Real-time Massive Multiplayer Online Space Strategy Arcade Browser Social Game for Twitter! ヘ(◕。◕ヘ)
-===
+# WarCluster 
+
+## Real-time Massive Multiplayer Online Space Strategy Arcade Browser Social Game for Twitter! ヘ(◕。◕ヘ)
+
 :warning: This project's support is discontinued. Venture forth at your own peril. It's ~3 years old and we had no prior production experience with WebGL MMOs. It's considered as a playground although it's working (we held numerous tournaments with ~100 simultaneous real players and dozens small scale inhouse tests) ;)
 
 Related links:
 
- - The Golang backend repo: https://github.com/vladimiroff/WarCluster
+ - The Go backend repo: https://github.com/WarCluster/warcluster-server
  - Amazingly strong AI player with fuzzy logic (written at 2 day hackathon) here: https://github.com/lepovica/WarCluster-AI  ლ(ಠ益ಠლ)
  - The awesome UI designer @Denitsa that also made the art of the game: https://www.behance.net/gallery/26279733/War-Cluster
  - The team behind this project: [humans.txt](https://github.com/vladimiroff/warcluster-site/blob/develop/public/humans.txt)
@@ -62,7 +64,8 @@ There're different kind of ships indicating the size of the army. From left (sma
 ### Running the app
 prerequisites:
 - nodejs `~0.8` installed via nvm (https://github.com/creationix/nvm) or other suitable node package manager
-- you need the [warcluster-server](https://github.com/vladimiroff/WarCluster) to be up & runnning ;)
+- you need the [warcluster-server](https://github.com/WarCluster/warcluster-server) to be up & runnning ;)
+- update the [twitter credentials](https://github.com/WarCluster/warcluster-client/blob/develop/dna/plasma.json#L16-L17) with your consumer key/secret in order to have a social twitter login.
 
 After you have the prerequisites:
 - `git clone ...`
@@ -71,9 +74,8 @@ After you have the prerequisites:
 
 ### Releasing to staging
 
-1. Update the [twitter credentials](https://github.com/vladimiroff/warcluster-site/blob/develop/dna/plasma.json#L16-L17) with your consumer key/secret in order to have a social twitter login.
-2. Point to your staging server [here](https://github.com/vladimiroff/warcluster-site/blob/develop/dna/cell.json#L5)
-3. Run `scripts/release-staging.js` for automated release
+1. Point to your staging server [here](https://github.com/WarCluster/warcluster-client/blob/develop/dna/cell.json#L5)
+2. Run `scripts/release-staging.js` for automated release
 
 #### Contributing:
 
