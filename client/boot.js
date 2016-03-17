@@ -17,8 +17,7 @@ Backbone = require("../client/vendor/backbone");
 
 config = require("config");
 
-//Nqkakva gadost za notifications
-//TODO: find a better plugin........
+//TODO: find a better notifications plugin........
 $.noty.defaults = {
     layout: 'bottomLeft',
     theme: 'defaultTheme',

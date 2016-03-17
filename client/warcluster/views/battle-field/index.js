@@ -15,7 +15,6 @@ var ShipsManager = require("../../managers/ships/ShipsManager");
 var SunsManager = require("../../managers/suns/SunsManager");
 var SunsTextureManager = require("../../managers/suns/SunsTextureManager");
 
-
 var SpaceScene = require("../../scene/SpaceScene");
 
 var KeyboardManager = require("../../managers/keyboard/KeyboardManager");
